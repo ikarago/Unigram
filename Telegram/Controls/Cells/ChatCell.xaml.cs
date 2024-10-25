@@ -529,12 +529,6 @@ namespace Telegram.Controls.Cells
                 }
             }
 
-            if (_clientService.Notifications.IsMuted(chat))
-            {
-                builder.Append(Strings.AccDescrNotificationsMuted);
-                builder.Append(", ");
-            }
-
             if (chat.UnreadCount > 0)
             {
                 builder.Append(Locale.Declension(Strings.R.NewMessages, chat.UnreadCount));
@@ -550,6 +544,12 @@ namespace Telegram.Controls.Cells
             if (chat.UnreadReactionCount > 0)
             {
                 builder.Append(Strings.AccDescrMentionReaction);
+                builder.Append(", ");
+            }
+
+            if (_clientService.Notifications.IsMuted(chat))
+            {
+                builder.Append(Strings.AccDescrNotificationsMuted);
                 builder.Append(", ");
             }
 
