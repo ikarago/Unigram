@@ -1646,7 +1646,7 @@ namespace Telegram.Controls.Cells
                 }
             }
 
-            if (chat?.Type is ChatTypeBasicGroup or ChatTypeSupergroup
+            if (chat?.Type is not ChatTypePrivate and not ChatTypeSecret
                 || message.ChatId == clientService.Options.MyId
                 || message.ChatId == clientService.Options.RepliesBotChatId
                 || message.ChatId == clientService.Options.VerificationCodesBotChatId)
