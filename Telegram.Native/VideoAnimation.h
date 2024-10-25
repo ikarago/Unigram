@@ -71,7 +71,7 @@ namespace winrt::Telegram::Native::implementation
 
             if (video_dec_ctx)
             {
-                avcodec_close(video_dec_ctx);
+                avcodec_free_context(&video_dec_ctx);
                 video_dec_ctx = nullptr;
             }
             if (fmt_ctx)
@@ -186,7 +186,6 @@ namespace winrt::Telegram::Native::implementation
         static int64_t seekCallback(void* opaque, int64_t offset, int whence);
 
         static void RedirectLoggingOutputs(void* ptr, int level, const char* fmt, va_list vargs);
-
 
         winrt::slim_mutex m_lock;
 

@@ -573,36 +573,37 @@ namespace winrt::Telegram::Native::implementation
             }
             else
             {
-                // In loving memory of the attempted upgrade to FFmpeg 6.1
+                // All of this could be avoided by simply allocating a buffer of the size of frame+AV_INPUT_BUFFER_PADDING_SIZE
 
-                //auto dstWidth = FFALIGN(width, 16);
-                //auto dstDiff = dstWidth - width;
+                auto dstWidth = FFALIGN(width, 16);
+                auto dstDiff = dstWidth - width;
 
-                //auto srcWidth = frame->linesize[0] - width;
-                //auto srcDiff = FFALIGN(srcWidth, 12) - srcWidth;
+                auto srcWidth = frame->linesize[0] - width;
+                auto srcDiff = FFALIGN(srcWidth, 12) - srcWidth;
 
-                //auto padding = srcDiff > 0 && dstDiff > 0
-                //    ? std::min(srcDiff, dstDiff)
-                //    : std::max(srcDiff, dstDiff);
+                auto padding = srcDiff > 0 && dstDiff > 0
+                    ? std::min(srcDiff, dstDiff)
+                    : std::max(srcDiff, dstDiff);
 
-                //padding = std::min(padding, width % 16);
+                padding = std::min(padding, width % 16);
 
-                //if (padding == 0 || srcWidth % 30 == 0)
-                //{
                 int32_t linesize = width * 4;
-                sws_scale(sws_ctx, frame->data, frame->linesize, 0, frame->height, &pixels, &linesize);
-                //}
-                //else
-                //{
-                //    if (dst_data == nullptr)
-                //    {
-                //        int32_t paddedsize = std::max(width + padding, 16) * height * 4;
-                //        dst_data = (uint8_t*)malloc(paddedsize);
-                //    }
 
-                //    sws_scale(sws_ctx, frame->data, frame->linesize, 0, frame->height, &dst_data, &linesize);
-                //    memcpy(pixels, dst_data, linesize * height);
-                //}
+                if (padding == 0 || srcWidth % 30 == 0)
+                {
+                    sws_scale(sws_ctx, frame->data, frame->linesize, 0, frame->height, &pixels, &linesize);
+                }
+                else
+                {
+                    if (dst_data == nullptr)
+                    {
+                        int32_t paddedsize = std::max(width + padding, 16) * height * 4;
+                        dst_data = (uint8_t*)malloc(paddedsize);
+                    }
+
+                    sws_scale(sws_ctx, frame->data, frame->linesize, 0, frame->height, &dst_data, &linesize);
+                    memcpy(pixels, dst_data, linesize * height);
+                }
 
                 if (frame->format == AV_PIX_FMT_YUVA420P)
                 {

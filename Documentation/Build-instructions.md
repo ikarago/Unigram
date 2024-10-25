@@ -29,9 +29,11 @@ Run the following commands to clone vcpkg:
 ```shell
 > git clone https://github.com/Microsoft/vcpkg.git
 > cd vcpkg
-> git checkout cd5e746ec203c8c3c61647e0886a8df8c1e78e41
+> git checkout cff6ed45719c0162fa7065fdac90506a0add812c
 > ./bootstrap-vcpkg.bat
 ```
+
+Apply the patch contained in `Libraries\vcpkg.patch`.
 
 Now that vcpkg is ready, you must customize the **ffmpeg** port to be built with all the flags needed by the app:
 - Navigate to `vcpkg\ports\ffmpeg`
@@ -64,7 +66,7 @@ Here is complete instruction for TDLib binaries building, taken from the officia
 > cd td
 > git clone https://github.com/Microsoft/vcpkg.git
 > cd vcpkg
-> git checkout cd5e746ec203c8c3c61647e0886a8df8c1e78e41
+> git checkout cff6ed45719c0162fa7065fdac90506a0add812c
 > ./bootstrap-vcpkg.bat
 > ./vcpkg.exe install gperf:x86-windows openssl:arm-uwp openssl:arm64-uwp openssl:x64-uwp openssl:x86-uwp zlib:arm-uwp zlib:arm64-uwp zlib:x64-uwp zlib:x86-uwp
 > cd ..

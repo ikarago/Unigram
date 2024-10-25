@@ -25,6 +25,7 @@
     </CppWinRTLibs>
     <CppWinRTModernIDL>true</CppWinRTModernIDL>
     <CppWinRTUsePrefixes>true</CppWinRTUsePrefixes>
+    <VcpkgEnableClassic>true</VcpkgEnableClassic>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
