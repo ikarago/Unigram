@@ -45,6 +45,10 @@ namespace Telegram.Views.Profile
         private async void Message_ContextRequested(UIElement sender, ContextRequestedEventArgs args)
         {
             var message = ScrollingHost.ItemFromContainer(sender) as MessageWithOwner;
+            if (message == null)
+            {
+                return;
+            }
 
             var flyout = new MenuFlyout();
 
@@ -194,7 +198,11 @@ namespace Telegram.Views.Profile
 
                 args.ItemContainer.Style = sender.ItemContainerStyle;
                 args.ItemContainer.ContentTemplate = sender.ItemTemplate;
-                args.ItemContainer.ContextRequested += Message_ContextRequested;
+
+                if (args.Item is MessageWithOwner)
+                {
+                    args.ItemContainer.ContextRequested += Message_ContextRequested;
+                }
             }
 
             if (sender.ItemTemplateSelector != null)
