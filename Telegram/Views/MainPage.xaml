@@ -4,10 +4,8 @@
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-                   xmlns:icons="using:Telegram.Assets.Icons"
                    xmlns:controls="using:Telegram.Controls"
                    xmlns:cells="using:Telegram.Controls.Cells"
-                   xmlns:contacts="using:Telegram.Controls.Contacts"
                    xmlns:stories="using:Telegram.Controls.Stories"
                    xmlns:views="using:Telegram.Controls.Views"
                    xmlns:viewModels="using:Telegram.ViewModels"
@@ -522,7 +520,6 @@
                                                   Click="Proxy_Click"
                                                   Visibility="Collapsed"
                                                   FontFamily="{StaticResource TelegramThemeFontFamily}"
-                                                  Style="{StaticResource HeaderGlyphButtonStyle}"
                                                   AutomationProperties.Name="{CustomResource ProxySettings}"
                                                   ToolTipService.ToolTip="{CustomResource ProxySettings}"
                                                   Width="40"
@@ -531,7 +528,6 @@
                                                   Visibility="Collapsed"
                                                   Glyph="&#xE785;"
                                                   Click="Lock_Click"
-                                                  Style="{StaticResource HeaderGlyphButtonStyle}"
                                                   AutomationProperties.Name="{CustomResource AccDescrPasscodeLock}"
                                                   ToolTipService.ToolTip="{CustomResource AccDescrPasscodeLock}"
                                                   Width="40"
@@ -828,21 +824,18 @@
 
                                     <controls:GlyphButton x:Name="ManageMute"
                                                           Click="{x:Bind ViewModel.Chats.NotifySelectedChats}"
-                                                          Style="{StaticResource HeaderGlyphButtonStyle}"
                                                           VerticalAlignment="Center"
                                                           Grid.Column="3" />
                                     <controls:GlyphButton Glyph="&#xE7B8;"
                                                           Click="{x:Bind ViewModel.Chats.ArchiveSelectedChats}"
                                                           AutomationProperties.Name="{CustomResource Archive}"
                                                           ToolTipService.ToolTip="{CustomResource Archive}"
-                                                          Style="{StaticResource HeaderGlyphButtonStyle}"
                                                           VerticalAlignment="Center"
                                                           Grid.Column="5" />
                                     <controls:GlyphButton Glyph="&#xE74D;"
                                                           Click="{x:Bind ViewModel.Chats.DeleteSelectedChats}"
                                                           AutomationProperties.Name="{CustomResource Delete}"
                                                           ToolTipService.ToolTip="{CustomResource Delete}"
-                                                          Style="{StaticResource HeaderGlyphButtonStyle}"
                                                           VerticalAlignment="Center"
                                                           Grid.Column="6" />
 

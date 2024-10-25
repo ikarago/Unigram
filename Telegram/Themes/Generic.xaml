@@ -4239,7 +4239,7 @@
     </Style>
 
     <Style TargetType="local:MoreButton"
-           BasedOn="{StaticResource HeaderGlyphButtonStyle}">
+           BasedOn="{StaticResource DefaultGlyphButtonStyle}">
         <Setter Property="Glyph"
                 Value="&#xE10C;" />
         <Setter Property="AutomationProperties.Name"

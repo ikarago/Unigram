@@ -701,7 +701,6 @@
                     <controls:GlyphButton x:Name="VideoCall"
                                           Visibility="Collapsed"
                                           Click="{x:Bind ViewModel.VideoCall}"
-                                          Style="{StaticResource HeaderGlyphButtonStyle}"
                                           Glyph="&#xE714;"
                                           FontSize="20"
                                           AutomationProperties.Name="{CustomResource VideoCall}"
@@ -711,7 +710,6 @@
                     <controls:GlyphButton x:Name="Call"
                                           Visibility="Collapsed"
                                           Click="{x:Bind ViewModel.VoiceCall}"
-                                          Style="{StaticResource HeaderGlyphButtonStyle}"
                                           Glyph="&#xE717;"
                                           AutomationProperties.Name="{CustomResource Call}"
                                           ToolTipService.ToolTip="{CustomResource Call}"
@@ -720,7 +718,6 @@
 
                     <controls:GlyphButton x:Name="SearchOption"
                                           Click="{x:Bind Search}"
-                                          Style="{StaticResource HeaderGlyphButtonStyle}"
                                           Glyph="&#xE721;"
                                           AutomationProperties.Name="{CustomResource Search}"
                                           ToolTipService.ToolTip="{CustomResource Search}"
