@@ -261,7 +261,17 @@ namespace Telegram.Views
 
         public void Handle(UpdateFileDownloads update)
         {
-            this.BeginOnUIThread(() => Downloads.UpdateFileDownloads(update));
+            this.BeginOnUIThread(() => UpdateFileDownloads(update));
+        }
+
+        private void UpdateFileDownloads(UpdateFileDownloads update)
+        {
+            if (update.TotalSize > 0)
+            {
+                FindName(nameof(Downloads));
+            }
+
+            Downloads?.UpdateFileDownloads(update);
         }
 
         public void Handle(UpdateChatIsMarkedAsUnread update)

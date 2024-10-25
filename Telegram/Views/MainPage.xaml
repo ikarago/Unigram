@@ -764,6 +764,7 @@
                                 </Grid>
 
                                 <controls:DownloadsFooter x:Name="Downloads"
+                                                          x:Load="False"
                                                           Click="Downloads_Click"
                                                           VerticalAlignment="Bottom"
                                                           Visibility="Collapsed"
