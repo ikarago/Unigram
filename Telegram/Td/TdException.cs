@@ -51,39 +51,44 @@ namespace Telegram.Td
 
         public static bool IsDatabaseBrokenError(string message)
         {
-            return message.Contains("Wrong key or database is corrupted") ||
-                message.Contains("SQL logic error or missing database") ||
-                message.Contains("database disk image is malformed") ||
-                message.Contains("file is encrypted or is not a database") ||
-                message.Contains("unsupported file format");
+            return message.Contains("Wrong key or database is corrupted")
+                || message.Contains("SQL logic error or missing database")
+                || message.Contains("database disk image is malformed")
+                || message.Contains("file is encrypted or is not a database")
+                || message.Contains("unsupported file format")
+                || message.Contains("attempt to write a readonly database for database");
         }
 
         public static bool IsDiskFullError(string message)
         {
-            return message.Contains("There is not enough space on the disk") ||
-                message.Contains(": 112 :") ||
-                message.Contains("database or disk is full") ||
-                message.Contains("out of memory for database");
+            return message.Contains("There is not enough space on the disk")
+                || message.Contains(": 112 :")
+                || message.Contains("database or disk is full")
+                || message.Contains("out of memory for database");
         }
 
         public static bool IsDiskError(string message)
         {
             // This is UNIX stuff and has no sense on Windows but I'm lazy to see
             // if there's any equivalents that we need to cover.
-            return message.Contains("I/O error") || message.Contains("Structure needs cleaning");
+            return message.Contains("I/O error")
+                || message.Contains("Structure needs cleaning");
         }
 
         public static bool IsBinlogError(string message)
         {
-            return message.Contains("Failed to rename binlog") ||
-                message.Contains("Can't rename") ||
-                message.Contains("Failed to unlink old binlog") ||
-                message.Contains(": 8 :");
+            return message.Contains("Failed to rename binlog")
+                || message.Contains("Can't rename")
+                || message.Contains("Failed to unlink old binlog")
+                || message.Contains("td.binlog")
+                || message.Contains(": 8 :")
+                || message.Contains(": 1392 :");
         }
 
         private static bool IsOutOfMemoryError(string message)
         {
-            return message.Contains("zlib deflate init failed");
+            return message.Contains("zlib deflate init failed")
+                || message.Contains("zlib inflate init failed");
         }
     }
 
