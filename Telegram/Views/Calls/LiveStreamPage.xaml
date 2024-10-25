@@ -206,7 +206,9 @@
                                           Click="Leave_Click"
                                           Content="{CustomResource VoipEnd2}"
                                           Glyph="&#xEA1F;"
-                                          FontSize="24" />
+                                          FontSize="24"
+                                          CornerRadius="0"
+                                          Padding="0" />
                 </Border>
                 <TextBlock Text="{CustomResource VoipSettings}"
                            TextAlignment="Center"
