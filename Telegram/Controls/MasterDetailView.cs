@@ -587,7 +587,8 @@ namespace Telegram.Controls
 
         private void SetScrollingHost()
         {
-            var hosted = DetailFrame.Content as HostedPage;
+            var hosted = DetailFrame?.Content as HostedPage;
+
             var scrollingHost = hosted?.FindName("ScrollingHost");
             if (scrollingHost is ListViewBase listView)
             {
