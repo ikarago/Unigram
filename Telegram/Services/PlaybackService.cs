@@ -223,6 +223,12 @@ namespace Telegram.Services
             }
         }
 
+        private void OnVolumeChanged(AsyncMediaPlayer sender, MediaPlayerVolumeChangedEventArgs args)
+        {
+            sender.VolumeChanged -= OnVolumeChanged;
+            sender.Volume = (int)Math.Round(_settingsService.VolumeLevel * 100);
+        }
+
         private void OnTimeChanged(AsyncMediaPlayer sender, MediaPlayerTimeChangedEventArgs args)
         {
             _positionChanged.Position = TimeSpan.FromMilliseconds(args.Time);
@@ -718,6 +724,7 @@ namespace Telegram.Services
 
                     //_mediaPlayer.SystemMediaTransportControls.ButtonPressed -= Transport_ButtonPressed;
                     //_mediaPlayer.PlaybackSession.PlaybackStateChanged -= OnPlaybackStateChanged;
+                    _player.VolumeChanged -= OnVolumeChanged;
                     _player.TimeChanged -= OnTimeChanged;
                     _player.LengthChanged -= OnLengthChanged;
                     _player.EncounteredError -= OnEncounteredError;
@@ -747,13 +754,13 @@ namespace Telegram.Services
                 //_mediaPlayer.SystemMediaTransportControls.AutoRepeatMode = _settingsService.Playback.RepeatMode;
                 //_mediaPlayer.SystemMediaTransportControls.ButtonPressed += Transport_ButtonPressed;
                 //_mediaPlayer.PlaybackSession.PlaybackStateChanged += OnPlaybackStateChanged;
+                _player.VolumeChanged += OnVolumeChanged;
                 _player.TimeChanged += OnTimeChanged;
                 _player.LengthChanged += OnLengthChanged;
                 _player.EncounteredError += OnEncounteredError;
                 _player.EndReached += OnEndReached;
                 _player.Buffering += OnBuffering;
                 //_mediaPlayer.CommandManager.IsEnabled = false;
-                _player.Volume = (int)Math.Round(_settingsService.VolumeLevel * 100);
 
                 _transport.ButtonPressed += Transport_ButtonPressed;
             }

@@ -80,9 +80,9 @@ namespace Telegram.Controls
             _playbackService.SourceChanged -= OnPlaybackStateChanged;
             _playbackService.StateChanged -= OnPlaybackStateChanged;
             _playbackService.PositionChanged -= OnPositionChanged;
-            _playbackService.SourceChanged += OnPlaybackStateChanged;
-
             _playbackService.PlaylistChanged -= OnPlaylistChanged;
+
+            _playbackService.SourceChanged += OnPlaybackStateChanged;
             _playbackService.StateChanged += OnPlaybackStateChanged;
             _playbackService.PositionChanged += OnPositionChanged;
             _playbackService.PlaylistChanged += OnPlaylistChanged;
