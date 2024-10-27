@@ -613,7 +613,7 @@ namespace Telegram.ViewModels
                 _ = LoadMoreItemsAsync(0);
             }
 
-            public async Task ReloadAsync(ChatList chatList)
+            public Task ReloadAsync(ChatList chatList)
             {
                 _token?.Cancel();
                 _token = new CancellationTokenSource();
@@ -625,16 +625,10 @@ namespace Telegram.ViewModels
 
                 _chatList = chatList;
 
-                if (_viewModel.Delegate != null)
-                {
-                    // Exp: does this affect layout cycles?
-                    await _viewModel.Delegate.UpdateLayoutAsync();
-                }
-
                 _chats.Clear();
                 Clear();
 
-                await LoadMoreItemsAsync();
+                return LoadMoreItemsAsync();
             }
 
             public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
@@ -652,12 +646,6 @@ namespace Telegram.ViewModels
                 var response = await _clientService.GetChatListAsync(_chatList, Count, 20);
                 if (response is Telegram.Td.Api.Chats chats && !token.IsCancellationRequested)
                 {
-                    if (_viewModel.Delegate != null)
-                    {
-                        // Exp: does this affect layout cycles?
-                        await _viewModel.Delegate.UpdateLayoutAsync();
-                    }
-
                     foreach (var chat in _clientService.GetChats(chats.ChatIds))
                     {
                         var order = chat.GetOrder(_chatList);
