@@ -1973,7 +1973,7 @@ namespace Telegram.Controls.Messages
 
             void OpenUrl(string url, bool trust)
             {
-                if (message.Content is MessageText text && MessageHelper.AreTheSame(text.LinkPreview?.Url, url, out _))
+                if (message.Content is MessageText text && text.LinkPreview?.InstantViewVersion != 0 && MessageHelper.AreTheSame(text.LinkPreview?.Url, url, out _))
                 {
                     message.Delegate.OpenWebPage(text);
                 }
