@@ -1983,7 +1983,8 @@ namespace Telegram.Views
 
         private void Search_LostFocus(object sender, RoutedEventArgs e)
         {
-            MasterDetail.AllowCompact = MasterDetail.NavigationService.CurrentPageType != typeof(BlankPage) && rpMasterTitlebar.SelectedIndex == INDEX_CHATS;
+            MasterDetail.AllowCompact = MasterDetail.NavigationService?.CurrentPageType != typeof(BlankPage)
+                && rpMasterTitlebar.SelectedIndex == INDEX_CHATS;
 
             SearchReset();
 

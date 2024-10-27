@@ -139,14 +139,13 @@ namespace Telegram.ViewModels
             ClientService.DownloadFile(file.Id, 32);
         }
 
-        public async void OpenFile(File file)
+        public void OpenFile(File file)
         {
             // TODO: I don't like retrieving services this way
             var service = TypeResolver.Current.Resolve<IStorageService>(ClientService.SessionId);
             if (service != null)
             {
-                await service.OpenFileAsync(file);
-                return;
+                _ = service.OpenFileAsync(file);
             }
         }
 

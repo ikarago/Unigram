@@ -1569,7 +1569,7 @@ namespace Telegram.Controls
             var effect = await GetEffectAsync();
             var digits = await GetDigitsAsync(fullInfo.Birthdate.ToYears());
 
-            if (effect == null || digits == null)
+            if (effect == null || digits == null || !this.IsConnected())
             {
                 return;
             }

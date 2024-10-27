@@ -186,7 +186,7 @@ namespace Telegram.Controls.Messages
 
             _templateApplied = true;
 
-            if (_message != null)
+            if (_message?.Delegate != null)
             {
                 UpdateMessage(_message, _owner, _message.Delegate.IsSelectionEnabled);
             }

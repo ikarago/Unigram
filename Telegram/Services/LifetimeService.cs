@@ -174,9 +174,7 @@ namespace Telegram.Services
                     window.NavigationServices.RemoveByFrameId($"{item.Id}");
                     window.NavigationServices.RemoveByFrameId($"Main{item.Id}");
 
-                    var popups = VisualTreeHelper.GetOpenPopupsForXamlRoot(window.Content.XamlRoot);
-
-                    foreach (var popup in popups)
+                    foreach (var popup in VisualTreeHelper.GetOpenPopups(window))
                     {
                         if (popup.Child is ContentPopup toast)
                         {

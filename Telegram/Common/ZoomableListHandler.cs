@@ -187,7 +187,7 @@ namespace Telegram.Common
 
                     _popupContent = content;
 
-                    if (content is StickerViewModel stickerViewModel)
+                    if (content is StickerViewModel stickerViewModel && stickerViewModel.StickerValue != null)
                     {
                         _popupPanel.SetSticker(stickerViewModel);
                     }

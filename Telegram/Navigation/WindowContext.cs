@@ -47,6 +47,8 @@ namespace Telegram.Navigation
         private readonly InputListener _inputListener;
         public InputListener InputListener => _inputListener;
 
+        public static implicit operator Window(WindowContext window) => window._window;
+
         public CoreWindow CoreWindow => _window.CoreWindow;
 
         public int Id { get; }

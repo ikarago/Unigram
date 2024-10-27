@@ -2754,7 +2754,7 @@ namespace Telegram.Controls.Messages
                 return;
             }
 
-            message.Delegate.OpenInlineButton(message, e.Button);
+            message.Delegate?.OpenInlineButton(message, e.Button);
         }
 
         #endregion
