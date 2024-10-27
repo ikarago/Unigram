@@ -501,7 +501,7 @@ namespace Telegram.Controls
         {
             InsertBlockquote(Document.Selection);
 
-            _selectionFlyout.Update(Document.Selection.CharacterFormat);
+            _selectionFlyout.Update(Document.Selection);
         }
 
         public void ToggleBold()
@@ -511,7 +511,7 @@ namespace Telegram.Controls
             Document.Selection.CharacterFormat.Bold = FormatEffect.Toggle;
             Document.ApplyDisplayUpdates();
 
-            _selectionFlyout.Update(Document.Selection.CharacterFormat);
+            _selectionFlyout.Update(Document.Selection);
         }
 
         public void ToggleItalic()
@@ -521,7 +521,7 @@ namespace Telegram.Controls
             Document.Selection.CharacterFormat.Italic = FormatEffect.Toggle;
             Document.ApplyDisplayUpdates();
 
-            _selectionFlyout.Update(Document.Selection.CharacterFormat);
+            _selectionFlyout.Update(Document.Selection);
         }
 
         public void ToggleUnderline()
@@ -531,7 +531,7 @@ namespace Telegram.Controls
             Document.Selection.CharacterFormat.Underline = Document.Selection.CharacterFormat.Underline != UnderlineType.Single ? UnderlineType.Single : UnderlineType.None;
             Document.ApplyDisplayUpdates();
 
-            _selectionFlyout.Update(Document.Selection.CharacterFormat);
+            _selectionFlyout.Update(Document.Selection);
         }
 
         public void ToggleStrikethrough()
@@ -541,7 +541,7 @@ namespace Telegram.Controls
             Document.Selection.CharacterFormat.Strikethrough = FormatEffect.Toggle;
             Document.ApplyDisplayUpdates();
 
-            _selectionFlyout.Update(Document.Selection.CharacterFormat);
+            _selectionFlyout.Update(Document.Selection);
         }
 
         public void ToggleMonospace()
@@ -551,7 +551,7 @@ namespace Telegram.Controls
             Document.Selection.CharacterFormat.Name = "Consolas";
             Document.ApplyDisplayUpdates();
 
-            _selectionFlyout.Update(Document.Selection.CharacterFormat);
+            _selectionFlyout.Update(Document.Selection);
         }
 
         public void ToggleSpoiler()
@@ -561,7 +561,7 @@ namespace Telegram.Controls
             Document.Selection.CharacterFormat.BackgroundColor = Colors.Gray;
             Document.ApplyDisplayUpdates();
 
-            _selectionFlyout.Update(Document.Selection.CharacterFormat);
+            _selectionFlyout.Update(Document.Selection);
         }
 
         public void ToggleRegular()
