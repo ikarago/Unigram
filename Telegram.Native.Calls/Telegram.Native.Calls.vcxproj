@@ -234,6 +234,7 @@
       <SubType>Code</SubType>
     </ClInclude>
     <ClInclude Include="LoopbackCapture.h" />
+    <ClInclude Include="MediaChannelDescriptionsRequestedEventArgs.h" />
     <ClInclude Include="RemoteMediaStateUpdatedEventArgs.h">
       <DependentUpon>RemoteMediaStateUpdatedEventArgs.idl</DependentUpon>
     </ClInclude>
@@ -446,6 +447,7 @@
       <SubType>Code</SubType>
     </ClCompile>
     <ClCompile Include="LoopbackCapture.cpp" />
+    <ClCompile Include="MediaChannelDescriptionsRequestedEventArgs.cpp" />
     <ClCompile Include="RemoteMediaStateUpdatedEventArgs.cpp">
       <DependentUpon>RemoteMediaStateUpdatedEventArgs.idl</DependentUpon>
     </ClCompile>
@@ -518,6 +520,7 @@
     <Midl Include="GroupNetworkStateChangedEventArgs.idl">
       <SubType>Designer</SubType>
     </Midl>
+    <Midl Include="MediaChannelDescriptionsRequestedEventArgs.idl" />
     <Midl Include="RemoteMediaStateUpdatedEventArgs.idl" />
     <Midl Include="SignalingDataEmittedEventArgs.idl" />
     <Midl Include="Telegram.Native.Calls.idl" />

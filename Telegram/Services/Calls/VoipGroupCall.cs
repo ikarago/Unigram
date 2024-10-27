@@ -109,6 +109,7 @@ namespace Telegram.Services.Calls
             _manager.AudioLevelsUpdated += OnAudioLevelsUpdated;
             _manager.BroadcastTimeRequested += OnBroadcastTimeRequested;
             _manager.BroadcastPartRequested += OnBroadcastPartRequested;
+            _manager.MediaChannelDescriptionsRequested += OnMediaChannelDescriptionsRequested;
 
             _coordinator?.TryNotifyMutedChanged(_manager.IsMuted);
 
@@ -491,6 +492,11 @@ namespace Telegram.Services.Calls
             args.Deferral(time, stamp, response as FilePart);
         }
 
+        private void OnMediaChannelDescriptionsRequested(VoipGroupManager sender, object args)
+        {
+            Logger.Info();
+        }
+
         private void OnNetworkStateUpdated(VoipGroupManager sender, GroupNetworkStateChangedEventArgs args)
         {
             //if (_isConnected && !connected)
@@ -501,6 +507,8 @@ namespace Telegram.Services.Calls
             //{
             //    _connectingTimer.Change(Timeout.Infinite, Timeout.Infinite);
             //}
+
+            Logger.Info(string.Format("Connected: {0}", args.IsConnected));
 
             _isConnected = args.IsConnected;
             NetworkStateChanged?.Invoke(this, new VoipGroupCallNetworkStateChangedEventArgs(args.IsConnected, args.IsTransitioningFromBroadcastToRtc));
@@ -631,6 +639,7 @@ namespace Telegram.Services.Calls
                 _manager.AudioLevelsUpdated -= OnAudioLevelsUpdated;
                 _manager.BroadcastTimeRequested -= OnBroadcastTimeRequested;
                 _manager.BroadcastPartRequested -= OnBroadcastPartRequested;
+                _manager.MediaChannelDescriptionsRequested -= OnMediaChannelDescriptionsRequested;
 
                 _manager.SetVideoCapture(null);
 

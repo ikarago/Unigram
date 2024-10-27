@@ -176,6 +176,7 @@
     </ClCompile>
     <ClCompile Include="VoipVideoOutputSink.cpp" />
     <ClCompile Include="LoopbackCapture.cpp" />
+    <ClCompile Include="MediaChannelDescriptionsRequestedEventArgs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -396,6 +397,7 @@
     <ClInclude Include="VoipVideoOutputSink.h" />
     <ClInclude Include="VoipVideoOutput.h" />
     <ClInclude Include="LoopbackCapture.h" />
+    <ClInclude Include="MediaChannelDescriptionsRequestedEventArgs.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VoipManager.rc" />
@@ -416,6 +418,7 @@
     <Midl Include="BroadcastTimeRequestedEventArgs.idl" />
     <Midl Include="VoipVideoOutputSink.idl" />
     <Midl Include="FrameReceivedEventArgs.idl" />
+    <Midl Include="MediaChannelDescriptionsRequestedEventArgs.idl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -65,6 +65,11 @@ namespace winrt::Telegram::Native::Calls::implementation
             winrt::Telegram::Native::Calls::BroadcastTimeRequestedEventArgs> const& value);
         void BroadcastTimeRequested(winrt::event_token const& token);
 
+        winrt::event_token MediaChannelDescriptionsRequested(Windows::Foundation::TypedEventHandler<
+            winrt::Telegram::Native::Calls::VoipGroupManager,
+            winrt::Telegram::Native::Calls::MediaChannelDescriptionsRequestedEventArgs> const& value);
+        void MediaChannelDescriptionsRequested(winrt::event_token const& token);
+
     private:
         std::unique_ptr<tgcalls::GroupInstanceCustomImpl> m_impl = nullptr;
         std::mutex m_lock;
@@ -93,6 +98,9 @@ namespace winrt::Telegram::Native::Calls::implementation
         winrt::event<Windows::Foundation::TypedEventHandler<
             winrt::Telegram::Native::Calls::VoipGroupManager,
             winrt::Telegram::Native::Calls::BroadcastTimeRequestedEventArgs>> m_broadcastTimeRequested;
+        winrt::event<Windows::Foundation::TypedEventHandler<
+            winrt::Telegram::Native::Calls::VoipGroupManager,
+            winrt::Telegram::Native::Calls::MediaChannelDescriptionsRequestedEventArgs>> m_mediaChannelDescriptionsRequested;
     };
 
 

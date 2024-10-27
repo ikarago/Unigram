@@ -381,6 +381,7 @@ namespace winrt::Telegram::Native::Calls::implementation
     std::shared_ptr<tgcalls::RequestMediaChannelDescriptionTask> VoipGroupManager::OnRequestMediaChannelDescriptions(const std::vector<uint32_t>& ssrcs, std::function<void(std::vector<tgcalls::MediaChannelDescription>&&)> done)
     {
         // TODO: missing implementation
+        m_mediaChannelDescriptionsRequested(*this, nullptr);
         return nullptr;
     }
 
@@ -446,5 +447,21 @@ namespace winrt::Telegram::Native::Calls::implementation
     {
         std::lock_guard const guard(m_lock);
         m_broadcastTimeRequested.remove(token);
+    }
+
+
+
+    winrt::event_token VoipGroupManager::MediaChannelDescriptionsRequested(Windows::Foundation::TypedEventHandler<
+        winrt::Telegram::Native::Calls::VoipGroupManager,
+        winrt::Telegram::Native::Calls::MediaChannelDescriptionsRequestedEventArgs> const& value)
+    {
+        std::lock_guard const guard(m_lock);
+        return m_mediaChannelDescriptionsRequested.add(value);
+    }
+
+    void VoipGroupManager::MediaChannelDescriptionsRequested(winrt::event_token const& token)
+    {
+        std::lock_guard const guard(m_lock);
+        m_mediaChannelDescriptionsRequested.remove(token);
     }
 }

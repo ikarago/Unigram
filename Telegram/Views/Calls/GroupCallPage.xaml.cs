@@ -1713,35 +1713,10 @@ namespace Telegram.Views.Calls
                     speaking.Foreground = status.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0x85, 0x85, 0x85));
                 }
 
-
                 wave.Background = new SolidColorBrush(participant.IsSpeaking ? Color.FromArgb(0xDD, 0x33, 0xc6, 0x59) : Color.FromArgb(0xDD, 0x4D, 0xB8, 0xFF));
                 glyph.Text = Icons.MicOn;
                 glyph.Foreground = new SolidColorBrush(participant.IsSpeaking ? Color.FromArgb(0xFF, 0x33, 0xc6, 0x59) : Color.FromArgb(0xFF, 0x85, 0x85, 0x85));
             }
-        }
-
-        private void UpdateRequestedVideos()
-        {
-            var descriptions = new Dictionary<string, VoipVideoChannelInfo>();
-
-            foreach (var cell in _gridCells.Values)
-            {
-                descriptions[cell.EndpointId] =
-                    new VoipVideoChannelInfo(cell.Participant.AudioSourceId, cell.EndpointId, cell.VideoInfo.SourceGroups, cell.Quality, cell.Quality);
-            }
-
-            foreach (var cell in _listCells.Values)
-            {
-                if (descriptions.ContainsKey(cell.EndpointId))
-                {
-                    continue;
-                }
-
-                descriptions[cell.EndpointId] =
-                    new VoipVideoChannelInfo(cell.Participant.AudioSourceId, cell.EndpointId, cell.VideoInfo.SourceGroups, cell.Quality, cell.Quality);
-            }
-
-            _call?.SetRequestedVideoChannels(descriptions.Values.ToArray());
         }
 
         private void AddGridItem(GroupCallParticipant participant, GroupCallParticipantVideoInfo videoInfo, bool screenSharing)
@@ -2063,14 +2038,14 @@ namespace Telegram.Views.Calls
                 gridLast = Math.Min(gridLast - 1, Viewport.Children.Count - 1);
             }
 
-            var next = new HashSet<string>();
+            var descriptions = new Dictionary<string, VoipVideoChannelInfo>();
 
-            UpdateVisibleParticipants(gridFirst, gridLast, false, next);
-            UpdateVisibleParticipants(listFirst, listLast, true, next);
+            UpdateVisibleParticipants(gridFirst, gridLast, false, descriptions);
+            UpdateVisibleParticipants(listFirst, listLast, true, descriptions);
 
             foreach (var sink in _sinks.ToArray())
             {
-                if (next.Contains(sink.Key))
+                if (descriptions.ContainsKey(sink.Key))
                 {
                     continue;
                 }
@@ -2079,7 +2054,7 @@ namespace Telegram.Views.Calls
                 sink.Value.Stop();
             }
 
-            UpdateRequestedVideos();
+            _call?.SetRequestedVideoChannels(descriptions.Values.ToArray());
         }
 
         private void ConnectVisual(GroupCallParticipantGridCell cell, string endpointId, bool mirrored, Action<string, VoipVideoOutputSink> connect)
@@ -2098,7 +2073,7 @@ namespace Telegram.Views.Calls
             }
         }
 
-        private void UpdateVisibleParticipants(int first, int last, bool list, HashSet<string> next)
+        private void UpdateVisibleParticipants(int first, int last, bool list, Dictionary<string, VoipVideoChannelInfo> descriptions)
         {
             var viewport = list ? ListViewport.Children : Viewport.Children;
 
@@ -2111,7 +2086,15 @@ namespace Telegram.Views.Calls
 
                     if (i >= first && i <= last)
                     {
-                        next.Add(child.EndpointId);
+                        if (descriptions.TryGetValue(child.EndpointId, out VoipVideoChannelInfo info))
+                        {
+                            // TODO
+                        }
+                        else
+                        {
+                            descriptions[child.EndpointId] = 
+                                new VoipVideoChannelInfo(child.Participant.AudioSourceId, child.EndpointId, child.VideoInfo.SourceGroups, child.Quality, child.Quality);
+                        }
 
                         if (participant.ScreenSharingVideoInfo?.EndpointId == child.EndpointId && participant.IsCurrentUser && _call.IsScreenSharing)
                         {
