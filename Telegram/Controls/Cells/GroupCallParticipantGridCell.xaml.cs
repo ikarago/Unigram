@@ -263,6 +263,8 @@ namespace Telegram.Controls.Cells
 
         protected override Size ArrangeOverride(Size finalSize)
         {
+            _visual.Size = finalSize.ToVector2();
+
             if (_pausedVisual != null)
             {
                 _pausedVisual.Size = finalSize.ToVector2();
