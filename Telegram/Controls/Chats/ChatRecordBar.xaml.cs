@@ -149,7 +149,9 @@ namespace Telegram.Controls.Chats
                 Width = 272,
                 Height = 272,
                 Background = new SolidColorBrush(Colors.Black),
-                CornerRadius = new CornerRadius(272 / 2)
+                CornerRadius = new CornerRadius(272 / 2),
+                Translation = new Vector3(0, 0, 128),
+                Shadow = new ThemeShadow()
             };
 
             videoRoot.Children.Add(_videoElement);
@@ -253,7 +255,9 @@ namespace Telegram.Controls.Chats
 
             batch.End();
 
-            StartTyping?.Invoke(this, ControlledButton.IsChecked.Value ? new ChatActionRecordingVideoNote() : new ChatActionRecordingVoiceNote());
+            StartTyping?.Invoke(this, ControlledButton.IsChecked.Value
+                ? new ChatActionRecordingVideoNote()
+                : new ChatActionRecordingVoiceNote());
         }
 
         public event EventHandler<ChatAction> StartTyping;
