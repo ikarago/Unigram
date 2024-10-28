@@ -488,27 +488,6 @@ namespace Telegram.Navigation
         {
             try
             {
-                if (args is ShareTargetActivatedEventArgs shareTarget && state is not AuthorizationStateReady)
-                {
-                    var options = new Windows.System.LauncherOptions();
-                    options.TargetApplicationPackageFamilyName = Package.Current.Id.FamilyName;
-
-                    try
-                    {
-                        await Windows.System.Launcher.LaunchUriAsync(new Uri("tg:"), options);
-                    }
-                    catch
-                    {
-                        // It's too early?
-                    }
-                    finally
-                    {
-                        shareTarget.ShareOperation.ReportCompleted();
-                    }
-
-                    return;
-                }
-
                 switch (state)
                 {
                     case AuthorizationStateReady:
@@ -544,23 +523,20 @@ namespace Telegram.Navigation
             catch { }
         }
 
-        private async void Activate(IActivatedEventArgs args, INavigationService service)
+        public static async void Activate(ShareTargetActivatedEventArgs args, AuthorizationState state)
         {
-            service ??= Current.NavigationServices.FirstOrDefault();
+            WatchDog.TrackEvent("ShareTarget");
 
-            if (service == null || args == null)
-            {
-                return;
-            }
+            var query = "tg://";
+            var chatId = 0L;
 
-            if (args is ShareTargetActivatedEventArgs share)
+            if (state is AuthorizationStateReady)
             {
-                WatchDog.TrackEvent("ShareTarget");
                 var package = new DataPackage();
 
                 try
                 {
-                    var operation = share.ShareOperation.Data;
+                    var operation = args.ShareOperation.Data;
                     if (operation.AvailableFormats.Contains(StandardDataFormats.ApplicationLink))
                     {
                         package.SetApplicationLink(await operation.GetApplicationLinkAsync());
@@ -596,15 +572,12 @@ namespace Telegram.Navigation
                 }
                 catch { }
 
-                var query = "tg://";
-                var chatId = 0L;
-
                 try
                 {
-                    var contactId = await ContactsService.GetContactIdAsync(share.ShareOperation.Contacts.FirstOrDefault());
+                    var contactId = await ContactsService.GetContactIdAsync(args.ShareOperation.Contacts.FirstOrDefault());
                     if (contactId is long userId)
                     {
-                        var response = await _lifetime.ActiveItem.ClientService.SendAsync(new CreatePrivateChat(userId, false));
+                        var response = await TypeResolver.Current.Lifetime.ActiveItem.ClientService.SendAsync(new CreatePrivateChat(userId, false));
                         if (response is Chat chat)
                         {
                             query = $"ms-contact-profile://meh?ContactRemoteIds=u" + userId;
@@ -618,21 +591,33 @@ namespace Telegram.Navigation
                 }
 
                 App.DataPackages[chatId] = package.GetView();
+                App.ShareOperation = args.ShareOperation;
+            }
 
-                App.ShareOperation = share.ShareOperation;
-                App.ShareWindow = _window;
+            var options = new Windows.System.LauncherOptions();
+            options.TargetApplicationPackageFamilyName = Package.Current.Id.FamilyName;
 
-                var options = new Windows.System.LauncherOptions();
-                options.TargetApplicationPackageFamilyName = Package.Current.Id.FamilyName;
+            try
+            {
+                await Windows.System.Launcher.LaunchUriAsync(new Uri(query), options);
+            }
+            catch
+            {
+                // It's too early?
+            }
+        }
 
-                try
-                {
-                    await Windows.System.Launcher.LaunchUriAsync(new Uri(query), options);
-                }
-                catch
-                {
-                    // It's too early?
-                }
+        private void Activate(IActivatedEventArgs args, INavigationService service)
+        {
+            service ??= Current.NavigationServices.FirstOrDefault();
+
+            if (service == null || args == null)
+            {
+                return;
+            }
+
+            if (args is ShareTargetActivatedEventArgs share)
+            {
             }
             else if (args is ProtocolActivatedEventArgs protocol)
             {
@@ -654,19 +639,6 @@ namespace Telegram.Navigation
                     }
                     catch { }
                 }
-
-                if (App.ShareWindow != null)
-                {
-                    try
-                    {
-                        await App.ShareWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                        {
-                            App.ShareWindow.Close();
-                            App.ShareWindow = null;
-                        });
-                    }
-                    catch { }
-                }
             }
             else if (args is FileActivatedEventArgs file)
             {
@@ -684,7 +656,7 @@ namespace Telegram.Navigation
                     // TODO: WinUI - most likely XamlRoot is going to be null at this stage.
                     // As well, Content may be null too.
 
-                    await new ThemePreviewPopup(item).ShowQueuedAsync(Content?.XamlRoot);
+                    _ = new ThemePreviewPopup(item).ShowQueuedAsync(Content?.XamlRoot);
                 }
             }
             else if (args is CommandLineActivatedEventArgs commandLine)

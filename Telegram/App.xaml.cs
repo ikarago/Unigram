@@ -62,7 +62,6 @@ namespace Telegram
     sealed partial class App : BootStrapper
     {
         public static ShareOperation ShareOperation { get; set; }
-        public static Window ShareWindow { get; set; }
 
         public static ConcurrentDictionary<long, DataPackageView> DataPackages { get; } = new ConcurrentDictionary<long, DataPackageView>();
 
@@ -183,21 +182,27 @@ namespace Telegram
 
             var navService = WindowContext.Current.NavigationServices.GetByFrameId($"{TypeResolver.Current.Lifetime.ActiveItem.Id}");
 
-            var service = TypeResolver.Current.Resolve<IClientService>();
             var update = TypeResolver.Current.Resolve<ICloudUpdateService>();
+            var service = TypeResolver.Current.Resolve<IClientService>();
 
-            if (service?.AuthorizationState != null)
+            var state = await service.GetAuthorizationStateAsync();
+
+            if (args is not ShareTargetActivatedEventArgs share)
             {
-                WindowContext.Current.Activate(args, navService, service.AuthorizationState);
+                WindowContext.Current.Activate(args, navService, state);
+
+                _ = Task.Run(() => OnStartSync(startKind, navService, update));
+
+                if (startKind != StartKind.Launch && WindowContext.Current.IsInMainView)
+                {
+                    var view = ApplicationView.GetForCurrentView();
+                    await ApplicationViewSwitcher.TryShowAsStandaloneAsync(view.Id);
+                    view.TryResizeView(WindowContext.Current.Bounds.ToSize());
+                }
             }
-
-            _ = Task.Run(() => OnStartSync(startKind, navService, update));
-
-            if (startKind != StartKind.Launch && WindowContext.Current.IsInMainView)
+            else
             {
-                var view = ApplicationView.GetForCurrentView();
-                await ApplicationViewSwitcher.TryShowAsStandaloneAsync(view.Id);
-                view.TryResizeView(WindowContext.Current.Bounds.ToSize());
+                WindowContext.Activate(share, state);
             }
         }
 
