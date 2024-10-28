@@ -627,6 +627,10 @@ namespace Telegram.Services.Calls
                 // TODO: check if call was in progress
                 SoundEffects.Play(SoundEffect.VoipEnd);
             }
+            else
+            {
+                SoundEffects.Stop();
+            }
         }
 
         private void TransitionToError(CallStateError error)
