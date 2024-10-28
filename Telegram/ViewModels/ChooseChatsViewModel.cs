@@ -119,7 +119,6 @@ namespace Telegram.ViewModels
                 SelectionMode = ListViewSelectionMode.None;
                 Options = ChooseChatsOptions.PostMessages;
                 IsCommentEnabled = false;
-                IsSendAsCopyEnabled = false;
                 IsChatSelection = false;
             }
             else if (parameter is ChooseChatsConfigurationShareMessage configurationShareMessage)

@@ -28,11 +28,6 @@ namespace Telegram.Common.Chats
             _clientService = clientService;
         }
 
-        public void SetThreadId(long threadId)
-        {
-            _threadId = threadId;
-        }
-
         public void SetTyping(ChatAction action)
         {
             var chat = _chat;
