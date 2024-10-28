@@ -344,29 +344,20 @@ namespace Telegram.Controls
 
         private void EmojisRoot_LayoutUpdated(object sender, object e)
         {
-            if (sender is FrameworkElement element)
-            {
-                element.LayoutUpdated -= EmojisRoot_LayoutUpdated;
-                Show(Tab0, _prevIndex > 0, 0);
-            }
+            EmojisRoot.LayoutUpdated -= EmojisRoot_LayoutUpdated;
+            Show(Tab0, _prevIndex > 0, 0);
         }
 
         private void AnimationsRoot_LayoutUpdated(object sender, object e)
         {
-            if (sender is FrameworkElement element)
-            {
-                element.LayoutUpdated -= AnimationsRoot_LayoutUpdated;
-                Show(Tab1, _prevIndex > 1, 1);
-            }
+            AnimationsRoot.LayoutUpdated -= AnimationsRoot_LayoutUpdated;
+            Show(Tab1, _prevIndex > 1, 1);
         }
 
         private void StickersRoot_LayoutUpdated(object sender, object e)
         {
-            if (sender is FrameworkElement element)
-            {
-                element.LayoutUpdated -= StickersRoot_LayoutUpdated;
-                Show(Tab2, _prevIndex > 2, 2);
-            }
+            StickersRoot.LayoutUpdated -= StickersRoot_LayoutUpdated;
+            Show(Tab2, _prevIndex > 2, 2);
         }
     }
 

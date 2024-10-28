@@ -76,12 +76,13 @@ namespace Telegram.Views
             ViewModel.Chats.Delegate = this;
             ViewModel.PlaybackService.SourceChanged += OnPlaybackSourceChanged;
 
-            InitializeSearch();
             InitializeLock();
 
             UpdateChatFolders();
 
             VisualUtilities.DropShadow(UpdateShadow);
+
+            RootGrid.CreateInsetClip(0, -32, 0, 0);
 
             ChatsList.RegisterPropertyChangedCallback(ListViewBase.SelectionModeProperty, List_SelectionModeChanged);
 
@@ -837,7 +838,7 @@ namespace Telegram.Views
                 return;
             }
 
-            if (rpMasterTitlebar.SelectedIndex != INDEX_CHATS)
+            if (_prevIndex != INDEX_CHATS)
             {
                 SetPivotSelectedIndex(INDEX_CHATS);
                 ViewModel.RaisePropertyChanged(nameof(ViewModel.SelectedFolder));
@@ -860,6 +861,64 @@ namespace Telegram.Views
                     args.Handled = true;
                 }
             }
+        }
+
+        private int _prevIndex;
+
+        private void LoadAtIndex(int index)
+        {
+            if (index == 0)
+            {
+                if (SettingsRoot != null)
+                {
+                    SettingsRoot.Visibility = Visibility.Collapsed;
+                }
+
+                Show(ChatsRoot, _prevIndex > index, 0);
+            }
+            else if (index == 1)
+            {
+                ChatsRoot.Visibility = Visibility.Collapsed;
+
+                if (SettingsRoot != null)
+                {
+                    Show(SettingsRoot, _prevIndex > index, 1);
+                }
+            }
+
+            _prevIndex = index;
+            Pivot_SelectionChanged(null, null);
+        }
+
+        private void Show(UIElement element, bool leftToRight, int index)
+        {
+            if (_prevIndex == -1)
+            {
+                return;
+            }
+
+            element.Visibility = Visibility.Visible;
+            ElementCompositionPreview.SetIsTranslationEnabled(element, true);
+
+            var visualIn = ElementComposition.GetElementVisual(element);
+            var offsetIn = visualIn.Compositor.CreateScalarKeyFrameAnimation();
+            offsetIn.InsertKeyFrame(0, leftToRight ? -48 : 48);
+            offsetIn.InsertKeyFrame(1, 0);
+            offsetIn.Duration = Constants.SoftAnimation;
+
+            var opacityIn = visualIn.Compositor.CreateScalarKeyFrameAnimation();
+            opacityIn.InsertKeyFrame(0, 0);
+            opacityIn.InsertKeyFrame(1, 1);
+            opacityIn.Duration = Constants.SoftAnimation;
+
+            visualIn.StartAnimation("Translation.X", offsetIn);
+            visualIn.StartAnimation("Opacity", opacityIn);
+        }
+
+        private void SettingsRoot_LayoutUpdated(object sender, object e)
+        {
+            SettingsRoot.LayoutUpdated -= SettingsRoot_LayoutUpdated;
+            Show(SettingsRoot, _prevIndex > 1, 1);
         }
 
         private void UpdateUser(User user)
@@ -1510,7 +1569,7 @@ namespace Telegram.Views
             }
             else
             {
-                MasterDetail.AllowCompact = e.SourcePageType != typeof(BlankPage) && rpMasterTitlebar.SelectedIndex == INDEX_CHATS;
+                MasterDetail.AllowCompact = e.SourcePageType != typeof(BlankPage) && _prevIndex == INDEX_CHATS;
             }
 
             _shouldGoBackWithDetail = true;
@@ -1586,7 +1645,7 @@ namespace Telegram.Views
             var visible = ViewModel.Chats.Items.ChatList is ChatListArchive
                 || !_searchCollapsed
                 || !_topicListCollapsed
-                || rpMasterTitlebar.SelectedIndex != INDEX_CHATS;
+                || _prevIndex != INDEX_CHATS;
 
             if (MasterDetail.CurrentState == MasterDetailState.Minimal)
             {
@@ -1805,29 +1864,11 @@ namespace Telegram.Views
             }
         }
 
-        private void InitializeSearch()
-        {
-            var debouncer = new EventDebouncer<TextChangedEventArgs>(Constants.TypingTimeout, handler => SearchField.TextChanged += new TextChangedEventHandler(handler));
-            debouncer.Invoked += async (s, args) =>
-            {
-                if (rpMasterTitlebar.SelectedIndex == INDEX_CHATS)
-                {
-                    //var items = ViewModel.Chats.Search;
-                    //if (items != null && string.Equals(SearchField.Text, items.Query))
-                    //{
-                    //    await items.LoadMoreItemsAsync(2);
-                    //    await items.LoadMoreItemsAsync(3);
-                    //    await items.LoadMoreItemsAsync(4);
-                    //}
-                }
-            };
-        }
-
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MasterDetail.AllowCompact = MasterDetail.NavigationService.CurrentPageType != typeof(BlankPage) && rpMasterTitlebar.SelectedIndex == INDEX_CHATS;
+            MasterDetail.AllowCompact = MasterDetail.NavigationService.CurrentPageType != typeof(BlankPage) && _prevIndex == INDEX_CHATS;
 
-            switch (rpMasterTitlebar.SelectedIndex)
+            switch (_prevIndex)
             {
                 case INDEX_CHATS:
                     Root?.SetSelectedIndex(RootDestination.Chats);
@@ -1856,13 +1897,13 @@ namespace Telegram.Views
 
             SearchReset();
 
-            if (rpMasterTitlebar.SelectedIndex != INDEX_CHATS)
+            if (_prevIndex != INDEX_CHATS)
             {
                 Stories.Collapse();
 
                 if (ChatFoldersSide != null)
                 {
-                    ChatFoldersSide.SelectedIndex = ViewModel.Folders.Count + rpMasterTitlebar.SelectedIndex - 1;
+                    ChatFoldersSide.SelectedIndex = ViewModel.Folders.Count + _prevIndex - 1;
                 }
             }
             else if (ChatFoldersSide != null)
@@ -1876,7 +1917,7 @@ namespace Telegram.Views
             {
                 if (ViewModel.Children[i] is IChildViewModel child)
                 {
-                    if (i == rpMasterTitlebar.SelectedIndex)
+                    if (i == _prevIndex)
                     {
                         child.Activate();
                     }
@@ -1890,7 +1931,7 @@ namespace Telegram.Views
 
         private void UpdateHeader()
         {
-            if (rpMasterTitlebar.SelectedIndex == INDEX_CHATS)
+            if (_prevIndex == INDEX_CHATS)
             {
                 ChatsOptions.Visibility = Visibility.Visible;
                 SearchField.Padding = new Thickness(10, 5, 40, 6);
@@ -1901,7 +1942,7 @@ namespace Telegram.Views
                 SearchField.Padding = new Thickness(10, 5, 6, 6);
             }
 
-            SearchField.PlaceholderText = rpMasterTitlebar.SelectedIndex == INDEX_SETTINGS
+            SearchField.PlaceholderText = _prevIndex == INDEX_SETTINGS
                 ? Strings.SearchInSettings
                 : Strings.Search;
         }
@@ -1984,7 +2025,7 @@ namespace Telegram.Views
         private void Search_LostFocus(object sender, RoutedEventArgs e)
         {
             MasterDetail.AllowCompact = MasterDetail.NavigationService?.CurrentPageType != typeof(BlankPage)
-                && rpMasterTitlebar.SelectedIndex == INDEX_CHATS;
+                && _prevIndex == INDEX_CHATS;
 
             SearchReset();
 
@@ -2005,12 +2046,12 @@ namespace Telegram.Views
 
             MasterDetail.AllowCompact = false;
 
-            if (rpMasterTitlebar.SelectedIndex == INDEX_CHATS)
+            if (_prevIndex == INDEX_CHATS)
             {
                 ShowHideSearch(true);
                 ViewModel.SearchChats.Query = SearchField.Text;
             }
-            else if (rpMasterTitlebar.SelectedIndex == INDEX_SETTINGS)
+            else if (_prevIndex == INDEX_SETTINGS)
             {
                 if (string.IsNullOrWhiteSpace(SearchField.Text))
                 {
@@ -2035,7 +2076,7 @@ namespace Telegram.Views
             //DialogsPanel.Visibility = Visibility.Visible;
             ShowHideSearch(false);
 
-            if (rpMasterTitlebar.SelectedIndex == INDEX_CHATS && SearchField.FocusState != FocusState.Unfocused)
+            if (_prevIndex == INDEX_CHATS && SearchField.FocusState != FocusState.Unfocused)
             {
                 Photo.Focus(FocusState.Programmatic);
             }
@@ -2101,10 +2142,9 @@ namespace Telegram.Views
 
         private void SetPivotSelectedIndex(int index)
         {
-            if (rpMasterTitlebar.SelectedIndex != index)
+            if (_prevIndex != index)
             {
-                rpMasterTitlebar.IsLocked = false;
-                rpMasterTitlebar.SelectedIndex = index;
+                LoadAtIndex(index);
 
                 if (MasterDetail.CurrentState == MasterDetailState.Minimal &&
                     MasterDetail.NavigationService.CurrentPageType != typeof(BlankPage))
@@ -2207,7 +2247,7 @@ namespace Telegram.Views
 
             UpdatePaneToggleButtonVisibility();
 
-            if (rpMasterTitlebar.SelectedIndex != INDEX_CHATS)
+            if (_prevIndex != INDEX_CHATS)
             {
                 SetPivotSelectedIndex(INDEX_CHATS);
             }
@@ -2229,12 +2269,12 @@ namespace Telegram.Views
                 }
                 else
                 {
-                    SetPivotSelectedIndex(INDEX_CHATS);
-
                     if (ViewModel.Chats.Items.ChatList is not ChatListArchive)
                     {
                         UpdateFolder(folder);
                     }
+
+                    SetPivotSelectedIndex(INDEX_CHATS);
                 }
 
                 if (MasterDetail.CurrentState == MasterDetailState.Minimal && MasterDetail.NavigationService.CurrentPageType != typeof(BlankPage))
@@ -2486,7 +2526,7 @@ namespace Telegram.Views
 
         private void UpdateFolder(ChatFolderViewModel folder, bool update = true)
         {
-            CarouselDirection direction;
+            CarouselDirection direction = CarouselDirection.None;
             if (folder.ChatList is ChatListArchive)
             {
                 direction = CarouselDirection.Next;
@@ -2495,7 +2535,7 @@ namespace Telegram.Views
             {
                 direction = CarouselDirection.Previous;
             }
-            else
+            else if (_prevIndex == INDEX_CHATS)
             {
                 var nextIndex = ViewModel.Folders.IndexOf(folder);
                 var prevIndex = ViewModel.Folders.IndexOf(ViewModel.SelectedFolder);
@@ -2813,7 +2853,7 @@ namespace Telegram.Views
             {
                 HideTopicList();
             }
-            else if (rpMasterTitlebar.SelectedIndex != INDEX_CHATS)
+            else if (_prevIndex != INDEX_CHATS)
             {
                 SetPivotSelectedIndex(INDEX_CHATS);
                 ViewModel.RaisePropertyChanged(nameof(ViewModel.SelectedFolder));
@@ -3441,7 +3481,7 @@ namespace Telegram.Views
 
         private void Stories_Expanding(object sender, EventArgs e)
         {
-            if (rpMasterTitlebar.SelectedIndex != INDEX_CHATS)
+            if (_prevIndex != INDEX_CHATS)
             {
                 SetPivotSelectedIndex(INDEX_CHATS);
                 ViewModel.RaisePropertyChanged(nameof(ViewModel.SelectedFolder));
@@ -3619,7 +3659,6 @@ namespace Telegram.Views
             Playback = null;
             CallBanner = null;
             Header = null;
-            rpMasterTitlebar = null;
             Stories = null;
             SettingsRoot = null;
             SettingsView = null;

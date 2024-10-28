@@ -431,7 +431,7 @@
                                                     x:Name="CallBanner" />
                 </Grid>
             </controls:MasterDetailView.Banner>
-            <Grid>
+            <Grid x:Name="RootGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
@@ -536,359 +536,352 @@
                     </Grid>
                 </Grid>
 
-                <Pivot x:Name="rpMasterTitlebar"
-                       SelectionChanged="Pivot_SelectionChanged"
-                       Style="{StaticResource HeaderlessPivotStyle}"
-                       Margin="0,-72,0,0"
-                       IsLocked="True"
-                       Grid.Row="1">
-                    <PivotItem Header="{CustomResource FilterChats}">
-                        <Grid Margin="0,0,0,0">
-                            <views:SearchChatsView x:Name="DialogsSearchPanel"
-                                                   x:Load="False"
-                                                   DataContext="{x:Bind ViewModel.SearchChats}"
-                                                   ItemClick="ListView_ItemClick"
-                                                   ItemContextRequested="DialogsSearchPanel_ItemContextRequested"
-                                                   Margin="0,72,0,0" />
-                            <Grid x:Name="DialogsPanel">
-                                <Grid x:Name="ChatsPanel">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <StackPanel x:Name="ChatListHeader"
-                                                VerticalAlignment="Top"
-                                                Spacing="60"
-                                                Canvas.ZIndex="1">
-                                        <Border Height="92" />
+                <Grid x:Name="ChatsRoot"
+                      Margin="0,-72,0,0"
+                      Grid.Row="1">
+                    <views:SearchChatsView x:Name="DialogsSearchPanel"
+                                           x:Load="False"
+                                           DataContext="{x:Bind ViewModel.SearchChats}"
+                                           ItemClick="ListView_ItemClick"
+                                           ItemContextRequested="DialogsSearchPanel_ItemContextRequested"
+                                           Margin="0,72,0,0" />
+                    <Grid x:Name="DialogsPanel">
+                        <Grid x:Name="ChatsPanel">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <StackPanel x:Name="ChatListHeader"
+                                        VerticalAlignment="Top"
+                                        Spacing="60"
+                                        Canvas.ZIndex="1">
+                                <Border Height="92" />
 
-                                        <Border x:Name="ChatTabs"
-                                                x:Load="False">
-                                            <Grid x:Name="ChatTabsView">
-                                                <controls:TopNavView x:Name="ChatFolders"
-                                                                     AutomationProperties.Name="{CustomResource Filters}"
-                                                                     ItemsSource="{x:Bind ViewModel.Folders}"
-                                                                     SelectedItem="{x:Bind ViewModel.SelectedFolder, Mode=OneWay}"
-                                                                     SelectionChanged="ChatFolders_SelectionChanged"
-                                                                     ItemContextRequested="ChatFolder_ContextRequested"
-                                                                     AllowDrop="True"
-                                                                     CanDragItems="True"
-                                                                     CanReorderItems="False"
-                                                                     DragItemsStarting="ChatFolders_DragItemsStarting"
-                                                                     DragItemsCompleted="ChatFolders_DragItemsCompleted"
-                                                                     ScrollViewer.IsHorizontalScrollChainingEnabled="False"
-                                                                     FocusFollowsSingleSelection="True"
-                                                                     SingleSelectionFollowsFocus="False"
-                                                                     Height="40">
-                                                    <controls:TopNavView.ItemTemplate>
-                                                        <DataTemplate x:DataType="viewModels:ChatFolderViewModel">
-                                                            <StackPanel Orientation="Horizontal">
-                                                                <TextBlock Text="{x:Bind Title, Mode=OneWay}"
-                                                                           FontFamily="{ThemeResource EmojiThemeFontFamily}"
-                                                                           VerticalAlignment="Bottom" />
+                                <Border x:Name="ChatTabs"
+                                        x:Load="False">
+                                    <Grid x:Name="ChatTabsView">
+                                        <controls:TopNavView x:Name="ChatFolders"
+                                                             AutomationProperties.Name="{CustomResource Filters}"
+                                                             ItemsSource="{x:Bind ViewModel.Folders}"
+                                                             SelectedItem="{x:Bind ViewModel.SelectedFolder, Mode=OneWay}"
+                                                             SelectionChanged="ChatFolders_SelectionChanged"
+                                                             ItemContextRequested="ChatFolder_ContextRequested"
+                                                             AllowDrop="True"
+                                                             CanDragItems="True"
+                                                             CanReorderItems="False"
+                                                             DragItemsStarting="ChatFolders_DragItemsStarting"
+                                                             DragItemsCompleted="ChatFolders_DragItemsCompleted"
+                                                             ScrollViewer.IsHorizontalScrollChainingEnabled="False"
+                                                             FocusFollowsSingleSelection="True"
+                                                             SingleSelectionFollowsFocus="False"
+                                                             Height="40">
+                                            <controls:TopNavView.ItemTemplate>
+                                                <DataTemplate x:DataType="viewModels:ChatFolderViewModel">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{x:Bind Title, Mode=OneWay}"
+                                                                   FontFamily="{ThemeResource EmojiThemeFontFamily}"
+                                                                   VerticalAlignment="Bottom" />
 
-                                                                <controls:BadgeControl Text="{x:Bind UnreadCount, Mode=OneWay}"
-                                                                                       IsUnmuted="{x:Bind IsUnmuted, Mode=OneWay}"
-                                                                                       Visibility="{x:Bind ShowCount, Mode=OneWay}"
-                                                                                       VerticalAlignment="Bottom"
-                                                                                       Margin="4,0,0,0" />
-                                                            </StackPanel>
-                                                        </DataTemplate>
-                                                    </controls:TopNavView.ItemTemplate>
-                                                    <controls:TopNavView.ItemContainerTransitions>
-                                                        <TransitionCollection>
-                                                            <AddDeleteThemeTransition />
-                                                            <ContentThemeTransition />
-                                                            <ReorderThemeTransition />
-                                                            <RepositionThemeTransition />
-                                                        </TransitionCollection>
-                                                    </controls:TopNavView.ItemContainerTransitions>
-                                                </controls:TopNavView>
-                                            </Grid>
-                                        </Border>
-                                    </StackPanel>
-
-                                    <controls:ChatListListView x:Name="ChatsList"
-                                                               ItemClick="ListView_ItemClick"
-                                                               IsItemClickEnabled="True"
-                                                               AutomationProperties.LandmarkType="Main"
-                                                               DataContext="{x:Bind ViewModel.Chats}"
-                                                               ItemsSource="{x:Bind ViewModel.Chats.Items, Mode=OneWay}"
-                                                               SelectionMode="{x:Bind ViewModel.Chats.SelectionMode, Mode=TwoWay}"
-                                                               SelectionChanged="ListView_SelectionChanged"
-                                                               ChoosingItemContainer="ChatsList_ChoosingItemContainer"
-                                                               SizeChanged="ChatList_SizeChanged"
-                                                               DragItemsStarting="Chats_DragItemsStarting"
-                                                               DragItemsCompleted="Chats_DragItemsCompleted"
-                                                               Swiped="ChatsList_Swiped"
-                                                               GettingFocus="ChatsList_GettingFocus"
-                                                               SingleSelectionFollowsFocus="False"
-                                                               AllowDrop="True"
-                                                               CanDragItems="True"
-                                                               CanReorderItems="False"
-                                                               Orientation="Vertical"
-                                                               Grid.RowSpan="2">
-                                        <ListView.Header>
-                                            <StackPanel>
-                                                <Grid>
-                                                    <controls:SuggestedActionSetBirthdateCard x:Name="SetBirthdateCard"
-                                                                                              x:Load="False"
-                                                                                              Click="{x:Bind ViewModel.SetBirthdate}"
-                                                                                              HideClick="{x:Bind ViewModel.HideBirthdate}" />
-                                                    <controls:UnconfirmedSessionCard x:Name="UnconfirmedCard"
-                                                                                     x:Load="False"
-                                                                                     ConfirmClick="{x:Bind ViewModel.ConfirmSession}"
-                                                                                     DenyClick="{x:Bind ViewModel.DenySession}" />
-                                                </Grid>
-
-                                                <Grid x:Name="ArchivedChatsPresenter">
-                                                    <Border x:Name="ArchivedChatsPanel">
-                                                        <Button Visibility="{x:Bind ArchivedChats.Visibility, Mode=OneWay}"
-                                                                Click="ArchivedChats_Click"
-                                                                ContextRequested="ArchivedChats_ContextRequested"
-                                                                AutomationProperties.Name="{CustomResource ArchivedChats}"
-                                                                Style="{StaticResource ListEmptyButtonStyle}"
-                                                                Background="Transparent"
-                                                                Padding="4,2"
-                                                                CornerRadius="4">
-                                                            <cells:ChatCell x:Name="ArchivedChats"
-                                                                            Visibility="Collapsed"
-                                                                            Stroke="{ThemeResource ChatLastMessageStateBrush}"
-                                                                            SelectionStroke="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                                                                            ActualThemeChanged="ArchivedChats_ActualThemeChanged" />
-                                                        </Button>
-                                                    </Border>
-                                                    <!--<Border VerticalAlignment="Bottom">
-                                                    <Border x:Name="ArchivedChatsCompactPanel"
-                                                            Background="{ThemeResource PageBackgroundDarkBrush}">
-                                                        <Button Click="ArchivedChats_Click"
-                                                                Content="{CustomResource ArchivedChats}"
-                                                                ContextRequested="ArchivedChats_ContextRequested"
-                                                                Style="{StaticResource EmptyButtonStyle}"
-                                                                Visibility="{x:Bind ArchivedChats.Visibility, Mode=OneWay}"
-                                                                BorderThickness="12,6" />
-                                                    </Border>
-                                                </Border>-->
-                                                </Grid>
-                                            </StackPanel>
-                                        </ListView.Header>
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <cells:ChatCell StoryClick="ChatCell_StoryClick"
-                                                                Stroke="{ThemeResource ChatLastMessageStateBrush}"
-                                                                SelectionStroke="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                        <ListView.ItemContainerTransitions>
-                                            <TransitionCollection>
-                                                <!-- Reordering items for some reason requires AddDeleteThemeTransition. -->
-                                                <!-- https://github.com/microsoft/microsoft-ui-xaml/issues/3543 -->
-                                                <!--<AddDeleteThemeTransition />
+                                                        <controls:BadgeControl Text="{x:Bind UnreadCount, Mode=OneWay}"
+                                                                               IsUnmuted="{x:Bind IsUnmuted, Mode=OneWay}"
+                                                                               Visibility="{x:Bind ShowCount, Mode=OneWay}"
+                                                                               VerticalAlignment="Bottom"
+                                                                               Margin="4,0,0,0" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </controls:TopNavView.ItemTemplate>
+                                            <controls:TopNavView.ItemContainerTransitions>
+                                                <TransitionCollection>
+                                                    <AddDeleteThemeTransition />
                                                     <ContentThemeTransition />
                                                     <ReorderThemeTransition />
-                                                    <EntranceThemeTransition IsStaggeringEnabled="False" />-->
-                                            </TransitionCollection>
-                                        </ListView.ItemContainerTransitions>
-                                    </controls:ChatListListView>
-
-                                    <Grid x:Name="TopicListPresenter"
-                                          x:Load="False"
-                                          Margin="68,-78,0,0"
-                                          Grid.Row="1">
-                                        <Border Background="{ThemeResource SettingsItemBackground}"
-                                                BorderBrush="{ThemeResource SettingsItemBorderBrush}"
-                                                CornerRadius="{ThemeResource NavigationViewContentGridCornerRadius}"
-                                                BorderThickness="{ThemeResource NavigationViewContentGridBorderThickness}"
-                                                BackgroundSizing="InnerBorderEdge" />
-                                        <controls:TopNavView x:Name="TopicList"
-                                                             ItemsSource="{x:Bind ViewModel.Topics.Items}"
-                                                             ChoosingItemContainer="TopicList_ChoosingItemContainer"
-                                                             ContainerContentChanging="TopicList_ContainerContentChanging"
-                                                             Orientation="Vertical"
-                                                             IsItemClickEnabled="True"
-                                                             ItemClick="ListView_ItemClick"
-                                                             Style="{StaticResource DefaultListViewStyle}"
-                                                             VerticalAlignment="Stretch"
-                                                             Height="Auto">
-                                            <ListView.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <ItemsStackPanel />
-                                                </ItemsPanelTemplate>
-                                            </ListView.ItemsPanel>
-                                            <ListView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <cells:ForumTopicCell Stroke="{ThemeResource ChatLastMessageStateBrush}"
-                                                                          SelectionStroke="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
-                                                </DataTemplate>
-                                            </ListView.ItemTemplate>
+                                                    <RepositionThemeTransition />
+                                                </TransitionCollection>
+                                            </controls:TopNavView.ItemContainerTransitions>
                                         </controls:TopNavView>
                                     </Grid>
+                                </Border>
+                            </StackPanel>
 
-                                    <Grid x:Name="EmptyState"
-                                          x:Load="{x:Bind ViewModel.Chats.Items.IsEmpty, Mode=OneWay}"
-                                          Grid.Row="1">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition />
-                                        </Grid.RowDefinitions>
-                                        <controls:AnimatedImage Source="ms-appx:///Assets/Animations/EmptyFolder.tgs"
-                                                                IsCachingEnabled="False"
-                                                                LoopCount="1"
-                                                                AutoPlay="True"
-                                                                FrameSize="96,96"
-                                                                DecodeFrameType="Logical"
-                                                                VerticalAlignment="Top"
-                                                                Width="96"
-                                                                Height="96"
-                                                                Margin="0,-96,0,0"
-                                                                Grid.Row="1" />
-                                        <TextBlock Text="{CustomResource FilterNoChatsToDisplay}"
-                                                   Style="{StaticResource BaseTextBlockStyle}"
-                                                   TextAlignment="Center"
-                                                   Margin="12,16,12,4"
-                                                   Grid.Row="2" />
-                                        <TextBlock Text="{CustomResource FilterNoChatsToDisplayInfo}"
-                                                   Style="{StaticResource InfoCaptionTextBlockStyle}"
-                                                   TextAlignment="Center"
-                                                   Margin="12,0,12,8"
-                                                   Grid.Row="3" />
+                            <controls:ChatListListView x:Name="ChatsList"
+                                                       ItemClick="ListView_ItemClick"
+                                                       IsItemClickEnabled="True"
+                                                       AutomationProperties.LandmarkType="Main"
+                                                       DataContext="{x:Bind ViewModel.Chats}"
+                                                       ItemsSource="{x:Bind ViewModel.Chats.Items, Mode=OneWay}"
+                                                       SelectionMode="{x:Bind ViewModel.Chats.SelectionMode, Mode=TwoWay}"
+                                                       SelectionChanged="ListView_SelectionChanged"
+                                                       ChoosingItemContainer="ChatsList_ChoosingItemContainer"
+                                                       SizeChanged="ChatList_SizeChanged"
+                                                       DragItemsStarting="Chats_DragItemsStarting"
+                                                       DragItemsCompleted="Chats_DragItemsCompleted"
+                                                       Swiped="ChatsList_Swiped"
+                                                       GettingFocus="ChatsList_GettingFocus"
+                                                       SingleSelectionFollowsFocus="False"
+                                                       AllowDrop="True"
+                                                       CanDragItems="True"
+                                                       CanReorderItems="False"
+                                                       Orientation="Vertical"
+                                                       Grid.RowSpan="2">
+                                <ListView.Header>
+                                    <StackPanel>
+                                        <Grid>
+                                            <controls:SuggestedActionSetBirthdateCard x:Name="SetBirthdateCard"
+                                                                                      x:Load="False"
+                                                                                      Click="{x:Bind ViewModel.SetBirthdate}"
+                                                                                      HideClick="{x:Bind ViewModel.HideBirthdate}" />
+                                            <controls:UnconfirmedSessionCard x:Name="UnconfirmedCard"
+                                                                             x:Load="False"
+                                                                             ConfirmClick="{x:Bind ViewModel.ConfirmSession}"
+                                                                             DenyClick="{x:Bind ViewModel.DenySession}" />
+                                        </Grid>
 
-                                    </Grid>
-                                </Grid>
-
-                                <controls:DownloadsFooter x:Name="Downloads"
-                                                          x:Load="False"
-                                                          Click="Downloads_Click"
-                                                          VerticalAlignment="Bottom"
-                                                          Visibility="Collapsed"
-                                                          Grid.Row="1" />
-
-                                <Grid VerticalAlignment="Bottom"
-                                      HorizontalAlignment="Center"
-                                      Margin="12"
-                                      Grid.Row="1">
-                                    <Rectangle x:Name="UpdateShadow"
-                                               HorizontalAlignment="Stretch"
-                                               VerticalAlignment="Stretch"
-                                               Fill="#2ca5e0"
-                                               RadiusX="18"
-                                               RadiusY="18" />
-                                    <controls:BadgeButton x:Name="UpdateCloud"
-                                                          Click="{x:Bind ViewModel.UpdateApp}"
-                                                          Visibility="{x:Bind ViewModel.IsUpdateAvailable, Mode=OneWay}"
-                                                          Content="{CustomResource UpdateTelegram}"
-                                                          Style="{StaticResource StartButtonStyle}"
-                                                          Padding="16,3,16,5"
-                                                          CornerRadius="18"
-                                                          Margin="0"
-                                                          Height="36" />
-                                </Grid>
-
-                                <Grid x:Name="ManagePanel"
-                                      Background="{ThemeResource PageSubHeaderBackgroundBrush2}"
-                                      VerticalAlignment="Bottom"
-                                      Margin="12,8"
-                                      CornerRadius="15"
-                                      Visibility="Collapsed"
-                                      Grid.Row="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Border BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
-                                            BorderThickness="1"
-                                            CornerRadius="15"
-                                            Grid.ColumnSpan="8" />
-
-                                    <controls:GlyphButton x:Name="ButtonManage"
-                                                          CornerRadius="13,4,4,13"
-                                                          Glyph="&#xE711;"
-                                                          Click="Manage_Click" />
-
-                                    <controls:AnimatedTextBlock x:Name="ManageCount"
-                                                                Text="{x:Bind ViewModel.Chats.SelectedItems.Count, Mode=OneWay}"
-                                                                TextStyle="{StaticResource BaseTextBlockStyle}"
-                                                                VerticalAlignment="Center"
-                                                                Margin="0,-2,0,0"
-                                                                Grid.Column="1" />
-
-
-                                    <controls:GlyphButton x:Name="ManageMute"
-                                                          Click="{x:Bind ViewModel.Chats.NotifySelectedChats}"
-                                                          VerticalAlignment="Center"
-                                                          Grid.Column="3" />
-                                    <controls:GlyphButton Glyph="&#xE7B8;"
-                                                          Click="{x:Bind ViewModel.Chats.ArchiveSelectedChats}"
-                                                          AutomationProperties.Name="{CustomResource Archive}"
-                                                          ToolTipService.ToolTip="{CustomResource Archive}"
-                                                          VerticalAlignment="Center"
-                                                          Grid.Column="5" />
-                                    <controls:GlyphButton Glyph="&#xE74D;"
-                                                          Click="{x:Bind ViewModel.Chats.DeleteSelectedChats}"
-                                                          AutomationProperties.Name="{CustomResource Delete}"
-                                                          ToolTipService.ToolTip="{CustomResource Delete}"
-                                                          VerticalAlignment="Center"
-                                                          Grid.Column="6" />
-
-                                    <controls:MoreButton CornerRadius="4,13,13,4"
-                                                         Grid.Column="7">
-                                        <controls:MoreButton.Flyout>
-                                            <MenuFlyout Placement="TopEdgeAlignedRight">
-                                                <MenuFlyoutItem x:Name="ManageMark"
-                                                                Click="{x:Bind ViewModel.Chats.MarkSelectedChatsAsRead}" />
-                                                <MenuFlyoutItem x:Name="ManageClear"
-                                                                Text="{CustomResource ClearHistory}"
-                                                                Click="{x:Bind ViewModel.Chats.ClearSelectedChats}">
-                                                    <MenuFlyoutItem.Icon>
-                                                        <FontIcon Glyph="&#xEA99;"
-                                                                  FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                                                  FontSize="20" />
-                                                    </MenuFlyoutItem.Icon>
-                                                </MenuFlyoutItem>
-                                            </MenuFlyout>
-                                        </controls:MoreButton.Flyout>
-                                    </controls:MoreButton>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </PivotItem>
-                    <PivotItem Header="{CustomResource Settings}">
-                        <Grid x:Name="SettingsRoot"
-                              x:Load="False"
-                              Margin="0,80,0,0">
-                            <ListView ItemsSource="{x:Bind ViewModel.Settings.Results}"
-                                      SelectionMode="None"
-                                      ContainerContentChanging="Settings_ContainerContentChanging"
-                                      Grid.Row="1">
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-                                        <Setter Property="HorizontalContentAlignment"
-                                                Value="Stretch" />
-                                        <Setter Property="Padding"
-                                                Value="0" />
-                                    </Style>
-                                </ListView.ItemContainerStyle>
+                                        <Grid x:Name="ArchivedChatsPresenter">
+                                            <Border x:Name="ArchivedChatsPanel">
+                                                <Button Visibility="{x:Bind ArchivedChats.Visibility, Mode=OneWay}"
+                                                        Click="ArchivedChats_Click"
+                                                        ContextRequested="ArchivedChats_ContextRequested"
+                                                        AutomationProperties.Name="{CustomResource ArchivedChats}"
+                                                        Style="{StaticResource ListEmptyButtonStyle}"
+                                                        Background="Transparent"
+                                                        Padding="4,2"
+                                                        CornerRadius="4">
+                                                    <cells:ChatCell x:Name="ArchivedChats"
+                                                                    Visibility="Collapsed"
+                                                                    Stroke="{ThemeResource ChatLastMessageStateBrush}"
+                                                                    SelectionStroke="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                                                                    ActualThemeChanged="ArchivedChats_ActualThemeChanged" />
+                                                </Button>
+                                            </Border>
+                                            <!--<Border VerticalAlignment="Bottom">
+                                                <Border x:Name="ArchivedChatsCompactPanel"
+                                                        Background="{ThemeResource PageBackgroundDarkBrush}">
+                                                    <Button Click="ArchivedChats_Click"
+                                                            Content="{CustomResource ArchivedChats}"
+                                                            ContextRequested="ArchivedChats_ContextRequested"
+                                                            Style="{StaticResource EmptyButtonStyle}"
+                                                            Visibility="{x:Bind ArchivedChats.Visibility, Mode=OneWay}"
+                                                            BorderThickness="12,6" />
+                                                </Border>
+                                            </Border>-->
+                                        </Grid>
+                                    </StackPanel>
+                                </ListView.Header>
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <controls:BadgeButton Style="{StaticResource IconSubbadgeBadgeButtonStyle}" />
+                                        <cells:ChatCell StoryClick="ChatCell_StoryClick"
+                                                        Stroke="{ThemeResource ChatLastMessageStateBrush}"
+                                                        SelectionStroke="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
-                            </ListView>
+                                <ListView.ItemContainerTransitions>
+                                    <TransitionCollection>
+                                        <!-- Reordering items for some reason requires AddDeleteThemeTransition. -->
+                                        <!-- https://github.com/microsoft/microsoft-ui-xaml/issues/3543 -->
+                                        <!--<AddDeleteThemeTransition />
+                                                <ContentThemeTransition />
+                                                <ReorderThemeTransition />
+                                                <EntranceThemeTransition IsStaggeringEnabled="False" />-->
+                                    </TransitionCollection>
+                                </ListView.ItemContainerTransitions>
+                            </controls:ChatListListView>
 
-                            <local:SettingsPage x:Name="SettingsView"
-                                                MasterDetail="{x:Bind MasterDetail}" />
+                            <Grid x:Name="TopicListPresenter"
+                                  x:Load="False"
+                                  Margin="68,-78,0,0"
+                                  Grid.Row="1">
+                                <Border Background="{ThemeResource SettingsItemBackground}"
+                                        BorderBrush="{ThemeResource SettingsItemBorderBrush}"
+                                        CornerRadius="{ThemeResource NavigationViewContentGridCornerRadius}"
+                                        BorderThickness="{ThemeResource NavigationViewContentGridBorderThickness}"
+                                        BackgroundSizing="InnerBorderEdge" />
+                                <controls:TopNavView x:Name="TopicList"
+                                                     ItemsSource="{x:Bind ViewModel.Topics.Items}"
+                                                     ChoosingItemContainer="TopicList_ChoosingItemContainer"
+                                                     ContainerContentChanging="TopicList_ContainerContentChanging"
+                                                     Orientation="Vertical"
+                                                     IsItemClickEnabled="True"
+                                                     ItemClick="ListView_ItemClick"
+                                                     Style="{StaticResource DefaultListViewStyle}"
+                                                     VerticalAlignment="Stretch"
+                                                     Height="Auto">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <ItemsStackPanel />
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <cells:ForumTopicCell Stroke="{ThemeResource ChatLastMessageStateBrush}"
+                                                                  SelectionStroke="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </controls:TopNavView>
+                            </Grid>
+
+                            <Grid x:Name="EmptyState"
+                                  x:Load="{x:Bind ViewModel.Chats.Items.IsEmpty, Mode=OneWay}"
+                                  Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <controls:AnimatedImage Source="ms-appx:///Assets/Animations/EmptyFolder.tgs"
+                                                        IsCachingEnabled="False"
+                                                        LoopCount="1"
+                                                        AutoPlay="True"
+                                                        FrameSize="96,96"
+                                                        DecodeFrameType="Logical"
+                                                        VerticalAlignment="Top"
+                                                        Width="96"
+                                                        Height="96"
+                                                        Margin="0,-96,0,0"
+                                                        Grid.Row="1" />
+                                <TextBlock Text="{CustomResource FilterNoChatsToDisplay}"
+                                           Style="{StaticResource BaseTextBlockStyle}"
+                                           TextAlignment="Center"
+                                           Margin="12,16,12,4"
+                                           Grid.Row="2" />
+                                <TextBlock Text="{CustomResource FilterNoChatsToDisplayInfo}"
+                                           Style="{StaticResource InfoCaptionTextBlockStyle}"
+                                           TextAlignment="Center"
+                                           Margin="12,0,12,8"
+                                           Grid.Row="3" />
+
+                            </Grid>
                         </Grid>
-                    </PivotItem>
-                </Pivot>
+
+                        <controls:DownloadsFooter x:Name="Downloads"
+                                                  x:Load="False"
+                                                  Click="Downloads_Click"
+                                                  VerticalAlignment="Bottom"
+                                                  Visibility="Collapsed"
+                                                  Grid.Row="1" />
+
+                        <Grid VerticalAlignment="Bottom"
+                              HorizontalAlignment="Center"
+                              Margin="12"
+                              Grid.Row="1">
+                            <Rectangle x:Name="UpdateShadow"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Stretch"
+                                       Fill="#2ca5e0"
+                                       RadiusX="18"
+                                       RadiusY="18" />
+                            <controls:BadgeButton x:Name="UpdateCloud"
+                                                  Click="{x:Bind ViewModel.UpdateApp}"
+                                                  Visibility="{x:Bind ViewModel.IsUpdateAvailable, Mode=OneWay}"
+                                                  Content="{CustomResource UpdateTelegram}"
+                                                  Style="{StaticResource StartButtonStyle}"
+                                                  Padding="16,3,16,5"
+                                                  CornerRadius="18"
+                                                  Margin="0"
+                                                  Height="36" />
+                        </Grid>
+
+                        <Grid x:Name="ManagePanel"
+                              Background="{ThemeResource PageSubHeaderBackgroundBrush2}"
+                              VerticalAlignment="Bottom"
+                              Margin="12,8"
+                              CornerRadius="15"
+                              Visibility="Collapsed"
+                              Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="15"
+                                    Grid.ColumnSpan="8" />
+
+                            <controls:GlyphButton x:Name="ButtonManage"
+                                                  CornerRadius="13,4,4,13"
+                                                  Glyph="&#xE711;"
+                                                  Click="Manage_Click" />
+
+                            <controls:AnimatedTextBlock x:Name="ManageCount"
+                                                        Text="{x:Bind ViewModel.Chats.SelectedItems.Count, Mode=OneWay}"
+                                                        TextStyle="{StaticResource BaseTextBlockStyle}"
+                                                        VerticalAlignment="Center"
+                                                        Margin="0,-2,0,0"
+                                                        Grid.Column="1" />
+
+
+                            <controls:GlyphButton x:Name="ManageMute"
+                                                  Click="{x:Bind ViewModel.Chats.NotifySelectedChats}"
+                                                  VerticalAlignment="Center"
+                                                  Grid.Column="3" />
+                            <controls:GlyphButton Glyph="&#xE7B8;"
+                                                  Click="{x:Bind ViewModel.Chats.ArchiveSelectedChats}"
+                                                  AutomationProperties.Name="{CustomResource Archive}"
+                                                  ToolTipService.ToolTip="{CustomResource Archive}"
+                                                  VerticalAlignment="Center"
+                                                  Grid.Column="5" />
+                            <controls:GlyphButton Glyph="&#xE74D;"
+                                                  Click="{x:Bind ViewModel.Chats.DeleteSelectedChats}"
+                                                  AutomationProperties.Name="{CustomResource Delete}"
+                                                  ToolTipService.ToolTip="{CustomResource Delete}"
+                                                  VerticalAlignment="Center"
+                                                  Grid.Column="6" />
+
+                            <controls:MoreButton CornerRadius="4,13,13,4"
+                                                 Grid.Column="7">
+                                <controls:MoreButton.Flyout>
+                                    <MenuFlyout Placement="TopEdgeAlignedRight">
+                                        <MenuFlyoutItem x:Name="ManageMark"
+                                                        Click="{x:Bind ViewModel.Chats.MarkSelectedChatsAsRead}" />
+                                        <MenuFlyoutItem x:Name="ManageClear"
+                                                        Text="{CustomResource ClearHistory}"
+                                                        Click="{x:Bind ViewModel.Chats.ClearSelectedChats}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xEA99;"
+                                                          FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                                          FontSize="20" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </controls:MoreButton.Flyout>
+                            </controls:MoreButton>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid x:Name="SettingsRoot"
+                      x:Load="False"
+                      LayoutUpdated="SettingsRoot_LayoutUpdated"
+                      Margin="0,8,0,0"
+                      Grid.Row="1">
+                    <ListView ItemsSource="{x:Bind ViewModel.Settings.Results}"
+                              SelectionMode="None"
+                              ContainerContentChanging="Settings_ContainerContentChanging"
+                              Grid.Row="1">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment"
+                                        Value="Stretch" />
+                                <Setter Property="Padding"
+                                        Value="0" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <controls:BadgeButton Style="{StaticResource IconSubbadgeBadgeButtonStyle}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <local:SettingsPage x:Name="SettingsView"
+                                        MasterDetail="{x:Bind MasterDetail}" />
+                </Grid>
 
                 <stories:StoriesStrip x:Name="Stories"
                                       Expanding="Stories_Expanding"
