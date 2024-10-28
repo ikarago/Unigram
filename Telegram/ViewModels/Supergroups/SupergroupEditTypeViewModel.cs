@@ -10,6 +10,7 @@ using Telegram.Navigation.Services;
 using Telegram.Services;
 using Telegram.Td.Api;
 using Telegram.Views.Chats;
+using Telegram.Views.Supergroups;
 using Windows.UI.Xaml.Navigation;
 
 namespace Telegram.ViewModels.Supergroups
@@ -20,6 +21,8 @@ namespace Telegram.ViewModels.Supergroups
             : base(clientService, settingsService, aggregator)
         {
         }
+
+        private bool _navigateToChat;
 
         private bool _joinToSendMessages;
         public bool JoinToSendMessages
@@ -51,6 +54,12 @@ namespace Telegram.ViewModels.Supergroups
 
         protected override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, NavigationState state)
         {
+            if (parameter is SupergroupEditTypeArgs args)
+            {
+                _navigateToChat = args.IsNewChat;
+                parameter = args.ChatId;
+            }
+
             await base.OnNavigatedToAsync(parameter, mode, state);
             HasProtectedContent = Chat?.HasProtectedContent ?? false;
 
@@ -123,7 +132,14 @@ namespace Telegram.ViewModels.Supergroups
                         return;
                     }
                 }
+            }
 
+            if (_navigateToChat)
+            {
+                NavigationService.NavigateToChat(chat);
+            }
+            else
+            {
                 NavigationService.GoBack();
             }
         }

@@ -63,7 +63,7 @@ namespace Telegram.ViewModels.Create
                     ClientService.Send(new SetChatPhoto(chat.Id, _inputPhoto));
                 }
 
-                NavigationService.Navigate(typeof(SupergroupEditTypePage), chat.Id);
+                NavigationService.Navigate(typeof(SupergroupEditTypePage), new SupergroupEditTypeArgs(chat.Id, true));
                 NavigationService.GoBackAt(0, false);
             }
         }

@@ -20,6 +20,19 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Telegram.Views.Supergroups
 {
+    public partial class SupergroupEditTypeArgs
+    {
+        public SupergroupEditTypeArgs(long chatId, bool isNewChat)
+        {
+            ChatId = chatId;
+            IsNewChat = isNewChat;
+        }
+
+        public long ChatId { get; }
+
+        public bool IsNewChat { get; }
+    }
+
     public sealed partial class SupergroupEditTypePage : HostedPage, ISupergroupEditDelegate
     {
         public SupergroupEditTypeViewModel ViewModel => DataContext as SupergroupEditTypeViewModel;
