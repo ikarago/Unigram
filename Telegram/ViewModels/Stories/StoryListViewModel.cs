@@ -267,6 +267,7 @@ namespace Telegram.ViewModels.Stories
                 _token = new CancellationTokenSource();
 
                 _aggregator.Unsubscribe(this);
+                _hasMoreItems = false;
 
                 _lastChatId = 0;
                 _lastOrder = 0;
