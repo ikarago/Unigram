@@ -1617,7 +1617,7 @@ namespace Telegram.ViewModels
                     NavigationService.NavigateToChat(migratedChat);
                 }
             }
-            else if (message.Content is MessageHeaderDate)
+            else if (message.Content is MessageHeaderDate && Type is DialogType.History or DialogType.Thread)
             {
                 var date = Formatter.ToLocalTime(message.Date);
 
