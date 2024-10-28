@@ -56,7 +56,8 @@ namespace Telegram.Td
                 || message.Contains("database disk image is malformed")
                 || message.Contains("file is encrypted or is not a database")
                 || message.Contains("unsupported file format")
-                || message.Contains("attempt to write a readonly database for database");
+                || message.Contains("attempt to write a readonly database for database")
+                || message.Contains("Can't open database");
         }
 
         public static bool IsDiskFullError(string message)

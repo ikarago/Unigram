@@ -265,7 +265,7 @@ namespace Telegram.Controls.Messages.Content
                 }
 
                 var response = await _message.ClientService.SendAsync(new ClickAnimatedEmojiMessage(_message.ChatId, _message.Id));
-                if (response is Sticker interaction)
+                if (response is Sticker interaction && this.IsConnected())
                 {
                     PlayInteraction(_message, interaction);
                 }

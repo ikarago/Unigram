@@ -244,7 +244,7 @@ namespace Telegram.Controls.Messages.Content
 
             // TODO: how des it work?
             var response = await _message.ClientService.SendAsync(new GetGiveawayInfo(_message.ChatId, _message.Id));
-            if (response is not GiveawayInfoOngoing and not GiveawayInfoCompleted)
+            if (response is not GiveawayInfoOngoing and not GiveawayInfoCompleted || !this.IsConnected())
             {
                 // TODO
                 return;

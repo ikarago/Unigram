@@ -2757,7 +2757,7 @@ namespace Telegram.Views
                     }
                 }
 
-                if (message.CanBeSaved is false && flyout.Items.Count > 0 && ViewModel.Chat.HasProtectedContent)
+                if (message.CanBeSaved is false && message.Chat.HasProtectedContent && flyout.Items.Count > 0)
                 {
                     flyout.CreateFlyoutSeparator();
                     flyout.Items.Add(new MenuFlyoutLabel

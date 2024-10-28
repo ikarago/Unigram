@@ -709,7 +709,7 @@ namespace Telegram.ViewModels
             {
                 if (update.AuthorizationState is AuthorizationStateReady)
                 {
-                    _viewModel.BeginOnUIThread(async () => await ReloadAsync(_chatList));
+                    _viewModel.BeginOnUIThread(() => _ = ReloadAsync(_chatList));
                 }
             }
 
