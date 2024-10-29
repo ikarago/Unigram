@@ -122,6 +122,23 @@ For reference, this is the list of VLC plugins currently needed by Unigram to pr
 
 ⚠️ TODO: there must be a way to compile WITHOUT libd3d11va and just use libavcodec
 
+### VLC-arm64-NuGet Package
+
+To build the VLC-arm64 NuGet package for Unigram, please follow these steps in Git Bash shell:
+```
+git clone https://code.videolan.org/videolan/libvlc-nuget.git
+cd libvlc-nuget
+git apply <path-to-Unigram>/Libraries/vlc/0001-vlc-nuget-win-arm64.patch
+bash ./package-nuget-win-arm64.bash 4.0.0
+cp VideoLAN.LibVLC.UWP.4.0.0.nupkg <path-to-Unigram>/Libraries/
+```
+
+1. Clone the VLC-NuGet Repository at your desired location.
+2. Navigate to the root of the cloned repository and apply the patch from `Unigram/libraries/vlc`.
+3. Run the Package Creation Script (`package-nuget-win-arm64.bash`) with version (`4.0.0`) in git bash terminal from the root folder of the `libvlc-nuget` repository.
+4. On Successful execution, the `VideoLAN.LibVLC.UWP.4.0.0.nupkg` file will be created in the same directory.
+5. Copy the generated NuGet package to the `Unigram/Libraries` directory to build Unigram for win-arm64.
+
 ### WebRTC
 Unigram uses WebRTC for calls and video chats. Since WebRTC doesn't currently support UWP, you must use our fork to build it.
 1. Click on Start Menu → Visual Studio 2022 → x64 Native Tools Command Prompt for VS 2022.
