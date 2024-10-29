@@ -1452,7 +1452,7 @@ namespace Telegram.Views
                         highlight.Background = new SolidColorBrush(Colors.PaleGoldenrod);
                         highlight.Ranges.Add(new TextRange { StartIndex = offset, Length = plainText.Text.Length });
 
-                        textBlock.TextHighlighters.Add(highlight);
+                        //textBlock.TextHighlighters.Add(highlight);
                     }
                     else if (effects.HasFlag(TextEffects.Link))
                     {
@@ -1461,7 +1461,7 @@ namespace Telegram.Views
                         highlight.Foreground = new SolidColorBrush(Theme.Accent);
                         highlight.Ranges.Add(new TextRange { StartIndex = offset, Length = plainText.Text.Length });
 
-                        textBlock.TextHighlighters.Add(highlight);
+                        //textBlock.TextHighlighters.Add(highlight);
                     }
 
                     offset += plainText.Text.Length;
