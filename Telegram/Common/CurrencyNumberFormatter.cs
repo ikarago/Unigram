@@ -17,6 +17,11 @@ namespace Telegram.Common
 
         public CurrencyNumberFormatter(string currencyCode, IEnumerable<string> languages, string geographicRegion)
         {
+            if (string.IsNullOrEmpty(currencyCode))
+            {
+                currencyCode = "USD";
+            }
+
             var formatter = new CurrencyFormatter(currencyCode, languages, geographicRegion);
             var formatted = formatter.Format(0);
             var splitted = formatted.Split('\u00A0');
