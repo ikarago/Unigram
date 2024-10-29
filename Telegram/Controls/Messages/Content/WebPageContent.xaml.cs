@@ -388,11 +388,7 @@ namespace Telegram.Controls.Messages.Content
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var text = GetContent(_message);
-            if (text?.LinkPreview != null)
-            {
-                _message?.Delegate?.OpenWebPage(text);
-            }
+            _message?.Delegate?.OpenWebPage(_message);
 
         }
 

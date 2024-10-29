@@ -191,8 +191,13 @@ namespace Telegram.ViewModels
 
         public bool IsAdministrator(MessageSender memberId) => _messageDelegate.IsAdministrator(memberId);
 
-        public void OpenWebPage(MessageText text)
+        public void OpenWebPage(MessageViewModel message)
         {
+            if (message.Content is not MessageText text)
+            {
+                return;
+            }
+
             if (text.LinkPreview?.InstantViewVersion != 0)
             {
                 var url = text.LinkPreview.Url;
@@ -225,7 +230,7 @@ namespace Telegram.ViewModels
             }
             else if (text.LinkPreview != null)
             {
-                MessageHelper.OpenUrl(ClientService, NavigationService, text.LinkPreview.Url, !text.LinkPreview.SkipConfirmation, new OpenUrlSourceChat(_chat.Id));
+                MessageHelper.OpenUrl(ClientService, NavigationService, text.LinkPreview.Url, !text.LinkPreview.SkipConfirmation, new OpenUrlSourceChat(message.ChatId, message.SenderId));
             }
         }
 
@@ -361,9 +366,9 @@ namespace Telegram.ViewModels
             Search = new ChatSearchViewModel(ClientService, NavigationService, Settings, Aggregator, this, hashtag);
         }
 
-        public void OpenUrl(string url, bool untrust)
+        public void OpenUrl(string url, bool untrust, OpenUrlSource source = null)
         {
-            _messageDelegate.OpenUrl(url, untrust);
+            _messageDelegate.OpenUrl(url, untrust, source);
         }
 
         public async void OpenMedia(MessageViewModel message, FrameworkElement target, int timestamp = 0)

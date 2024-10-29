@@ -8773,6 +8773,31 @@ namespace Telegram
         public static string GiftPremium => Resource.GetString("GiftPremium");
         
         /// <summary>
+        /// Localized resource similar to "This link allows you or **anyone you choose** to activate a {0}."
+        /// </summary>
+        public static string GiftPremiumAboutThisLink => Resource.GetString("GiftPremiumAboutThisLink");
+        
+        /// <summary>
+        /// Localized resource similar to "**Telegram Premium** subscription"
+        /// </summary>
+        public static string GiftPremiumAboutThisLinkEnd => Resource.GetString("GiftPremiumAboutThisLinkEnd");
+        
+        /// <summary>
+        /// Localized resource similar to "You can activate this gift code after {0} or **send the link** to a friend."
+        /// </summary>
+        public static string GiftPremiumActivateErrorText => Resource.GetString("GiftPremiumActivateErrorText");
+        
+        /// <summary>
+        /// Localized resource similar to "You already have Telegram Premium"
+        /// </summary>
+        public static string GiftPremiumActivateErrorTitle => Resource.GetString("GiftPremiumActivateErrorTitle");
+        
+        /// <summary>
+        /// Localized resource similar to "Activate For Free"
+        /// </summary>
+        public static string GiftPremiumActivateForFree => Resource.GetString("GiftPremiumActivateForFree");
+        
+        /// <summary>
         /// Localized resource similar to "You can review the list of features and more details about Telegram Premium *here*."
         /// </summary>
         public static string GiftPremiumListFeaturesAndTerms => Resource.GetString("GiftPremiumListFeaturesAndTerms");
@@ -8781,6 +8806,11 @@ namespace Telegram
         /// Localized resource similar to "-{0}%"
         /// </summary>
         public static string GiftPremiumOptionDiscount => Resource.GetString("GiftPremiumOptionDiscount");
+        
+        /// <summary>
+        /// Localized resource similar to "Use Gift"
+        /// </summary>
+        public static string GiftPremiumUseGiftBtn => Resource.GetString("GiftPremiumUseGiftBtn");
         
         /// <summary>
         /// Localized resource similar to "With Stars, **{0}** will be able to unlock content and services on Telegram."

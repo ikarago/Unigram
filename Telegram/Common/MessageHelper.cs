@@ -53,9 +53,12 @@ namespace Telegram.Common
     {
         public long ChatId { get; }
 
-        public OpenUrlSourceChat(long chatId)
+        public MessageSender SenderId { get; }
+
+        public OpenUrlSourceChat(long chatId, MessageSender senderId)
         {
             ChatId = chatId;
+            SenderId = senderId;
         }
     }
 
@@ -536,7 +539,7 @@ namespace Telegram.Common
             }
             else if (internalLink is InternalLinkTypePremiumGiftCode premiumGiftCode)
             {
-                NavigateToPremiumGiftCode(clientService, navigation, premiumGiftCode.Code);
+                NavigateToPremiumGiftCode(clientService, navigation, premiumGiftCode.Code, source);
             }
             else if (internalLink is InternalLinkTypePrivacyAndSecuritySettings)
             {
@@ -608,12 +611,19 @@ namespace Telegram.Common
             }
         }
 
-        private static async void NavigateToPremiumGiftCode(IClientService clientService, INavigationService navigation, string code)
+        private static async void NavigateToPremiumGiftCode(IClientService clientService, INavigationService navigation, string code, OpenUrlSource source)
         {
             var response = await clientService.SendAsync(new CheckPremiumGiftCode(code));
             if (response is PremiumGiftCodeInfo info)
             {
-                await new GiftCodePopup(clientService, navigation, info, code).ShowQueuedAsync(navigation.XamlRoot);
+                if (source is OpenUrlSourceChat sourceChat)
+                {
+                    navigation.ShowPopup(new PromoPopup(clientService, sourceChat.SenderId ?? new MessageSenderChat(sourceChat.ChatId), info, code));
+                }
+                else
+                {
+                    navigation.ShowPopup(new PromoPopup(clientService, null, info, code));
+                }
             }
             else
             {

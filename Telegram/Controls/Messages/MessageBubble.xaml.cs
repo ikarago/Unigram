@@ -1975,11 +1975,11 @@ namespace Telegram.Controls.Messages
             {
                 if (message.Content is MessageText text && text.LinkPreview?.InstantViewVersion != 0 && MessageHelper.AreTheSame(text.LinkPreview?.Url, url, out _))
                 {
-                    message.Delegate.OpenWebPage(text);
+                    message.Delegate.OpenWebPage(message);
                 }
                 else
                 {
-                    message.Delegate.OpenUrl(url, trust);
+                    message.Delegate.OpenUrl(url, trust, new OpenUrlSourceChat(message.ChatId, message.SenderId));
                 }
             }
 

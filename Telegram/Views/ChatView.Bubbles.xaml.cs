@@ -806,11 +806,11 @@ namespace Telegram.Views
 
             if (message.IsService)
             {
-                if (message.Content is MessagePremiumGiftCode or MessageGiveawayPrizeStars)
+                if (message.Content is MessageGiveawayPrizeStars)
                 {
                     return ChatHistoryViewItemType.ServiceGiftCode;
                 }
-                else if (message.Content is MessageGiftedPremium or MessageGiftedStars or MessageGift)
+                else if (message.Content is MessageGiftedPremium or MessageGiftedStars or MessageGift or MessagePremiumGiftCode)
                 {
                     return ChatHistoryViewItemType.ServiceGift;
                 }

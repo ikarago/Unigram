@@ -5892,11 +5892,29 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="GiftPremium" xml:space="preserve">
     <value>Gift Premium</value>
   </data>
+  <data name="GiftPremiumAboutThisLink" xml:space="preserve">
+    <value>This link allows you or **anyone you choose** to activate a {0}.</value>
+  </data>
+  <data name="GiftPremiumAboutThisLinkEnd" xml:space="preserve">
+    <value>**Telegram Premium** subscription</value>
+  </data>
+  <data name="GiftPremiumActivateErrorText" xml:space="preserve">
+    <value>You can activate this gift code after {0} or **send the link** to a friend.</value>
+  </data>
+  <data name="GiftPremiumActivateErrorTitle" xml:space="preserve">
+    <value>You already have Telegram Premium</value>
+  </data>
+  <data name="GiftPremiumActivateForFree" xml:space="preserve">
+    <value>Activate For Free</value>
+  </data>
   <data name="GiftPremiumListFeaturesAndTerms" xml:space="preserve">
     <value>You can review the list of features and more details about Telegram Premium *here*.</value>
   </data>
   <data name="GiftPremiumOptionDiscount" xml:space="preserve">
     <value>-{0}%</value>
+  </data>
+  <data name="GiftPremiumUseGiftBtn" xml:space="preserve">
+    <value>Use Gift</value>
   </data>
   <data name="GiftStarsSubtitle" xml:space="preserve">
     <value>With Stars, **{0}** will be able to unlock content and services on Telegram.</value>

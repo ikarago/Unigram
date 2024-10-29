@@ -454,11 +454,11 @@ namespace Telegram.Controls.Messages.Content
             }
             else if (type is TextEntityTypeTextUrl textUrl)
             {
-                message.Delegate.OpenUrl(textUrl.Url, true);
+                message.Delegate.OpenUrl(textUrl.Url, true, new OpenUrlSourceChat(message.ChatId, message.SenderId));
             }
             else if (type is TextEntityTypeUrl)
             {
-                message.Delegate.OpenUrl(data, false);
+                message.Delegate.OpenUrl(data, false, new OpenUrlSourceChat(message.ChatId, message.SenderId));
             }
             else if (type is TextEntityTypeBankCardNumber)
             {

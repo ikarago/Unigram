@@ -512,7 +512,7 @@ namespace Telegram.Controls.Messages.Content
             }
             else if (_message.Content is MessageText text && text.LinkPreview.HasText())
             {
-                _message.Delegate.OpenWebPage(text);
+                _message.Delegate.OpenWebPage(_message);
             }
             else if (_paidMedia != null)
             {

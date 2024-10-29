@@ -159,9 +159,10 @@ namespace Telegram.ViewModels
             NavigationService.NavigateToUser(userId);
         }
 
-        public void OpenUrl(string url, bool untrust)
+        public void OpenUrl(string url, bool untrust, OpenUrlSource source = null)
         {
-            MessageHelper.OpenUrl(ClientService, NavigationService, url, untrust, Chat == null ? null : new OpenUrlSourceChat(Chat.Id));
+            source ??= (Chat == null ? null : new OpenUrlSourceChat(Chat.Id, null));
+            MessageHelper.OpenUrl(ClientService, NavigationService, url, untrust, source);
         }
 
         public string GetAdminTitle(MessageViewModel message)
@@ -265,7 +266,7 @@ namespace Telegram.ViewModels
         /// <summary>
         /// Only available when created through DialogViewModel
         /// </summary>
-        public virtual void OpenWebPage(MessageText text) { }
+        public virtual void OpenWebPage(MessageViewModel message) { }
 
         /// <summary>
         /// Only available when created through DialogViewModel
@@ -446,7 +447,7 @@ namespace Telegram.ViewModels
 
         public override void OpenThread(MessageViewModel message) => _viewModel.OpenThread(message);
 
-        public override void OpenWebPage(MessageText text) => _viewModel.OpenWebPage(text);
+        public override void OpenWebPage(MessageViewModel message) => _viewModel.OpenWebPage(message);
 
         public override void OpenSticker(Sticker sticker) => _viewModel.OpenSticker(sticker);
 

@@ -1615,9 +1615,6 @@
     <Compile Include="Views\Premium\Popups\GiftBoostsPopup.xaml.cs">
       <DependentUpon>GiftBoostsPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Premium\Popups\GiftCodePopup.xaml.cs">
-      <DependentUpon>GiftCodePopup.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Premium\Popups\GiftPopup.xaml.cs">
       <DependentUpon>GiftPopup.xaml</DependentUpon>
     </Compile>
@@ -3392,10 +3389,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Premium\Popups\GiftBoostsPopup.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Premium\Popups\GiftCodePopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

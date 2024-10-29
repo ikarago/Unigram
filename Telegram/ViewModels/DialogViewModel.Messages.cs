@@ -1169,7 +1169,7 @@ namespace Telegram.ViewModels
             }
             else if (inline.Type is InlineKeyboardButtonTypeUrl urlButton)
             {
-                MessageHelper.OpenUrl(ClientService, NavigationService, urlButton.Url, true, new OpenUrlSourceChat(chat.Id));
+                MessageHelper.OpenUrl(ClientService, NavigationService, urlButton.Url, true, new OpenUrlSourceChat(message.ChatId, message.SenderId));
             }
             else if (inline.Type is InlineKeyboardButtonTypeCallback callback)
             {
@@ -1384,7 +1384,7 @@ namespace Telegram.ViewModels
             var info = await ClientService.SendAsync(new GetInternalLinkType(url));
             if (info is InternalLinkTypeWebApp webApp)
             {
-                MessageHelper.NavigateToWebApp(ClientService, NavigationService, webApp.BotUsername, webApp.StartParameter, webApp.WebAppShortName, new OpenUrlSourceChat(chat.Id));
+                MessageHelper.NavigateToWebApp(ClientService, NavigationService, webApp.BotUsername, webApp.StartParameter, webApp.WebAppShortName, new OpenUrlSourceChat(chat.Id, null));
             }
             else
             {
@@ -1726,7 +1726,7 @@ namespace Telegram.ViewModels
             }
             else if (message.Content is MessagePremiumGiftCode premiumGiftCode)
             {
-                MessageHelper.OpenTelegramUrl(ClientService, NavigationService, new InternalLinkTypePremiumGiftCode(premiumGiftCode.Code));
+                MessageHelper.OpenTelegramUrl(ClientService, NavigationService, new InternalLinkTypePremiumGiftCode(premiumGiftCode.Code), new OpenUrlSourceChat(message.ChatId, message.SenderId));
             }
             else if (message.Content is MessageGiveawayCompleted giveawayCompleted)
             {

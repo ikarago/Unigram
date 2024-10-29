@@ -769,6 +769,24 @@ namespace Telegram.Td.Api
             }
         }
 
+        public static FormattedText Concat(params FormattedText[] text)
+        {
+            var builder = new StringBuilder();
+            var entities = new List<TextEntity>();
+
+            foreach (var part in text)
+            {
+                foreach (var entity in part.Entities)
+                {
+                    entities.Add(new TextEntity(builder.Length + entity.Offset, entity.Length, entity.Type));
+                }
+
+                builder.Append(part.Text);
+            }
+
+            return new FormattedText(builder.ToString(), entities);
+        }
+
         public static FormattedText Substring(this FormattedText text, long startIndex, long length)
         {
             return Substring(text, (int)startIndex, (int)length);
