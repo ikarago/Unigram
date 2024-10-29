@@ -215,15 +215,7 @@ namespace Telegram.Controls.Messages
                 var animation = FindName("Animation") as AnimatedImage;
                 animation.LoopCount = 1;
                 animation.Margin = new Thickness(0, -20, 0, 12);
-
-                if (Tag == null)
-                {
-                    animation.Source = DelayedFileSource.FromSticker(message.ClientService, giftedPremium.Sticker);
-                }
-                else
-                {
-                    animation.Source = new PremiumInfoFileSource(message.ClientService, giftedPremium.MonthCount);
-                }
+                animation.Source = DelayedFileSource.FromSticker(message.ClientService, giftedPremium.Sticker);
 
                 ribbonRoot.Visibility = Visibility.Collapsed;
             }

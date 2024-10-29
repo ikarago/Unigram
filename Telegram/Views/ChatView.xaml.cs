@@ -1650,9 +1650,7 @@ namespace Telegram.Views
 
                 if (ViewModel.Type is DialogType.History or DialogType.Thread)
                 {
-                    if (ViewModel.IsPremium
-                        && ViewModel.ClientService.Options.GiftPremiumFromAttachmentMenu
-                        && ViewModel.ClientService.TryGetUserFull(chat, out UserFullInfo fullInfo) && fullInfo.PremiumGiftOptions.Count > 0)
+                    if (ViewModel.IsPremium && ViewModel.ClientService.Options.GiftPremiumFromAttachmentMenu)
                     {
                         flyout.CreateFlyoutItem(ViewModel.GiftPremium, Strings.SendAGift, Icons.GiftPremium);
                     }

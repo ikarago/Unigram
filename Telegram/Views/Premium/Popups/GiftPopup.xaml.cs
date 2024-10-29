@@ -104,42 +104,18 @@ namespace Telegram.Views.Premium.Popups
         {
             PremiumOptions.ItemsSource = new[]
             {
-                new PremiumGiftCodePaymentOption(string.Empty, 0, 0, 0, string.Empty, 0),
-                new PremiumGiftCodePaymentOption(string.Empty, 0, 0, 0, string.Empty, 0),
-                new PremiumGiftCodePaymentOption(string.Empty, 0, 0, 0, string.Empty, 0),
+                new PremiumGiftCodePaymentOption(string.Empty, 0, 0, 0, 0, string.Empty, 0, null),
+                new PremiumGiftCodePaymentOption(string.Empty, 0, 0, 0, 0, string.Empty, 0, null),
+                new PremiumGiftCodePaymentOption(string.Empty, 0, 0, 0, 0, string.Empty, 0, null),
             };
 
             var response = await clientService.SendAsync(new GetPremiumGiftCodePaymentOptions(0));
             if (response is PremiumGiftCodePaymentOptions options)
             {
-                // TODO: remove when DiscountPercentage is added to PremiumGiftCodePaymentOption
-                var items = options.Options
+                PremiumOptions.ItemsSource = options.Options
                     .Where(x => x.WinnerCount == 1)
                     .OrderBy(x => x.MonthCount)
                     .ToList();
-                if (items.Count > 0)
-                {
-                    var minimum = items[0];
-                    var output = new List<PremiumPaymentOption>();
-
-                    static double PerMonth(PremiumGiftCodePaymentOption option)
-                    {
-                        return (double)option.Amount / option.MonthCount;
-                    }
-
-                    foreach (var item in items)
-                    {
-                        output.Add(new PremiumPaymentOption
-                        {
-                            Amount = item.Amount,
-                            Currency = item.Currency,
-                            MonthCount = item.MonthCount,
-                            DiscountPercentage = (int)((1 - (PerMonth(item) / PerMonth(minimum))) * 100)
-                        });
-                    }
-
-                    PremiumOptions.ItemsSource = output;
-                }
             }
         }
 
@@ -191,10 +167,10 @@ namespace Telegram.Views.Premium.Popups
                     await _navigationService.ShowPopupAsync(new SendGiftPopup(_clientService, _navigationService, gift, _userId));
                 }
             }
-            else if (e.ClickedItem is PremiumPaymentOption option)
+            else if (e.ClickedItem is PremiumGiftCodePaymentOption option)
             {
                 Hide();
-                await _navigationService.ShowPopupAsync(new SendGiftPopup(_clientService, _navigationService, new PremiumGiftCodePaymentOption(option.Currency, option.Amount, 1, option.MonthCount, string.Empty, 0), _userId));
+                await _navigationService.ShowPopupAsync(new SendGiftPopup(_clientService, _navigationService, option, _userId));
             }
         }
 

@@ -778,7 +778,7 @@ namespace Telegram.Controls.Chats
                 return;
             }
 
-            var options = new MessageSendOptions(disableNotification, false, false, false, null, Effect?.Id ?? 0, 0, false);
+            var options = new MessageSendOptions(disableNotification, false, false, false, false, null, Effect?.Id ?? 0, 0, false);
 
             Sending?.Invoke(this, EventArgs.Empty);
             Effect = null;
@@ -795,7 +795,7 @@ namespace Telegram.Controls.Chats
 
             if (whenOnline)
             {
-                options = new MessageSendOptions(false, false, false, false, new MessageSchedulingStateSendWhenOnline(), 0, 0, false);
+                options = new MessageSendOptions(false, false, false, false, false, new MessageSchedulingStateSendWhenOnline(), 0, 0, false);
             }
             else
             {

@@ -92,7 +92,7 @@ namespace Telegram.Views.Stars.Popups
 
             clientService.TryGetChatFromUser(clientService.Options.MyId, out Chat chat);
 
-            var content = new MessageGiftedPremium(_clientService.Options.MyId, _userId, new FormattedText(string.Empty, Array.Empty<TextEntity>()), _option.Currency, _option.Amount, string.Empty, 0, _option.MonthCount, null);
+            var content = new MessageGiftedPremium(_clientService.Options.MyId, _userId, new FormattedText(string.Empty, Array.Empty<TextEntity>()), _option.Currency, _option.Amount, string.Empty, 0, _option.MonthCount, _option.Sticker);
             var message = new Message(0, new MessageSenderUser(clientService.Options.MyId), 0, null, null, false, false, false, false, false, false, false, false, 0, 0, null, null, null, Array.Empty<UnreadReaction>(), null, null, 0, 0, null, 0, 0, 0, 0, 0, string.Empty, 0, 0, false, string.Empty, content, null);
 
             var playback = TypeResolver.Current.Playback;
@@ -102,7 +102,6 @@ namespace Telegram.Views.Stars.Popups
             var viewModel = new MessageViewModel(clientService, playback, delegato, chat, message, true);
 
             BackgroundControl.Update(clientService, null);
-            Message.Tag = new object();
             Message.UpdateMessage(viewModel);
 
             var emoji = EmojiDrawerViewModel.Create(clientService.SessionId);
@@ -139,7 +138,7 @@ namespace Telegram.Views.Stars.Popups
             }
             else if (_option != null)
             {
-                content = new MessageGiftedPremium(_clientService.Options.MyId, _userId, text, _option.Currency, _option.Amount, string.Empty, 0, _option.MonthCount, null);
+                content = new MessageGiftedPremium(_clientService.Options.MyId, _userId, text, _option.Currency, _option.Amount, string.Empty, 0, _option.MonthCount, _option.Sticker);
             }
             else
             {
