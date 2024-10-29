@@ -2281,13 +2281,6 @@ namespace Telegram.Views
                 {
                     MasterDetail.NavigationService.GoBackAt(0);
                 }
-                else
-                {
-                    Logger.Info("ChangeView");
-
-                    var scrollingHost = ChatsList.GetScrollViewer();
-                    scrollingHost?.ChangeView(null, 0, null);
-                }
 
                 HideTopicList();
             }
@@ -2557,6 +2550,11 @@ namespace Telegram.Views
                 if (update)
                 {
                     ConvertFolder(folder);
+
+                    Logger.Info("ChangeView");
+
+                    var scrollingHost = ChatsList.GetScrollViewer();
+                    scrollingHost?.ChangeView(null, 0, null, true);
                 }
             });
 
