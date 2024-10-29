@@ -249,11 +249,7 @@ namespace Telegram.ViewModels
                     return;
                 }
 
-                var factory = await MessageFactory.CreateDocumentAsync(media, false, false);
-                if (factory != null)
-                {
-                    header.EditingMessageMedia = factory;
-                }
+                await EditMediaAsync(media);
             }
             catch { }
         }
