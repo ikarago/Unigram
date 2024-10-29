@@ -80,21 +80,12 @@ namespace Telegram.Td.Api
 
         public static string TotalText(this Gift gift)
         {
-            if (gift.TotalCount >= 10000)
-            {
-                return Formatter.ShortNumber(gift.TotalCount);
-            }
-
-            return gift.TotalCount.ToString();
+            return Formatter.ShortNumber(gift.TotalCount);
         }
 
         public static string RemainingText(this Gift gift)
         {
-            return gift.RemainingCount switch
-            {
-                0 => string.Format(Strings.Gift2AvailabilityValueNone, gift.TotalCount),
-                _ => Locale.Declension(Strings.R.Gift2Availability4Value, gift.RemainingCount, gift.TotalCount)
-            };
+            return Locale.Declension(Strings.R.Gift2Availability4Value, gift.RemainingCount, gift.TotalCount.ToString("N0"));
         }
 
         public static int CountUnread(this ChatActiveStories activeStories, out bool closeFriends)

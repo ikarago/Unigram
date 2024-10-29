@@ -14,7 +14,6 @@ using Telegram.Controls;
 using Telegram.Controls.Cells;
 using Telegram.Navigation.Services;
 using Telegram.Services;
-using Telegram.Streams;
 using Telegram.Td.Api;
 using Telegram.Views.Stars.Popups;
 using Windows.Foundation;
@@ -158,7 +157,9 @@ namespace Telegram.Views.Premium.Popups
             {
                 if (gift.TotalCount > 0 && gift.RemainingCount == 0)
                 {
-                    ToastPopup.Show(XamlRoot, string.Format("**{0}**\n{1}", Strings.Gift2SoldOutTitle, Locale.Declension(Strings.R.Gift2SoldOutHint, gift.TotalCount)), new DelayedFileSource(_clientService, gift.Sticker));
+                    Hide();
+                    await _navigationService.ShowPopupAsync(new Views.Stars.Popups.UserGiftPopup(_clientService, _navigationService, gift));
+                    await this.ShowQueuedAsync(XamlRoot);
                 }
                 else
                 {

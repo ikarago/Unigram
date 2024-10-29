@@ -1748,7 +1748,7 @@ namespace Telegram.ViewModels
 
                 var userGift = new UserGift(senderUserId, gift.Text, gift.IsPrivate, gift.IsSaved, message.Date, gift.Gift, message.Id, gift.SellStarCount);
 
-                var confirm = await ShowPopupAsync(new ReceiptPopup(ClientService, NavigationService, userGift, userId));
+                var confirm = await ShowPopupAsync(new UserGiftPopup(ClientService, NavigationService, userGift, userId));
                 if (confirm == ContentDialogResult.Primary)
                 {
                     var response = await ClientService.SendAsync(new ToggleGiftIsSaved(userGift.SenderUserId, userGift.MessageId, !userGift.IsSaved));

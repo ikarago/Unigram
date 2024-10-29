@@ -282,6 +282,17 @@ namespace Telegram.Views.Stars.Popups
                     MediaPreview.Visibility = Visibility.Collapsed;
                 }
             }
+            else if (transaction.Partner is StarTransactionPartnerTelegramApi sourceTelegramApi)
+            {
+                Title.Text = Strings.StarsTransactionFloodskip;
+                Photo.Source = PlaceholderImage.GetGlyph(Icons.ChatStarsFilled);
+
+                MediaPreview.Visibility = Visibility.Collapsed;
+
+                From.Visibility = Visibility.Collapsed;
+                Messages.Visibility = Visibility.Visible;
+                Messages.Content = Locale.Declension(Strings.R.StarsTransactionFloodskipNumber, sourceTelegramApi.RequestCount);
+            }
             else
             {
                 FromPhoto.Source = PlaceholderImage.GetGlyph(Icons.QuestionCircle, long.MinValue);
@@ -366,92 +377,6 @@ namespace Telegram.Views.Stars.Popups
             StarCount.Foreground = BootStrapper.Current.Resources[stars.StarCount < 0 ? "SystemFillColorCriticalBrush" : "SystemFillColorSuccessBrush"] as Brush;
 
             Refund.Visibility = Visibility.Collapsed;
-        }
-
-        private readonly MessageSender _giftSenderId;
-        private readonly long _giftMessageId;
-        private readonly long _giftStarCount;
-
-        public ReceiptPopup(IClientService clientService, INavigationService navigationService, UserGift gift, long userId)
-        {
-            InitializeComponent();
-
-            _clientService = clientService;
-            _navigationService = navigationService;
-
-            _giftSenderId = new MessageSenderUser(gift.SenderUserId);
-            _giftMessageId = gift.MessageId;
-            _giftStarCount = gift.SellStarCount;
-
-            MediaPreview.Visibility = Visibility.Collapsed;
-
-            if (clientService.TryGetUser(gift.SenderUserId, out User user))
-            {
-                FromPhoto.SetUser(clientService, user, 24);
-                FromPhoto.Visibility = Visibility.Visible;
-                FromTitle.Text = user.FullName();
-            }
-            else
-            {
-                FromPhoto.Source = PlaceholderImage.GetGlyph(Icons.AuthorHiddenFilled, 5);
-                FromPhoto.Visibility = Visibility.Visible;
-                FromTitle.Text = Strings.StarsTransactionHidden;
-            }
-
-            From.Header = Strings.Gift2From;
-            Title.Text = Strings.Gift2TitleReceived;
-
-            if (userId != clientService.Options.MyId)
-            {
-                Subtitle.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                if (gift.IsSaved)
-                {
-                    TextBlockHelper.SetMarkdown(Subtitle, Strings.Gift2InfoPinned);
-                    Info.Text = Strings.Gift2ProfileVisible;
-                    PurchaseCommand.Content = Strings.Gift2ProfileMakeInvisible;
-                }
-                else
-                {
-                    TextBlockHelper.SetMarkdown(Subtitle, Locale.Declension(Strings.R.Gift2Info, gift.SellStarCount));
-                    Info.Text = Strings.Gift2ProfileInvisible;
-                    PurchaseCommand.Content = Strings.Gift2ProfileMakeVisible;
-                }
-
-                Info.Visibility = Visibility.Visible;
-
-                Convert.Visibility = Visibility.Visible;
-                Convert.Content = Locale.Declension(Strings.R.Gift2ToBalance, gift.SellStarCount);
-            }
-
-            AnimatedPhoto.LoopCount = 0;
-            AnimatedPhoto.Source = new DelayedFileSource(clientService, gift.Gift.Sticker);
-
-            Transaction.Visibility = Visibility.Collapsed;
-            Date.Content = Formatter.DateAt(gift.Date);
-
-            StarCount.Text = "+" + gift.Gift.StarCount.ToString("N0");
-            StarCount.Foreground = BootStrapper.Current.Resources["SystemFillColorSuccessBrush"] as Brush;
-
-            Refund.Visibility = Visibility.Collapsed;
-            Terms.Visibility = Visibility.Collapsed;
-
-            if (gift.Gift.TotalCount > 0)
-            {
-                Availability.Visibility = Visibility.Visible;
-                Availability.Content = gift.Gift.RemainingText();
-            }
-
-            if (gift.Text?.Text.Length > 0)
-            {
-                TableRoot.BorderThickness = new Thickness(1, 1, 1, 0);
-                TableRoot.CornerRadius = new CornerRadius(2, 2, 0, 0);
-
-                CaptionRoot.Visibility = Visibility.Visible;
-                Caption.SetText(clientService, gift.Text);
-            }
         }
 
         private void Purchase_Click(object sender, RoutedEventArgs e)
@@ -581,35 +506,6 @@ namespace Telegram.Views.Stars.Popups
 
             var viewModel = new StandaloneGalleryViewModel(_clientService, storageService, aggregator, items, item);
             _navigationService.ShowGallery(viewModel, Media1);
-        }
-
-        private async void Convert_Click(object sender, RoutedEventArgs e)
-        {
-            if (_clientService.TryGetUser(_giftSenderId, out User user))
-            {
-                var message = string.Format(Strings.Gift2ConvertText, user.FirstName, Locale.Declension(Strings.R.StarsCount, _giftStarCount));
-
-                var confirm = await MessagePopup.ShowAsync(XamlRoot, target: null, message, Strings.Gift2ConvertTitle, Strings.Gift2ConvertButton, Strings.Cancel);
-                if (confirm == ContentDialogResult.Primary)
-                {
-                    var response = await _clientService.SendAsync(new SellGift(user.Id, _giftMessageId));
-                    if (response is Ok)
-                    {
-                        Hide(ContentDialogResult.Secondary);
-
-                        var popup = new StarsPopup();
-
-                        void handler(object sender, object e)
-                        {
-                            popup.Opened -= handler;
-                            ToastPopup.Show(XamlRoot, string.Format("**{0}**\n{1}", Strings.Gift2ConvertedTitle, Locale.Declension(Strings.R.Gift2Converted, _giftStarCount)), ToastPopupIcon.StarsTopup);
-                        }
-
-                        _ = _navigationService.ShowPopupAsync(popup);
-                        popup.Opened += handler;
-                    }
-                }
-            }
         }
     }
 }

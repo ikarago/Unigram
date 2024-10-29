@@ -88,7 +88,7 @@ namespace Telegram.ViewModels.Profile
                 return;
             }
 
-            var confirm = await ShowPopupAsync(new ReceiptPopup(ClientService, NavigationService, userGift, _userId));
+            var confirm = await ShowPopupAsync(new UserGiftPopup(ClientService, NavigationService, userGift, _userId));
             if (confirm == ContentDialogResult.Primary)
             {
                 var response = await ClientService.SendAsync(new ToggleGiftIsSaved(userGift.SenderUserId, userGift.MessageId, !userGift.IsSaved));

@@ -144,7 +144,7 @@
 
     <Style TargetType="local:TableView">
         <Setter Property="CornerRadius"
-                Value="2" />
+                Value="4" />
         <Setter Property="BorderThickness"
                 Value="1" />
         <Setter Property="ItemsPanel">

@@ -5713,6 +5713,12 @@ Duration: {1}</value>
   <data name="Gift2AvailabilityValueNone" xml:space="preserve">
     <value>None of {0} left</value>
   </data>
+  <data name="Gift2ButtonSell_one" xml:space="preserve">
+    <value>sell for {0} Star</value>
+  </data>
+  <data name="Gift2ButtonSell_other" xml:space="preserve">
+    <value>sell for {0} Stars</value>
+  </data>
   <data name="Gift2ConvertButton" xml:space="preserve">
     <value>Convert</value>
   </data>
@@ -5727,6 +5733,20 @@ Duration: {1}</value>
   </data>
   <data name="Gift2ConvertText" xml:space="preserve">
     <value>Do you want to convert this gift from **{0}** to **{1}**?
+
+This action cannot be undone. This will permanently destroy the gift.</value>
+  </data>
+  <data name="Gift2ConvertText2_one" xml:space="preserve">
+    <value>Do you want to convert this gift from **{1}** to **{2}**?
+
+Conversion is available for the next **{0} day**.
+
+This action cannot be undone. This will permanently destroy the gift.</value>
+  </data>
+  <data name="Gift2ConvertText2_other" xml:space="preserve">
+    <value>Do you want to convert this gift from **{1}** to **{2}**?
+
+Conversion is available for the next **{0} days**.
 
 This action cannot be undone. This will permanently destroy the gift.</value>
   </data>
@@ -5747,6 +5767,12 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   </data>
   <data name="Gift2Info_other" xml:space="preserve">
     <value>You can keep this gift in your Profile or convert it to **{0}** Stars.</value>
+  </data>
+  <data name="Gift2Info2Expired_one" xml:space="preserve">
+    <value>You can keep this {0} Star gift in your Profile.</value>
+  </data>
+  <data name="Gift2Info2Expired_other" xml:space="preserve">
+    <value>You can keep this {0} Stars gift in your Profile.</value>
   </data>
   <data name="Gift2InfoConverted_one" xml:space="preserve">
     <value>You converted this gift to **{0}** Star.</value>
@@ -5835,6 +5861,21 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="Gift2SoldOutHint_other" xml:space="preserve">
     <value>All {0} gifts were already sold.</value>
   </data>
+  <data name="Gift2SoldOutSheetFirstSale" xml:space="preserve">
+    <value>First Sale</value>
+  </data>
+  <data name="Gift2SoldOutSheetLastSale" xml:space="preserve">
+    <value>Last Sale</value>
+  </data>
+  <data name="Gift2SoldOutSheetSubtitle" xml:space="preserve">
+    <value>This gift has been sold out</value>
+  </data>
+  <data name="Gift2SoldOutSheetTitle" xml:space="preserve">
+    <value>Unavailable</value>
+  </data>
+  <data name="Gift2SoldOutSheetValue" xml:space="preserve">
+    <value>Value</value>
+  </data>
   <data name="Gift2SoldOutTitle" xml:space="preserve">
     <value>Sold Out!</value>
   </data>
@@ -5882,6 +5923,9 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   </data>
   <data name="Gift2TransactionSent" xml:space="preserve">
     <value>Gift</value>
+  </data>
+  <data name="Gift2Value" xml:space="preserve">
+    <value>Value</value>
   </data>
   <data name="GiftMonths_one" xml:space="preserve">
     <value>{0}-month</value>

@@ -1,4 +1,4 @@
-﻿<controls:ContentPopup x:Class="Telegram.Views.Stars.Popups.ReceiptPopup"
+﻿<controls:ContentPopup x:Class="Telegram.Views.Stars.Popups.UserGiftPopup"
                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -23,10 +23,6 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <controls:ProfilePicture x:Name="Photo"
-                                         Width="96"
-                                         Height="96"
-                                         Margin="0,0,0,8" />
                 <controls:AnimatedImage x:Name="AnimatedPhoto"
                                         Width="120"
                                         Height="120"
@@ -36,72 +32,27 @@
                                         LoopCount="1"
                                         Margin="0,-16,0,8" />
 
-                <HyperlinkButton x:Name="MediaPreview"
-                                 Click="MediaPreview_Click"
-                                 Style="{StaticResource EmptyHyperlinkButtonStyle}"
-                                 Margin="0,0,0,8">
-                    <Grid Width="120"
-                          Height="120">
-                        <Border x:Name="Media2"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Bottom"
-                                CornerRadius="12"
-                                Width="110"
-                                Height="110" />
-                        <Border x:Name="Media1"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Top"
-                                CornerRadius="12"
-                                Width="120"
-                                Height="120"
-                                BorderBrush="{ThemeResource ContentDialogBackground}"
-                                BorderThickness="2"
-                                Margin="-8" />
-                    </Grid>
-                </HyperlinkButton>
-
                 <TextBlock x:Name="Title"
                            Text="{CustomResource GiftTelegramPremiumTitle}"
                            Style="{StaticResource PopupTextBlockStyle}"
                            TextAlignment="Center"
                            VerticalAlignment="Top"
                            Grid.Row="1" />
-                <StackPanel HorizontalAlignment="Center"
-                            Orientation="Horizontal"
-                            Margin="0,-2,0,0"
-                            Grid.Row="2">
-                    <TextBlock x:Name="StarCount"
-                               Style="{StaticResource BaseTextBlockStyle}"
-                               VerticalAlignment="Center" />
-
-                    <controls:PremiumStarCount Width="24"
-                                               Height="24"
-                                               Grid.Column="4"
-                                               Grid.RowSpan="2" />
-
-                    <controls:BadgeControl x:Name="Refund"
-                                           Text="{CustomResource StarsRefunded}"
-                                           Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"
-                                           Foreground="{ThemeResource SystemFillColorSuccessBrush}"
-                                           CornerRadius="4"
-                                           VerticalAlignment="Bottom"
-                                           Margin="0,0,0,3" />
-                </StackPanel>
                 <TextBlock x:Name="Subtitle"
                            Style="{StaticResource BodyTextBlockStyle}"
                            TextAlignment="Center"
                            Margin="12,0,12,8"
                            Grid.Row="3" />
-                <TextBlock x:Name="Info"
-                           Style="{StaticResource InfoBodyTextBlockStyle}"
-                           TextAlignment="Center"
-                           Margin="12,0,12,8"
-                           Visibility="Collapsed"
-                           Grid.Row="4" />
             </Grid>
 
             <controls:TableView x:Name="TableRoot"
-                                Margin="0,12,0,0">
+                                Margin="-8,12,0,0">
+                <controls:TableViewItem x:Name="FirstSale"
+                                        Header="{CustomResource Gift2SoldOutSheetFirstSale}"
+                                        Visibility="Collapsed" />
+                <controls:TableViewItem x:Name="LastSale"
+                                        Header="{CustomResource Gift2SoldOutSheetLastSale}"
+                                        Visibility="Collapsed" />
                 <controls:TableViewItem x:Name="From"
                                         Padding="0">
                     <Grid>
@@ -123,50 +74,64 @@
                         </TextBlock>
                     </Grid>
                 </controls:TableViewItem>
-                <controls:TableViewItem x:Name="Transaction"
-                                        Header="{CustomResource StarsTransactionID}"
+                <controls:TableViewItem Header="{CustomResource Gift2Value}"
                                         Padding="0">
                     <Grid>
-                        <TextBlock x:Name="Identifier"
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <controls:PremiumStarCount Margin="8,0,0,0" />
+                        <TextBlock x:Name="StarCount"
+                                   Margin="4,5,8,6"
                                    Style="{StaticResource BodyTextBlockStyle}"
-                                   FontFamily="Consolas"
-                                   TextWrapping="Wrap"
-                                   Margin="8,5,4,10"
-                                   VerticalAlignment="Top" />
+                                   VerticalAlignment="Top"
+                                   Grid.Column="1" />
 
-                        <TextBlock Text="&#xE8C8;"
-                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                   FontSize="20"
-                                   Foreground="{ThemeResource AccentButtonBackground}"
-                                   HorizontalAlignment="Right"
-                                   VerticalAlignment="Bottom"
-                                   Margin="4"
-                                   IsHitTestVisible="False" />
-
-                        <Button Click="CopyLink_Click"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                Opacity="0" />
+                        <Button x:Name="Convert"
+                                Click="Convert_Click"
+                                Style="{StaticResource AccentButtonStyle}"
+                                VerticalAlignment="Center"
+                                FontSize="11"
+                                Padding="8,0"
+                                CornerRadius="8"
+                                BorderThickness="0"
+                                Height="16"
+                                Grid.Column="2">
+                            <TextBlock x:Name="ConvertValue"
+                                       TextLineBounds="Tight"
+                                       TextAlignment="Center"
+                                       OpticalMarginAlignment="TrimSideBearings"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"
+                                       Typography.NumeralAlignment="Tabular" />
+                        </Button>
                     </Grid>
                 </controls:TableViewItem>
-                <controls:TableViewItem x:Name="Messages"
-                                        Header="{CustomResource StarsTransactionFloodskipNumberName}"
-                                        Visibility="Collapsed" />
                 <controls:TableViewItem x:Name="Date"
                                         Header="{CustomResource StarsTransactionDate}" />
                 <controls:TableViewItem x:Name="Availability"
                                         Header="{CustomResource Gift2Availability}"
                                         Visibility="Collapsed" />
             </controls:TableView>
+            <Border x:Name="CaptionRoot"
+                    Background="{ThemeResource ButtonBackground}"
+                    BorderBrush="{ThemeResource ButtonBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="0,0,4,4"
+                    Margin="-8,0,0,0"
+                    Visibility="Collapsed">
+                <controls:FormattedTextBlock x:Name="Caption"
+                                             Margin="8,5,4,6" />
+            </Border>
 
             <Border Height="8" />
 
-            <controls:SettingsFooter x:Name="Terms"
-                                     IsLink="True"
-                                     Click="SettingsFooter_Click"
-                                     Text="{CustomResource StarsTransactionTOS}"
-                                     TextAlignment="Center"
-                                     Margin="0,4,0,4" />
+            <TextBlock x:Name="Info"
+                       Style="{StaticResource InfoBodyTextBlockStyle}"
+                       TextAlignment="Center"
+                       Margin="0,4,0,4" />
         </StackPanel>
 
         <Grid x:Name="PurchasePanel"
