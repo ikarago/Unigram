@@ -311,6 +311,19 @@ namespace Telegram.Services.Calls
 
         public async void Accept(XamlRoot xamlRoot)
         {
+            try
+            {
+                _systemCall?.TryShowAppUI();
+
+                // NotifyCallActive causes the main app window to be focused
+                // We call it immediately, so that the focus can move to the call window.
+                _systemCall?.NotifyCallActive();
+            }
+            catch
+            {
+                // All the remote procedure calls must be wrapped in a try-catch block
+            }
+
             if (xamlRoot == null)
             {
                 ClientService.Send(new AcceptCall(Id, VoipManager.Protocol));
@@ -870,19 +883,6 @@ namespace Telegram.Services.Calls
 
         private void OnAnswerRequested(VoipPhoneCall sender, CallAnswerEventArgs args)
         {
-            try
-            {
-                sender.TryShowAppUI();
-
-                // NotifyCallActive causes the main app window to be focused
-                // We call it immediately, so that the focus can move to the call window.
-                sender.NotifyCallActive();
-            }
-            catch
-            {
-                // All the remote procedure calls must be wrapped in a try-catch block
-            }
-
             IsVideo = args.AcceptedMedia.HasFlag(VoipPhoneCallMedia.Video);
             Accept(null);
         }
