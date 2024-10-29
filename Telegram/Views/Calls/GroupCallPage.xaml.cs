@@ -2092,7 +2092,7 @@ namespace Telegram.Views.Calls
                         }
                         else
                         {
-                            descriptions[child.EndpointId] = 
+                            descriptions[child.EndpointId] =
                                 new VoipVideoChannelInfo(child.Participant.AudioSourceId, child.EndpointId, child.VideoInfo.SourceGroups, child.Quality, child.Quality);
                         }
 

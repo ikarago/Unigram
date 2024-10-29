@@ -7,6 +7,7 @@
 using Microsoft.Graphics.Canvas.Effects;
 using System;
 using System.Numerics;
+using Telegram.Common;
 using Telegram.Controls.Media;
 using Telegram.Native.Calls;
 using Telegram.Navigation;
@@ -34,6 +35,7 @@ namespace Telegram.Controls.Cells
         private CompositionEffectBrush _pausedBrush;
 
         private readonly SpriteVisual _visual;
+        private readonly bool _needArrange;
 
         private readonly bool _screenSharing;
 
@@ -60,7 +62,16 @@ namespace Telegram.Controls.Cells
             header.Opacity = 0;
 
             _visual = BootStrapper.Current.Compositor.CreateSpriteVisual();
-            _visual.RelativeSizeAdjustment = Vector2.One;
+
+            if (ApiInfo.IsWindows11)
+            {
+                _visual.RelativeSizeAdjustment = Vector2.One;
+            }
+            else
+            {
+                _needArrange = true;
+            }
+
             ElementCompositionPreview.SetElementChildVisual(CanvasRoot, _visual);
         }
 
@@ -263,7 +274,10 @@ namespace Telegram.Controls.Cells
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            _visual.Size = finalSize.ToVector2();
+            if (_needArrange)
+            {
+                _visual.Size = finalSize.ToVector2();
+            }
 
             if (_pausedVisual != null)
             {
