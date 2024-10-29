@@ -9502,6 +9502,9 @@ The channel &quot;**{1}**&quot; will become private.</value>
   <data name="ScheduledMessages" xml:space="preserve">
     <value>Scheduled Messages</value>
   </data>
+  <data name="ScheduledTimeApprox" xml:space="preserve">
+    <value>appx. {0}</value>
+  </data>
   <data name="ScheduleMessage" xml:space="preserve">
     <value>Schedule Message</value>
   </data>
@@ -11592,6 +11595,36 @@ However, it is currently available for purchase. **Learn more…**</value>
   </data>
   <data name="VideoCall" xml:space="preserve">
     <value>Video Call</value>
+  </data>
+  <data name="VideoConversionAction" xml:space="preserve">
+    <value>The video will be published once converted and optimized</value>
+  </data>
+  <data name="VideoConversionDone" xml:space="preserve">
+    <value>Video published.</value>
+  </data>
+  <data name="VideoConversionDoneView" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="VideoConversionInfo" xml:space="preserve">
+    <value>The video will be published once converted and optimized.</value>
+  </data>
+  <data name="VideoConversionNowSend" xml:space="preserve">
+    <value>Send Anyway</value>
+  </data>
+  <data name="VideoConversionNowText" xml:space="preserve">
+    <value>This video hasn&apos;t been converted and optimized yet. If you send it now, the viewers of the video may experience slow download speed.</value>
+  </data>
+  <data name="VideoConversionNowTitle" xml:space="preserve">
+    <value>Wait!</value>
+  </data>
+  <data name="VideoConversionText" xml:space="preserve">
+    <value>The video will be published after it&apos;s optimized for the best viewing experience.</value>
+  </data>
+  <data name="VideoConversionTimeInfo" xml:space="preserve">
+    <value>Processing video may take a few minutes.</value>
+  </data>
+  <data name="VideoConversionTitle" xml:space="preserve">
+    <value>Improving Video...</value>
   </data>
   <data name="VideoMessagesAutodownload" xml:space="preserve">
     <value>Video messages</value>

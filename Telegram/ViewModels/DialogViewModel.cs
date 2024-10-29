@@ -4535,6 +4535,10 @@ namespace Telegram.ViewModels
             {
                 return sendAtDate.SendDate;
             }
+            else if (item.SchedulingState is MessageSchedulingStateSendWhenVideoProcessed sendWhenVideoProcessed)
+            {
+                return sendWhenVideoProcessed.SendDate;
+            }
             else if (item.SchedulingState is MessageSchedulingStateSendWhenOnline)
             {
                 return int.MinValue;

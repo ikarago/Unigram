@@ -2775,6 +2775,16 @@ namespace Telegram.Views
                             : Strings.ForwardsRestrictedInfoGroup
                     });
                 }
+                else if (message.SchedulingState is MessageSchedulingStateSendWhenVideoProcessed && flyout.Items.Count > 0)
+                {
+                    flyout.CreateFlyoutSeparator();
+                    flyout.Items.Add(new MenuFlyoutLabel
+                    {
+                        Padding = new Thickness(12, 4, 12, 4),
+                        MaxWidth = 178,
+                        Text = Strings.VideoConversionInfo
+                    });
+                }
             }
 
             //sender.ContextFlyout = menu;
@@ -3013,7 +3023,7 @@ namespace Telegram.Views
 
         private bool MessageReschedule_Loaded(MessageViewModel message)
         {
-            return message.SchedulingState != null;
+            return message.SchedulingState is not null and not MessageSchedulingStateSendWhenVideoProcessed;
         }
 
         private bool MessageQuote_Loaded(MessageQuote quote, MessageProperties properties)

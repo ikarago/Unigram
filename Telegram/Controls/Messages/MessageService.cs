@@ -513,6 +513,10 @@ namespace Telegram.Controls.Messages
             {
                 return (string.Format(Strings.MessageScheduledOn, Formatter.DayGrouping(sendAtDate.SendDate)), null);
             }
+            else if (message.SchedulingState is MessageSchedulingStateSendWhenVideoProcessed sendWhenVideoProcessed)
+            {
+                return (string.Format(Strings.MessageScheduledOn, Formatter.DayGrouping(sendWhenVideoProcessed.SendDate)), null);
+            }
             else if (message.SchedulingState is MessageSchedulingStateSendWhenOnline)
             {
                 return (Strings.MessageScheduledUntilOnline, null);

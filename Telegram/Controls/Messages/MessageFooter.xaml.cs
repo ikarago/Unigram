@@ -4,6 +4,7 @@
 // Distributed under the GNU General Public License v3.0. (See accompanying
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -57,6 +58,11 @@ namespace Telegram.Controls.Messages
             {
                 Stroke?.RegisterColorChangedCallback(OnStrokeChanged, ref _strokeToken);
                 OnStrokeChanged(Stroke, SolidColorBrush.ColorProperty);
+            }
+
+            if (_message?.SchedulingState is MessageSchedulingStateSendWhenVideoProcessed)
+            {
+                ToastPopup.Show(this, Strings.VideoConversionTimeInfo, TeachingTipPlacementMode.Top, dismissAfter: TimeSpan.FromSeconds(3));
             }
         }
 
@@ -288,6 +294,10 @@ namespace Telegram.Controls.Messages
             {
                 _dateLabel = Formatter.Time(sendAtDate.SendDate);
             }
+            else if (message.SchedulingState is MessageSchedulingStateSendWhenVideoProcessed sendWhenVideoProcessed)
+            {
+                _dateLabel = string.Format(Strings.ScheduledTimeApprox, Formatter.Time(sendWhenVideoProcessed.SendDate));
+            }
             else if (message.SchedulingState is MessageSchedulingStateSendWhenOnline)
             {
                 _dateLabel = string.Empty;
@@ -518,6 +528,10 @@ namespace Telegram.Controls.Messages
                 var time = Formatter.Time(sendAtTime.SendDate);
 
                 text = string.Format(Strings.formatDateAtTime, date, time);
+            }
+            if (message.SchedulingState is MessageSchedulingStateSendWhenVideoProcessed sendWhenVideoProcessed)
+            {
+                text = Strings.VideoConversionTimeInfo;
             }
             else if (message.SchedulingState is MessageSchedulingStateSendWhenOnline)
             {

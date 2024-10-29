@@ -996,8 +996,17 @@ namespace Telegram.ViewModels
 
         #region Send now
 
-        public void SendNowMessage(MessageViewModel message)
+        public async void SendNowMessage(MessageViewModel message)
         {
+            if (message.SchedulingState is MessageSchedulingStateSendWhenVideoProcessed)
+            {
+                var confirm = await ShowPopupAsync(Strings.VideoConversionNowText, Strings.VideoConversionNowTitle, Strings.VideoConversionNowSend, Strings.Cancel);
+                if (confirm != ContentDialogResult.Primary)
+                {
+                    return;
+                }
+            }
+
             ClientService.Send(new EditMessageSchedulingState(message.ChatId, message.Id, null));
         }
 

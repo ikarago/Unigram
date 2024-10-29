@@ -55,7 +55,8 @@ namespace Telegram.Controls
         Transcribe,
         Translate,
         Unmute,
-        Unpin
+        Unpin,
+        VideoConversion
     }
 
     public partial class ToastPopup : TeachingTip

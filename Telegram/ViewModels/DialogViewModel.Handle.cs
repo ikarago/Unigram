@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Telegram.Collections;
 using Telegram.Common;
+using Telegram.Controls;
 using Telegram.Controls.Messages;
 using Telegram.Controls.Messages.Content;
 using Telegram.Services;
@@ -945,7 +946,16 @@ namespace Telegram.ViewModels
 
         public void Handle(UpdateMessageSendSucceeded update)
         {
-            if (update.Message.ChatId == _chat?.Id && CheckSchedulingState(update.Message))
+            if (update.Message.ChatId == _chat?.Id && _type == DialogType.History && update.Message.SchedulingState is MessageSchedulingStateSendWhenVideoProcessed)
+            {
+                Handle(new UpdateDeleteMessages(update.Message.ChatId, new[] { update.OldMessageId }, true, false));
+                BeginOnUIThread(() =>
+                {
+                    NavigationService.NavigateToChat(_chat, update.Message.Id, scheduled: true);
+                    ShowToast(string.Format("**{0}**\n{1}", Strings.VideoConversionTitle, Strings.VideoConversionText), ToastPopupIcon.VideoConversion);
+                });
+            }
+            else if (update.Message.ChatId == _chat?.Id && CheckSchedulingState(update.Message))
             {
                 Handle(update.OldMessageId, message =>
                 {

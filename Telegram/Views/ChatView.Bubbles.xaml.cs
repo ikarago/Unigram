@@ -158,6 +158,10 @@ namespace Telegram.Views
                         {
                             UpdateDateHeader(sendAtDate.SendDate, true);
                         }
+                        else if (message.SchedulingState is MessageSchedulingStateSendWhenVideoProcessed sendWhenVideoProcessed)
+                        {
+                            UpdateDateHeader(sendWhenVideoProcessed.SendDate, true);
+                        }
                         else if (message.SchedulingState is MessageSchedulingStateSendWhenOnline)
                         {
                             UpdateDateHeader(0, true);

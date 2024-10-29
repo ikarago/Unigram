@@ -2211,6 +2211,7 @@
     <Content Include="Assets\Toasts\Unmute.tgs" />
     <Content Include="Assets\Toasts\StarsTopup.tgs" />
     <None Include="Assets\Toasts\Unpin.tgs" />
+    <Content Include="Assets\Toasts\VideoConversion.tgs" />
     <None Include="Telegram_StoreKey.pfx" />
     <None Include="Telegram_TemporaryKey.pfx" />
   </ItemGroup>
