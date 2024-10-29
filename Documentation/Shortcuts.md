@@ -162,7 +162,7 @@
       <td>Ctrl + Shift + Y</td>
     </tr>
     <tr>
-      <td rowspan="3">Record Notes</td>
+      <td rowspan="4">Record Notes</td>
       <td>Start Record</td>
       <td>Ctrl + R</td>
     </tr>
@@ -171,8 +171,29 @@
       <td>Ctrl + R (again)</td>
     </tr>
     <tr>
-      <td>Stop Record</td>
+      <td>Stop Recording</td>
       <td>Ctrl + D</td>
+    </tr>
+    <tr>
+      <td>Pause Recording</td>
+      <td>Space (when Recording)</td>
+    </tr>
+    <tr>
+      <td rowspan="4">Calls</td>
+      <td>Accept Incoming Call</td>
+      <td>Ctrl+Home</td>
+    </tr>
+    <tr>
+      <td>Reject Incoming Call</td>
+      <td>Ctrl+End</td>
+    </tr>
+    <tr>
+      <td>Toggle Camera</td>
+      <td>Ctrl+PageUp</td>
+    </tr>
+    <tr>
+      <td>Toggle Microphone</td>
+      <td>Ctrl+PageDown</td>
     </tr>
   </tbody>
 </table>
