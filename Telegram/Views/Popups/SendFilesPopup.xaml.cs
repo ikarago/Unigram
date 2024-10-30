@@ -1298,7 +1298,7 @@ namespace Telegram.Views.Popups
 
                 if (rects.Length == 1)
                 {
-                    height = Math.Max(98, height);
+                    height = Math.Clamp(height, 98, 438);
                 }
 
                 rects[i] = new Rect(x, y, width, height);
@@ -1309,7 +1309,7 @@ namespace Telegram.Views.Popups
 
             if (rects.Length == 1)
             {
-                finalHeight = Math.Max(98, finalHeight);
+                finalHeight = Math.Clamp(finalHeight, 98, 438);
             }
 
             return (rects, new Size(finalWidth, finalHeight));
