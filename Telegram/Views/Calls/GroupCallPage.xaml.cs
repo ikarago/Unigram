@@ -1471,6 +1471,8 @@ namespace Telegram.Views.Calls
                 {
                     output.CreateFlyoutItem(null, hasOutput.HasValue ? Strings.NotFoundSpeakers : Strings.Loading);
                 }
+
+                flyout.CreateFlyoutItem(() => _call.IsNoiseSuppressionEnabled = !_call.IsNoiseSuppressionEnabled, Strings.VoipNoiseCancellation, _call.IsNoiseSuppressionEnabled ? Icons.Checkmark : null);
             }
 
             //flyout.CreateFlyoutItem(ShareInviteLink, Strings.VoipGroupShareInviteLink, Icons.Link);
