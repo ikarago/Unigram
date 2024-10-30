@@ -465,12 +465,12 @@ namespace Telegram.Services
                     double originalWidth = props.GetWidth();
                     double originalHeight = props.GetHeight();
 
-                    //if (!conversion.CropRectangle.IsEmpty())
-                    //{
-                    //    file = await ImageHelper.CropAsync(file, temp, conversion.CropRectangle);
-                    //    originalWidth = conversion.CropRectangle.Width;
-                    //    originalHeight = conversion.CropRectangle.Height;
-                    //}
+                    if (conversion.Transform && !conversion.CropRectangle.IsEmpty)
+                    {
+                        file = await ImageHelper.CropAsync(file, temp, conversion.CropRectangle, trimStart: conversion.TrimStartTime);
+                        originalWidth = conversion.CropRectangle.Width;
+                        originalHeight = conversion.CropRectangle.Height;
+                    }
 
                     using (var fileStream = await ImageHelper.OpenReadAsync(file))
                     using (var outputStream = await temp.OpenAsync(FileAccessMode.ReadWrite))

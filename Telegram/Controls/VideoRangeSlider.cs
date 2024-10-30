@@ -50,14 +50,14 @@ namespace Telegram.Controls
         public TimeSpan OriginalDuration
         {
             get => _originalDuration;
-            set => SetOriginalDuration(value);
+            set => SetOriginalDuration(value, TimeSpan.FromSeconds(10));
         }
 
-        private void SetOriginalDuration(TimeSpan duration)
+        public void SetOriginalDuration(TimeSpan duration, TimeSpan maxLength)
         {
             _originalDuration = duration;
 
-            _maxLength = Math.Min(10 / duration.TotalSeconds, 1);
+            _maxLength = Math.Min(maxLength.TotalSeconds / duration.TotalSeconds, 1);
             _minLength = Math.Min(3 / duration.TotalSeconds, 1);
 
             _minimum = 0;

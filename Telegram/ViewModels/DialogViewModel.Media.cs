@@ -363,7 +363,7 @@ namespace Telegram.ViewModels
             }
             else if (storage is StorageVideo video)
             {
-                request = MessageFactory.CreateVideoAsync(video, video.IsMuted, captionAboveMedia, hasSpoiler, storage.Ttl, video.GetTransform());
+                request = MessageFactory.CreateVideoAsync(video, video.IsMuted, captionAboveMedia, hasSpoiler, storage.Ttl, video.GetConversion());
             }
 
             if (request == null)

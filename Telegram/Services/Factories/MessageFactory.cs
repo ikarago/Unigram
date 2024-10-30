@@ -81,35 +81,26 @@ namespace Telegram.Services.Factories
             };
         }
 
-        public static async Task<InputMessageFactory> CreateVideoAsync(StorageVideo video, bool animated, bool captionAboveMedia = false, bool spoiler = false, MessageSelfDestructType ttl = null, VideoTransformEffectDefinition transform = null)
+        public static async Task<InputMessageFactory> CreateVideoAsync(StorageVideo video, bool animated, bool captionAboveMedia = false, bool spoiler = false, MessageSelfDestructType ttl = null, VideoConversion conversion = null)
         {
             var duration = video.TotalSeconds;
             var videoWidth = video.Width;
             var videoHeight = video.Height;
 
-            var conversion = new VideoConversion
+            conversion ??= new VideoConversion
             {
                 Mute = animated
             };
 
-            //var profile = await video.GetEncodingAsync();
-            //if (profile != null)
-            //{
-            //    conversion.Transcode = true;
-            //    conversion.Mute = animated;
-            //    conversion.Width = profile.Video.Width;
-            //    conversion.Height = profile.Video.Height;
-            //    conversion.Bitrate = profile.Video.Bitrate;
-            //}
-
-            if (transform != null)
+            if (conversion.TrimStartTime is TimeSpan trimStart && conversion.TrimStopTime is TimeSpan trimStop)
             {
-                //conversion.Transcode = true;
-                conversion.Transform = true;
-                conversion.Rotation = transform.Rotation;
-                conversion.OutputSize = transform.OutputSize;
-                conversion.Mirror = transform.Mirror;
-                conversion.CropRectangle = transform.CropRectangle;
+                duration = (int)(trimStop.TotalSeconds - trimStart.TotalSeconds);
+            }
+
+            if (conversion.Transform && !conversion.CropRectangle.IsEmpty)
+            {
+                videoWidth = (int)conversion.CropRectangle.Width;
+                videoHeight = (int)conversion.CropRectangle.Height;
             }
 
             var generated = await video.File.ToGeneratedAsync(ConversionType.Transcode, JsonConvert.SerializeObject(conversion));
