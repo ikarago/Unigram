@@ -6,6 +6,7 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Common;
 using Telegram.Native;
@@ -1553,7 +1554,7 @@ namespace Telegram.Services
                     {
                         ProcessFiles(pageBlockTable.Caption);
                     }
-                    foreach (var item in pageBlockTable.Cells)
+                    foreach (var item in pageBlockTable.Cells.SelectMany(x => x))
                     {
                         ProcessFiles(item);
                     }
@@ -1706,6 +1707,18 @@ namespace Telegram.Services
                     if (premiumFeaturePromotionAnimation.Animation != null)
                     {
                         ProcessFiles(premiumFeaturePromotionAnimation.Animation);
+                    }
+                    break;
+                case PremiumGiftCodePaymentOption premiumGiftCodePaymentOption:
+                    if (premiumGiftCodePaymentOption.Sticker != null)
+                    {
+                        ProcessFiles(premiumGiftCodePaymentOption.Sticker);
+                    }
+                    break;
+                case PremiumGiftCodePaymentOptions premiumGiftCodePaymentOptions:
+                    foreach (var item in premiumGiftCodePaymentOptions.Options)
+                    {
+                        ProcessFiles(item);
                     }
                     break;
                 case PremiumState premiumState:

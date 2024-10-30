@@ -84,8 +84,6 @@ namespace Telegram
             builder.AppendLine("switch (target)");
             builder.AppendLine("{");
 
-            var first = true;
-
             foreach (var type in typesToCrossMap.OrderBy(x => x.Key.Name))
             {
                 var key = type.Key.Name;
@@ -100,7 +98,16 @@ namespace Telegram
 
                     if (property.Value.IsGenericType)
                     {
-                        builder.AppendLine($"foreach (var item in {name}.{propertyKey})");
+                        var argument = property.Value.GenericTypeArguments[0];
+                        if (argument.IsGenericType)
+                        {
+                            builder.AppendLine($"foreach (var item in {name}.{propertyKey}.SelectMany(x => x))");
+                        }
+                        else
+                        {
+                            builder.AppendLine($"foreach (var item in {name}.{propertyKey})");
+                        }
+
                         builder.AppendLine("{");
 
                         builder.AppendLine($"ProcessFiles(item);");
