@@ -84,6 +84,11 @@ namespace Telegram.ViewModels
             get => _query;
             set
             {
+                if (string.Equals(value, _query))
+                {
+                    return;
+                }
+
                 SynchronizeQuery(value);
 
                 if (SelectedTab == 1)
@@ -109,6 +114,8 @@ namespace Telegram.ViewModels
         {
             _cancellation.Cancel();
             _cancellation = new();
+
+            IsEmpty = false;
         }
 
         private bool _isTopChatsVisible;
@@ -131,7 +138,6 @@ namespace Telegram.ViewModels
 
                     if (value == 1)
                     {
-                        //_channels.Activate();
                         _channels.Query = Query;
                     }
                     else if (value == 2)
@@ -144,6 +150,13 @@ namespace Telegram.ViewModels
                     }
                 }
             }
+        }
+
+        private bool _isEmpty;
+        public bool IsEmpty
+        {
+            get => _isEmpty;
+            set => Set(ref _isEmpty, value);
         }
 
         private bool CanUpdateQuery(string value)
@@ -200,6 +213,8 @@ namespace Telegram.ViewModels
             {
                 await LoadMessagesAsync(query, token);
             }
+
+            IsEmpty = Items.Empty();
         }
 
         private async Task LoadTopChatsAsync(CancellationToken cancellationToken)

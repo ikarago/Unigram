@@ -7447,6 +7447,10 @@ will appear here.</value>
   <data name="NoResult" xml:space="preserve">
     <value>No results</value>
   </data>
+  <data name="NoResultFoundFor2" xml:space="preserve">
+    <value>There were no results for &quot;{0}&quot;.
+Try a new search.</value>
+  </data>
   <data name="NoRtmpStreamFromAppOwner" xml:space="preserve">
     <value>**Oops!** Telegram doesn&apos;t see any stream coming from your streaming app.
 

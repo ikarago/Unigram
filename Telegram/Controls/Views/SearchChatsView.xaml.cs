@@ -289,5 +289,13 @@ namespace Telegram.Controls.Views
         {
             ViewModel.ClearRecentChats();
         }
+
+        private void EmptyState_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBlock textBlock)
+            {
+                textBlock.Text = string.Format(Strings.NoResultFoundFor2, ViewModel.Query);
+            }
+        }
     }
 }
