@@ -857,7 +857,7 @@
                 </Grid>
                 <Grid x:Name="SettingsRoot"
                       x:Load="False"
-                      LayoutUpdated="SettingsRoot_LayoutUpdated"
+                      Loaded="SettingsRoot_Loaded"
                       Margin="0,8,0,0"
                       Grid.Row="1">
                     <ListView ItemsSource="{x:Bind ViewModel.Settings.Results}"
