@@ -574,6 +574,7 @@ namespace winrt::Telegram::Native::implementation
             else
             {
                 // All of this could be avoided by simply allocating a buffer of the size of frame+AV_INPUT_BUFFER_PADDING_SIZE
+                // Videos coming from CachedVideoAnimation will always use the fast path as width is aligned.
 
                 auto dstWidth = FFALIGN(width, 16);
                 auto dstDiff = dstWidth - width;
