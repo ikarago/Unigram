@@ -1027,15 +1027,6 @@ namespace Telegram.ViewModels
 
         #endregion
 
-        #region Interactions
-
-        public async void ShowMessageInteractions(MessageViewModel message)
-        {
-            await ShowPopupAsync(new InteractionsPopup(), new MessageReplyToMessage(message.ChatId, message.Id, null, null, 0, null));
-        }
-
-        #endregion
-
         #region Translate
 
         public async void TranslateMessage(MessageQuote message)

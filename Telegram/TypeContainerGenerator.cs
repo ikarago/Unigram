@@ -180,7 +180,6 @@ namespace Telegram
                 typeof(PaymentAddressViewModel),
                 typeof(PaymentCredentialsViewModel),
                 typeof(PaymentFormViewModel),
-                typeof(InteractionsViewModel),
                 typeof(StoryInteractionsViewModel),
                 typeof(FoldersViewModel),
                 typeof(FolderViewModel),

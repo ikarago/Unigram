@@ -461,7 +461,6 @@ namespace Telegram
                 StarsPopup => TypeResolver.Current.Resolve<StarsViewModel>(sessionId),
                 BuyPopup => TypeResolver.Current.Resolve<BuyViewModel>(sessionId),
                 PayPopup => TypeResolver.Current.Resolve<PayViewModel>(sessionId),
-                InteractionsPopup => TypeResolver.Current.Resolve<InteractionsViewModel>(sessionId),
                 StoryInteractionsPopup => TypeResolver.Current.Resolve<StoryInteractionsViewModel>(sessionId),
                 BackgroundsPopup => TypeResolver.Current.Resolve<SettingsBackgroundsViewModel>(sessionId),
                 BackgroundPopup backgroundPopup => TypeResolver.Current.Resolve<BackgroundViewModel, IBackgroundDelegate>(backgroundPopup, sessionId),

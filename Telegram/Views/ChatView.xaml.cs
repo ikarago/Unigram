@@ -25,6 +25,7 @@ using Telegram.Controls.Gallery;
 using Telegram.Controls.Media;
 using Telegram.Controls.Messages;
 using Telegram.Controls.Stories;
+using Telegram.Controls.Views;
 using Telegram.Converters;
 using Telegram.Navigation;
 using Telegram.Navigation.Services;
@@ -2853,33 +2854,71 @@ namespace Telegram.Views
 
         private async void LoadMessageViewers(MessageViewModel message, MessageProperties properties, MenuFlyout flyout)
         {
-            static async Task<IList<User>> GetMessageViewersAsync(MessageViewModel message, MessageProperties properties)
+            static async Task<IList<MessageViewer>> GetMessageViewersAsync(MessageViewModel message, MessageProperties properties)
             {
                 if (CanGetMessageViewers(message, properties, false))
                 {
                     var response = await message.ClientService.SendAsync(new GetMessageViewers(message.ChatId, message.Id));
                     if (response is MessageViewers viewers && viewers.Viewers.Count > 0)
                     {
-                        return message.ClientService.GetUsers(viewers.Viewers.Select(x => x.UserId));
+                        return viewers.Viewers;
                     }
                 }
 
-                return Array.Empty<User>();
+                return Array.Empty<MessageViewer>();
             }
 
             var played = message.Content is MessageVoiceNote or MessageVideoNote;
             var reacted = message.InteractionInfo.TotalReactions();
 
-            var placeholder = flyout.CreateFlyoutItem(ViewModel.ShowMessageInteractions, message, "...", reacted > 0 ? Icons.Heart : played ? Icons.Play : Icons.Seen);
+            var placeholder = new MenuFlyoutSubItem
+            {
+                Text = "...",
+                Icon = MenuFlyoutHelper.CreateIcon(reacted > 0 ? Icons.Heart : played ? Icons.Play : Icons.Seen)
+            };
+
+            flyout.Items.Add(placeholder);
+
             var separator = flyout.CreateFlyoutSeparator();
 
             // Width must be fixed because viewers are loaded asynchronously
             placeholder.Width = 200;
-            placeholder.Style = BootStrapper.Current.Resources["MessageSeenMenuFlyoutItemStyle"] as Style;
+            //placeholder.Style = BootStrapper.Current.Resources["MessageSeenMenuFlyoutItemStyle"] as Style;
 
             var viewers = await GetMessageViewersAsync(message, properties);
             if (viewers.Count > 0 || reacted > 0)
             {
+                var popup = new InteractionsView(message.ClientService, message.ChatId, message.Id, new MessageViewers(viewers))
+                {
+                    Width = 264,
+                    Height = 48 * Math.Max(viewers.Count, reacted),
+                    MinHeight = 72,
+                    MaxHeight = 360
+                };
+
+                void handler(InteractionsView sender, ItemClickEventArgs e)
+                {
+                    sender.ItemClick -= handler;
+                    flyout.Hide();
+
+                    if (e.ClickedItem is AddedReaction addedReaction)
+                    {
+                        ViewModel.NavigationService.NavigateToSender(addedReaction.SenderId);
+                    }
+                    else if (e.ClickedItem is MessageViewer messageViewer)
+                    {
+                        ViewModel.NavigationService.NavigateToUser(messageViewer.UserId);
+                    }
+                }
+
+                popup.ItemClick += handler;
+
+                placeholder.Items.Add(new MenuFlyoutContent
+                {
+                    Content = popup,
+                    Padding = new Thickness(0)
+                });
+
                 string text;
                 if (reacted > 0)
                 {
@@ -2896,9 +2935,9 @@ namespace Telegram.Views
                 {
                     text = Locale.Declension(played ? Strings.R.MessagePlayed : Strings.R.MessageSeen, viewers.Count);
                 }
-                else if (viewers.Count > 0)
+                else if (viewers.Count > 0 && message.ClientService.TryGetUser(viewers[0].UserId, out User first))
                 {
-                    text = viewers[0].FullName();
+                    text = first.FullName();
                 }
                 else
                 {
@@ -2919,7 +2958,7 @@ namespace Telegram.Views
 
                 for (int i = 0; i < Math.Min(3, viewers.Count); i++)
                 {
-                    var user = viewers[i];
+                    var user = message.ClientService.GetUser(viewers[i].UserId);
                     var picture = new ProfilePicture();
                     picture.Width = 24;
                     picture.Height = 24;

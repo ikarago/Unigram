@@ -778,11 +778,6 @@ namespace Telegram.Views
                         _clientService,
                         _settingsService,
                         _eventAggregator);
-                case "Telegram.ViewModels.InteractionsViewModel":
-                    return (T)(object)new Telegram.ViewModels.InteractionsViewModel(
-                        _clientService,
-                        _settingsService,
-                        _eventAggregator);
                 case "Telegram.ViewModels.StoryInteractionsViewModel":
                     return (T)(object)new Telegram.ViewModels.StoryInteractionsViewModel(
                         _clientService,

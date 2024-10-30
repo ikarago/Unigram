@@ -1296,10 +1296,9 @@
     <Compile Include="Views\Popups\InputPopup.xaml.cs">
       <DependentUpon>InputPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Popups\InteractionsPopup.xaml.cs">
-      <DependentUpon>InteractionsPopup.xaml</DependentUpon>
+    <Compile Include="Controls\Views\InteractionsView.xaml.cs">
+      <DependentUpon>InteractionsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\InteractionsViewModel.cs" />
     <Compile Include="Views\Calls\Popups\RecordVideoChatPopup.xaml.cs">
       <DependentUpon>RecordVideoChatPopup.xaml</DependentUpon>
     </Compile>
@@ -3176,7 +3175,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Popups\InteractionsPopup.xaml">
+    <Page Include="Controls\Views\InteractionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
