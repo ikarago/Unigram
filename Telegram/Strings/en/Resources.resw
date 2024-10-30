@@ -10302,6 +10302,24 @@ The channel &quot;**{1}**&quot; will become private.</value>
   <data name="StarsTransactionDate" xml:space="preserve">
     <value>Date</value>
   </data>
+  <data name="StarsTransactionFloodskip" xml:space="preserve">
+    <value>Paid Broadcast</value>
+  </data>
+  <data name="StarsTransactionFloodskipMessages_one" xml:space="preserve">
+    <value>{0} Message</value>
+  </data>
+  <data name="StarsTransactionFloodskipMessages_other" xml:space="preserve">
+    <value>{0} Messages</value>
+  </data>
+  <data name="StarsTransactionFloodskipNumber_one" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="StarsTransactionFloodskipNumber_other" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="StarsTransactionFloodskipNumberName" xml:space="preserve">
+    <value>Messages</value>
+  </data>
   <data name="StarsTransactionFragment" xml:space="preserve">
     <value>Purchase from Fragment</value>
   </data>

@@ -302,6 +302,7 @@ namespace Telegram.Controls.Media
         public const string MicOnFilled = "\uF12E";
         public const string DataUsage = "\uE9D9";
         public const string Add = "\uE710";
+        public const string ChatStarsFilled = "\uE97C";
 
         public const string LastSeenFilled = "\uEA6D";
         public const string ChatLockedFilled = "\uEA6C";

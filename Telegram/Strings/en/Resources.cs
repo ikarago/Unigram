@@ -197,6 +197,8 @@ namespace Telegram
             public const string StarsPurchaseCompletedInfo = "StarsPurchaseCompletedInfo";
             public const string StarsReactionTextSent = "StarsReactionTextSent";
             public const string StarsSentText = "StarsSentText";
+            public const string StarsTransactionFloodskipMessages = "StarsTransactionFloodskipMessages";
+            public const string StarsTransactionFloodskipNumber = "StarsTransactionFloodskipNumber";
             public const string Stickers = "Stickers";
             public const string StickerSets = "StickerSets";
             public const string Stories = "Stories";
@@ -15485,6 +15487,16 @@ namespace Telegram
         /// Localized resource similar to "Date"
         /// </summary>
         public static string StarsTransactionDate => Resource.GetString("StarsTransactionDate");
+        
+        /// <summary>
+        /// Localized resource similar to "Paid Broadcast"
+        /// </summary>
+        public static string StarsTransactionFloodskip => Resource.GetString("StarsTransactionFloodskip");
+        
+        /// <summary>
+        /// Localized resource similar to "Messages"
+        /// </summary>
+        public static string StarsTransactionFloodskipNumberName => Resource.GetString("StarsTransactionFloodskipNumberName");
         
         /// <summary>
         /// Localized resource similar to "Purchase from Fragment"

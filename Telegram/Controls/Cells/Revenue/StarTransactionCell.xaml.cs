@@ -204,6 +204,16 @@ namespace Telegram.Controls.Cells.Revenue
                     MediaPreview.Visibility = Visibility.Collapsed;
                 }
             }
+            else if (transaction.Partner is StarTransactionPartnerTelegramApi sourceTelegramApi)
+            {
+                Title.Text = Strings.StarsTransactionFloodskip;
+                Photo.Source = PlaceholderImage.GetGlyph(Icons.ChatStarsFilled);
+
+                MediaPreview.Visibility = Visibility.Collapsed;
+
+                Subtitle.Text = Locale.Declension(Strings.R.StarsTransactionFloodskipMessages, sourceTelegramApi.RequestCount);
+                Subtitle.Visibility = Visibility.Visible;
+            }
             else
             {
                 MediaPreview.Visibility = Visibility.Collapsed;
