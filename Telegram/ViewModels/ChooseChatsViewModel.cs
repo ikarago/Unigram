@@ -37,6 +37,8 @@ namespace Telegram.ViewModels
             Items = new MvxObservableCollection<Chat>();
             SelectedItems = new MvxObservableCollection<Chat>();
 
+            Folders = new ObservableCollection<ChatFolderViewModel>();
+
             SendCommand = new RelayCommand(SendExecute, () => SelectedItems?.Count > 0);
         }
 
