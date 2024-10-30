@@ -59,7 +59,7 @@ namespace Telegram.Services
 
         public static async Task<CaptureSessionOptions> ChooseAsync(XamlRoot xamlRoot, bool canShareAudio)
         {
-            var access = await CaptureSessionService.RequestAccessAsync();
+            var access = await RequestAccessAsync();
             if (access == AppCapabilityAccessStatus.UserPromptRequired)
             {
                 var picker = new GraphicsCapturePicker();
@@ -99,12 +99,12 @@ namespace Telegram.Services
         {
             if (ApiInfo.IsBuildOrGreater(20348))
             {
-                var capability = AppCapability.Create("graphicsCaptureProgrammatic");
-                var status = capability.CheckAccess();
-
-                if (status == AppCapabilityAccessStatus.UserPromptRequired)
+                try
                 {
-                    try
+                    var capability = AppCapability.Create("graphicsCaptureProgrammatic");
+                    var status = capability.CheckAccess();
+
+                    if (status == AppCapabilityAccessStatus.UserPromptRequired)
                     {
                         var access = await AppCapability.RequestAccessForCapabilitiesAsync(new[] { "graphicsCaptureProgrammatic" });
                         if (access.TryGetValue("graphicsCaptureProgrammatic", out status))
@@ -112,17 +112,17 @@ namespace Telegram.Services
                             return status;
                         }
                     }
-                    catch
+                    else if (status != AppCapabilityAccessStatus.Allowed)
                     {
-                        return AppCapabilityAccessStatus.DeniedBySystem;
+                        status = AppCapabilityAccessStatus.UserPromptRequired;
                     }
-                }
-                else if (status != AppCapabilityAccessStatus.Allowed)
-                {
-                    status = AppCapabilityAccessStatus.UserPromptRequired;
-                }
 
-                return status;
+                    return status;
+                }
+                catch
+                {
+                    // All the remote procedure calls must be wrapped in a try-catch block
+                }
             }
 
             return AppCapabilityAccessStatus.UserPromptRequired;
