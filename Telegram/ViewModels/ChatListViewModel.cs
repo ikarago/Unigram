@@ -644,6 +644,8 @@ namespace Telegram.ViewModels
                 var token = _token;
                 var totalCount = 0u;
 
+                await Task.Yield();
+
                 var response = await _clientService.GetChatListAsync(_chatList, Count, 20);
                 if (response is Telegram.Td.Api.Chats chats && !token.IsCancellationRequested)
                 {
