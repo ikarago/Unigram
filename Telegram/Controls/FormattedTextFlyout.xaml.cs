@@ -33,7 +33,7 @@ namespace Telegram.Controls
                 return;
             }
 
-            Update( _textBox.Document.Selection);
+            Update(_textBox.Document.Selection);
         }
 
         public void Update(ITextRange selection)
