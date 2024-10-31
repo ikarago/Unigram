@@ -292,7 +292,6 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition />
-                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <!-- TODO: Migrate to RecentUserHeads -->
                                     <StackPanel x:Name="RecentRepliers"
@@ -310,9 +309,9 @@
                                                Grid.Column="1" />
                                     <TextBlock Text="&#xE0E3;"
                                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                               HorizontalAlignment="Right"
                                                VerticalAlignment="Center"
-                                               FontSize="20"
-                                               Grid.Column="2" />
+                                               FontSize="20" />
                                 </Grid>
                             </HyperlinkButton>
                         </Grid>
