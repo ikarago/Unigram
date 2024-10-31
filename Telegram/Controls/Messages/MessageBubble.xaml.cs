@@ -654,7 +654,23 @@ namespace Telegram.Controls.Messages
 
             if (message.IsSaved || message.IsVerificationCode)
             {
-                FwdFrom_Click(null, null);
+                if (message.ForwardInfo?.Origin is MessageOriginUser fromUser)
+                {
+                    message.Delegate.OpenUser(fromUser.SenderUserId);
+                }
+                else if (message.ForwardInfo?.Origin is MessageOriginChat fromChat)
+                {
+                    message.Delegate.OpenChat(fromChat.SenderChatId, true);
+                }
+                else if (message.ForwardInfo?.Origin is MessageOriginChannel fromChannel)
+                {
+                    // TODO: verify if this is sufficient
+                    message.Delegate.OpenChat(fromChannel.ChatId);
+                }
+                else if (message.ForwardInfo?.Origin is MessageOriginHiddenUser)
+                {
+                    ToastPopup.Show(XamlRoot, Strings.HidAccount);
+                }
             }
             else if (message.ClientService.TryGetChat(message.SenderId, out Chat senderChat))
             {

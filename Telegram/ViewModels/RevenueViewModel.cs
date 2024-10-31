@@ -54,22 +54,25 @@ namespace Telegram.ViewModels
         {
             var chatId = (long)parameter;
 
-            if (state.TryGet("selectedIndex", out int selectedIndex))
-            {
-                SelectedIndex = selectedIndex;
-            }
-
             Chat = ClientService.GetChat(chatId);
 
             if (ClientService.TryGetSupergroupFull(Chat, out SupergroupFullInfo fullInfo))
             {
-                if (fullInfo.CanGetRevenueStatistics)
+                if (fullInfo.CanGetRevenueStatistics || fullInfo.CanGetStarRevenueStatistics)
                 {
                     Items.Add(new ProfileTabItem(Strings.Monetization, typeof(ChatRevenuePage)));
                 }
             }
 
-            SelectedItem ??= Items.FirstOrDefault();
+            if (state.TryGet("selectedIndex", out int selectedIndex))
+            {
+                SelectedItem = Items[selectedIndex];
+            }
+            else
+            {
+                SelectedItem ??= Items.FirstOrDefault();
+            }
+
             RaisePropertyChanged(nameof(SharedCount));
 
             return base.NavigatedToAsync(parameter, mode, state);

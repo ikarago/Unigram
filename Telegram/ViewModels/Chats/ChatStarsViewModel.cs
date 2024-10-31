@@ -33,7 +33,7 @@ namespace Telegram.ViewModels.Chats
         public ChatStarsViewModel(IClientService clientService, ISettingsService settingsService, IEventAggregator aggregator)
             : base(clientService, settingsService, aggregator)
         {
-            Items = new IncrementalCollection<StarTransaction>(this);
+            Items = new IncrementalCollection<object>(this);
         }
 
         private double _headerHeight;
@@ -85,13 +85,6 @@ namespace Telegram.ViewModels.Chats
             set => Set(ref _isEmpty, value);
         }
 
-        private bool _isOwner;
-        public bool IsOwner
-        {
-            get => _isOwner;
-            set => Set(ref _isOwner, value);
-        }
-
         public double UsdRate { get; private set; }
 
         private bool _withdrawalEnabled;
@@ -108,24 +101,27 @@ namespace Telegram.ViewModels.Chats
             set => Set(ref _nextWithdrawalDate, value);
         }
 
-        public IncrementalCollection<StarTransaction> Items { get; }
+        public IncrementalCollection<object> Items { get; }
 
         protected override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, NavigationState state)
         {
             if (parameter is long chatId)
             {
-                parameter = new MessageSenderChat(chatId);
+                if (ClientService.TryGetChat(chatId, out Chat chat))
+                {
+                    if (chat.Type is ChatTypePrivate privata)
+                    {
+                        parameter = new MessageSenderUser(privata.UserId);
+                    }
+                    else
+                    {
+                        parameter = new MessageSenderChat(chatId);
+                    }
+                }
             }
 
             _ownerId = parameter as MessageSender;
             IsLoading = true;
-
-            //Chat = ClientService.GetChat(chatId);
-
-            //if (ClientService.TryGetSupergroup(Chat, out Supergroup supergroup))
-            //{
-            //    IsOwner = supergroup.Status is ChatMemberStatusCreator;
-            //}
 
             await LoadAsync();
 

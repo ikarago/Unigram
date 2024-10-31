@@ -20,6 +20,13 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Telegram.ViewModels.Chats
 {
+    public enum ChatRevenueAvailability
+    {
+        Crypto,
+        Stars,
+        CryptoAndStars
+    }
+
     public partial class ChatRevenueViewModel : MultiViewModelBase, IIncrementalCollectionOwner, IHandle
     {
         private ChatBoostStatus _status;
@@ -29,7 +36,7 @@ namespace Telegram.ViewModels.Chats
             : base(clientService, settingsService, aggregator)
         {
             Stars = TypeResolver.Current.Resolve<ChatStarsViewModel>(clientService.SessionId);
-            Items = new IncrementalCollection<ChatRevenueTransaction>(this);
+            Items = new IncrementalCollection<object>(this);
 
             Children.Add(Stars);
         }
@@ -42,6 +49,13 @@ namespace Telegram.ViewModels.Chats
         }
 
         public ChatStarsViewModel Stars { get; }
+
+        private ChatRevenueAvailability _availability;
+        public ChatRevenueAvailability Availability
+        {
+            get => _availability;
+            set => Set(ref _availability, value);
+        }
 
         private Chat _chat;
         public Chat Chat
@@ -113,17 +127,37 @@ namespace Telegram.ViewModels.Chats
             set => Set(ref _minSponsoredMessageDisableBoostLevel, value);
         }
 
+        private int _selectedIndex;
+        public int SelectedIndex
+        {
+            get => _selectedIndex;
+            set
+            {
+                if (Set(ref _selectedIndex, value))
+                {
+                    RaisePropertyChanged(nameof(ItemsView));
+                }
+            }
+        }
+
+        private bool _isSelectionVisible;
+        public bool IsSelectionVisible
+        {
+            get => _isSelectionVisible;
+            set => Set(ref _isSelectionVisible, value);
+        }
+
+        public IncrementalCollection<object> ItemsView => SelectedIndex == 0 ? Items : Stars.Items;
+
         public double UsdRate { get; private set; }
 
         public bool WithdrawalEnabled => AvailableAmount?.CryptocurrencyAmount > 0 && ClientService.Options.CanWithdrawChatRevenue;
 
-        public IncrementalCollection<ChatRevenueTransaction> Items { get; }
+        public IncrementalCollection<object> Items { get; }
 
-        protected override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, NavigationState state)
+        public override Task NavigatedToAsync(object parameter, NavigationMode mode, NavigationState state)
         {
             var chatId = (long)parameter;
-
-            IsLoading = true;
 
             Chat = ClientService.GetChat(chatId);
 
@@ -135,7 +169,32 @@ namespace Telegram.ViewModels.Chats
             if (ClientService.TryGetSupergroupFull(Chat, out SupergroupFullInfo fullInfo))
             {
                 DisableSponsoredMessages = !fullInfo.CanHaveSponsoredMessages;
+
+                Availability = fullInfo.CanGetRevenueStatistics && fullInfo.CanGetStarRevenueStatistics
+                    ? ChatRevenueAvailability.CryptoAndStars
+                    : fullInfo.CanGetRevenueStatistics
+                    ? ChatRevenueAvailability.Crypto
+                    : ChatRevenueAvailability.Stars;
+
+                SelectedIndex = fullInfo.CanGetRevenueStatistics ? 0 : 1;
+                IsSelectionVisible = fullInfo.CanGetRevenueStatistics && fullInfo.CanGetStarRevenueStatistics;
             }
+            else if (ClientService.TryGetUserFull(Chat, out UserFullInfo userFullInfo))
+            {
+                Availability = userFullInfo.BotInfo.CanGetRevenueStatistics
+                    ? ChatRevenueAvailability.CryptoAndStars
+                    : ChatRevenueAvailability.Stars;
+
+                SelectedIndex = userFullInfo.BotInfo.CanGetRevenueStatistics ? 0 : 1;
+                IsSelectionVisible = userFullInfo.BotInfo.CanGetRevenueStatistics;
+            }
+
+            return base.NavigatedToAsync(parameter, mode, state);
+        }
+
+        protected override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, NavigationState state)
+        {
+            IsLoading = true;
 
             await LoadAsync();
 

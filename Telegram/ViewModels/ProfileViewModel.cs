@@ -131,18 +131,9 @@ namespace Telegram.ViewModels
                     Delegate?.UpdateUserFullInfo(chat, item, cache, false, false);
                 }
 
-                if (item.Type is UserTypeBot { CanBeEdited: true })
+                if (cache?.BotInfo?.CanGetRevenueStatistics is false || item.Type is UserTypeBot { CanBeEdited: true })
                 {
-                    async void UpdateStarCount()
-                    {
-                        var response = await ClientService.GetStarTransactionsAsync(new MessageSenderUser(item.Id), string.Empty, null, string.Empty, 1);
-                        if (response is StarTransactions transactions)
-                        {
-                            StarCount = transactions.StarCount;
-                        }
-                    }
-
-                    UpdateStarCount();
+                    UpdateBalance(chat.Id, new MessageSenderUser(item.Id));
                 }
             }
             else if (chat.Type is ChatTypeSecret secretType)
@@ -186,6 +177,11 @@ namespace Telegram.ViewModels
                 {
                     Delegate?.UpdateSupergroupFullInfo(chat, item, cache);
                 }
+
+                if (cache?.CanGetRevenueStatistics is true || cache?.CanGetStarRevenueStatistics is true)
+                {
+                    UpdateBalance(chat.Id, new MessageSenderChat(chat.Id));
+                }
             }
 
             return base.OnNavigatedToAsync(parameter, mode, state);
@@ -209,7 +205,20 @@ namespace Telegram.ViewModels
                 .Subscribe<UpdateChatNotificationSettings>(Handle);
         }
 
+        private async void UpdateBalance(long chatId, MessageSender senderId)
+        {
+            var response = await ClientService.SendAsync(new GetStarTransactions(senderId, string.Empty, null, string.Empty, 1));
+            if (response is StarTransactions transactions)
+            {
+                StarCount = transactions.StarCount;
+            }
 
+            var response2 = await ClientService.SendAsync(new GetChatRevenueStatistics(chatId, false));
+            if (response2 is ChatRevenueStatistics statistics)
+            {
+                CryptoCount = statistics.RevenueAmount.BalanceAmount;
+            }
+        }
 
         public void Handle(UpdateUser update)
         {
@@ -240,7 +249,15 @@ namespace Telegram.ViewModels
             if (chat.Type is ChatTypePrivate privata && privata.UserId == update.UserId)
             {
                 LinkedChatId = update.UserFullInfo.PersonalChatId;
-                BeginOnUIThread(() => Delegate?.UpdateUserFullInfo(chat, ClientService.GetUser(update.UserId), update.UserFullInfo, false, false));
+                BeginOnUIThread(() =>
+                {
+                    Delegate?.UpdateUserFullInfo(chat, ClientService.GetUser(update.UserId), update.UserFullInfo, false, false);
+
+                    if (update.UserFullInfo.BotInfo?.CanGetRevenueStatistics is false)
+                    {
+                        UpdateBalance(chat.Id, new MessageSenderUser(update.UserId));
+                    }
+                });
             }
             else if (chat.Type is ChatTypeSecret secret && secret.UserId == update.UserId)
             {
@@ -321,6 +338,11 @@ namespace Telegram.ViewModels
                 {
                     MembersTab.UpdateMembers();
                     Delegate?.UpdateSupergroupFullInfo(chat, ClientService.GetSupergroup(update.SupergroupId), update.SupergroupFullInfo);
+
+                    if (update.SupergroupFullInfo?.CanGetRevenueStatistics is true || update.SupergroupFullInfo?.CanGetStarRevenueStatistics is true)
+                    {
+                        UpdateBalance(chat.Id, new MessageSenderChat(chat.Id));
+                    }
                 });
             }
         }
@@ -1214,22 +1236,36 @@ namespace Telegram.ViewModels
             NavigationService.NavigateToChat(_chat.Id, savedMessagesTopicId: topic.Id);
         }
 
-        private long? _starCount;
-        public long? StarCount
+        private long _starCount;
+        public long StarCount
         {
             get => _starCount;
             set => Set(ref _starCount, value);
         }
 
+        private long _cryptoCount;
+        public long CryptoCount
+        {
+            get => _cryptoCount;
+            set => Set(ref _cryptoCount, value);
+        }
+
         public void OpenBalance()
         {
             var chat = _chat;
-            if (chat == null || chat.Type is not ChatTypePrivate privata)
+            if (chat == null)
             {
                 return;
             }
 
-            NavigationService.Navigate(typeof(ChatStarsPage), new MessageSenderUser(privata.UserId));
+            if (chat.Type is ChatTypePrivate privata)
+            {
+                NavigationService.Navigate(typeof(ChatRevenuePage), chat.Id);
+            }
+            else if (chat.Type is ChatTypeSupergroup)
+            {
+                NavigationService.Navigate(typeof(RevenuePage), chat.Id, new NavigationState { { "selectedIndex", 2 } });
+            }
         }
 
         public void OpenAdmins()
@@ -1241,17 +1277,6 @@ namespace Telegram.ViewModels
             }
 
             NavigationService.Navigate(typeof(SupergroupAdministratorsPage), chat.Id);
-        }
-
-        public void OpenBanned()
-        {
-            var chat = _chat;
-            if (chat == null)
-            {
-                return;
-            }
-
-            NavigationService.Navigate(typeof(SupergroupBannedPage), chat.Id);
         }
 
         public void OpenKicked()

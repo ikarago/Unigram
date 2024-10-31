@@ -3048,6 +3048,9 @@ Note: if you forget your passcode, you&apos;ll need to log out or reinstall the 
   <data name="ChannelAdministrators" xml:space="preserve">
     <value>Administrators</value>
   </data>
+  <data name="ChannelAdminSettings" xml:space="preserve">
+    <value>Channel Settings</value>
+  </data>
   <data name="ChannelAdminsInfo" xml:space="preserve">
     <value>You can add admins to help you manage your channel. Press and hold to remove admins.</value>
   </data>
@@ -7199,6 +7202,12 @@ Minimum length is 5 characters.</value>
   </data>
   <data name="MonetizationTransactions" xml:space="preserve">
     <value>Transaction history</value>
+  </data>
+  <data name="MonetizationTransactionsStars" xml:space="preserve">
+    <value>Stars Transactions</value>
+  </data>
+  <data name="MonetizationTransactionsTON" xml:space="preserve">
+    <value>TON Transactions</value>
   </data>
   <data name="MonetizationTransactionWithdraw" xml:space="preserve">
     <value>Collection via Fragment</value>

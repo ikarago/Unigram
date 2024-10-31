@@ -732,12 +732,12 @@ namespace Telegram.Controls
                     Grid.SetColumn(Search, 2);
                     Grid.SetColumn(Edit, 1);
 
-                    BotPanel.Visibility = Visibility.Visible;
+                    Statistics.Visibility = Visibility.Visible;
                 }
                 else
                 {
                     Edit.Visibility = Visibility.Collapsed;
-                    BotPanel.Visibility = Visibility.Collapsed;
+                    Statistics.Visibility = Visibility.Collapsed;
                 }
 
                 if (userTypeBot.HasMainWebApp)
@@ -754,7 +754,6 @@ namespace Telegram.Controls
             else
             {
                 Edit.Visibility = Visibility.Collapsed;
-                BotPanel.Visibility = Visibility.Collapsed;
                 BotMainApp.Visibility = Visibility.Collapsed;
             }
 
@@ -765,12 +764,9 @@ namespace Telegram.Controls
             Join.Visibility = Visibility.Collapsed;
             Leave.Visibility = Visibility.Collapsed;
 
-            ChannelMembersPanel.Visibility = Visibility.Collapsed;
-            MembersPanel.Visibility = Visibility.Collapsed;
-            //Admins.Visibility = Visibility.Collapsed;
-            //Banned.Visibility = Visibility.Collapsed;
-            //Restricted.Visibility = Visibility.Collapsed;
-            //Members.Visibility = Visibility.Collapsed;
+            Admins.Visibility = Visibility.Collapsed;
+            Members.Visibility = Visibility.Collapsed;
+            ChannelSettings.Visibility = Visibility.Collapsed;
         }
 
         public void UpdateUserFullInfo(Chat chat, User user, UserFullInfo fullInfo, bool secret, bool accessToken)
@@ -912,12 +908,10 @@ namespace Telegram.Controls
             SecretLifetime.Visibility = Visibility.Collapsed;
             SecretHashKey.Visibility = Visibility.Collapsed;
 
-            ChannelMembersPanel.Visibility = Visibility.Collapsed;
-            MembersPanel.Visibility = Visibility.Collapsed;
-            //Admins.Visibility = Visibility.Collapsed;
-            //Banned.Visibility = Visibility.Collapsed;
-            //Restricted.Visibility = Visibility.Collapsed;
-            //Members.Visibility = Visibility.Collapsed;
+            Admins.Visibility = Visibility.Collapsed;
+            Members.Visibility = Visibility.Collapsed;
+            Statistics.Visibility = Visibility.Collapsed;
+            ChannelSettings.Visibility = Visibility.Collapsed;
 
             if (chat.Permissions.CanChangeInfo || group.Status is ChatMemberStatusCreator || group.Status is ChatMemberStatusAdministrator)
             {
@@ -951,7 +945,6 @@ namespace Telegram.Controls
             Call.Visibility = Visibility.Collapsed;
             VideoCall.Visibility = Visibility.Collapsed;
 
-            BotPanel.Visibility = Visibility.Collapsed;
             BotMainApp.Visibility = Visibility.Collapsed;
 
             AnonymousNumber.Visibility = Visibility.Collapsed;
@@ -1007,13 +1000,6 @@ namespace Telegram.Controls
 
             Location.Visibility = group.HasLocation ? Visibility.Visible : Visibility.Collapsed;
 
-            ChannelMembersPanel.Visibility = group.IsChannel && (group.Status is ChatMemberStatusCreator || group.Status is ChatMemberStatusAdministrator) ? Visibility.Visible : Visibility.Collapsed;
-            MembersPanel.Visibility = group.IsChannel ? Visibility.Collapsed : Visibility.Collapsed;
-            //Admins.Visibility = Visibility.Collapsed;
-            //Banned.Visibility = Visibility.Collapsed;
-            //Restricted.Visibility = Visibility.Collapsed;
-            //Members.Visibility = Visibility.Collapsed;
-
             if (chat.VideoChat.GroupCallId != 0 || group.CanManageVideoChats())
             {
                 VideoChat.Visibility = Visibility.Visible;
@@ -1057,7 +1043,6 @@ namespace Telegram.Controls
                 : Strings.VoipGroupOpenGroup;
 
             // Unused:
-            BotPanel.Visibility = Visibility.Collapsed;
             BotMainApp.Visibility = Visibility.Collapsed;
             MiscPanel.Visibility = Visibility.Collapsed;
             UserPhone.Visibility = Visibility.Collapsed;
@@ -1092,17 +1077,25 @@ namespace Telegram.Controls
             Location.Visibility = fullInfo.Location != null ? Visibility.Visible : Visibility.Collapsed;
             Location.Badge = fullInfo.Location?.Address;
 
-            Admins.Badge = fullInfo.AdministratorCount;
-            //Admins.Visibility = fullInfo.AdministratorCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+            if (group.IsChannel && group.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator)
+            {
+                Admins.Visibility = Visibility.Visible;
+                Members.Visibility = Visibility.Visible;
+                ChannelSettings.Visibility = Visibility.Visible;
 
-            Banned.Badge = fullInfo.BannedCount;
-            //Banned.Visibility = fullInfo.BannedCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+                Admins.Badge = fullInfo.AdministratorCount.ToString("N0");
+                Members.Badge = fullInfo.MemberCount.ToString("N0");
+            }
+            else
+            {
+                Admins.Visibility = Visibility.Collapsed;
+                Members.Visibility = Visibility.Collapsed;
+                ChannelSettings.Visibility = Visibility.Collapsed;
+            }
 
-            //Restricted.Badge = fullInfo.RestrictedCount;
-            //Restricted.Visibility = fullInfo.RestrictedCount > 0 ? Visibility.Visible : Visibility.Collapsed;
-
-            Members.Badge = fullInfo.MemberCount;
-            //Members.Visibility = fullInfo.CanGetMembers && group.IsChannel ? Visibility.Visible : Visibility.Collapsed;
+            Statistics.Visibility = fullInfo.CanGetRevenueStatistics || fullInfo.CanGetStarRevenueStatistics
+                ? Visibility.Visible
+                : Visibility.Collapsed;
 
             if (group.IsChannel is false && ViewModel.ClientService.TryGetChat(fullInfo.LinkedChatId, out Chat linkedChat) && linkedChat.LastMessage != null)
             {
@@ -1504,6 +1497,15 @@ namespace Telegram.Controls
             {
                 ViewModel.OpenUrl(data, false);
             }
+        }
+
+        #endregion
+
+        #region Binding
+
+        private string ConvertCryptoCount(long count)
+        {
+            return string.Format("{0:N3}", count / 1000000000.0d);
         }
 
         #endregion
