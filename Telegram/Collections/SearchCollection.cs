@@ -29,6 +29,7 @@ namespace Telegram.Collections
         private ISupportIncrementalLoading _incrementalSource;
 
         private bool _initialized;
+        private bool _loading;
 
         public SearchCollection(Func<object, string, TSource> factory, IDiffHandler<T> handler)
             : this(factory, null, handler)
@@ -61,14 +62,11 @@ namespace Telegram.Collections
         public void Reload()
         {
             Update(_factory(_sender ?? this, _query.Value));
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Query)));
         }
 
         public void UpdateQuery(string value)
         {
-            _query.Value = value;
-            Update(_factory(_sender ?? this, value));
-            //OnPropertyChanged(new PropertyChangedEventArgs(nameof(Query)));
+            Update(_factory(_sender ?? this, _query.Value = value));
         }
 
         public CancellationTokenSource Cancel()
@@ -87,6 +85,8 @@ namespace Telegram.Collections
 
                 if (_initialized)
                 {
+                    _loading = true;
+
                     var token = Cancel();
 
                     await incremental.LoadMoreItemsAsync(0);
@@ -94,6 +94,7 @@ namespace Telegram.Collections
 
                     if (token.IsCancellationRequested)
                     {
+                        _loading = false;
                         return;
                     }
 
@@ -106,6 +107,8 @@ namespace Telegram.Collections
                         // but really a lot of problems for sure.
                         Add(default);
                     }
+
+                    _loading = false;
                 }
             }
         }
@@ -114,7 +117,15 @@ namespace Telegram.Collections
         {
             return AsyncInfo.Run(async _ =>
             {
-                _initialized = true;
+                if (_loading)
+                {
+                    return new LoadMoreItemsResult
+                    {
+                        Count = 0
+                    };
+                }
+
+                _loading = true;
 
                 var token = Cancel();
                 var result = await _incrementalSource?.LoadMoreItemsAsync(count);
@@ -125,12 +136,16 @@ namespace Telegram.Collections
 
                     if (token.IsCancellationRequested)
                     {
+                        _loading = false;
                         return result;
                     }
 
                     ReplaceDiff(diff);
                     UpdateEmpty();
                 }
+
+                _initialized = true;
+                _loading = false;
 
                 return result;
             });
