@@ -207,7 +207,7 @@ namespace Telegram.Controls.Cells.Revenue
             else if (transaction.Partner is StarTransactionPartnerTelegramApi sourceTelegramApi)
             {
                 Title.Text = Strings.StarsTransactionFloodskip;
-                Photo.Source = PlaceholderImage.GetGlyph(Icons.ChatStarsFilled);
+                Photo.Source = PlaceholderImage.GetGlyph(Icons.ChatStarsFilled, 3);
 
                 MediaPreview.Visibility = Visibility.Collapsed;
 

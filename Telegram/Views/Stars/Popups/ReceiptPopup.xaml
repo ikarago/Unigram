@@ -101,7 +101,7 @@
             </Grid>
 
             <controls:TableView x:Name="TableRoot"
-                                Margin="0,12,0,0">
+                                Margin="-8,12,-8,0">
                 <controls:TableViewItem x:Name="From"
                                         Padding="0">
                     <Grid>
