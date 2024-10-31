@@ -228,7 +228,7 @@ namespace Telegram.Common
                         }
 
                         var frame = BufferSurface.Create((uint)(width * height * 4));
-                        animation.RenderSync(frame, width, height, false, out _);
+                        animation.RenderSync(frame, width, height, true, out _);
 
                         return frame;
                     });
@@ -444,7 +444,7 @@ namespace Telegram.Common
                 int height = animation.PixelHeight;
 
                 var frame = BufferSurface.Create((uint)(width * height * 4));
-                await Task.Run(() => animation.RenderSync(frame, width, height, false, out _));
+                await Task.Run(() => animation.RenderSync(frame, width, height, true, out _));
 
                 using var stream = new InMemoryRandomAccessStream();
                 PlaceholderImageHelper.Current.Encode(frame, stream, width, height);
@@ -545,7 +545,7 @@ namespace Telegram.Common
                     int height = animation.PixelHeight;
 
                     var frame = BufferSurface.Create((uint)(width * height * 4));
-                    var result = animation.RenderSync(frame, width, height, false, out _);
+                    var result = animation.RenderSync(frame, width, height, true, out _);
 
                     var stream = new InMemoryRandomAccessStream();
                     PlaceholderImageHelper.Current.Encode(frame, stream, width, height);
