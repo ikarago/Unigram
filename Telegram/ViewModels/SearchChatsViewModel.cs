@@ -84,7 +84,7 @@ namespace Telegram.ViewModels
             get => _query;
             set
             {
-                if (string.Equals(value, _query))
+                if (string.Equals(value, _query) && !string.IsNullOrEmpty(value))
                 {
                     return;
                 }
