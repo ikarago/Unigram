@@ -313,6 +313,7 @@
       <DependentUpon>WebVideoPlayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="CsWinRT.cs" />
+    <Compile Include="Entities\StorageAlbum.cs" />
     <Compile Include="Services\Calls\VoipCallBase.cs" />
     <Compile Include="Services\Calls\VoipGroupCallJoinedStateChangedEventArgs.cs" />
     <Compile Include="Services\Calls\VoipGroupCallParticipants.cs" />

@@ -412,17 +412,26 @@ namespace Telegram.ViewModels
             else if (popup.Items.Count > 1 && popup.IsAlbum)
             {
                 var group = new List<StorageMedia>(Math.Min(popup.Items.Count, 10));
+                var groupType = 0;
 
                 foreach (var item in popup.Items)
                 {
-                    group.Add(item);
+                    var type = item switch
+                    {
+                        StoragePhoto or StorageVideo => popup.IsFilesSelected ? 0 : 1,
+                        StorageAudio => 2,
+                        _ => 0
+                    };
 
-                    if (group.Count == 10)
+                    if (group.Count > 9 || (groupType != type && group.Count > 0))
                     {
                         await SendGroupedAsync(group, reply, captionz, options, popup.IsFilesSelected, captionAboveMedia, hasSpoiler, popup.StarCount);
                         group = new List<StorageMedia>(Math.Min(popup.Items.Count, 10));
                         reply = null;
                     }
+
+                    group.Add(item);
+                    groupType = type;
                 }
 
                 if (group.Count > 0)
