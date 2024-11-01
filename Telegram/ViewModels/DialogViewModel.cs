@@ -3392,6 +3392,7 @@ namespace Telegram.ViewModels
                 if (confirm == ContentDialogResult.Primary)
                 {
                     ClientService.Send(new UnpinChatMessage(chat.Id, message.Id));
+                    PinnedMessages.Clear();
                     Delegate?.UpdatePinnedMessage(chat, false);
                 }
             }
