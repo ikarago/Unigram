@@ -789,6 +789,11 @@ namespace Telegram.ViewModels
         {
             foreach (var message in Items.Where(x => x.IsOutgoing).Reverse())
             {
+                if (message.SendingState is not null)
+                {
+                    return;
+                }
+
                 var properties = await ClientService.SendAsync(new GetMessageProperties(message.ChatId, message.Id)) as MessageProperties;
                 if (properties != null && properties.CanBeEdited)
                 {
