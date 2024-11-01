@@ -210,7 +210,8 @@ namespace Telegram.Views
             TranslateHeader.InitializeParent(ClipperTranslate);
             ActionBar.InitializeParent(ClipperActionBar);
             ConnectedBot.InitializeParent(ClipperConnected);
-            PinnedMessage.InitializeParent(Clipper);
+            PinnedMessage.InitializeParent(ClipperPinned);
+            Sponsored.InitializeParent(Clipper);
         }
 
         public string GetAutomationName()
@@ -362,6 +363,8 @@ namespace Telegram.Views
             //Playback.Update(ViewModel.ClientService, ViewModel.PlaybackService, ViewModel.NavigationService);
 
             UpdateTextAreaRadius(false);
+
+            Sponsored.UpdateSponsoredMessage(ViewModel.ClientService, ViewModel.Chat, ViewModel.SponsoredMessage);
 
             TextField.IsReplaceEmojiEnabled = ViewModel.Settings.IsReplaceEmojiEnabled;
 
@@ -703,6 +706,10 @@ namespace Telegram.Views
                 {
                     EmptyChatAnimated.Source = null;
                 }
+            }
+            else if (e.PropertyName.Equals(nameof(ViewModel.SponsoredMessage)))
+            {
+                Sponsored.UpdateSponsoredMessage(ViewModel.ClientService, ViewModel.Chat, ViewModel.SponsoredMessage);
             }
         }
 
@@ -6084,6 +6091,11 @@ namespace Telegram.Views
         private void EmptyChatHow_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.NavigationService.Navigate(typeof(BusinessPage));
+        }
+
+        private void ClipperOuter_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ClipperBackground.Margin = new Thickness(0, -e.NewSize.Height - 48, 0, 0);
         }
     }
 

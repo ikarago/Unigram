@@ -1289,6 +1289,8 @@ namespace Telegram.ViewModels
             {
                 await LoadNextSliceAsync(loadMore);
             }
+
+            await AddSponsoredMessagesAsync();
         }
 
         private async Task<Messages> PreloadAlbumsAsync(long chatId, FoundChatMessages foundChatMessages)
@@ -1604,7 +1606,27 @@ namespace Telegram.ViewModels
         private async Task AddSponsoredMessagesAsync()
         {
             var chat = _chat;
-            if (chat == null || chat.Type is not ChatTypeSupergroup supergroup || !supergroup.IsChannel)
+            if (chat == null)
+            {
+                return;
+            }
+
+            if (chat.Type is ChatTypePrivate && ClientService.TryGetUser(chat, out User user))
+            {
+                if (user.Type is not UserTypeBot)
+                {
+                    return;
+                }
+            }
+            // Currently only bot ads are supported
+            //else if (chat.Type is ChatTypeSupergroup supergroup)
+            //{
+            //    if (supergroup.IsChannel is false)
+            //    {
+            //        return;
+            //    }
+            //}
+            else
             {
                 return;
             }
@@ -3404,6 +3426,21 @@ namespace Telegram.ViewModels
         }
 
         #endregion
+
+        public void HideSponsoredMessage()
+        {
+            if (IsPremium)
+            {
+                ClientService.Send(new ToggleHasSponsoredMessagesEnabled(false));
+                SponsoredMessage = null;
+
+                ToastPopup.Show(XamlRoot, Strings.AdHidden, ToastPopupIcon.AntiSpam);
+            }
+            else if (IsPremiumAvailable)
+            {
+                NavigationService.ShowPromo(new PremiumSourceFeature(new PremiumFeatureDisabledAds()));
+            }
+        }
 
         #region Unblock
 

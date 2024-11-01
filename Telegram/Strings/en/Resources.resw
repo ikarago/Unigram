@@ -73,6 +73,9 @@
   <data name="AboutPremiumTitle" xml:space="preserve">
     <value>About Telegram Premium</value>
   </data>
+  <data name="AboutRevenueSharingAds" xml:space="preserve">
+    <value>About These Ads</value>
+  </data>
   <data name="AccActionCancelDownload" xml:space="preserve">
     <value>Cancel download</value>
   </data>
@@ -928,6 +931,12 @@ Your prize is **{0} Stars**.</value>
   </data>
   <data name="AddToTheGroup" xml:space="preserve">
     <value>Add {0} to the group?</value>
+  </data>
+  <data name="AdHidden" xml:space="preserve">
+    <value>You will no longer see ads from Telegram.</value>
+  </data>
+  <data name="AdReported" xml:space="preserve">
+    <value>We will review this ad to ensure it matches our **Ad Policies and Guidelines**.</value>
   </data>
   <data name="Agree" xml:space="preserve">
     <value>Agree</value>
@@ -2197,6 +2206,9 @@ from **{0}**.</value>
   </data>
   <data name="Bot" xml:space="preserve">
     <value>bot</value>
+  </data>
+  <data name="BotAdWhat" xml:space="preserve">
+    <value>what&apos;s this?</value>
   </data>
   <data name="BotChangeSettings" xml:space="preserve">
     <value>Change Bot Settings</value>
@@ -6190,6 +6202,9 @@ They can still join via an invite link as long as they are not on the Removed Us
   <data name="Hide" xml:space="preserve">
     <value>Hide</value>
   </data>
+  <data name="HideAd" xml:space="preserve">
+    <value>Hide</value>
+  </data>
   <data name="HideCaption" xml:space="preserve">
     <value>Hide Caption</value>
   </data>
@@ -8867,6 +8882,9 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   <data name="ProfileStoriesArchiveHint" xml:space="preserve">
     <value>Only you can see archived stories unless you choose to post them to your profile.</value>
   </data>
+  <data name="PromoteUrl" xml:space="preserve">
+    <value>https://ads.telegram.org</value>
+  </data>
   <data name="Proxy" xml:space="preserve">
     <value>Proxy</value>
   </data>
@@ -9179,6 +9197,12 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   <data name="Report2Send" xml:space="preserve">
     <value>Send Report</value>
   </data>
+  <data name="ReportAd" xml:space="preserve">
+    <value>Report Ad</value>
+  </data>
+  <data name="ReportAdLearnMore" xml:space="preserve">
+    <value>Learn more about our [Ad Policies and Guidelines](https://ads.telegram.org/guidelines).</value>
+  </data>
   <data name="ReportChat" xml:space="preserve">
     <value>Report</value>
   </data>
@@ -9431,6 +9455,42 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   </data>
   <data name="ReturnToCall" xml:space="preserve">
     <value>RETURN TO CALL</value>
+  </data>
+  <data name="RevenueSharingAdsAlertButton" xml:space="preserve">
+    <value>Understood</value>
+  </data>
+  <data name="RevenueSharingAdsAlertSubtitle" xml:space="preserve">
+    <value>Telegram Ads are very different from ads on other platforms. Ads such as this one:</value>
+  </data>
+  <data name="RevenueSharingAdsInfo1Subtitle" xml:space="preserve">
+    <value>Ads on Telegram do not use your personal information and are based on the channel in which you see them.</value>
+  </data>
+  <data name="RevenueSharingAdsInfo1Title" xml:space="preserve">
+    <value>Respect Your Privacy</value>
+  </data>
+  <data name="RevenueSharingAdsInfo2Subtitle" xml:space="preserve">
+    <value>50% of the revenue from Telegram Ads goes to the owner of the channel where they are displayed.</value>
+  </data>
+  <data name="RevenueSharingAdsInfo2Title" xml:space="preserve">
+    <value>Help the Channel Creator</value>
+  </data>
+  <data name="RevenueSharingAdsInfo3Subtitle" xml:space="preserve">
+    <value>You can turn off ads by subscribing to **Telegram Premium**, and Level {0} channels can remove them for their subscribers.</value>
+  </data>
+  <data name="RevenueSharingAdsInfo3SubtitleBot" xml:space="preserve">
+    <value>You can turn off ads by subscribing to **Telegram Premium**.</value>
+  </data>
+  <data name="RevenueSharingAdsInfo3Title" xml:space="preserve">
+    <value>Can Be Removed</value>
+  </data>
+  <data name="RevenueSharingAdsInfo4Subtitle2" xml:space="preserve">
+    <value>Anyone can create an ad to display in this channel — with minimal budgets. Check out the **Telegram Ad Platform** for details. {0}</value>
+  </data>
+  <data name="RevenueSharingAdsInfo4SubtitleLearnMore" xml:space="preserve">
+    <value>**Learn More &gt;**</value>
+  </data>
+  <data name="RevenueSharingAdsInfo4Title" xml:space="preserve">
+    <value>Can I Launch an Ad?</value>
   </data>
   <data name="RevokeAlert" xml:space="preserve">
     <value>Are you sure you want to revoke this link? Once the link is revoked, no one will be able to join using it.</value>
@@ -10092,6 +10152,12 @@ The channel &quot;**{1}**&quot; will become private.</value>
   </data>
   <data name="SponsoredMessage" xml:space="preserve">
     <value>ad</value>
+  </data>
+  <data name="SponsoredMessageSponsor" xml:space="preserve">
+    <value>Advertiser Info</value>
+  </data>
+  <data name="SponsoredMessageSponsorReportable" xml:space="preserve">
+    <value>Sponsor Info</value>
   </data>
   <data name="StarMediaPurchase" xml:space="preserve">
     <value>Media Purchase</value>

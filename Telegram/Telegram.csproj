@@ -267,6 +267,9 @@
     <Compile Include="Controls\Cells\UserGiftCell.xaml.cs">
       <DependentUpon>UserGiftCell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Chats\ChatSponsoredHeader.xaml.cs">
+      <DependentUpon>ChatSponsoredHeader.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Chats\ChatConnectedBotHeader.xaml.cs">
       <DependentUpon>ChatConnectedBotHeader.xaml</DependentUpon>
     </Compile>
@@ -1135,6 +1138,9 @@
     <Compile Include="Views\Host\TabbedPage.xaml.cs">
       <DependentUpon>TabbedPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Monetization\Popups\AboutAdsPopup.xaml.cs">
+      <DependentUpon>AboutAdsPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Monetization\Popups\LearnMorePopup.xaml.cs">
       <DependentUpon>LearnMorePopup.xaml</DependentUpon>
     </Compile>
@@ -1199,6 +1205,9 @@
     </Compile>
     <Compile Include="Views\Popups\ChooseTimeZonePopup.xaml.cs">
       <DependentUpon>ChooseTimeZonePopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Popups\ReportAdsPopup.xaml.cs">
+      <DependentUpon>ReportAdsPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Popups\ReportStoryPopup.xaml.cs">
       <DependentUpon>ReportStoryPopup.xaml</DependentUpon>
@@ -2447,6 +2456,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Chats\ChatSponsoredHeader.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Chats\ChatConnectedBotHeader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2963,6 +2976,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Monetization\Popups\AboutAdsPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Monetization\Popups\LearnMorePopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -3044,6 +3061,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Popups\ChooseTimeZonePopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Popups\ReportAdsPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
