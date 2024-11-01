@@ -69,7 +69,7 @@ namespace Telegram.Views.Stars.Popups
                     if (gift.Date + clientService.Options.GiftSellPeriod > DateTime.Now.ToTimestamp())
                     {
                         TextBlockHelper.SetMarkdown(Subtitle, Strings.Gift2InfoPinned);
-                        ConvertValue.Text = Locale.Declension(Strings.R.Gift2ButtonSell, gift.SellStarCount);
+                        Convert.Glyph = Locale.Declension(Strings.R.Gift2ButtonSell, gift.SellStarCount);
                     }
                     else
                     {
@@ -85,7 +85,7 @@ namespace Telegram.Views.Stars.Popups
                     if (gift.Date + clientService.Options.GiftSellPeriod > DateTime.Now.ToTimestamp())
                     {
                         TextBlockHelper.SetMarkdown(Subtitle, Locale.Declension(Strings.R.Gift2Info, gift.SellStarCount));
-                        ConvertValue.Text = Locale.Declension(Strings.R.Gift2ButtonSell, gift.SellStarCount);
+                        Convert.Glyph = Locale.Declension(Strings.R.Gift2ButtonSell, gift.SellStarCount);
                     }
                     else
                     {

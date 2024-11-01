@@ -89,24 +89,16 @@
                                    VerticalAlignment="Top"
                                    Grid.Column="1" />
 
-                        <Button x:Name="Convert"
-                                Click="Convert_Click"
-                                Style="{StaticResource AccentButtonStyle}"
-                                VerticalAlignment="Center"
-                                FontSize="11"
-                                Padding="8,0"
-                                CornerRadius="8"
-                                BorderThickness="0"
-                                Height="16"
-                                Grid.Column="2">
-                            <TextBlock x:Name="ConvertValue"
-                                       TextLineBounds="Tight"
-                                       TextAlignment="Center"
-                                       OpticalMarginAlignment="TrimSideBearings"
-                                       FontSize="11"
-                                       VerticalAlignment="Center"
-                                       Typography.NumeralAlignment="Tabular" />
-                        </Button>
+                        <controls:BadgeButton x:Name="Convert"
+                                              Click="Convert_Click"
+                                              Style="{StaticResource SmallButtonStyle}"
+                                              VerticalAlignment="Center"
+                                              FontSize="11"
+                                              Padding="8,0"
+                                              CornerRadius="8"
+                                              BorderThickness="0"
+                                              Height="16"
+                                              Grid.Column="2" />
                     </Grid>
                 </controls:TableViewItem>
                 <controls:TableViewItem x:Name="Date"
