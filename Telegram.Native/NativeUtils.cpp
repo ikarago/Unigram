@@ -463,40 +463,6 @@ namespace winrt::Telegram::Native::implementation
         return L"en-US";
     }
 
-    hstring NativeUtils::FormatTime(winrt::Windows::Foundation::DateTime value)
-    {
-        FILETIME fileTime = winrt::clock::to_file_time(value);
-        FILETIME localFileTime;
-        if (FileTimeToLocalFileTime(&fileTime, &localFileTime))
-        {
-            SYSTEMTIME systemTime;
-            if (FileTimeToSystemTime(&localFileTime, &systemTime))
-            {
-                TCHAR timeString[128];
-                if (GetTimeFormatEx(LOCALE_NAME_USER_DEFAULT, TIME_NOSECONDS, &systemTime, nullptr, timeString, 128))
-                {
-                    return hstring(timeString);
-                }
-
-                //switch (GetLastError())
-                //{
-                //case ERROR_INSUFFICIENT_BUFFER:
-                //    return L"E_INSUFFICIENT_BUFFER";
-                //case ERROR_INVALID_FLAGS:
-                //    return L"E_INVALID_FLAGS";
-                //case ERROR_INVALID_PARAMETER:
-                //    return L"E_INVALID_PARAMETER";
-                //case ERROR_OUTOFMEMORY:
-                //    return L"E_OUTOFMEMORY";
-                //default:
-                //    return L"E_UNKNOWN";
-                //}
-            }
-        }
-
-        return hstring();
-    }
-
     inline static hstring GetDateFormatEx(CONST SYSTEMTIME* lpDate, hstring format)
     {
         DWORD flags = NULL;
@@ -527,13 +493,13 @@ namespace winrt::Telegram::Native::implementation
     hstring NativeUtils::FormatDate(winrt::Windows::Foundation::DateTime value, hstring format)
     {
         FILETIME fileTime = winrt::clock::to_file_time(value);
-        FILETIME localFileTime;
-        if (FileTimeToLocalFileTime(&fileTime, &localFileTime))
+        SYSTEMTIME systemTime;
+        if (FileTimeToSystemTime(&fileTime, &systemTime))
         {
-            SYSTEMTIME systemTime;
-            if (FileTimeToSystemTime(&localFileTime, &systemTime))
+            SYSTEMTIME localSystemTime;
+            if (SystemTimeToTzSpecificLocalTime(NULL, &systemTime, &localSystemTime))
             {
-                return GetDateFormatEx(&systemTime, format);
+                return GetDateFormatEx(&localSystemTime, format);
             }
         }
 
@@ -559,14 +525,14 @@ namespace winrt::Telegram::Native::implementation
         fileTime.dwLowDateTime = uli.LowPart;
         fileTime.dwHighDateTime = uli.HighPart;
 
-        FILETIME localFileTime;
-        if (FileTimeToLocalFileTime(&fileTime, &localFileTime))
+        SYSTEMTIME systemTime;
+        if (FileTimeToSystemTime(&fileTime, &systemTime))
         {
-            SYSTEMTIME systemTime;
-            if (FileTimeToSystemTime(&localFileTime, &systemTime))
+            SYSTEMTIME localSystemTime;
+            if (SystemTimeToTzSpecificLocalTime(NULL, &systemTime, &localSystemTime))
             {
                 TCHAR timeString[128];
-                if (GetTimeFormatEx(LOCALE_NAME_USER_DEFAULT, TIME_NOSECONDS, &systemTime, nullptr, timeString, 128))
+                if (GetTimeFormatEx(LOCALE_NAME_USER_DEFAULT, TIME_NOSECONDS, &localSystemTime, nullptr, timeString, 128))
                 {
                     return hstring(timeString);
                 }
@@ -576,23 +542,55 @@ namespace winrt::Telegram::Native::implementation
         return hstring();
     }
 
+    hstring NativeUtils::FormatTime(winrt::Windows::Foundation::DateTime value)
+    {
+        FILETIME fileTime = winrt::clock::to_file_time(value);
+        SYSTEMTIME systemTime;
+        if (FileTimeToSystemTime(&fileTime, &systemTime))
+        {
+            SYSTEMTIME localSystemTime;
+            if (SystemTimeToTzSpecificLocalTime(NULL, &systemTime, &localSystemTime))
+            {
+                TCHAR timeString[128];
+                if (GetTimeFormatEx(LOCALE_NAME_USER_DEFAULT, TIME_NOSECONDS, &localSystemTime, nullptr, timeString, 128))
+                {
+                    return hstring(timeString);
+                }
+
+                //switch (GetLastError())
+                //{
+                //case ERROR_INSUFFICIENT_BUFFER:
+                //    return L"E_INSUFFICIENT_BUFFER";
+                //case ERROR_INVALID_FLAGS:
+                //    return L"E_INVALID_FLAGS";
+                //case ERROR_INVALID_PARAMETER:
+                //    return L"E_INVALID_PARAMETER";
+                //case ERROR_OUTOFMEMORY:
+                //    return L"E_OUTOFMEMORY";
+                //default:
+                //    return L"E_UNKNOWN";
+                //}
+            }
+        }
+
+        return hstring();
+    }
+
     hstring NativeUtils::FormatDate(int value, hstring format)
     {
-        // TODO: DATE_MONTHDAY doesn't seem to work, so we're not using this method.
-
         FILETIME fileTime;
         ULARGE_INTEGER uli;
         uli.QuadPart = (static_cast<ULONGLONG>(value) + 11644473600LL) * 10000000LL;
         fileTime.dwLowDateTime = uli.LowPart;
         fileTime.dwHighDateTime = uli.HighPart;
 
-        FILETIME localFileTime;
-        if (FileTimeToLocalFileTime(&fileTime, &localFileTime))
+        SYSTEMTIME systemTime;
+        if (FileTimeToSystemTime(&fileTime, &systemTime))
         {
-            SYSTEMTIME systemTime;
-            if (FileTimeToSystemTime(&localFileTime, &systemTime))
+            SYSTEMTIME localSystemTime;
+            if (SystemTimeToTzSpecificLocalTime(NULL, &systemTime, &localSystemTime))
             {
-                return GetDateFormatEx(&systemTime, format);
+                return GetDateFormatEx(&localSystemTime, format);
             }
         }
 
