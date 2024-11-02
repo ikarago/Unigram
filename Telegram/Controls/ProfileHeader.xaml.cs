@@ -775,11 +775,17 @@ namespace Telegram.Controls
             {
                 GetEntities(fullInfo.BotInfo.ShortDescription);
                 Description.Visibility = string.IsNullOrEmpty(fullInfo.BotInfo.ShortDescription) ? Visibility.Collapsed : Visibility.Visible;
+
+                Statistics.Visibility = fullInfo.BotInfo.CanGetRevenueStatistics
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
             }
             else
             {
                 ReplaceEntities(fullInfo.Bio);
                 Description.Visibility = string.IsNullOrEmpty(fullInfo.Bio.Text) ? Visibility.Collapsed : Visibility.Visible;
+
+                Statistics.Visibility = Visibility.Collapsed;
             }
 
             if (user.Type is UserTypeBot userTypeBot && userTypeBot.CanBeEdited)

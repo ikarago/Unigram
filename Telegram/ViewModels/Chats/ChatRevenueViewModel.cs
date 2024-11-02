@@ -216,22 +216,34 @@ namespace Telegram.ViewModels.Chats
                 UsdRate = statistics.UsdRate;
 
                 UpdateAmount(statistics.RevenueAmount);
+
+                Availability = statistics.RevenueAmount.TotalAmount > 0 && Stars.TotalAmount.CryptocurrencyAmount > 0
+                    ? ChatRevenueAvailability.CryptoAndStars 
+                    : statistics.RevenueAmount.TotalAmount > 0
+                    ? ChatRevenueAvailability.Crypto
+                    : ChatRevenueAvailability.Stars;
+
+                SelectedIndex = statistics.RevenueAmount.TotalAmount > 0 ? 0 : 1;
+                IsSelectionVisible = statistics.RevenueAmount.TotalAmount > 0 && Stars.TotalAmount.CryptocurrencyAmount > 0;
             }
 
-            var response1 = await ClientService.SendAsync(new GetChatBoostFeatures(Chat.Type is ChatTypeSupergroup { IsChannel: true }));
-            var response2 = await ClientService.SendAsync(new GetChatBoostStatus(Chat.Id));
-
-            if (response1 is ChatBoostFeatures features && response2 is ChatBoostStatus status)
+            if (Chat.Type is ChatTypeSupergroup)
             {
-                _features = features;
-                _status = status;
+                var response1 = await ClientService.SendAsync(new GetChatBoostFeatures(Chat.Type is ChatTypeSupergroup { IsChannel: true }));
+                var response2 = await ClientService.SendAsync(new GetChatBoostStatus(Chat.Id));
 
-                int MinLevelOrZero(int level)
+                if (response1 is ChatBoostFeatures features && response2 is ChatBoostStatus status)
                 {
-                    return level < status.Level ? 0 : level;
-                }
+                    _features = features;
+                    _status = status;
 
-                MinSponsoredMessageDisableBoostLevel = MinLevelOrZero(features.MinSponsoredMessageDisableBoostLevel);
+                    int MinLevelOrZero(int level)
+                    {
+                        return level < status.Level ? 0 : level;
+                    }
+
+                    MinSponsoredMessageDisableBoostLevel = MinLevelOrZero(features.MinSponsoredMessageDisableBoostLevel);
+                }
             }
         }
 

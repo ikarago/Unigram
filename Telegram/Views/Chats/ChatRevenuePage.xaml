@@ -122,7 +122,7 @@
                                               Footer="{x:Bind ConvertTransferInfo(ViewModel.WithdrawalEnabled, ViewModel.IsOwner), Mode=OneWay}">
                         <StackPanel Background="{ThemeResource SettingsItemBackground}">
                             <TextBlock TextAlignment="Center"
-                                       Margin="0,8,0,0">
+                                       Margin="0,8,0,8">
                                 <Run Text="&#xEA7E;"
                                      Foreground="{ThemeResource SystemColorControlAccentBrush}"
                                      FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -137,7 +137,7 @@
                                      Foreground="{ThemeResource SystemControlDisabledChromeDisabledLowBrush}" />
                             </TextBlock>
 
-                            <Grid>
+                            <Grid Margin="0,0,0,8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition />
@@ -150,7 +150,7 @@
                                         Style="{StaticResource AccentButtonStyle}"
                                         HorizontalAlignment="Center"
                                         Height="40"
-                                        Margin="12,8" />
+                                        Margin="12,0,12,8" />
                                 <Button x:Name="AdsButton"
                                         x:Load="{x:Bind ViewModel.IsOwner}"
                                         Click="{x:Bind ViewModel.Transfer}"
@@ -159,7 +159,7 @@
                                         Style="{StaticResource AccentButtonStyle}"
                                         HorizontalAlignment="Center"
                                         Height="40"
-                                        Margin="12,8"
+                                        Margin="12,8,12,0"
                                         Grid.Column="1" />
                             </Grid>
                         </StackPanel>
@@ -196,13 +196,13 @@
                     <Grid x:Name="TransactionsRoot"
                           Visibility="{x:Bind ViewModel.ItemsView.Count, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <TextBlock x:Name="TransactionsHeader"
-                                   x:Load="{x:Bind ViewModel.IsSelectionVisible, Converter={StaticResource BooleanNegationConverter}}"
+                                   x:Load="{x:Bind ViewModel.IsSelectionVisible, Mode=OneWay, Converter={StaticResource BooleanNegationConverter}}"
                                    Text="{CustomResource MonetizationTransactions}"
                                    Style="{StaticResource BaseTextBlockStyle}"
                                    Margin="24,16,24,8" />
 
                         <Grid x:Name="TransactionsNavigation"
-                              x:Load="{x:Bind ViewModel.IsSelectionVisible}"
+                              x:Load="{x:Bind ViewModel.IsSelectionVisible, Mode=OneWay}"
                               CornerRadius="4"
                               MaxWidth="1000"
                               Margin="24,16,24,2">
@@ -236,6 +236,9 @@
                     </chats:ChatRevenueTemplateSelector.StarTransactionTemplate>
                 </chats:ChatRevenueTemplateSelector>
             </ListView.ItemTemplateSelector>
+            <ListView.Footer>
+                <Border Height="30" />
+            </ListView.Footer>
         </controls:TableListView>
     </Grid>
 </local:HostedPage>

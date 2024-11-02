@@ -131,7 +131,7 @@ namespace Telegram.ViewModels
                     Delegate?.UpdateUserFullInfo(chat, item, cache, false, false);
                 }
 
-                if (cache?.BotInfo?.CanGetRevenueStatistics is false || item.Type is UserTypeBot { CanBeEdited: true })
+                if (cache?.BotInfo?.CanGetRevenueStatistics is true || item.Type is UserTypeBot { CanBeEdited: true })
                 {
                     UpdateBalance(chat.Id, new MessageSenderUser(item.Id));
                 }
@@ -253,7 +253,7 @@ namespace Telegram.ViewModels
                 {
                     Delegate?.UpdateUserFullInfo(chat, ClientService.GetUser(update.UserId), update.UserFullInfo, false, false);
 
-                    if (update.UserFullInfo.BotInfo?.CanGetRevenueStatistics is false)
+                    if (update.UserFullInfo.BotInfo?.CanGetRevenueStatistics is true)
                     {
                         UpdateBalance(chat.Id, new MessageSenderUser(update.UserId));
                     }

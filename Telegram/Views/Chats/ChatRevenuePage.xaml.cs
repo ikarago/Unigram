@@ -33,6 +33,9 @@ namespace Telegram.Views.Chats
             UpdateAvailability(ViewModel.Availability);
 
             FooterInfo.Text = string.Format(Strings.MonetizationInfo, 50);
+            FooterInfo.Visibility = ViewModel.Chat.Type is ChatTypeSupergroup
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
