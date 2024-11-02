@@ -384,7 +384,7 @@ namespace Telegram.Common
                 var result = message.SelfDestructType is MessageSelfDestructTypeImmediately
                     ? Strings.AttachOnceAudio
                     : Strings.AttachAudio;
-                
+
                 result += GetCaption(voiceNote.Caption.Text) + ", " + (voiceNote.IsListened ? "" : Strings.AccDescrMsgNotPlayed + ", ");
 
                 if (details)

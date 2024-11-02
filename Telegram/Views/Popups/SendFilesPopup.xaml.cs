@@ -1320,15 +1320,12 @@ namespace Telegram.Views.Popups
     {
         public DataTemplate FileTemplate { get; set; }
 
-        public DataTemplate MediaTemplate { get; set; }
-
         public DataTemplate AlbumTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
             return item switch
             {
-                StoragePhoto or StorageVideo => MediaTemplate,
                 StorageAlbum => AlbumTemplate,
                 _ => FileTemplate
             };

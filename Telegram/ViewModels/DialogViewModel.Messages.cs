@@ -308,7 +308,7 @@ namespace Telegram.ViewModels
                 ClientService.Send(new DeleteQuickReplyShortcutMessages(QuickReplyShortcut.Id, messages.Select(x => x.Id).ToList()));
                 return;
             }
-          
+
             ClientService.Send(new DeleteMessages(chat.Id, messages.Select(x => x.Id).ToList(), popup.Revoke));
 
             foreach (var sender in popup.DeleteAll)

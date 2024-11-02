@@ -218,7 +218,7 @@ namespace Telegram.ViewModels.Chats
                 UpdateAmount(statistics.RevenueAmount);
 
                 Availability = statistics.RevenueAmount.TotalAmount > 0 && Stars.TotalAmount.CryptocurrencyAmount > 0
-                    ? ChatRevenueAvailability.CryptoAndStars 
+                    ? ChatRevenueAvailability.CryptoAndStars
                     : statistics.RevenueAmount.TotalAmount > 0
                     ? ChatRevenueAvailability.Crypto
                     : ChatRevenueAvailability.Stars;

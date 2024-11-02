@@ -389,8 +389,7 @@
                   Padding="8,8,8,0"
                   Grid.Row="1">
             <ListView.ItemTemplateSelector>
-                <local:StorageMediaTemplateSelector FileTemplate="{StaticResource FileItemTemplate}"
-                                                    MediaTemplate="{StaticResource MediaItemTemplate}">
+                <local:StorageMediaTemplateSelector FileTemplate="{StaticResource FileItemTemplate}">
                     <local:StorageMediaTemplateSelector.AlbumTemplate>
                         <DataTemplate>
                             <Grid>
