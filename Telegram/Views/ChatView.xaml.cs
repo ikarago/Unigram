@@ -2902,8 +2902,9 @@ namespace Telegram.Views
                 {
                     Width = 264,
                     Height = 48 * Math.Max(viewers.Count, reacted),
-                    MinHeight = 72,
-                    MaxHeight = 360
+                    MinHeight = 50,
+                    MaxHeight = 360,
+                    Margin = new Thickness(0, 0, 0, -2)
                 };
 
                 void handler(InteractionsView sender, ItemClickEventArgs e)
@@ -2941,13 +2942,9 @@ namespace Telegram.Views
                         text = Locale.Declension(Strings.R.Reacted, reacted);
                     }
                 }
-                else if (viewers.Count > 1)
+                else if (viewers.Count > 0)
                 {
                     text = Locale.Declension(played ? Strings.R.MessagePlayed : Strings.R.MessageSeen, viewers.Count);
-                }
-                else if (viewers.Count > 0 && message.ClientService.TryGetUser(viewers[0].UserId, out User first))
-                {
-                    text = first.FullName();
                 }
                 else
                 {
