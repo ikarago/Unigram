@@ -19,9 +19,11 @@ using Telegram.Td.Api;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Composition;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Input;
 
 namespace Telegram.Controls.Views
 {
@@ -38,7 +40,6 @@ namespace Telegram.Controls.Views
         private readonly HashSet<long> _users = new();
 
         private string _nextOffset;
-
 
         public InteractionsView(IClientService clientService, long chatId, long messageId, MessageViewers viewers)
         {
@@ -57,6 +58,11 @@ namespace Telegram.Controls.Views
             {
                 ShowHideSkeleton();
             };
+        }
+
+        protected override void OnGotFocus(RoutedEventArgs e)
+        {
+            base.OnGotFocus(e);
         }
 
         private bool _skeletonCollapsed = true;
@@ -177,6 +183,15 @@ namespace Telegram.Controls.Views
                 }
 
                 args.Handled = true;
+
+                if (args.ItemIndex == 0 && args.Phase == 2)
+                {
+                    var element = FocusManager.GetFocusedElement();
+                    if (element is MenuFlyoutContent flyout)
+                    {
+                        args.ItemContainer.Focus(flyout.FocusState);
+                    }
+                }
             }
         }
 
@@ -184,7 +199,6 @@ namespace Telegram.Controls.Views
         {
             ItemClick?.Invoke(this, e);
         }
-
 
         public async Task<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
         {
