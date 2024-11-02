@@ -311,7 +311,8 @@
                                                FontFamily="{StaticResource SymbolThemeFontFamily}"
                                                HorizontalAlignment="Right"
                                                VerticalAlignment="Center"
-                                               FontSize="20" />
+                                               FontSize="20"
+                                               Grid.Column="1" />
                                 </Grid>
                             </HyperlinkButton>
                         </Grid>
