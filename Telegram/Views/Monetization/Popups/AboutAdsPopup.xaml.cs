@@ -32,6 +32,8 @@ namespace Telegram.Views.Monetization.Popups
             _message = message;
 
             //Icon.Source = new LocalFileSource($"ms-appx:///Assets/Animations/CollectibleUsername.tgs");
+
+            TextBlockHelper.SetMarkdown(LongInfo, string.Format(Strings.RevenueSharingAdsInfo4Subtitle2, string.Empty));//string.Format("[{0}]({1})", Strings.RevenueSharingAdsInfo4SubtitleLearnMore.Replace("**", string.Empty), Strings.PromoteUrl)));
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -44,7 +46,7 @@ namespace Telegram.Views.Monetization.Popups
 
         private void OnOpened(ContentDialog sender, ContentDialogOpenedEventArgs args)
         {
-            Icon.Play();
+
         }
 
         private void Learn_Click(object sender, RoutedEventArgs e)

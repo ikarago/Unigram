@@ -20,7 +20,7 @@
                       VerticalScrollMode="Auto">
 
             <StackPanel Padding="16,16,16,24">
-                <Border Background="{ThemeResource AccentButtonBackground}"
+                <!--<Border Background="{ThemeResource AccentButtonBackground}"
                         CornerRadius="48"
                         Width="96"
                         Height="96">
@@ -34,7 +34,7 @@
                                             DecodeFrameType="Logical"
                                             Width="72"
                                             Height="72" />
-                </Border>
+                </Border>-->
 
                 <TextBlock Text="{CustomResource AboutRevenueSharingAds}"
                            Style="{StaticResource PopupTextBlockStyle}"
@@ -160,7 +160,8 @@
                            VerticalAlignment="Top"
                            Margin="0,8,0,4" />
 
-                <TextBlock common:TextBlockHelper.IsLink="True"
+                <TextBlock x:Name="LongInfo"
+                           common:TextBlockHelper.IsLink="True"
                            common:TextBlockHelper.Markdown="{CustomResource RevenueSharingAdsInfo4Subtitle2}"
                            TextAlignment="Center"
                            TextTrimming="CharacterEllipsis"
