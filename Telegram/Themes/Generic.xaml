@@ -3521,6 +3521,7 @@
 
                                     <local:GlyphButton x:Name="DismissButton"
                                                        x:Load="False"
+                                                       AutomationProperties.Name="{CustomResource Close}"
                                                        HorizontalAlignment="Right"
                                                        VerticalAlignment="Top"
                                                        Margin="0,-24,-24,0"
