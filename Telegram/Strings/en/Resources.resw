@@ -1293,6 +1293,12 @@ Please take a look at the &lt;a href=&quot;https://telegram.org/faq#general-ques
   <data name="AttachMusic" xml:space="preserve">
     <value>Music</value>
   </data>
+  <data name="AttachOnceAudio" xml:space="preserve">
+    <value>One-time Voice Message</value>
+  </data>
+  <data name="AttachOnceRound" xml:space="preserve">
+    <value>One-time Video Message</value>
+  </data>
   <data name="AttachPhoto" xml:space="preserve">
     <value>Photo</value>
   </data>
@@ -9491,6 +9497,9 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   </data>
   <data name="RevenueSharingAdsInfo4Title" xml:space="preserve">
     <value>Can I Launch an Ad?</value>
+  </data>
+  <data name="ReverseOrder" xml:space="preserve">
+    <value>Reverse Order</value>
   </data>
   <data name="RevokeAlert" xml:space="preserve">
     <value>Are you sure you want to revoke this link? Once the link is revoked, no one will be able to join using it.</value>
