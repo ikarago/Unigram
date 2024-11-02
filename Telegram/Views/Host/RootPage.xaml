@@ -8,6 +8,7 @@
       xmlns:controls="using:Telegram.Controls"
       xmlns:services="using:Telegram.Services"
       xmlns:settings="using:Telegram.Views.Settings"
+      xmlns:converters="using:Telegram.Converters"
       muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
       mc:Ignorable="d"
       d:DesignHeight="300"
@@ -127,7 +128,7 @@
                                            Grid.Column="1" />
                 </Grid>
 
-                <controls:BadgeControl Text="{x:Bind UnreadCount, Mode=OneWay}"
+                <controls:BadgeControl Text="{x:Bind converters:Formatter.ShortNumber(UnreadCount), Mode=OneWay}"
                                        IsUnmuted="{x:Bind IsUnmuted, Mode=OneWay}"
                                        Visibility="{x:Bind ShowCount, Mode=OneWay}"
                                        VerticalAlignment="Center"
