@@ -1660,7 +1660,10 @@ namespace Telegram.Views
                 {
                     if (ViewModel.IsPremium && ViewModel.ClientService.Options.GiftPremiumFromAttachmentMenu)
                     {
-                        flyout.CreateFlyoutItem(ViewModel.GiftPremium, Strings.SendAGift, Icons.GiftPremium);
+                        if (ViewModel.ClientService.TryGetUser(ViewModel.Chat, out User receiver) && !receiver.IsPremium)
+                        {
+                            flyout.CreateFlyoutItem(ViewModel.GiftPremium, Strings.SendAGift, Icons.GiftPremium);
+                        }
                     }
 
                     var bots = ViewModel.ClientService.GetBotsForChat(chat.Id);
