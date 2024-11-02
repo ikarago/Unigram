@@ -217,6 +217,7 @@ namespace Telegram.Views.Premium.Popups
 
             // TODO:
             Link.Text = "t.me/giftcode/" + code;
+            LinkRoot.Visibility = Visibility.Visible;
 
             var gifter = clientService.GetMessageSender(giftCode.CreatorId ?? senderId);
             //var receiver = clientService.GetUser(giftedPremium.ReceiverUserId);

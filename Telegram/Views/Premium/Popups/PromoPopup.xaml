@@ -78,7 +78,9 @@
                                Margin="12,8,12,20"
                                Grid.Row="2" />
 
-                    <Grid Margin="12,-12,12,20"
+                    <Grid x:Name="LinkRoot"
+                          Margin="12,-12,12,20"
+                          Visibility="Collapsed"
                           Grid.Row="3">
                         <Button Click="CopyLink_Click"
                                 HorizontalAlignment="Stretch"
