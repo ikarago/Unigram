@@ -1016,20 +1016,17 @@ namespace Telegram.Views.Popups
             }
         }
 
-        private async void Album_ItemClick(object sender, ItemClickEventArgs e)
+        private async void Album_ItemClick(StorageMedia sender, EventArgs args)
         {
-            if (e.ClickedItem is StorageMedia media)
+            var popup = new EditMediaPopup(sender);
+
+            var confirm = await popup.ShowAsync(XamlRoot);
+            if (confirm == ContentDialogResult.Primary)
             {
-                var popup = new EditMediaPopup(media);
+                sender.Refresh();
 
-                var confirm = await popup.ShowAsync(XamlRoot);
-                if (confirm == ContentDialogResult.Primary)
-                {
-                    media.Refresh();
-
-                    UpdateView();
-                    UpdatePanel();
-                }
+                UpdateView();
+                UpdatePanel();
             }
         }
 
@@ -1353,7 +1350,7 @@ namespace Telegram.Views.Popups
         protected override Size MeasureOverride(Size availableSize)
         {
             var album = _album;
-            if (album == null || album.Media.Count <= 1)
+            if (album == null || album.Media.Count < 1)
             {
                 return base.MeasureOverride(availableSize);
             }
@@ -1372,13 +1369,13 @@ namespace Telegram.Views.Popups
         protected override Size ArrangeOverride(Size finalSize)
         {
             var album = _album;
-            if (album == null || album.Media.Count <= 1)
+            if (album == null || album.Media.Count < 1)
             {
                 return base.ArrangeOverride(finalSize);
             }
 
             var positions = _positions;
-            if (positions.Item1 == null || positions.Item1.Length == 1)
+            if (positions.Item1 == null || positions.Item1.Length < 1)
             {
                 return base.ArrangeOverride(finalSize);
             }
@@ -1391,6 +1388,8 @@ namespace Telegram.Views.Popups
             return finalSize;
         }
 
+        public event TypedEventHandler<StorageMedia, EventArgs> ItemClick;
+
         public void UpdateMessage(StorageAlbum album)
         {
             _album = album;
@@ -1398,7 +1397,7 @@ namespace Telegram.Views.Popups
 
             foreach (var pos in album.Media)
             {
-                var element = new ContentControl
+                var element = new Button
                 {
                     ContentTemplate = ItemTemplate,
                     Content = pos,
@@ -1409,9 +1408,21 @@ namespace Telegram.Views.Popups
                     MaxWidth = MessageAlbum.MAX_WIDTH,
                     MaxHeight = MessageAlbum.MAX_HEIGHT,
                     Margin = new Thickness(0, 0, MessageAlbum.ITEM_MARGIN, MessageAlbum.ITEM_MARGIN),
+                    Padding = new Thickness(0),
+                    Style = BootStrapper.Current.Resources["EmptyButtonStyle"] as Style
                 };
 
+                element.Click += Element_Click;
+
                 Children.Add(element);
+            }
+        }
+
+        private void Element_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button element && element.Content is StorageMedia item)
+            {
+                ItemClick?.Invoke(item, EventArgs.Empty);
             }
         }
 

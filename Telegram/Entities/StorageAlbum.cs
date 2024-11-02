@@ -30,6 +30,13 @@ namespace Telegram.Entities
         public (Rect[], Size) GetPositionsForWidth(double w)
         {
             var positions = _positions ??= MosaicAlbumLayout.chatMessageBubbleMosaicLayout(new Size(MAX_WIDTH, MAX_HEIGHT), GetSizes());
+            if (positions.Item1.Length == 1)
+            {
+                var size = new Size(Media[0].ActualWidth, Media[0].ActualHeight);
+                var rect = new Rect(0, 0, size.Width, size.Height);
+
+                positions = (new[] { (rect, MosaicItemPosition.None) }, size);
+            }
 
             var ratio = w / positions.Item2.Width;
             var rects = new Rect[positions.Item1.Length];
@@ -42,11 +49,21 @@ namespace Telegram.Entities
                 var width = Sanitize(rect.Width * ratio);
                 var height = Sanitize(rect.Height * ratio);
 
+                if (rects.Length == 1)
+                {
+                    height = Math.Clamp(height, 98, MAX_HEIGHT);
+                }
+
                 rects[i] = new Rect(x, y, width, height);
             }
 
             var finalWidth = Sanitize(positions.Item2.Width * ratio);
             var finalHeight = Sanitize(positions.Item2.Height * ratio);
+
+            if (rects.Length == 1)
+            {
+                finalHeight = Math.Clamp(finalHeight, 98, MAX_HEIGHT);
+            }
 
             return (rects, new Size(finalWidth, finalHeight));
         }
