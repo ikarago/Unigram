@@ -13,6 +13,7 @@ using Telegram.Controls;
 using Telegram.Controls.Messages.Content;
 using Telegram.Controls.Stories;
 using Telegram.Converters;
+using Telegram.Navigation.Services;
 using Telegram.Services.Updates;
 using Telegram.Td.Api;
 using Telegram.ViewModels.Chats;
@@ -133,7 +134,7 @@ namespace Telegram.ViewModels
                     }
                 }
 
-                NavigationService.NavigateToChat(chatId, messageId, thread: threadId);
+                NavigationService.NavigateToChat(chatId, messageId, thread: threadId, state: new NavigationState { { "highlight", replyToMessage.Quote } });
             }
             else if (replyToMessage.Origin != null && replyToMessage.MessageId == 0)
             {

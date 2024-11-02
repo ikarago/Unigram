@@ -2110,15 +2110,13 @@ namespace Telegram.ViewModels
             SetScrollMode(ItemsUpdatingScrollMode.KeepLastItemInView, true);
             SetTranslating();
 
-            if (state.TryGet("access_token", out string accessToken))
+            if (state.TryRemove("access_token", out string accessToken))
             {
-                state.Remove("access_token");
                 AccessToken = accessToken;
             }
 
-            if (state.TryGet("search", out string search))
+            if (state.TryRemove("search", out string search))
             {
-                state.Remove("search");
                 SearchExecute(search);
             }
 
@@ -2144,13 +2142,13 @@ namespace Telegram.ViewModels
                 NotifyMessageSliceLoaded();
                 LoadQuickReplyShortcutSliceAsync();
             }
-            else if (state.TryGet("message_id", out long navigation))
+            else if (state.TryRemove("message_id", out long navigation))
             {
                 Settings.Chats.Clear(chat.Id, ThreadId);
                 Logger.Debug(string.Format("{0} - Loading messages from specific id", chat.Id));
 
-                state.Remove("message_id");
-                LoadMessageSliceAsync(null, navigation);
+                state.TryRemove("highlight", out TextQuote quote);
+                LoadMessageSliceAsync(null, navigation, highlight: quote);
             }
             else
             {
@@ -2338,10 +2336,9 @@ namespace Telegram.ViewModels
             {
                 await HandlePackageAsync(package);
             }
-            else if (_type == DialogType.History && state.TryGet("package", out DataPackageView packageView))
+            else if (_type == DialogType.History && state.TryRemove("package", out package))
             {
-                state.Remove("package");
-                await HandlePackageAsync(packageView);
+                await HandlePackageAsync(package);
             }
         }
 
