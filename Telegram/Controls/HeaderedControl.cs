@@ -129,6 +129,11 @@ namespace Telegram.Controls
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            if (ContentRoot == null)
+            {
+                return base.MeasureOverride(availableSize);
+            }
+
             ContentRoot.Measure(availableSize);
 
             if (ItemsPanelRoot?.DesiredSize.Height > 0)
@@ -141,6 +146,11 @@ namespace Telegram.Controls
 
         protected override Size ArrangeOverride(Size finalSize)
         {
+            if (ContentRoot == null)
+            {
+                return base.ArrangeOverride(finalSize);
+            }
+
             ContentRoot.Arrange(new Rect(0, 0, finalSize.Width, finalSize.Height));
 
             return finalSize;

@@ -1116,67 +1116,6 @@
         </Setter>
     </Style>
 
-    <Style x:Key="FooteredControlStyle"
-           TargetType="controls:HeaderedControl">
-        <Setter Property="CornerRadius"
-                Value="4" />
-        <Setter Property="Padding"
-                Value="0,16,0,0" />
-        <Setter Property="IsTabStop"
-                Value="False" />
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <controls:HeaderedControlPanel />
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="ItemPresenterStyle">
-            <Setter.Value>
-                <Style TargetType="ContentPresenter">
-                    <Setter Property="BorderBrush"
-                            Value="{ThemeResource CardStrokeColorDefaultBrush}" />
-                </Style>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="controls:HeaderedControl">
-                    <Grid x:Name="ContentRoot"
-                          Padding="{TemplateBinding Padding}"
-                          MaxWidth="1000"
-                          Margin="24,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <TextBlock x:Name="HeaderLabel"
-                                   Text="{TemplateBinding Header}"
-                                   Margin="0,0,0,8"
-                                   Style="{StaticResource BaseTextBlockStyle}"
-                                   Visibility="{Binding Header, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullToVisibilityConverter}}" />
-
-                        <TextBlock x:Name="FooterLabel"
-                                   Text="{TemplateBinding Footer}"
-                                   Style="{StaticResource InfoCaptionTextBlockStyle}"
-                                   Visibility="{Binding Footer, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullToVisibilityConverter}}"
-                                   Margin="0,0,0,8"
-                                   HorizontalAlignment="Right" />
-
-                        <Border x:Name="ContentPanel"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1"
-                                CornerRadius="{TemplateBinding CornerRadius}"
-                                Grid.Row="1">
-                            <ItemsPresenter x:Name="Presenter" />
-                        </Border>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style x:Key="AccentRadioButtonStyle"
            TargetType="RadioButton">
         <Setter Property="Background"
