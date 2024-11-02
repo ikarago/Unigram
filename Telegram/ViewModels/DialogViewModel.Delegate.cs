@@ -631,10 +631,18 @@ namespace Telegram.ViewModels
 
             RaisePropertyChanged(nameof(SelectedCount));
 
-            var properties = await ClientService.GetMessagePropertiesAsync(SelectedItems.Values.Select(x => new MessageId(x)));
+            if (_type is DialogType.BusinessReplies)
+            {
+                CanDeleteSelectedMessages = true;
+                CanForwardSelectedMessages = false;
+            }
+            else
+            {
+                var properties = await ClientService.GetMessagePropertiesAsync(SelectedItems.Values.Select(x => new MessageId(x)));
 
-            CanDeleteSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeDeletedForAllUsers || x.CanBeDeletedOnlyForSelf);
-            CanForwardSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeForwarded);
+                CanDeleteSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeDeletedForAllUsers || x.CanBeDeletedOnlyForSelf);
+                CanForwardSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeForwarded);
+            }
         }
 
         public async void Unselect(MessageViewModel message)
@@ -669,10 +677,18 @@ namespace Telegram.ViewModels
 
             RaisePropertyChanged(nameof(SelectedCount));
 
-            var properties = await ClientService.GetMessagePropertiesAsync(SelectedItems.Values.Select(x => new MessageId(x)));
+            if (_type is DialogType.BusinessReplies)
+            {
+                CanDeleteSelectedMessages = true;
+                CanForwardSelectedMessages = false;
+            }
+            else
+            {
+                var properties = await ClientService.GetMessagePropertiesAsync(SelectedItems.Values.Select(x => new MessageId(x)));
 
-            CanDeleteSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeDeletedForAllUsers || x.CanBeDeletedOnlyForSelf);
-            CanForwardSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeForwarded);
+                CanDeleteSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeDeletedForAllUsers || x.CanBeDeletedOnlyForSelf);
+                CanForwardSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeForwarded);
+            }
         }
     }
 }

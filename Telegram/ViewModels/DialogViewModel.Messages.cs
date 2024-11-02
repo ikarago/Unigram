@@ -272,7 +272,20 @@ namespace Telegram.ViewModels
             }
 
             var items = messages.Select(x => x.Get()).ToArray();
-            var properties = await ClientService.GetMessagePropertiesAsync(items.Select(x => new MessageId(x)));
+
+            IDictionary<MessageId, MessageProperties> properties;
+            if (_type == DialogType.BusinessReplies)
+            {
+                properties = items.ToDictionary(x => new MessageId(x), y => new MessageProperties
+                {
+                    CanBeDeletedForAllUsers = true,
+                    CanBeDeletedOnlyForSelf = false
+                });
+            }
+            else
+            {
+                properties = await ClientService.GetMessagePropertiesAsync(items.Select(x => new MessageId(x)));
+            }
 
             var updated = items.Where(x => properties.ContainsKey(new MessageId(x))).ToArray();
             if (updated.Empty())
@@ -290,6 +303,12 @@ namespace Telegram.ViewModels
 
             IsSelectionEnabled = false;
 
+            if (_type == DialogType.BusinessReplies)
+            {
+                ClientService.Send(new DeleteQuickReplyShortcutMessages(QuickReplyShortcut.Id, messages.Select(x => x.Id).ToList()));
+                return;
+            }
+          
             ClientService.Send(new DeleteMessages(chat.Id, messages.Select(x => x.Id).ToList(), popup.Revoke));
 
             foreach (var sender in popup.DeleteAll)
