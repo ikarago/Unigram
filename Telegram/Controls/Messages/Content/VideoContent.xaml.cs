@@ -87,7 +87,7 @@ namespace Telegram.Controls.Messages.Content
                 return;
             }
 
-            LayoutRoot.Constraint = isSecret ? Constants.SecretSize : ((object)_paidMedia ?? message);
+            LayoutRoot.Constraint = isSecret ? Constants.SecretSize : ((object)_paidMedia ?? video);
             Texture.Source = null;
 
             UpdateThumbnail(message, video, video.Thumbnail?.File, true, isSecret, hasSpoiler);

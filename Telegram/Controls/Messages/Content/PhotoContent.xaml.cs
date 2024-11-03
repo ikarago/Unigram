@@ -111,7 +111,7 @@ namespace Telegram.Controls.Messages.Content
 
             _hidden = (prevId != nextId || _hidden) && hasSpoiler;
 
-            LayoutRoot.Constraint = isSecret ? Constants.SecretSize : ((object)_paidMedia ?? message);
+            LayoutRoot.Constraint = isSecret ? Constants.SecretSize : ((object)_paidMedia ?? photo);
             LayoutRoot.Background = null;
             Texture.ImageSource = null;
             Texture.Stretch = _album

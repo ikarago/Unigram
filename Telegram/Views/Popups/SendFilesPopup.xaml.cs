@@ -1312,7 +1312,17 @@ namespace Telegram.Views.Popups
 
         public void UpdateItem(StorageMedia oldItem, StorageMedia newItem)
         {
+            if (oldItem is StorageAlbum album)
+            {
+                var container = ScrollingHost.ContainerFromItem(album) as SelectorItem;
+                var content = container?.ContentTemplateRoot as Grid;
 
+                if (content != null && content.Children[0] is StorageAlbumPanel panel)
+                {
+                    album.Invalidate();
+                    panel.Invalidate();
+                }
+            }
         }
     }
 
@@ -1343,6 +1353,14 @@ namespace Telegram.Views.Popups
         }
 
         private (Rect[], Size) _positions;
+
+        public void Invalidate()
+        {
+            _positions = default;
+
+            InvalidateMeasure();
+            InvalidateArrange();
+        }
 
         protected override Size MeasureOverride(Size availableSize)
         {
