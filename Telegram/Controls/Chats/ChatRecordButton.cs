@@ -369,7 +369,11 @@ namespace Telegram.Controls.Chats
         {
             if (ClickMode == ClickMode.Press)
             {
-                if (IsRestricted)
+                if (MediaDevicePermissions.IsUnsupported(XamlRoot))
+                {
+                    return;
+                }
+                else if (IsRestricted)
                 {
                     var message = Mode == ChatRecordMode.Video
                         ? Strings.VideoMessagesRestrictedByPrivacy
