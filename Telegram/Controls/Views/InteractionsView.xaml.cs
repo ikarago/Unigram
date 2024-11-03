@@ -35,6 +35,7 @@ namespace Telegram.Controls.Views
 
         private readonly long _chatId;
         private readonly long _messageId;
+        private readonly ReactionType _reactionType;
 
         private readonly IncrementalCollection<object> _items;
         private readonly HashSet<long> _users = new();
@@ -42,12 +43,23 @@ namespace Telegram.Controls.Views
         private string _nextOffset;
 
         public InteractionsView(IClientService clientService, long chatId, long messageId, MessageViewers viewers)
+            : this(clientService, chatId, messageId, null, viewers)
+        {
+        }
+
+        public InteractionsView(IClientService clientService, long chatId, long messageId, ReactionType reactionType)
+            : this(clientService, chatId, messageId, reactionType, null)
+        {
+        }
+
+        private InteractionsView(IClientService clientService, long chatId, long messageId, ReactionType reactionType, MessageViewers viewers)
         {
             InitializeComponent();
 
             _clientService = clientService;
             _chatId = chatId;
             _messageId = messageId;
+            _reactionType = reactionType;
             _viewers = viewers;
 
             _items = new IncrementalCollection<object>(this);
@@ -206,7 +218,7 @@ namespace Telegram.Controls.Views
 
             if (_nextOffset != null)
             {
-                var response = await _clientService.SendAsync(new GetMessageAddedReactions(_chatId, _messageId, null, _nextOffset, 50));
+                var response = await _clientService.SendAsync(new GetMessageAddedReactions(_chatId, _messageId, _reactionType, _nextOffset, 50));
                 if (response is AddedReactions addedReactions)
                 {
                     _nextOffset = addedReactions.NextOffset.Length > 0 ? addedReactions.NextOffset : null;

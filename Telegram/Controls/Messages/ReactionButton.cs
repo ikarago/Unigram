@@ -6,6 +6,7 @@
 //
 using System;
 using Telegram.Common;
+using Telegram.Controls.Views;
 using Telegram.Converters;
 using Telegram.Streams;
 using Telegram.Td.Api;
@@ -216,6 +217,50 @@ namespace Telegram.Controls.Messages
         protected override void OnToggle()
         {
             //base.OnToggle();
+        }
+
+        public virtual void OnContextRequested(ContextRequestedEventArgs args)
+        {
+            var message = _message;
+            if (message == null || message.IsChannelPost)
+            {
+                return;
+            }
+
+            var flyout = new MenuFlyout();
+            var popup = new InteractionsView(message.ClientService, message.ChatId, message.Id, _reactionType)
+            {
+                Width = 264,
+                Height = 48 * _reaction.TotalCount,
+                MinHeight = 50,
+                MaxHeight = 360,
+                Margin = new Thickness(0, 0, 0, -2)
+            };
+
+            void handler(InteractionsView sender, ItemClickEventArgs e)
+            {
+                sender.ItemClick -= handler;
+                flyout.Hide();
+
+                if (e.ClickedItem is AddedReaction addedReaction)
+                {
+                    //ViewModel.NavigationService.NavigateToSender(addedReaction.SenderId);
+                }
+                else if (e.ClickedItem is MessageViewer messageViewer)
+                {
+                    //ViewModel.NavigationService.NavigateToUser(messageViewer.UserId);
+                }
+            }
+
+            popup.ItemClick += handler;
+
+            flyout.Items.Add(new MenuFlyoutContent
+            {
+                Content = popup,
+                Padding = new Thickness(0)
+            });
+
+            flyout.ShowAt(this, args);
         }
 
         private void OnClick(object sender, RoutedEventArgs e)

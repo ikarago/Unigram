@@ -2454,10 +2454,10 @@ namespace Telegram.Views
                     }
                 }
 
-                var reaction = children.FirstOrDefault(x => x is ReactionAsTagButton) as ReactionAsTagButton;
+                var reaction = children.FirstOrDefault(x => x is ReactionButton) as ReactionButton;
                 if (reaction != null)
                 {
-                    reaction.OnContextRequested();
+                    reaction.OnContextRequested(args);
                     return;
                 }
 

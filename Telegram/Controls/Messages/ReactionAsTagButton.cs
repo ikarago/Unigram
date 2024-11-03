@@ -12,6 +12,7 @@ using Telegram.Views.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
 
 namespace Telegram.Controls.Messages
 {
@@ -101,7 +102,7 @@ namespace Telegram.Controls.Messages
             }
         }
 
-        public void OnContextRequested()
+        public override void OnContextRequested(ContextRequestedEventArgs args)
         {
             var chosen = _reaction;
             if (chosen != null)
