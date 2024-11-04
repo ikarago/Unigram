@@ -7,7 +7,7 @@
 using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Numerics;
-using Telegram.Common;
+using Telegram.Composition;
 using Telegram.Controls.Media;
 using Telegram.Navigation;
 using Telegram.Services;
@@ -80,23 +80,14 @@ namespace Telegram.Controls.Cells
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_strokeToken == 0 && _strokeBrush != null)
-            {
-                Stroke?.RegisterColorChangedCallback(OnStrokeChanged, ref _strokeToken);
-                OnStrokeChanged(Stroke, SolidColorBrush.ColorProperty);
-            }
-
-            if (_selectionStrokeToken == 0 && _selectionStrokeBrush != null)
-            {
-                SelectionStroke?.RegisterColorChangedCallback(OnSelectionStrokeChanged, ref _selectionStrokeToken);
-                OnSelectionStrokeChanged(SelectionStroke, SolidColorBrush.ColorProperty);
-            }
+            _strokeBrush?.Register();
+            _selectionStrokeBrush?.Register();
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            Stroke?.UnregisterColorChangedCallback(ref _strokeToken);
-            SelectionStroke?.UnregisterColorChangedCallback(ref _selectionStrokeToken);
+            _strokeBrush?.Unregister();
+            _selectionStrokeBrush?.Unregister();
         }
 
         public void UpdateChat(IClientService clientService, ContainerContentChangingEventArgs args, TypedEventHandler<ListViewBase, ContainerContentChangingEventArgs> callback)
@@ -308,8 +299,7 @@ namespace Telegram.Controls.Cells
 
         #region Stroke
 
-        private long _strokeToken;
-        private CompositionColorBrush _strokeBrush;
+        private CompositionColorSource _strokeBrush;
 
         public Brush Stroke
         {
@@ -327,38 +317,14 @@ namespace Telegram.Controls.Cells
 
         private void OnStrokeChanged(SolidColorBrush newValue, SolidColorBrush oldValue)
         {
-            oldValue?.UnregisterColorChangedCallback(ref _strokeToken);
-
-            if (newValue == null || _strokeBrush == null)
-            {
-                return;
-            }
-
-            _strokeBrush.Color = newValue.Color;
-
-            if (IsConnected)
-            {
-                newValue.RegisterColorChangedCallback(OnStrokeChanged, ref _strokeToken);
-            }
-        }
-
-        private void OnStrokeChanged(DependencyObject sender, DependencyProperty dp)
-        {
-            var newValue = sender as SolidColorBrush;
-            if (newValue == null || _strokeBrush == null)
-            {
-                return;
-            }
-
-            _strokeBrush.Color = newValue.Color;
+            _strokeBrush?.PropertyChanged(newValue, oldValue, IsConnected);
         }
 
         #endregion
 
         #region SelectionStroke
 
-        private long _selectionStrokeToken;
-        private CompositionColorBrush _selectionStrokeBrush;
+        private CompositionColorSource _selectionStrokeBrush;
 
         public SolidColorBrush SelectionStroke
         {
@@ -376,30 +342,7 @@ namespace Telegram.Controls.Cells
 
         private void OnSelectionStrokeChanged(SolidColorBrush newValue, SolidColorBrush oldValue)
         {
-            oldValue?.UnregisterColorChangedCallback(ref _selectionStrokeToken);
-
-            if (newValue == null || _selectionStrokeBrush == null)
-            {
-                return;
-            }
-
-            _selectionStrokeBrush.Color = newValue.Color;
-
-            if (IsConnected)
-            {
-                newValue.RegisterColorChangedCallback(OnSelectionStrokeChanged, ref _selectionStrokeToken);
-            }
-        }
-
-        private void OnSelectionStrokeChanged(DependencyObject sender, DependencyProperty dp)
-        {
-            var newValue = sender as SolidColorBrush;
-            if (newValue == null || _selectionStrokeBrush == null)
-            {
-                return;
-            }
-
-            _selectionStrokeBrush.Color = newValue.Color;
+            _selectionStrokeBrush?.PropertyChanged(newValue, oldValue, IsConnected);
         }
 
         #endregion
@@ -411,27 +354,6 @@ namespace Telegram.Controls.Cells
 
         private CompositionPathGeometry _polygon;
         private ShapeVisual _visual;
-
-        private CompositionBrush GetBrush(DependencyProperty dp, ref CompositionColorBrush brush, ref long token, DependencyPropertyChangedCallback callback)
-        {
-            if (brush != null)
-            {
-                return brush;
-            }
-
-            var value = GetValue(dp);
-            if (value is SolidColorBrush solid)
-            {
-                if (IsConnected && token == 0)
-                {
-                    solid.RegisterColorChangedCallback(callback, ref token);
-                }
-
-                return brush = BootStrapper.Current.Compositor.CreateColorBrush(solid.Color);
-            }
-
-            return brush = BootStrapper.Current.Compositor.CreateColorBrush(Colors.Black);
-        }
 
         private void InitializeSelection()
         {
@@ -469,7 +391,7 @@ namespace Telegram.Controls.Cells
 
             var shape2 = compositor.CreateSpriteShape();
             shape2.Geometry = ellipse;
-            shape2.FillBrush = GetBrush(StrokeProperty, ref _strokeBrush, ref _strokeToken, OnStrokeChanged);
+            shape2.FillBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
 
             var outer = compositor.CreateEllipseGeometry();
             outer.Radius = new Vector2(10);
@@ -477,7 +399,7 @@ namespace Telegram.Controls.Cells
 
             var shape3 = compositor.CreateSpriteShape();
             shape3.Geometry = outer;
-            shape3.FillBrush = GetBrush(SelectionStrokeProperty, ref _selectionStrokeBrush, ref _selectionStrokeToken, OnSelectionStrokeChanged);
+            shape3.FillBrush = _selectionStrokeBrush ??= new CompositionColorSource(SelectionStroke, IsConnected);
 
             var visual = compositor.CreateShapeVisual();
             visual.Shapes.Add(shape3);

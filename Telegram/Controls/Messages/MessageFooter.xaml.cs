@@ -9,16 +9,14 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using Telegram.Common;
+using Telegram.Composition;
 using Telegram.Controls.Cells;
-using Telegram.Controls.Media;
 using Telegram.Converters;
 using Telegram.Navigation;
 using Telegram.Streams;
 using Telegram.Td.Api;
 using Telegram.ViewModels;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -55,11 +53,7 @@ namespace Telegram.Controls.Messages
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_strokeToken == 0 && _strokeBrush != null)
-            {
-                Stroke?.RegisterColorChangedCallback(OnStrokeChanged, ref _strokeToken);
-                OnStrokeChanged(Stroke, SolidColorBrush.ColorProperty);
-            }
+            _strokeBrush?.Register();
 
             if (_message?.SchedulingState is MessageSchedulingStateSendWhenVideoProcessed)
             {
@@ -69,7 +63,7 @@ namespace Telegram.Controls.Messages
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            Stroke?.UnregisterColorChangedCallback(ref _strokeToken);
+            _strokeBrush?.Unregister();
         }
 
         #region InitializeComponent
@@ -575,8 +569,7 @@ namespace Telegram.Controls.Messages
 
         #region Stroke
 
-        private long _strokeToken;
-        private CompositionColorBrush _strokeBrush;
+        private CompositionColorSource _strokeBrush;
 
         public Brush Stroke
         {
@@ -594,34 +587,7 @@ namespace Telegram.Controls.Messages
 
         private void OnStrokeChanged(SolidColorBrush newValue, SolidColorBrush oldValue)
         {
-            if (oldValue != null && _strokeToken != 0)
-            {
-                oldValue.UnregisterPropertyChangedCallback(SolidColorBrush.ColorProperty, _strokeToken);
-                _strokeToken = 0;
-            }
-
-            if (newValue == null || _strokeBrush == null)
-            {
-                return;
-            }
-
-            _strokeBrush.Color = newValue.Color;
-
-            if (IsConnected)
-            {
-                newValue.RegisterColorChangedCallback(OnStrokeChanged, ref _strokeToken);
-            }
-        }
-
-        private void OnStrokeChanged(DependencyObject sender, DependencyProperty dp)
-        {
-            var solid = sender as SolidColorBrush;
-            if (solid == null || _strokeBrush == null)
-            {
-                return;
-            }
-
-            _strokeBrush.Color = solid.Color;
+            _strokeBrush?.PropertyChanged(newValue, oldValue, IsConnected);
         }
 
         #endregion
@@ -657,7 +623,7 @@ namespace Telegram.Controls.Messages
 
             var shape11 = BootStrapper.Current.Compositor.CreateSpriteShape(BootStrapper.Current.Compositor.CreatePathGeometry(GetClock()));
             shape11.StrokeThickness = stroke;
-            shape11.StrokeBrush = GetBrush(StrokeProperty, ref _strokeBrush, ref _strokeToken, OnStrokeChanged);
+            shape11.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
             shape11.IsStrokeNonScaling = true;
             shape11.StrokeStartCap = CompositionStrokeCap.Round;
 
@@ -696,13 +662,13 @@ namespace Telegram.Controls.Messages
 
             var shape11 = BootStrapper.Current.Compositor.CreateSpriteShape(line11);
             shape11.StrokeThickness = stroke;
-            shape11.StrokeBrush = GetBrush(StrokeProperty, ref _strokeBrush, ref _strokeToken, OnStrokeChanged);
+            shape11.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
             shape11.IsStrokeNonScaling = true;
             shape11.StrokeStartCap = CompositionStrokeCap.Round;
 
             var shape12 = BootStrapper.Current.Compositor.CreateSpriteShape(line12);
             shape12.StrokeThickness = stroke;
-            shape12.StrokeBrush = GetBrush(StrokeProperty, ref _strokeBrush, ref _strokeToken, OnStrokeChanged);
+            shape12.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
             shape12.IsStrokeNonScaling = true;
             shape12.StrokeEndCap = CompositionStrokeCap.Round;
 
@@ -724,12 +690,12 @@ namespace Telegram.Controls.Messages
 
             var shape21 = BootStrapper.Current.Compositor.CreateSpriteShape(line21);
             shape21.StrokeThickness = stroke;
-            shape21.StrokeBrush = GetBrush(StrokeProperty, ref _strokeBrush, ref _strokeToken, OnStrokeChanged);
+            shape21.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
             shape21.StrokeStartCap = CompositionStrokeCap.Round;
 
             var shape22 = BootStrapper.Current.Compositor.CreateSpriteShape(line22);
             shape22.StrokeThickness = stroke;
-            shape22.StrokeBrush = GetBrush(StrokeProperty, ref _strokeBrush, ref _strokeToken, OnStrokeChanged);
+            shape22.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
             shape22.StrokeEndCap = CompositionStrokeCap.Round;
 
             var visual2 = BootStrapper.Current.Compositor.CreateShapeVisual();
@@ -798,27 +764,6 @@ namespace Telegram.Controls.Messages
                     _container.IsVisible = true;
                 }
             }
-        }
-
-        private CompositionBrush GetBrush(DependencyProperty dp, ref CompositionColorBrush brush, ref long token, DependencyPropertyChangedCallback callback)
-        {
-            if (brush != null)
-            {
-                return brush;
-            }
-
-            var value = GetValue(dp);
-            if (value is SolidColorBrush solid)
-            {
-                if (IsConnected && token == 0)
-                {
-                    solid.RegisterColorChangedCallback(callback, ref token);
-                }
-
-                return brush = BootStrapper.Current.Compositor.CreateColorBrush(solid.Color);
-            }
-
-            return brush = BootStrapper.Current.Compositor.CreateColorBrush(Colors.Black);
         }
 
         private void AnimateTicks(bool read)
