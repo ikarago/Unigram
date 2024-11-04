@@ -460,6 +460,7 @@
                                                  Style="{StaticResource NoDeleteTextBoxStyle}"
                                                  AutomationProperties.LandmarkType="Search"
                                                  StartingIndex="1"
+                                                 Padding="10,5,36,6"
                                                  VerticalAlignment="Center"
                                                  GotFocus="Search_Click"
                                                  TextChanged="Search_TextChanged"
