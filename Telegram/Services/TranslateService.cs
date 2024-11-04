@@ -65,6 +65,13 @@ namespace Telegram.Services
 
             var culture = new CultureInfo(split[0]);
             rtl = culture.TextInfo.IsRightToLeft && !latin;
+
+            var displayName = LocaleService.Current.GetString("TranslateLanguage" + split[0].ToUpper());
+            if (displayName.Length > 0)
+            {
+                return displayName;
+            }
+
             return culture.DisplayName;
         }
 

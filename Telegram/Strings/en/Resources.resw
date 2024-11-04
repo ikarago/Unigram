@@ -11160,6 +11160,108 @@ If you are not comfortable with Telegram&apos;s modest needs, it won&apos;t be p
   <data name="TranscriptionTrialLeftUntil_other" xml:space="preserve">
     <value>You have **{0}** free voice transcriptions left until {1}.</value>
   </data>
+  <data name="TranslateLanguageAR" xml:space="preserve">
+    <value>Arabic</value>
+  </data>
+  <data name="TranslateLanguageBE" xml:space="preserve">
+    <value>Belarusian</value>
+  </data>
+  <data name="TranslateLanguageCA" xml:space="preserve">
+    <value>Catalan</value>
+  </data>
+  <data name="TranslateLanguageCS" xml:space="preserve">
+    <value>Czech</value>
+  </data>
+  <data name="TranslateLanguageDE" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="TranslateLanguageEN" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="TranslateLanguageEO" xml:space="preserve">
+    <value>Esperanto</value>
+  </data>
+  <data name="TranslateLanguageES" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="TranslateLanguageFA" xml:space="preserve">
+    <value>Persian</value>
+  </data>
+  <data name="TranslateLanguageFI" xml:space="preserve">
+    <value>Finnish</value>
+  </data>
+  <data name="TranslateLanguageFR" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="TranslateLanguageHE" xml:space="preserve">
+    <value>Hebrew</value>
+  </data>
+  <data name="TranslateLanguageHR" xml:space="preserve">
+    <value>Croatian</value>
+  </data>
+  <data name="TranslateLanguageHU" xml:space="preserve">
+    <value>Hungarian</value>
+  </data>
+  <data name="TranslateLanguageID" xml:space="preserve">
+    <value>Indonesian</value>
+  </data>
+  <data name="TranslateLanguageIT" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="TranslateLanguageJA" xml:space="preserve">
+    <value>Japanese</value>
+  </data>
+  <data name="TranslateLanguageKO" xml:space="preserve">
+    <value>Korean</value>
+  </data>
+  <data name="TranslateLanguageML" xml:space="preserve">
+    <value>Malayalam</value>
+  </data>
+  <data name="TranslateLanguageMS" xml:space="preserve">
+    <value>Malay</value>
+  </data>
+  <data name="TranslateLanguageNL" xml:space="preserve">
+    <value>Dutch</value>
+  </data>
+  <data name="TranslateLanguageNO" xml:space="preserve">
+    <value>Norwegian</value>
+  </data>
+  <data name="TranslateLanguagePO" xml:space="preserve">
+    <value>Polish</value>
+  </data>
+  <data name="TranslateLanguagePT" xml:space="preserve">
+    <value>Portuguese</value>
+  </data>
+  <data name="TranslateLanguageRO" xml:space="preserve">
+    <value>Romanian</value>
+  </data>
+  <data name="TranslateLanguageRU" xml:space="preserve">
+    <value>Russian</value>
+  </data>
+  <data name="TranslateLanguageSK" xml:space="preserve">
+    <value>Slovak</value>
+  </data>
+  <data name="TranslateLanguageSR" xml:space="preserve">
+    <value>Serbian</value>
+  </data>
+  <data name="TranslateLanguageSV" xml:space="preserve">
+    <value>Swedish</value>
+  </data>
+  <data name="TranslateLanguageTA" xml:space="preserve">
+    <value>Tamil</value>
+  </data>
+  <data name="TranslateLanguageTR" xml:space="preserve">
+    <value>Turkish</value>
+  </data>
+  <data name="TranslateLanguageUK" xml:space="preserve">
+    <value>Ukrainian</value>
+  </data>
+  <data name="TranslateLanguageUZ" xml:space="preserve">
+    <value>Uzbek</value>
+  </data>
+  <data name="TranslateLanguageZH" xml:space="preserve">
+    <value>Chinese</value>
+  </data>
   <data name="TranslateMessage" xml:space="preserve">
     <value>Translate</value>
   </data>
