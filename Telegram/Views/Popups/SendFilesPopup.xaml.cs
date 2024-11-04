@@ -41,6 +41,7 @@ using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Shapes;
 
 namespace Telegram.Views.Popups
@@ -1003,6 +1004,12 @@ namespace Telegram.Views.Popups
             var button = sender as ToggleButton;
             if (button.Tag is StorageMedia media)
             {
+                var parent = button.GetParent<AspectView>();
+                if (parent != null)
+                {
+                    ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("EditMediaPopup", parent);
+                }
+
                 var popup = new EditMediaPopup(media);
 
                 var confirm = await popup.ShowAsync(XamlRoot);
@@ -1016,14 +1023,20 @@ namespace Telegram.Views.Popups
             }
         }
 
-        private async void Album_ItemClick(StorageMedia sender, EventArgs args)
+        private async void Album_ItemClick(object sender, StorageMedia args)
         {
-            var popup = new EditMediaPopup(sender);
+            var parent = sender as UIElement;
+            if (parent != null)
+            {
+                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("EditMediaPopup", parent);
+            }
+
+            var popup = new EditMediaPopup(args);
 
             var confirm = await popup.ShowAsync(XamlRoot);
             if (confirm == ContentDialogResult.Primary)
             {
-                sender.Refresh();
+                args.Refresh();
 
                 UpdateView();
                 UpdatePanel();
@@ -1403,7 +1416,7 @@ namespace Telegram.Views.Popups
             return finalSize;
         }
 
-        public event TypedEventHandler<StorageMedia, EventArgs> ItemClick;
+        public event EventHandler<StorageMedia> ItemClick;
 
         public void UpdateMessage(StorageAlbum album)
         {
@@ -1437,7 +1450,7 @@ namespace Telegram.Views.Popups
         {
             if (sender is Button element && element.Content is StorageMedia item)
             {
-                ItemClick?.Invoke(item, EventArgs.Empty);
+                ItemClick?.Invoke(sender, item);
             }
         }
 

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using Telegram.Common;
 using Telegram.Controls;
 using Telegram.Converters;
 using Telegram.Entities;
@@ -25,6 +26,7 @@ using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Telegram.Views.Popups
@@ -89,6 +91,12 @@ namespace Telegram.Views.Popups
             else
             {
                 await Cropper.SetSourceAsync(_media.File, _media.EditState.Rotation, _media.EditState.Flip, _media.EditState.Proportions, _media.EditState.Rectangle);
+            }
+
+            var animation = ConnectedAnimationService.GetForCurrentView().GetAnimation("EditMediaPopup");
+            if (animation != null)
+            {
+                animation.TryStart(Cropper);
             }
         }
 
@@ -167,43 +175,43 @@ namespace Telegram.Views.Popups
 
         private async void InitializeVideo(StorageMedia media, ImageCropperMask mask)
         {
-            Media.Source = MediaSource.CreateFromStorageFile(media.File);
-            Media.MediaPlayer.AutoPlay = true;
-            Media.MediaPlayer.IsMuted = mask == ImageCropperMask.Ellipse;
-            Media.MediaPlayer.IsLoopingEnabled = true;
-            Media.MediaPlayer.PlaybackSession.PositionChanged += MediaPlayer_PositionChanged;
-
-            using var stream = await media.File.OpenReadAsync();
-            using var animation = await Task.Run(() => VideoAnimation.LoadFromFile(new VideoAnimationStreamSource(stream), false, false, false));
-
-            double ratioX = (double)40 / animation.PixelWidth;
-            double ratioY = (double)40 / animation.PixelHeight;
-            double ratio = Math.Max(ratioY, ratioY);
-
-            var width = (int)(animation.PixelWidth * ratio);
-            var height = (int)(animation.PixelHeight * ratio);
-
-            var count = Math.Ceiling(296d / width);
-
-            width = (int)(width * XamlRoot.RasterizationScale);
-            height = (int)(height * XamlRoot.RasterizationScale);
-
-            var duration = TimeSpan.FromMilliseconds(animation.Duration);
-            var maxLength = mask == ImageCropperMask.Ellipse
-                ? TimeSpan.FromSeconds(10)
-                : duration;
-
-            TrimRange.SetOriginalDuration(duration, maxLength);
-            TrimThumbnails.Children.Clear();
-
-            if (mask != ImageCropperMask.Ellipse && media.EditState?.TrimStartTime != TimeSpan.Zero && media.EditState?.TrimStopTime != TimeSpan.Zero)
-            {
-                TrimRange.Minimum = media.EditState.TrimStartTime.TotalSeconds / TrimRange.OriginalDuration.TotalSeconds;
-                TrimRange.Maximum = media.EditState.TrimStopTime.TotalSeconds / TrimRange.OriginalDuration.TotalSeconds;
-            }
-
             try
             {
+                Media.Source = MediaSource.CreateFromStorageFile(media.File);
+                Media.MediaPlayer.AutoPlay = true;
+                Media.MediaPlayer.IsMuted = mask == ImageCropperMask.Ellipse;
+                Media.MediaPlayer.IsLoopingEnabled = true;
+                Media.MediaPlayer.PlaybackSession.PositionChanged += MediaPlayer_PositionChanged;
+
+                using var stream = await media.File.OpenReadAsync();
+                using var animation = await Task.Run(() => VideoAnimation.LoadFromFile(new VideoAnimationStreamSource(stream), false, false, false));
+
+                double ratioX = (double)40 / animation.PixelWidth;
+                double ratioY = (double)40 / animation.PixelHeight;
+                double ratio = Math.Max(ratioY, ratioY);
+
+                var width = (int)(animation.PixelWidth * ratio);
+                var height = (int)(animation.PixelHeight * ratio);
+
+                var count = Math.Ceiling(296d / width);
+
+                width = (int)(width * XamlRoot.RasterizationScale);
+                height = (int)(height * XamlRoot.RasterizationScale);
+
+                var duration = TimeSpan.FromMilliseconds(animation.Duration);
+                var maxLength = mask == ImageCropperMask.Ellipse
+                    ? TimeSpan.FromSeconds(10)
+                    : duration;
+
+                TrimRange.SetOriginalDuration(duration, maxLength);
+                TrimThumbnails.Children.Clear();
+
+                if (mask != ImageCropperMask.Ellipse && media.EditState?.TrimStartTime != TimeSpan.Zero && media.EditState?.TrimStopTime != TimeSpan.Zero)
+                {
+                    TrimRange.Minimum = media.EditState.TrimStartTime.TotalSeconds / TrimRange.OriginalDuration.TotalSeconds;
+                    TrimRange.Maximum = media.EditState.TrimStopTime.TotalSeconds / TrimRange.OriginalDuration.TotalSeconds;
+                }
+
                 for (int i = 0; i < count; i++)
                 {
                     var bitmap = new WriteableBitmap(width, height);
@@ -212,7 +220,7 @@ namespace Telegram.Views.Popups
                     await Task.Run(() =>
                     {
                         animation.SeekToMilliseconds((long)(animation.Duration / count * i), false);
-                        animation.RenderSync(buffer, width, height, false, out _);
+                        animation.RenderSync(buffer, width, height, true, out _);
                     });
 
                     var image = new Image();
@@ -220,10 +228,16 @@ namespace Telegram.Views.Popups
                     image.Stretch = Windows.UI.Xaml.Media.Stretch.UniformToFill;
                     image.Source = bitmap;
 
+                    Grid.SetColumn(image, i);
+
                     TrimThumbnails.Children.Add(image);
+                    TrimThumbnails.ColumnDefinitions.Add(1, i == count - 1 ? GridUnitType.Star : GridUnitType.Auto);
                 }
             }
-            catch { }
+            catch
+            {
+                // People like to delete files while they're sending them
+            }
         }
 
         private void Accept_Click(object sender, RoutedEventArgs e)
@@ -563,6 +577,11 @@ namespace Telegram.Views.Popups
         {
             await TrimRange.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
+                if (TrimRange.IsChanging)
+                {
+                    return;
+                }
+
                 if (sender.Position.TotalMilliseconds >= TrimRange.Maximum * sender.NaturalDuration.TotalMilliseconds)
                 {
                     sender.Position = TimeSpan.FromMilliseconds(sender.NaturalDuration.TotalMilliseconds * TrimRange.Minimum);
