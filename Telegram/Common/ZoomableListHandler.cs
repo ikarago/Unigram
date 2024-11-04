@@ -10,6 +10,7 @@ using Telegram.Td.Api;
 using Telegram.ViewModels.Drawers;
 using Telegram.Views.Popups;
 using Windows.Devices.Input;
+using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -298,6 +299,11 @@ namespace Telegram.Common
 
             _popupPanel.Width = bounds.Width;
             _popupPanel.Height = bounds.Height;
+            _popupPanel.RequestedTheme = _listView.ActualTheme;
+            _popupPanel.Background = new SolidColorBrush(_listView.ActualTheme == ElementTheme.Light
+                ? Color.FromArgb(0x99, 0xFF, 0xFF, 0xFF)
+                : Color.FromArgb(0x99, 0x00, 0x00, 0x00));
+
             _popupContent = item;
             _popupHost.XamlRoot = _listView.XamlRoot;
             _popupHost.IsOpen = true;
