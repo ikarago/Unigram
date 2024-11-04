@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Numerics;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Telegram.Common;
 using Telegram.Composition;
 using Telegram.Controls.Media;
 using Telegram.Navigation;
 using Telegram.Td.Api;
+using Windows.Graphics.Imaging;
 using Windows.Media.Capture;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
@@ -14,6 +18,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Telegram.Controls.Chats
 {
@@ -124,7 +129,7 @@ namespace Telegram.Controls.Chats
             _controlledButton.ManipulationDelta += OnManipulationDelta;
         }
 
-        private void OnRecordingStarted(object sender, EventArgs e)
+        private async void OnRecordingStarted(object sender, EventArgs e)
         {
             if (sender is not MediaCapture mediaCapture || mediaCapture.MediaCaptureSettings.StreamingCaptureMode == StreamingCaptureMode.Audio)
             {
@@ -148,7 +153,7 @@ namespace Telegram.Controls.Chats
             {
                 Width = 272,
                 Height = 272,
-                Background = new SolidColorBrush(Colors.Black),
+                Background = await LoadLastFrameAsync(),
                 CornerRadius = new CornerRadius(272 / 2),
                 Translation = new Vector3(0, 0, 128),
                 Shadow = new ThemeShadow()
@@ -263,7 +268,60 @@ namespace Telegram.Controls.Chats
         public event EventHandler<ChatAction> StartTyping;
         public event EventHandler CancelTyping;
 
-        private void OnRecordingStopped(object sender, EventArgs e)
+        private async Task<Brush> LoadLastFrameAsync()
+        {
+            try
+            {
+                var file = await ApplicationData.Current.TemporaryFolder.TryGetItemAsync("LastVideoFrame.png");
+                if (file != null)
+                {
+                    var bitmap = new BitmapImage();
+                    PlaceholderHelper.GetBlurred(bitmap, file.Path, 3);
+
+                    return new ImageBrush
+                    {
+                        ImageSource = bitmap
+                    };
+                }
+            }
+            catch
+            {
+                // Catching as this would break the UI otherwise
+            }
+
+            return new SolidColorBrush(Colors.Black);
+        }
+
+        private async Task SaveLastFrameAsync()
+        {
+            try
+            {
+                var target = new RenderTargetBitmap();
+                await target.RenderAsync(_videoElement);
+                var pixels = await target.GetPixelsAsync();
+
+                var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("LastVideoFrame.png", CreationCollisionOption.ReplaceExisting);
+                using var stream = await file.OpenAsync(FileAccessMode.ReadWrite);
+                var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+
+                var width = (uint)target.PixelWidth;
+                var height = (uint)target.PixelHeight;
+
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied, width, height, 96, 96, pixels.ToArray());
+
+                encoder.BitmapTransform.ScaledWidth = 80;
+                encoder.BitmapTransform.ScaledHeight = 80;
+                encoder.BitmapTransform.Flip = BitmapFlip.Horizontal;
+
+                await encoder.FlushAsync();
+            }
+            catch
+            {
+                // Catching as this would break the UI otherwise
+            }
+        }
+
+        private async void OnRecordingStopped(object sender, EventArgs e)
         {
             //if (btnVoiceMessage.IsLocked)
             //{
@@ -276,6 +334,8 @@ namespace Telegram.Controls.Chats
 
             if (_videoPopup != null)
             {
+                await SaveLastFrameAsync();
+
                 _videoPopup.IsOpen = false;
                 _videoPopup = null;
 
