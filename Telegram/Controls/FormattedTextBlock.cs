@@ -672,13 +672,14 @@ namespace Telegram.Controls
                             if (entity.Offset == 0 && direction != locale)
                             {
                                 direct.AddToCollection(inlines, CreateDirectRun(direct, direction == FlowDirection.RightToLeft ? Icons.RTL : Icons.LTR, direction));
+                                workaround++;
                             }
 
                             // TODO: see if there's a better way
                             direct.AddToCollection(inlines, direct.GetXamlDirectObject(inline));
                             direct.AddToCollection(inlines, CreateDirectRun(direct, Icons.ZWNJ, direction));
 
-                            workaround++;
+                            workaround += data.Length - 1;
                         }
                         else
                         {
