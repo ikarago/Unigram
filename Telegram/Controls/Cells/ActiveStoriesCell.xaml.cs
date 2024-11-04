@@ -144,10 +144,7 @@ namespace Telegram.Controls.Cells
                 controller.Pause();
                 controller.StartAnimation("Progress", clean);
 
-
                 gradient.Clip = clip1;
-
-                ElementCompositionPreview.SetElementChildVisual(PhotoRoot, null);
             }
             else
             {
