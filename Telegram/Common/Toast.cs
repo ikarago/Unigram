@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
@@ -113,6 +114,10 @@ namespace Telegram.Common
                     {
                         arguments = launch.TileActivatedInfo.RecentlyShownNotifications[0].Arguments;
                     }
+                    else
+                    {
+                        arguments = launch.Arguments;
+                    }
                     break;
                 case ProtocolActivatedEventArgs protocol:
                     var uri = protocol.Uri.ToString();
@@ -187,6 +192,31 @@ namespace Telegram.Common
             }
 
             return dictionary;
+        }
+
+        public static string ToBase64(string value)
+        {
+            var bytes = Encoding.UTF8.GetBytes(value);
+            var base64 = Convert.ToBase64String(bytes);
+
+            return base64
+                .TrimEnd('=')
+                .Replace('+', '-')
+                .Replace('/', '_');
+        }
+
+        public static string FromBase64(string value)
+        {
+            var base64 = value.Replace('_', '/').Replace('-', '+');
+
+            switch (base64.Length % 4)
+            {
+                case 2: base64 += "=="; break;
+                case 3: base64 += "="; break;
+            }
+
+            var bytes = Convert.FromBase64String(base64);
+            return Encoding.UTF8.GetString(bytes);
         }
 
         public static Dictionary<string, string> SplitArguments(string arguments)

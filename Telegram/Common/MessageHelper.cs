@@ -650,12 +650,12 @@ namespace Telegram.Common
                 var response2 = await clientService.SendAsync(new GetAttachmentMenuBot(botUser.Id));
                 if (response2 is AttachmentMenuBot menuBot)
                 {
-                    OpenMiniApp(clientService, navigation, botUser, menuBot, attachmentMenuBot.Url, sourceChat);
+                    OpenMiniApp(clientService, navigation, botUser, menuBot, attachmentMenuBot.Url, sourceChat, attachmentMenuBot);
                 }
             }
         }
 
-        public static async void OpenMiniApp(IClientService clientService, INavigationService navigation, User user, AttachmentMenuBot bot, string url, Chat sourceChat = null, Action<bool> continuation = null)
+        public static async void OpenMiniApp(IClientService clientService, INavigationService navigation, User user, AttachmentMenuBot bot, string url, Chat sourceChat = null, InternalLinkType sourceLink = null, Action<bool> continuation = null)
         {
             if (bot.ShowDisclaimerInSideMenu || !clientService.IsBotAddedToAttachmentMenu(bot.BotUserId))
             {
@@ -697,7 +697,7 @@ namespace Telegram.Common
             var response = await clientService.SendAsync(new GetWebAppUrl(bot.BotUserId, url, Theme.Current.Parameters, Strings.AppName));
             if (response is HttpUrl httpUrl)
             {
-                navigation.NavigateToWebApp(user, httpUrl.Url, 0, bot, sourceChat);
+                navigation.NavigateToWebApp(user, httpUrl.Url, 0, bot, sourceChat, sourceLink);
             }
         }
 
@@ -811,7 +811,7 @@ namespace Telegram.Common
                     var responsa = await clientService.SendAsync(new GetWebAppLinkUrl(chatId, botUser.Id, webAppShortName, startParameter, Theme.Current.Parameters, Strings.AppName, foundWebApp.RequestWriteAccess && popup.IsChecked is true));
                     if (responsa is HttpUrl url)
                     {
-                        navigation.NavigateToWebApp(botUser, url.Url);
+                        navigation.NavigateToWebApp(botUser, url.Url, sourceLink: new InternalLinkTypeWebApp(botUsername, webAppShortName, startParameter, false));
                     }
                 }
                 else
@@ -894,7 +894,7 @@ namespace Telegram.Common
             var responsa = await clientService.SendAsync(new GetMainWebApp(chatId, botUser.Id, startParameter, Theme.Current.Parameters, Strings.AppName));
             if (responsa is MainWebApp webApp)
             {
-                navigation.NavigateToWebApp(botUser, webApp.Url, menuBot: menuBot);
+                navigation.NavigateToWebApp(botUser, webApp.Url, menuBot: menuBot, sourceLink: new InternalLinkTypeMainWebApp(botUser.ActiveUsername(), startParameter, false));
             }
         }
 

@@ -55,14 +55,34 @@ namespace Telegram.Common
 
         public IClientService ClientService => _clientService;
 
-        public async void NavigateToWebApp(User botUser, string url, long launchId = 0, AttachmentMenuBot menuBot = null, Chat sourceChat = null)
+        public async void NavigateToWebApp(User botUser, string url, long launchId = 0, AttachmentMenuBot menuBot = null, Chat sourceChat = null, InternalLinkType sourceLink = null)
         {
+            if (sourceLink != null)
+            {
+                var oldViewId = WindowContext.Current.Id;
+                var found = false;
+
+                await WindowContext.ForEachAsync(window =>
+                {
+                    if (window.Content is WebAppPage webApp && webApp.AreTheSame(sourceLink))
+                    {
+                        _ = ApplicationViewSwitcher.SwitchAsync(WindowContext.Current.Id, oldViewId);
+                        found = true;
+                    };
+                });
+
+                if (found)
+                {
+                    return;
+                }
+            }
+
             await OpenAsync(new ViewServiceOptions
             {
                 Width = 384,
                 Height = 640,
                 PersistedId = "WebApp",
-                Content = control => new WebAppPage(ClientService, botUser, url, launchId, menuBot, sourceChat)
+                Content = control => new WebAppPage(ClientService, botUser, url, launchId, menuBot, sourceChat, sourceLink)
             });
         }
 
@@ -140,19 +160,19 @@ namespace Telegram.Common
 
         private async void NavigateToTab(Func<WindowContext, TabViewItem> newTab, ViewServiceOptions parameters)
         {
-            var oldViewId = WindowContext.Current.Id;
-
             var already = WindowContext.All.FirstOrDefault(x => x.PersistedId == parameters.PersistedId);
             if (already != null)
             {
-                await already.Dispatcher.DispatchAsync(async () =>
+                var oldViewId = WindowContext.Current.Id;
+
+                await already.Dispatcher.DispatchAsync(() =>
                 {
                     if (WindowContext.Current.Content is TabbedPage page)
                     {
                         page.AddNewTab(newTab(already));
                     }
 
-                    await ApplicationViewSwitcher.SwitchAsync(WindowContext.Current.Id, oldViewId);
+                    return ApplicationViewSwitcher.SwitchAsync(WindowContext.Current.Id, oldViewId);
                 });
             }
             else

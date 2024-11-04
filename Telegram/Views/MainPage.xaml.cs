@@ -1480,13 +1480,18 @@ namespace Telegram.Views
                 parameter = parameter.Substring("tg://toast?".Length);
             }
 
+            var data = Toast.SplitArguments(parameter);
+            if (data.TryGetValue("web_app", out string webApp))
+            {
+                parameter = Toast.FromBase64(webApp);
+            }
+
             if (Uri.TryCreate(parameter, UriKind.Absolute, out Uri scheme))
             {
                 Activate(scheme);
             }
             else
             {
-                var data = Toast.SplitArguments(parameter);
                 if (data.ContainsKey("chat_id") && long.TryParse(data["chat_id"], out long chatId))
                 {
                     MasterDetail.NavigationService.NavigateToChat(chatId, force: false);

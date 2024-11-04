@@ -511,7 +511,7 @@ namespace Telegram.ViewModels
         {
             if (ClientService.TryGetUser(bot.BotUserId, out User user))
             {
-                MessageHelper.OpenMiniApp(ClientService, NavigationService, user, bot, string.Empty, null, continuation);
+                MessageHelper.OpenMiniApp(ClientService, NavigationService, user, bot, string.Empty, null, new InternalLinkTypeAttachmentMenuBot(new TargetChatCurrent(), user.ActiveUsername(), string.Empty), continuation);
             }
             else
             {

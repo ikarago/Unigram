@@ -1996,6 +1996,11 @@
     <Content Include="Assets\Animations\AuthorizationStateWaitPassword.tgs" />
     <Content Include="Assets\Animations\MyStories.tgs" />
     <Content Include="Assets\Animations\Expired.tgs" />
+    <Content Include="Assets\Logos\WebAppLogo.scale-100.png" />
+    <Content Include="Assets\Logos\WebAppLogo.scale-125.png" />
+    <Content Include="Assets\Logos\WebAppLogo.scale-150.png" />
+    <Content Include="Assets\Logos\WebAppLogo.scale-200.png" />
+    <Content Include="Assets\Logos\WebAppLogo.scale-400.png" />
     <Content Include="Assets\mp4.html" />
     <Content Include="Assets\hls.html" />
     <Content Include="Assets\hls.js" />

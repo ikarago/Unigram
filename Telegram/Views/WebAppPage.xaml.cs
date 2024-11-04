@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Numerics;
+using System.Text;
 using Telegram.Common;
 using Telegram.Controls;
 using Telegram.Controls.Media;
@@ -21,9 +22,11 @@ using Telegram.Views.Host;
 using Telegram.Views.Popups;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Json;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Core.Preview;
+using Windows.UI.StartScreen;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
@@ -43,6 +46,8 @@ namespace Telegram.Views
         private readonly User _botUser;
         private readonly AttachmentMenuBot _menuBot;
 
+        private readonly InternalLinkType _sourceLink;
+
         private readonly long _launchId;
 
         private readonly long _gameChatId;
@@ -54,7 +59,7 @@ namespace Telegram.Views
         private bool _settingsVisible;
 
         // TODO: constructor should take a function and URL should be loaded asynchronously
-        public WebAppPage(IClientService clientService, User botUser, string url, long launchId = 0, AttachmentMenuBot menuBot = null, Chat sourceChat = null)
+        public WebAppPage(IClientService clientService, User botUser, string url, long launchId = 0, AttachmentMenuBot menuBot = null, Chat sourceChat = null, InternalLinkType sourceLink = null)
         {
             RequestedTheme = SettingsService.Current.Appearance.GetCalculatedElementTheme();
             InitializeComponent();
@@ -69,11 +74,12 @@ namespace Telegram.Views
             _launchId = launchId;
             _menuBot = menuBot;
             _sourceChat = sourceChat;
+            _sourceLink = sourceLink;
 
             TitleText.Text = botUser.FullName();
             Photo.SetUser(clientService, botUser, 24);
 
-            View.Navigate(url);
+            View.Navigate(url.Replace("7.10", "7.12"));
 
             var panel = ElementComposition.GetElementVisual(BottomBarPanel);
             panel.Clip = panel.Compositor.CreateInsetClip(0, 96, 0, 0);
@@ -88,6 +94,30 @@ namespace Telegram.Views
             var navigationClient = (IApplicationWindowTitleBarNavigationClient)coreWindow.NavigationClient;
 
             navigationClient.TitleBarPreferredVisibilityMode = AppWindowTitleBarVisibility.AlwaysHidden;
+        }
+
+        public bool AreTheSame(InternalLinkType internalLink)
+        {
+            if (_sourceLink is InternalLinkTypeAttachmentMenuBot xMenu && internalLink is InternalLinkTypeAttachmentMenuBot yMenu)
+            {
+                return xMenu.TargetChat is TargetChatCurrent
+                    && yMenu.TargetChat is TargetChatCurrent
+                    && xMenu.BotUsername == yMenu.BotUsername
+                    && xMenu.Url == xMenu.Url;
+            }
+            else if (_sourceLink is InternalLinkTypeMainWebApp xMain && internalLink is InternalLinkTypeMainWebApp yMain)
+            {
+                return xMain.BotUsername == yMain.BotUsername
+                    && xMain.StartParameter == yMain.StartParameter;
+            }
+            else if (_sourceLink is InternalLinkTypeWebApp xWebApp && internalLink is InternalLinkTypeWebApp yWebApp)
+            {
+                return xWebApp.BotUsername == yWebApp.BotUsername
+                    && xWebApp.WebAppShortName == yWebApp.WebAppShortName
+                    && xWebApp.StartParameter == yWebApp.StartParameter;
+            }
+
+            return false;
         }
 
         public WebAppPage(IClientService clientService, User botUser, string url, string title, long gameChatId = 0, long gameMessageId = 0)
@@ -420,6 +450,14 @@ namespace Telegram.Views
             {
                 ProcessShareToStory(eventData);
             }
+            else if (eventName == "web_app_check_home_screen")
+            {
+                ProcessCheckHomeScreen(eventData);
+            }
+            else if (eventName == "web_app_add_to_home_screen")
+            {
+                ProcessAddToHomeScreen(eventData);
+            }
             // Games
             else if (eventName == "share_game")
             {
@@ -428,6 +466,99 @@ namespace Telegram.Views
             else if (eventName == "share_score")
             {
                 ProcessShareGame(true);
+            }
+        }
+
+        private void ProcessCheckHomeScreen(JsonObject eventData)
+        {
+            if (SecondaryTile.Exists("web_app_" + _clientService.SessionId + "_" + _botUser.Id))
+            {
+                PostEvent("home_screen_checked", "{ status: \"added\" }");
+            }
+            else
+            {
+                PostEvent("home_screen_checked", "{ status: \"missed\" }");
+            }
+        }
+
+        private async void ProcessAddToHomeScreen(JsonObject eventData)
+        {
+            try
+            {
+                Uri square150x150Logo = new Uri("ms-appx:///Assets/Logos/Square150x150Logo.png");
+                Uri wide310x150Logo = new Uri("ms-appx:///Assets/Logos/Wide310x150Logo.png");
+                Uri square310x310Logo = new Uri("ms-appx:///Assets/Logos/Square310x310Logo.png");
+                Uri square71x71Logo = new Uri("ms-appx:///Assets/Logos/Square71x71Logo.png");
+                Uri square30x30Logo = new Uri("ms-appx:///Assets/Logos/WebAppLogo.png");
+
+                var user = _botUser;
+                if (user.ProfilePhoto?.Small.Local.IsDownloadingCompleted is true)
+                {
+                    var relative = System.IO.Path.GetRelativePath(ApplicationData.Current.LocalFolder.Path, user.ProfilePhoto.Small.Local.Path);
+                    var photo = new Uri("ms-appdata:///local/" + relative.Replace('\\', '/'));
+
+                    square150x150Logo = photo;
+                    wide310x150Logo = photo;
+                    square310x310Logo = photo;
+                    square71x71Logo = photo;
+                    square30x30Logo = photo;
+                }
+
+                var response = await _clientService.SendAsync(new GetInternalLink(_sourceLink, false));
+                if (response is not HttpUrl url)
+                {
+                    return;
+                }
+
+                var arguments = new Dictionary<string, string>();
+                arguments.Add("session", _clientService.SessionId.ToString());
+                arguments.Add("web_app", Toast.ToBase64(url.Url));
+
+                var builder = new StringBuilder();
+
+                foreach (var item in arguments)
+                {
+                    if (builder.Length > 0)
+                    {
+                        builder.Append("&");
+                    }
+
+                    builder.AppendFormat("{0}={1}", item.Key, item.Value);
+                }
+
+                // Create a Secondary tile with all the required arguments.
+                // Note the last argument specifies what size the Secondary tile should show up as by default in the Pin to start fly out.
+                // It can be set to TileSize.Square150x150, TileSize.Wide310x150, or TileSize.Default.  
+                // If set to TileSize.Wide310x150, then the asset for the wide size must be supplied as well.
+                // TileSize.Default will default to the wide size if a wide size is provided, and to the medium size otherwise. 
+                SecondaryTile secondaryTile = new SecondaryTile("web_app_" + _clientService.SessionId + "_" + _botUser.Id,
+                                                                _botUser.FirstName,
+                                                                builder.ToString(),
+                                                                square150x150Logo,
+                                                                TileSize.Square150x150);
+
+                secondaryTile.VisualElements.Wide310x150Logo = wide310x150Logo;
+                secondaryTile.VisualElements.Square310x310Logo = square310x310Logo;
+                secondaryTile.VisualElements.Square71x71Logo = square71x71Logo;
+                secondaryTile.VisualElements.Square30x30Logo = square30x30Logo;
+
+                // The display of the secondary tile name can be controlled for each tile size.
+                // The default is false.
+                secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;
+                secondaryTile.VisualElements.ShowNameOnWide310x150Logo = true;
+                secondaryTile.VisualElements.ShowNameOnSquare310x310Logo = true;
+
+                // The tile is created and we can now attempt to pin the tile.
+                // Note that the status message is updated when the async operation to pin the tile completes.
+                var pinned = await secondaryTile.RequestCreateForSelectionAsync(new Windows.Foundation.Rect(0, 0, ActualWidth, ActualHeight));
+                if (pinned)
+                {
+                    PostEvent("home_screen_added");
+                }
+            }
+            catch
+            {
+                //
             }
         }
 
