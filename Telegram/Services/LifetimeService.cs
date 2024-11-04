@@ -162,7 +162,7 @@ namespace Telegram.Services
             item.Aggregator.Unsubscribe(item);
             //WindowContext.Unsubscribe(item);
 
-            await WindowContext.ForEachAsync(async window =>
+            await WindowContext.ForEachAsync(window =>
             {
                 if (window.Content is RootPage root && replace != null)
                 {
@@ -182,10 +182,12 @@ namespace Telegram.Services
                             toast.Hide();
                         }
                     }
+
+                    return Task.CompletedTask;
                 }
                 else
                 {
-                    await WindowContext.Current.ConsolidateAsync();
+                    return WindowContext.Current.ConsolidateAsync();
                 }
             });
 

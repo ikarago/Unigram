@@ -177,7 +177,7 @@ namespace Telegram.Services.Settings
             UpdateNightMode(false);
         }
 
-        public void UpdateNightMode(bool? force = false, bool updateBackground = true)
+        public async void UpdateNightMode(bool? force = false, bool updateBackground = true)
         {
             // Same theme:
             // - false: update dictionaries
@@ -197,7 +197,7 @@ namespace Telegram.Services.Settings
                 ? ElementTheme.Dark
                 : ElementTheme.Light;
 
-            WindowContext.ForEach(window =>
+            await WindowContext.ForEachAsync(window =>
             {
                 if (force is not null)
                 {

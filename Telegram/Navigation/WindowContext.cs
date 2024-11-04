@@ -802,6 +802,21 @@ namespace Telegram.Navigation
             return Task.WhenAll(tasks);
         }
 
+        public static Task ForEachAsync(Action<WindowContext> action)
+        {
+            var tasks = new List<Task>();
+
+            lock (_allLock)
+            {
+                foreach (var window in All)
+                {
+                    tasks.Add(window.Dispatcher.DispatchAsync(() => action(window)));
+                }
+            }
+
+            return Task.WhenAll(tasks);
+        }
+
         private static readonly Dictionary<UIContext, WindowContext> _mapping = new();
 
         public static WindowContext ForXamlRoot(XamlRoot xamlRoot)

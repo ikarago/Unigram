@@ -192,7 +192,7 @@ namespace Telegram.Services
             {
                 if (window.IsInMainView)
                 {
-                    return Task.CompletedTask;
+                    return;
                 }
 
                 foreach (var service in window.NavigationServices)
@@ -200,11 +200,9 @@ namespace Telegram.Services
                     if (parameter is long chatId && service.IsChatOpen(chatId, true))
                     {
                         oldControl = ViewLifetimeControl.GetForCurrentView();
-                        return Task.CompletedTask;
+                        return;
                     }
                 }
-
-                return Task.CompletedTask;
             });
 
             if (oldControl != null)
