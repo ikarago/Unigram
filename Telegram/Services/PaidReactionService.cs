@@ -124,8 +124,8 @@ namespace Telegram.Services
                     Margin = new Thickness(8, -12, -4, -12)
                 };
 
-                animated.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                animated.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(32, GridUnitType.Pixel) });
+                animated.ColumnDefinitions.Add(1, GridUnitType.Auto);
+                animated.ColumnDefinitions.Add(32, GridUnitType.Pixel);
 
                 var slice = new SelfDestructTimer
                 {

@@ -16,7 +16,7 @@ namespace Telegram.Common
             }
 
             container.ColumnDefinitions.Clear();
-            container.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(12, GridUnitType.Pixel) });
+            container.ColumnDefinitions.Add(12, GridUnitType.Pixel);
 
             int j = 1;
             for (int i = 0; i < count; i++)
@@ -32,19 +32,19 @@ namespace Telegram.Common
 
                 if (i > 0 && i < count - 1)
                 {
-                    container.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                    container.ColumnDefinitions.Add(1, GridUnitType.Star);
                     Grid.SetColumn(label, ++j);
                 }
                 else
                 {
-                    container.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0.5, GridUnitType.Star) });
+                    container.ColumnDefinitions.Add(0.5, GridUnitType.Star);
                     Grid.SetColumnSpan(label, count + 2);
                 }
 
                 container.Children.Add(label);
             }
 
-            container.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(12, GridUnitType.Pixel) });
+            container.ColumnDefinitions.Add(12, GridUnitType.Pixel);
 
             Grid.SetColumnSpan(slider, container.ColumnDefinitions.Count);
         }

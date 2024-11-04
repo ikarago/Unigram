@@ -35,11 +35,11 @@ namespace Telegram.Views.Settings
                 var label = new TextBlock { Text = ConvertKeepMediaTick(i), TextAlignment = TextAlignment.Center, HorizontalAlignment = HorizontalAlignment.Stretch, Style = BootStrapper.Current.Resources["InfoCaptionTextBlockStyle"] as Style };
                 Grid.SetColumn(label, j);
 
-                KeepMediaTicks.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+                KeepMediaTicks.ColumnDefinitions.Add(1, GridUnitType.Auto);
 
                 if (i < 3)
                 {
-                    KeepMediaTicks.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                    KeepMediaTicks.ColumnDefinitions.Add(1, GridUnitType.Star);
                 }
 
                 KeepMediaTicks.Children.Add(label);

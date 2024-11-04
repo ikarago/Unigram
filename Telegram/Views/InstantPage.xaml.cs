@@ -291,10 +291,10 @@ namespace Telegram.Views
             foreach (var article in relatedArticles.Articles)
             {
                 var grid = new Grid();
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
-                grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+                grid.ColumnDefinitions.Add(1, GridUnitType.Star);
+                grid.ColumnDefinitions.Add(1, GridUnitType.Auto);
+                grid.RowDefinitions.Add(1, GridUnitType.Auto);
+                grid.RowDefinitions.Add(1, GridUnitType.Auto);
 
                 var title = new TextBlock { Text = article.Title };
                 var description = new TextBlock { TextWrapping = TextWrapping.Wrap, TextTrimming = TextTrimming.CharacterEllipsis, MaxLines = 2, Style = Resources["BlockAuthorDateTextBlockStyle"] as Style };
@@ -438,7 +438,7 @@ namespace Telegram.Views
                     column += cell.Colspan;
                 }
 
-                grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+                grid.RowDefinitions.Add(1, GridUnitType.Auto);
 
                 row++;
             }
@@ -1013,7 +1013,7 @@ namespace Telegram.Views
         private FrameworkElement ProcessList(PageBlockList block)
         {
             var panel = new Grid();
-            panel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+            panel.ColumnDefinitions.Add(1, GridUnitType.Auto);
             panel.ColumnDefinitions.Add(new ColumnDefinition());
 
             var row = 0;
@@ -1036,7 +1036,7 @@ namespace Telegram.Views
                 Grid.SetRow(stack, row);
                 Grid.SetColumn(stack, 1);
 
-                panel.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+                panel.RowDefinitions.Add(1, GridUnitType.Auto);
                 panel.Children.Add(label);
                 panel.Children.Add(stack);
 
@@ -1331,10 +1331,10 @@ namespace Telegram.Views
             }
 
             var grid = new Grid();
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+            grid.ColumnDefinitions.Add(1, GridUnitType.Auto);
+            grid.ColumnDefinitions.Add(1, GridUnitType.Auto);
+            grid.ColumnDefinitions.Add(1, GridUnitType.Auto);
+            grid.ColumnDefinitions.Add(1, GridUnitType.Auto);
 
             for (int i = 0; i < items.Count; i++)
             {
@@ -1347,7 +1347,7 @@ namespace Telegram.Views
 
                 if (x == 0)
                 {
-                    grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+                    grid.RowDefinitions.Add(1, GridUnitType.Auto);
                 }
             }
 
@@ -1368,9 +1368,9 @@ namespace Telegram.Views
             var element = new StackPanel { Style = Resources["BlockEmbedPostStyle"] as Style };
 
             var header = new Grid();
-            header.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
-            header.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
-            header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+            header.RowDefinitions.Add(1, GridUnitType.Auto);
+            header.RowDefinitions.Add(1, GridUnitType.Auto);
+            header.ColumnDefinitions.Add(1, GridUnitType.Auto);
             header.ColumnDefinitions.Add(new ColumnDefinition());
             header.Margin = new Thickness(_padding, 0, 0, 0);
 

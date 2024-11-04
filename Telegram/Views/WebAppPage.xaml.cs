@@ -688,8 +688,8 @@ namespace Telegram.Views
                 RowSpacing = 24
             };
 
-            panel.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-            panel.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+            panel.RowDefinitions.Add(1, GridUnitType.Star);
+            panel.RowDefinitions.Add(1, GridUnitType.Auto);
             panel.Children.Add(label);
 
             var popup = new ContentPopup

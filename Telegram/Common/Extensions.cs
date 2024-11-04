@@ -67,6 +67,16 @@ namespace Telegram.Common
             columns.Add(new ColumnDefinition { Width = new GridLength(value, type) });
         }
 
+        public static void Add(this RowDefinitionCollection rows, double pixels)
+        {
+            rows.Add(new RowDefinition { Height = new GridLength(pixels) });
+        }
+
+        public static void Add(this RowDefinitionCollection rows, double value, GridUnitType type)
+        {
+            rows.Add(new RowDefinition { Height = new GridLength(value, type) });
+        }
+
         public static void SetToolTip(DependencyObject element, object value, [CallerMemberName] string member = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int line = 0)
         {
             if (ApiInfo.IsStoreRelease || value == null)

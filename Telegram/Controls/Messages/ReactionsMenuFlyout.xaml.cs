@@ -342,13 +342,13 @@ namespace Telegram.Controls.Messages
 
                 Canvas.SetZIndex(button, 1);
 
-                Presenter.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+                Presenter.ColumnDefinitions.Add(1, GridUnitType.Auto);
                 Presenter.Children.Insert(index, button);
                 Preloader.Children.Add(preload);
                 index++;
             }
 
-            Presenter.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+            Presenter.ColumnDefinitions.Add(1, GridUnitType.Auto);
         }
 
         public static ReactionsMenuFlyout ShowAt(IClientService clientService, IList<long> effectIds, FrameworkElement reserved, MenuFlyout flyout)
@@ -629,13 +629,13 @@ namespace Telegram.Controls.Messages
                 Grid.SetColumn(preload, index);
                 Grid.SetColumn(button, index);
 
-                Presenter.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+                Presenter.ColumnDefinitions.Add(1, GridUnitType.Auto);
                 Presenter.Children.Insert(index, button);
                 Preloader.Children.Add(preload);
                 index++;
             }
 
-            Presenter.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+            Presenter.ColumnDefinitions.Add(1, GridUnitType.Auto);
         }
 
         private void OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)

@@ -5,6 +5,7 @@
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
 using System.Collections.Generic;
+using Telegram.Common;
 using Telegram.Converters;
 using Telegram.Td.Api;
 using Windows.UI.Xaml;
@@ -17,7 +18,7 @@ namespace Telegram.Controls.Payments
         public LabeledPricesPanel()
         {
             ColumnDefinitions.Add(new ColumnDefinition());
-            ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0, GridUnitType.Auto) });
+            ColumnDefinitions.Add(0, GridUnitType.Auto);
         }
 
         private string _currency;
@@ -70,7 +71,7 @@ namespace Telegram.Controls.Payments
 
                     Children.Add(label);
                     Children.Add(amount);
-                    RowDefinitions.Add(new RowDefinition { Height = new GridLength(0, GridUnitType.Auto) });
+                    RowDefinitions.Add(0, GridUnitType.Auto);
                 }
             }
         }

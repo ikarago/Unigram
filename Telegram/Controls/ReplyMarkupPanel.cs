@@ -206,7 +206,7 @@ namespace Telegram.Controls
 
                 SetRow(panel, j);
 
-                RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                RowDefinitions.Add(1, GridUnitType.Star);
                 Children.Add(panel);
             }
 
@@ -267,7 +267,7 @@ namespace Telegram.Controls
 
                 SetRow(panel, j);
 
-                RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, resize ? GridUnitType.Auto : GridUnitType.Star) });
+                RowDefinitions.Add(1, resize ? GridUnitType.Auto : GridUnitType.Star);
                 Children.Add(panel);
             }
 

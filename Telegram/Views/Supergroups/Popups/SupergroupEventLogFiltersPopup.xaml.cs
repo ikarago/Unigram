@@ -130,8 +130,8 @@ namespace Telegram.Views.Supergroups.Popups
                 Grid.SetColumn(title, 1);
 
                 var content = new Grid();
-                content.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
-                content.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                content.ColumnDefinitions.Add(1, GridUnitType.Auto);
+                content.ColumnDefinitions.Add(1, GridUnitType.Star);
                 content.Children.Add(photo);
                 content.Children.Add(title);
 

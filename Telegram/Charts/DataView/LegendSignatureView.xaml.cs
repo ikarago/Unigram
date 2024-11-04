@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Telegram.Common;
 using Telegram.Converters;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -291,7 +292,7 @@ namespace Telegram.Charts.DataView
 
                 if (showPercentage)
                 {
-                    ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(48, GridUnitType.Pixel) });
+                    ColumnDefinitions.Add(48, GridUnitType.Pixel);
 
                     percentage = new TextBlock();
                     percentage.Margin = new Thickness(0, 2, 8, 0);
@@ -303,11 +304,11 @@ namespace Telegram.Charts.DataView
                 }
                 else
                 {
-                    ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0, GridUnitType.Pixel) });
+                    ColumnDefinitions.Add(0, GridUnitType.Pixel);
                 }
 
-                ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+                ColumnDefinitions.Add(1, GridUnitType.Star);
+                ColumnDefinitions.Add(1, GridUnitType.Auto);
 
                 signature = new TextBlock();
                 signature.Margin = new Thickness(0, 2, 0, 0);

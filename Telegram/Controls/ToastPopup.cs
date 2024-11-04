@@ -223,9 +223,9 @@ namespace Telegram.Controls
             Grid.SetColumn(label, 1);
 
             var content = new Grid();
-            content.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+            content.ColumnDefinitions.Add(1, GridUnitType.Auto);
             content.ColumnDefinitions.Add(new ColumnDefinition());
-            content.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+            content.ColumnDefinitions.Add(1, GridUnitType.Auto);
             content.Children.Add(label);
 
             if (icon != null)

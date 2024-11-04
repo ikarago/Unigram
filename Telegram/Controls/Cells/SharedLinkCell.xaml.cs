@@ -269,7 +269,7 @@ namespace Telegram.Controls.Cells
                     Extensions.SetToolTip(hyperlink, link);
                     SetRow(textBlock, i);
 
-                    LinksPanel.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+                    LinksPanel.RowDefinitions.Add(1, GridUnitType.Auto);
                     LinksPanel.Children.Add(textBlock);
                 }
             }
