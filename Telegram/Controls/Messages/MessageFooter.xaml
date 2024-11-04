@@ -48,6 +48,7 @@
                                    TextWrapping="NoWrap"
                                    TextTrimming="CharacterEllipsis"
                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                   Padding="0,0,22,0"
                                    Grid.Column="1">
                             <ToolTipService.ToolTip>
                                 <ToolTip x:Name="ToolTip" />

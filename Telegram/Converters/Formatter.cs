@@ -330,35 +330,14 @@ namespace Telegram.Converters
             }
         }
 
-        private static bool? _isTimeRightToLeft;
-        public static bool IsTimeRightToLeft => _isTimeRightToLeft is true;
-
         public static string Time(int value)
         {
             // "۰۱:۵۹ ق.ظ"
-            if (_isTimeRightToLeft == null)
-            {
-                var time = NativeUtils.FormatTime(value);
-                var direction = NativeUtils.GetDirectionality(time);
-
-                _isTimeRightToLeft = direction == TextDirectionality.RightToLeft;
-                return time;
-            }
-
             return NativeUtils.FormatTime(value);
         }
 
         public static string Time(DateTime value)
         {
-            if (_isTimeRightToLeft == null)
-            {
-                var time = NativeUtils.FormatTime(value);
-                var direction = NativeUtils.GetDirectionality(time);
-
-                _isTimeRightToLeft = direction == TextDirectionality.RightToLeft;
-                return time;
-            }
-
             return NativeUtils.FormatTime(value);
         }
 

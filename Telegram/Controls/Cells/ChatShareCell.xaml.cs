@@ -80,13 +80,13 @@ namespace Telegram.Controls.Cells
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_strokeToken == 0 && _ellipse != null)
+            if (_strokeToken == 0 && _strokeBrush != null)
             {
                 Stroke?.RegisterColorChangedCallback(OnStrokeChanged, ref _strokeToken);
                 OnStrokeChanged(Stroke, SolidColorBrush.ColorProperty);
             }
 
-            if (_selectionStrokeToken == 0 && _stroke != null)
+            if (_selectionStrokeToken == 0 && _selectionStrokeBrush != null)
             {
                 SelectionStroke?.RegisterColorChangedCallback(OnSelectionStrokeChanged, ref _selectionStrokeToken);
                 OnSelectionStrokeChanged(SelectionStroke, SolidColorBrush.ColorProperty);
@@ -309,6 +309,7 @@ namespace Telegram.Controls.Cells
         #region Stroke
 
         private long _strokeToken;
+        private CompositionColorBrush _strokeBrush;
 
         public Brush Stroke
         {
@@ -328,12 +329,12 @@ namespace Telegram.Controls.Cells
         {
             oldValue?.UnregisterColorChangedCallback(ref _strokeToken);
 
-            if (newValue == null || _ellipse == null)
+            if (newValue == null || _strokeBrush == null)
             {
                 return;
             }
 
-            _ellipse.FillBrush = BootStrapper.Current.Compositor.CreateColorBrush(newValue.Color);
+            _strokeBrush.Color = newValue.Color;
 
             if (IsConnected)
             {
@@ -343,13 +344,13 @@ namespace Telegram.Controls.Cells
 
         private void OnStrokeChanged(DependencyObject sender, DependencyProperty dp)
         {
-            var solid = sender as SolidColorBrush;
-            if (solid == null || _ellipse == null)
+            var newValue = sender as SolidColorBrush;
+            if (newValue == null || _strokeBrush == null)
             {
                 return;
             }
 
-            _ellipse.FillBrush = BootStrapper.Current.Compositor.CreateColorBrush(solid.Color);
+            _strokeBrush.Color = newValue.Color;
         }
 
         #endregion
@@ -357,6 +358,7 @@ namespace Telegram.Controls.Cells
         #region SelectionStroke
 
         private long _selectionStrokeToken;
+        private CompositionColorBrush _selectionStrokeBrush;
 
         public SolidColorBrush SelectionStroke
         {
@@ -376,12 +378,12 @@ namespace Telegram.Controls.Cells
         {
             oldValue?.UnregisterColorChangedCallback(ref _selectionStrokeToken);
 
-            if (newValue == null || _stroke == null)
+            if (newValue == null || _selectionStrokeBrush == null)
             {
                 return;
             }
 
-            _stroke.FillBrush = BootStrapper.Current.Compositor.CreateColorBrush(newValue.Color);
+            _selectionStrokeBrush.Color = newValue.Color;
 
             if (IsConnected)
             {
@@ -391,13 +393,13 @@ namespace Telegram.Controls.Cells
 
         private void OnSelectionStrokeChanged(DependencyObject sender, DependencyProperty dp)
         {
-            var solid = sender as SolidColorBrush;
-            if (solid == null || _stroke == null)
+            var newValue = sender as SolidColorBrush;
+            if (newValue == null || _selectionStrokeBrush == null)
             {
                 return;
             }
 
-            _stroke.FillBrush = BootStrapper.Current.Compositor.CreateColorBrush(solid.Color);
+            _selectionStrokeBrush.Color = newValue.Color;
         }
 
         #endregion
@@ -408,24 +410,27 @@ namespace Telegram.Controls.Cells
         private readonly Visual _selectionPhoto;
 
         private CompositionPathGeometry _polygon;
-        private CompositionSpriteShape _ellipse;
-        private CompositionSpriteShape _stroke;
         private ShapeVisual _visual;
 
-        private CompositionBrush GetBrush(DependencyProperty dp, ref long token, DependencyPropertyChangedCallback callback)
+        private CompositionBrush GetBrush(DependencyProperty dp, ref CompositionColorBrush brush, ref long token, DependencyPropertyChangedCallback callback)
         {
+            if (brush != null)
+            {
+                return brush;
+            }
+
             var value = GetValue(dp);
             if (value is SolidColorBrush solid)
             {
-                if (IsConnected)
+                if (IsConnected && token == 0)
                 {
                     solid.RegisterColorChangedCallback(callback, ref token);
                 }
 
-                return BootStrapper.Current.Compositor.CreateColorBrush(solid.Color);
+                return brush = BootStrapper.Current.Compositor.CreateColorBrush(solid.Color);
             }
 
-            return BootStrapper.Current.Compositor.CreateColorBrush(Colors.Black);
+            return brush = BootStrapper.Current.Compositor.CreateColorBrush(Colors.Black);
         }
 
         private void InitializeSelection()
@@ -464,7 +469,7 @@ namespace Telegram.Controls.Cells
 
             var shape2 = compositor.CreateSpriteShape();
             shape2.Geometry = ellipse;
-            shape2.FillBrush = GetBrush(StrokeProperty, ref _strokeToken, OnStrokeChanged);
+            shape2.FillBrush = GetBrush(StrokeProperty, ref _strokeBrush, ref _strokeToken, OnStrokeChanged);
 
             var outer = compositor.CreateEllipseGeometry();
             outer.Radius = new Vector2(10);
@@ -472,7 +477,7 @@ namespace Telegram.Controls.Cells
 
             var shape3 = compositor.CreateSpriteShape();
             shape3.Geometry = outer;
-            shape3.FillBrush = GetBrush(SelectionStrokeProperty, ref _selectionStrokeToken, OnSelectionStrokeChanged);
+            shape3.FillBrush = GetBrush(SelectionStrokeProperty, ref _selectionStrokeBrush, ref _selectionStrokeToken, OnSelectionStrokeChanged);
 
             var visual = compositor.CreateShapeVisual();
             visual.Shapes.Add(shape3);
@@ -486,8 +491,6 @@ namespace Telegram.Controls.Cells
             ElementCompositionPreview.SetElementChildVisual(PhotoPanel, visual);
 
             _polygon = polygon;
-            _ellipse = shape2;
-            _stroke = shape3;
             _visual = visual;
         }
 

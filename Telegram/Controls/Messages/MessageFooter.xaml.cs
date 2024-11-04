@@ -4,6 +4,7 @@
 // Distributed under the GNU General Public License v3.0. (See accompanying
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
+using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Numerics;
@@ -54,7 +55,7 @@ namespace Telegram.Controls.Messages
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_strokeToken == 0 && _shapes != null)
+            if (_strokeToken == 0 && _strokeBrush != null)
             {
                 Stroke?.RegisterColorChangedCallback(OnStrokeChanged, ref _strokeToken);
                 OnStrokeChanged(Stroke, SolidColorBrush.ColorProperty);
@@ -102,14 +103,7 @@ namespace Telegram.Controls.Messages
         {
             if (Label != null)
             {
-                if (Formatter.IsTimeRightToLeft)
-                {
-                    Label.Text = _effectGlyph + _pinnedGlyph + _repliesLabel + _viewsLabel + _editedLabel + _authorLabel + Icons.LTR + Icons.RTL + _dateLabel + _stateLabel;
-                }
-                else
-                {
-                    Label.Text = _effectGlyph + _pinnedGlyph + _repliesLabel + _viewsLabel + _editedLabel + _authorLabel + _dateLabel + _stateLabel;
-                }
+                Label.Text = _effectGlyph + _pinnedGlyph + _repliesLabel + _viewsLabel + _editedLabel + _authorLabel + _dateLabel + _stateLabel;
             }
         }
 
@@ -479,7 +473,9 @@ namespace Telegram.Controls.Messages
                     _ticksState = MessageTicksState.Pending;
                     _ticksHash = messageHash;
 
-                    return "\u00A0\uEA06"; // Pending
+                    InitializeClock();
+
+                    return string.Empty; // Pending
                 }
                 else if (message.Id <= maxId)
                 {
@@ -488,7 +484,7 @@ namespace Telegram.Controls.Messages
                     _ticksState = MessageTicksState.Read;
                     _ticksHash = messageHash;
 
-                    return "\u00A0\uEA07"; // Read
+                    return string.Empty; // Read
                 }
 
                 UpdateTicks(true, false, _ticksState == MessageTicksState.Pending && _ticksHash == messageHash);
@@ -496,7 +492,7 @@ namespace Telegram.Controls.Messages
                 _ticksState = MessageTicksState.Sent;
                 _ticksHash = messageHash;
 
-                return "\u00A0\uEA07"; // Unread
+                return string.Empty; // Unread
             }
 
             UpdateTicks(false, null);
@@ -573,13 +569,14 @@ namespace Telegram.Controls.Messages
         private CompositionGeometry _line22;
         private ShapeVisual _visual2;
 
-        private CompositionSpriteShape[] _shapes;
+        private ShapeVisual _clock;
 
         private SpriteVisual _container;
 
         #region Stroke
 
         private long _strokeToken;
+        private CompositionColorBrush _strokeBrush;
 
         public Brush Stroke
         {
@@ -603,38 +600,75 @@ namespace Telegram.Controls.Messages
                 _strokeToken = 0;
             }
 
-            if (newValue == null || _container == null)
+            if (newValue == null || _strokeBrush == null)
             {
                 return;
             }
 
-            var brush = BootStrapper.Current.Compositor.CreateColorBrush(newValue.Color);
+            _strokeBrush.Color = newValue.Color;
 
-            foreach (var shape in _shapes)
+            if (IsConnected)
             {
-                shape.StrokeBrush = brush;
+                newValue.RegisterColorChangedCallback(OnStrokeChanged, ref _strokeToken);
             }
-
-            _strokeToken = newValue.RegisterPropertyChangedCallback(SolidColorBrush.ColorProperty, OnStrokeChanged);
         }
 
         private void OnStrokeChanged(DependencyObject sender, DependencyProperty dp)
         {
             var solid = sender as SolidColorBrush;
-            if (solid == null || _shapes == null)
+            if (solid == null || _strokeBrush == null)
             {
                 return;
             }
 
-            var brush = BootStrapper.Current.Compositor.CreateColorBrush(solid.Color);
-
-            foreach (var shape in _shapes)
-            {
-                shape.StrokeBrush = brush;
-            }
+            _strokeBrush.Color = solid.Color;
         }
 
         #endregion
+
+        private void InitializeClock()
+        {
+            if (_container == null)
+            {
+                return;
+            }
+
+            var width = 18f;
+            var height = 10f;
+            var stroke = 1.33f;
+
+            static CompositionPath GetClock()
+            {
+                var stroke = 1.33f;
+                var radius = 5 - stroke / 2;
+
+                CanvasGeometry result;
+                using (var builder = new CanvasPathBuilder(null))
+                {
+                    builder.AddGeometry(CanvasGeometry.CreateEllipse(null, 13, 5, radius, radius));
+                    builder.BeginFigure(new Vector2(12.5f, 3f));
+                    builder.AddLine(new Vector2(12.5f, 5.5f));
+                    builder.AddLine(new Vector2(15f, 5.5f));
+                    builder.EndFigure(CanvasFigureLoop.Open);
+                    result = CanvasGeometry.CreatePath(builder);
+                }
+                return new CompositionPath(result);
+            }
+
+            var shape11 = BootStrapper.Current.Compositor.CreateSpriteShape(BootStrapper.Current.Compositor.CreatePathGeometry(GetClock()));
+            shape11.StrokeThickness = stroke;
+            shape11.StrokeBrush = GetBrush(StrokeProperty, ref _strokeBrush, ref _strokeToken, OnStrokeChanged);
+            shape11.IsStrokeNonScaling = true;
+            shape11.StrokeStartCap = CompositionStrokeCap.Round;
+
+            var visual1 = BootStrapper.Current.Compositor.CreateShapeVisual();
+            visual1.Shapes.Add(shape11);
+            visual1.Size = new Vector2(width, height);
+            visual1.CenterPoint = new Vector3(width, height / 2f, 0);
+
+            _clock = visual1;
+            _container.Children.InsertAtBottom(visual1);
+        }
 
         private void InitializeTicks()
         {
@@ -662,13 +696,13 @@ namespace Telegram.Controls.Messages
 
             var shape11 = BootStrapper.Current.Compositor.CreateSpriteShape(line11);
             shape11.StrokeThickness = stroke;
-            shape11.StrokeBrush = GetBrush(StrokeProperty, ref _strokeToken, OnStrokeChanged);
+            shape11.StrokeBrush = GetBrush(StrokeProperty, ref _strokeBrush, ref _strokeToken, OnStrokeChanged);
             shape11.IsStrokeNonScaling = true;
             shape11.StrokeStartCap = CompositionStrokeCap.Round;
 
             var shape12 = BootStrapper.Current.Compositor.CreateSpriteShape(line12);
             shape12.StrokeThickness = stroke;
-            shape12.StrokeBrush = GetBrush(StrokeProperty, ref _strokeToken, OnStrokeChanged);
+            shape12.StrokeBrush = GetBrush(StrokeProperty, ref _strokeBrush, ref _strokeToken, OnStrokeChanged);
             shape12.IsStrokeNonScaling = true;
             shape12.StrokeEndCap = CompositionStrokeCap.Round;
 
@@ -690,12 +724,12 @@ namespace Telegram.Controls.Messages
 
             var shape21 = BootStrapper.Current.Compositor.CreateSpriteShape(line21);
             shape21.StrokeThickness = stroke;
-            shape21.StrokeBrush = GetBrush(StrokeProperty, ref _strokeToken, OnStrokeChanged);
+            shape21.StrokeBrush = GetBrush(StrokeProperty, ref _strokeBrush, ref _strokeToken, OnStrokeChanged);
             shape21.StrokeStartCap = CompositionStrokeCap.Round;
 
             var shape22 = BootStrapper.Current.Compositor.CreateSpriteShape(line22);
             shape22.StrokeThickness = stroke;
-            shape22.StrokeBrush = GetBrush(StrokeProperty, ref _strokeToken, OnStrokeChanged);
+            shape22.StrokeBrush = GetBrush(StrokeProperty, ref _strokeBrush, ref _strokeToken, OnStrokeChanged);
             shape22.StrokeEndCap = CompositionStrokeCap.Round;
 
             var visual2 = BootStrapper.Current.Compositor.CreateShapeVisual();
@@ -718,7 +752,6 @@ namespace Telegram.Controls.Messages
             _line12 = line12;
             _line21 = line21;
             _line22 = line22;
-            _shapes = new[] { shape11, shape12, shape21, shape22 };
             _visual1 = visual1;
             _visual2 = visual2;
             _container = container;
@@ -745,6 +778,12 @@ namespace Telegram.Controls.Messages
                     InitializeTicks();
                 }
 
+                if (_clock != null)
+                {
+                    _container.Children.Remove(_clock);
+                    _clock = null;
+                }
+
                 if (animate)
                 {
                     AnimateTicks(read == true);
@@ -761,20 +800,25 @@ namespace Telegram.Controls.Messages
             }
         }
 
-        private CompositionBrush GetBrush(DependencyProperty dp, ref long token, DependencyPropertyChangedCallback callback)
+        private CompositionBrush GetBrush(DependencyProperty dp, ref CompositionColorBrush brush, ref long token, DependencyPropertyChangedCallback callback)
         {
+            if (brush != null)
+            {
+                return brush;
+            }
+
             var value = GetValue(dp);
             if (value is SolidColorBrush solid)
             {
-                if (token == 0)
+                if (IsConnected && token == 0)
                 {
-                    token = solid.RegisterPropertyChangedCallback(SolidColorBrush.ColorProperty, callback);
+                    solid.RegisterColorChangedCallback(callback, ref token);
                 }
 
-                return BootStrapper.Current.Compositor.CreateColorBrush(solid.Color);
+                return brush = BootStrapper.Current.Compositor.CreateColorBrush(solid.Color);
             }
 
-            return BootStrapper.Current.Compositor.CreateColorBrush(Colors.Black);
+            return brush = BootStrapper.Current.Compositor.CreateColorBrush(Colors.Black);
         }
 
         private void AnimateTicks(bool read)
