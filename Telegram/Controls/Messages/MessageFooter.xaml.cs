@@ -734,7 +734,8 @@ namespace Telegram.Controls.Messages
 
                 if (_container != null)
                 {
-                    _container.IsVisible = false;
+                    _visual1.IsVisible = false;
+                    _visual2.IsVisible = false;
                 }
             }
             else
@@ -761,14 +762,16 @@ namespace Telegram.Controls.Messages
 
                     _line21.TrimStart = read == true ? 1 : 0;
 
-                    _container.IsVisible = true;
+                    _visual1.IsVisible = true;
+                    _visual2.IsVisible = true;
                 }
             }
         }
 
         private void AnimateTicks(bool read)
         {
-            _container.IsVisible = true;
+            _visual1.IsVisible = true;
+            _visual2.IsVisible = true;
 
             var height = 10f;
             var stroke = 2f;
