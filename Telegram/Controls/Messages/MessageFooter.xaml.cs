@@ -32,6 +32,8 @@ namespace Telegram.Controls.Messages
         private MessageTicksState _ticksState;
         private long _ticksHash;
 
+        private bool _outgoing;
+
         private string _effectGlyph;
         private string _pinnedGlyph;
         private string _repliesLabel;
@@ -437,10 +439,21 @@ namespace Telegram.Controls.Messages
             _stateLabel = UpdateStateIcon(message);
         }
 
+        private void UpdateMessageOutgoing(bool outgoing)
+        {
+            if (_outgoing != outgoing)
+            {
+                _outgoing = outgoing;
+                Label.Padding = new Thickness(0, 0, outgoing ? 22 : 0, 0);
+            }
+        }
+
         private string UpdateStateIcon(MessageViewModel message)
         {
             if (message.IsOutgoing && !message.IsChannelPost && !message.IsSaved)
             {
+                UpdateMessageOutgoing(true);
+
                 var maxId = 0L;
                 var messageHash = message.ChatId ^ message.Id;
 
@@ -489,6 +502,7 @@ namespace Telegram.Controls.Messages
                 return string.Empty; // Unread
             }
 
+            UpdateMessageOutgoing(true);
             UpdateTicks(false, null);
 
             _ticksState = MessageTicksState.None;
