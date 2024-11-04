@@ -1045,7 +1045,11 @@ namespace Telegram.Controls.Chats
                         return;
                     }
 
-                    _recorder.m_mediaCapture.Failed -= OnFailed;
+                    if (recorder.m_mediaCapture != null)
+                    {
+                        recorder.m_mediaCapture.Failed -= OnFailed;
+                    }
+
                     RecordingStopped?.Invoke(this, EventArgs.Empty);
 
                     Logger.Debug("stopping reader");
