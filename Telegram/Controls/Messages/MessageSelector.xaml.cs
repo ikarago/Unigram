@@ -281,7 +281,7 @@ namespace Telegram.Controls.Messages
                 CreateIcon();
 
                 var presenter = ElementComposition.GetElementVisual(Presenter);
-                var outgoing = (message.IsOutgoing && !message.IsChannelPost && message.SenderId is MessageSenderUser) || (message.IsSaved && message.ForwardInfo?.Source is { IsOutgoing: true });
+                var outgoing = (message.IsOutgoing && !message.IsChannelPost) || (message.IsSaved && message.ForwardInfo?.Source is { IsOutgoing: true });
 
                 if (animate)
                 {
