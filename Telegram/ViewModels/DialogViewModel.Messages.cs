@@ -1315,7 +1315,7 @@ namespace Telegram.ViewModels
                     return;
                 }
 
-                var response = await ClientService.SendAsync(new OpenWebApp(chat.Id, botUser.Id, webApp.Url, Theme.Current.Parameters, Strings.AppName, ThreadId, null));
+                var response = await ClientService.SendAsync(new OpenWebApp(chat.Id, botUser.Id, webApp.Url, Theme.Current.Parameters, "unigram", ThreadId, null));
                 if (response is WebAppInfo webAppInfo)
                 {
                     NavigationService.NavigateToWebApp(botUser, webAppInfo.Url, webAppInfo.LaunchId, null, chat);
@@ -1380,7 +1380,7 @@ namespace Telegram.ViewModels
             {
                 if (ClientService.TryGetUser(message.SenderId, out Td.Api.User botUser))
                 {
-                    var response = await ClientService.SendAsync(new OpenWebApp(chat.Id, botUser.Id, webApp.Url, Theme.Current.Parameters, Strings.AppName, ThreadId, null));
+                    var response = await ClientService.SendAsync(new OpenWebApp(chat.Id, botUser.Id, webApp.Url, Theme.Current.Parameters, "unigram", ThreadId, null));
                     if (response is WebAppInfo webAppInfo)
                     {
                         NavigationService.NavigateToWebApp(botUser, webAppInfo.Url, webAppInfo.LaunchId, null, chat);
@@ -1412,7 +1412,7 @@ namespace Telegram.ViewModels
             }
             else
             {
-                var response = await ClientService.SendAsync(new OpenWebApp(chat.Id, botUser.Id, url, Theme.Current.Parameters, Strings.AppName, ThreadId, null));
+                var response = await ClientService.SendAsync(new OpenWebApp(chat.Id, botUser.Id, url, Theme.Current.Parameters, "unigram", ThreadId, null));
                 if (response is WebAppInfo webAppInfo)
                 {
                     NavigationService.NavigateToWebApp(botUser, webAppInfo.Url, webAppInfo.LaunchId, null, chat);
@@ -1428,7 +1428,7 @@ namespace Telegram.ViewModels
                 return;
             }
 
-            var response = await ClientService.SendAsync(new OpenWebApp(chat.Id, menuBot.BotUserId, string.Empty, Theme.Current.Parameters, Strings.AppName, ThreadId, null));
+            var response = await ClientService.SendAsync(new OpenWebApp(chat.Id, menuBot.BotUserId, string.Empty, Theme.Current.Parameters, "unigram", ThreadId, null));
             if (response is WebAppInfo webAppInfo)
             {
                 NavigationService.NavigateToWebApp(botUser, webAppInfo.Url, webAppInfo.LaunchId, menuBot, chat);

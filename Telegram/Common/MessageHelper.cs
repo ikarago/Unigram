@@ -694,7 +694,7 @@ namespace Telegram.Common
 
             continuation?.Invoke(true);
 
-            var response = await clientService.SendAsync(new GetWebAppUrl(bot.BotUserId, url, Theme.Current.Parameters, Strings.AppName));
+            var response = await clientService.SendAsync(new GetWebAppUrl(bot.BotUserId, url, Theme.Current.Parameters, "unigram"));
             if (response is HttpUrl httpUrl)
             {
                 navigation.NavigateToWebApp(user, httpUrl.Url, 0, bot, sourceChat, sourceLink);
@@ -808,7 +808,7 @@ namespace Telegram.Common
                         _ => 0
                     };
 
-                    var responsa = await clientService.SendAsync(new GetWebAppLinkUrl(chatId, botUser.Id, webAppShortName, startParameter, Theme.Current.Parameters, Strings.AppName, foundWebApp.RequestWriteAccess && popup.IsChecked is true));
+                    var responsa = await clientService.SendAsync(new GetWebAppLinkUrl(chatId, botUser.Id, webAppShortName, startParameter, Theme.Current.Parameters, "unigram", foundWebApp.RequestWriteAccess && popup.IsChecked is true));
                     if (responsa is HttpUrl url)
                     {
                         navigation.NavigateToWebApp(botUser, url.Url, sourceLink: new InternalLinkTypeWebApp(botUsername, webAppShortName, startParameter, false));
@@ -891,7 +891,7 @@ namespace Telegram.Common
                 _ => 0
             };
 
-            var responsa = await clientService.SendAsync(new GetMainWebApp(chatId, botUser.Id, startParameter, Theme.Current.Parameters, Strings.AppName));
+            var responsa = await clientService.SendAsync(new GetMainWebApp(chatId, botUser.Id, startParameter, Theme.Current.Parameters, "unigram"));
             if (responsa is MainWebApp webApp)
             {
                 navigation.NavigateToWebApp(botUser, webApp.Url, menuBot: menuBot, sourceLink: new InternalLinkTypeMainWebApp(botUser.ActiveUsername(), startParameter, false));
