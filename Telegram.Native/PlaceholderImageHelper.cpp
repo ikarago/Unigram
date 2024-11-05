@@ -877,10 +877,10 @@ namespace winrt::Telegram::Native::implementation
             }
         }
 
-        FLOAT x;
-        FLOAT y;
+        BOOL isTrailingHit;
+        BOOL isInside;
         DWRITE_HIT_TEST_METRICS metrics;
-        ReturnIfFailed(result, textLayout->HitTestTextPosition(text.size() - 1, false, &x, &y, &metrics));
+        ReturnIfFailed(result, textLayout->HitTestPoint(FLT_MAX, FLT_MAX, &isTrailingHit, &isInside, &metrics));
 
         offset = float2(metrics.left + metrics.width, metrics.top + metrics.height);
         return result;
