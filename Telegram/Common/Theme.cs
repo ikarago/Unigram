@@ -101,9 +101,11 @@ namespace Telegram.Common
             switch (SettingsService.Current.Appearance.EmojiSet)
             {
                 case "microsoft":
+                    this["EmojiOnlyThemeFontFamily"] = "ms-appx:///Assets/Emoji/microsoft.ttf#Segoe UI Emoji";
                     xamlAutoFontFamily.Prepend("ms-appx:///Assets/Emoji/microsoft.ttf#Segoe UI Emoji", comma);
                     break;
                 default:
+                    this["EmojiOnlyThemeFontFamily"] = "ms-appx:///Assets/Emoji/apple.ttf#Segoe UI Emoji";
                     xamlAutoFontFamily.Prepend("ms-appx:///Assets/Emoji/apple.ttf#Segoe UI Emoji", comma);
                     break;
             }
