@@ -2234,6 +2234,18 @@ from **{0}**.</value>
   <data name="BotEditIntro" xml:space="preserve">
     <value>Edit Intro</value>
   </data>
+  <data name="BotEmojiStatusConfirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="BotEmojiStatusText" xml:space="preserve">
+    <value>Do you want to set this emoji status suggested by **{0}**?</value>
+  </data>
+  <data name="BotEmojiStatusTextFor" xml:space="preserve">
+    <value>Do you want to set this emoji status suggested by **{0}** for {1}?</value>
+  </data>
+  <data name="BotEmojiStatusTitle" xml:space="preserve">
+    <value>Set Emoji Status</value>
+  </data>
   <data name="BotHelp" xml:space="preserve">
     <value>Help</value>
   </data>

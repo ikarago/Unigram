@@ -457,7 +457,7 @@ namespace Telegram.Common
 
         public static int GetNamedInt32(this JsonObject obj, string name, int defaultValue)
         {
-            return (int)obj.GetNamedNumber(name);
+            return (int)obj.GetNamedNumber(name, defaultValue);
         }
 
         public static bool HasExtension(this IStorageFile file, params string[] extensions)

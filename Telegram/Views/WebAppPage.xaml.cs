@@ -34,6 +34,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace Telegram.Views
 {
@@ -464,6 +465,22 @@ namespace Telegram.Views
             {
                 ProcessAddToHomeScreen(eventData);
             }
+            else if (eventName == "web_app_set_emoji_status")
+            {
+                ProcessSetEmojiStatus(eventData);
+            }
+            else if (eventName == "web_app_start_accelerometer")
+            {
+                PostEvent("accelerometer_failed");
+            }
+            else if (eventName == "web_app_start_device_orientation")
+            {
+                PostEvent("device_orientation_failed");
+            }
+            else if (eventName == "web_app_start_gyroscope")
+            {
+                PostEvent("gyroscope_failed");
+            }
             // Games
             else if (eventName == "share_game")
             {
@@ -472,6 +489,47 @@ namespace Telegram.Views
             else if (eventName == "share_score")
             {
                 ProcessShareGame(true);
+            }
+        }
+
+        private async void ProcessSetEmojiStatus(JsonObject eventData)
+        {
+            var customEmoji = eventData.GetNamedString("custom_emoji_id", string.Empty);
+            var expirationDate = eventData.GetNamedInt32("expiration_date", 0);
+
+            if (string.IsNullOrEmpty(customEmoji) || !long.TryParse(customEmoji, out long customEmojiId))
+            {
+                PostEvent("emoji_status_failed", "{ error: \"SUGGESTED_EMOJI_INVALID\" }");
+                return;
+            }
+
+            if (expirationDate != 0 && expirationDate < DateTime.Now.ToTimestamp())
+            {
+                PostEvent("emoji_status_failed", "{ error: \"EXPIRATION_DATE_INVALID\" }");
+                return;
+            }
+
+            var response = await _clientService.SendAsync(new GetCustomEmojiStickers(new[] { customEmojiId }));
+            if (response is not Stickers stickers || stickers.StickersValue.Count != 1)
+            {
+                PostEvent("emoji_status_failed", "{ error: \"SUGGESTED_EMOJI_INVALID\" }");
+                return;
+            }
+
+            var popup = new EmojiStatusPopup(_clientService, _navigationService, _botUser.Id, stickers.StickersValue[0], expirationDate);
+
+            var confirm = await popup.ShowQueuedAsync(XamlRoot);
+            if (confirm == ContentDialogResult.Primary)
+            {
+                PostEvent("emoji_status_set");
+            }
+            else if (confirm == ContentDialogResult.Secondary)
+            {
+                PostEvent("emoji_status_failed", "{ error: \"SERVER_ERROR\" }");
+            }
+            else
+            {
+                PostEvent("emoji_status_failed", "{ error: \"USER_DECLINED\" }");
             }
         }
 
@@ -1516,12 +1574,6 @@ namespace Telegram.Views
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             PostEvent("back_button_pressed");
-        }
-
-        private async void ByNavigation(Action<INavigationService> action)
-        {
-            WindowContext.Main.Dispatcher.Dispatch(() => action(WindowContext.Main.GetNavigationService()));
-            await ApplicationViewSwitcher.SwitchAsync(WindowContext.Main.Id);
         }
 
         private void OnActualThemeChanged(FrameworkElement sender, object args)
