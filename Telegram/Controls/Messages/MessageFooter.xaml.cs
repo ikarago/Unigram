@@ -502,7 +502,7 @@ namespace Telegram.Controls.Messages
                 return string.Empty; // Unread
             }
 
-            UpdateMessageOutgoing(true);
+            UpdateMessageOutgoing(false);
             UpdateTicks(false, null);
 
             _ticksState = MessageTicksState.None;
