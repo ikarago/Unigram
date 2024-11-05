@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Telegram.Common;
 using Telegram.Composition;
 using Telegram.Controls.Media;
+using Telegram.Native;
 using Telegram.Navigation;
 using Telegram.Td.Api;
 using Windows.Graphics.Imaging;
 using Windows.Media.Capture;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
@@ -276,7 +278,16 @@ namespace Telegram.Controls.Chats
                 if (file != null)
                 {
                     var bitmap = new BitmapImage();
-                    PlaceholderHelper.GetBlurred(bitmap, file.Path, 3);
+
+                    using (var stream = new InMemoryRandomAccessStream())
+                    {
+                        try
+                        {
+                            await Task.Run(() => PlaceholderImageHelper.Current.DrawThumbnailPlaceholder(file.Path, 3, stream));
+                            await bitmap.SetSourceAsync(stream);
+                        }
+                        catch { }
+                    }
 
                     return new ImageBrush
                     {
