@@ -5,6 +5,7 @@ using Telegram.Navigation;
 using Telegram.Services;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 
 namespace Telegram.Views.Popups
@@ -94,6 +95,7 @@ namespace Telegram.Views.Popups
                 else if (args.Item is CaptureSessionItem item)
                 {
                     content.UpdateCell(item);
+                    AutomationProperties.SetName(args.ItemContainer, item.DisplayName);
                 }
             }
         }
