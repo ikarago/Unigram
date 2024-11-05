@@ -150,13 +150,16 @@
         </Grid>
 
         <Grid x:Name="CaptionPanel"
-              Margin="24,12,24,0">
+              Background="{ThemeResource TextControlBackground}">
             <controls:CaptionTextBox x:Name="CaptionInput"
                                      TextChanged="OnTextChanged"
                                      InputScope="Chat"
                                      FontFamily="{ThemeResource EmojiThemeFontFamily}"
                                      PlaceholderText="{CustomResource Gift2Message}"
-                                     Padding="10,6,36,5"
+                                     Style="{StaticResource DefaultChatTextBoxStyle}"
+                                     Background="Transparent"
+                                     Padding="24,0,0,0"
+                                     BorderThickness="0"
                                      Grid.Row="1">
                 <FlyoutBase.AttachedFlyout>
                     <Flyout x:Name="EmojiFlyout"
@@ -176,17 +179,22 @@
                 </FlyoutBase.AttachedFlyout>
             </controls:CaptionTextBox>
 
+            <Border x:Name="CaptionBorder"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="0,0,0,1"
+                    Grid.ColumnSpan="3" />
+
             <messages:CustomEmojiCanvas x:Name="CustomEmoji"
                                         IsHitTestVisible="False"
-                                        Margin="10,4,-2,-2" />
+                                        Margin="22,11,0,0" />
 
             <controls:GlyphButton Click="Emoji_Click"
                                   Glyph="&#xE76E;"
                                   AllowFocusOnInteraction="False"
                                   HorizontalAlignment="Right"
                                   VerticalAlignment="Bottom"
-                                  Width="36"
-                                  Height="32" />
+                                  FontSize="24"
+                                  Grid.Column="1" />
         </Grid>
 
         <TextBlock x:Name="CaptionInfo"

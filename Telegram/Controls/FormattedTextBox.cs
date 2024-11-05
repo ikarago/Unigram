@@ -214,6 +214,7 @@ namespace Telegram.Controls
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            this.CreateInsetClip();
 
             CustomEmoji ??= GetTemplateChild(nameof(CustomEmoji)) as CustomEmojiCanvas;
             Blocks = GetTemplateChild(nameof(Blocks)) as Grid;
