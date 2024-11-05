@@ -574,6 +574,11 @@ namespace Telegram.Controls.Cells
                 }
             }
 
+            if (chat.Type is ChatTypeSecret == false)
+            {
+                builder.Append(Automation.GetSummary(clientService, message));
+            }
+
             var date = Locale.FormatDateAudio(message.Date);
             if (message.IsOutgoing)
             {
@@ -582,11 +587,6 @@ namespace Telegram.Controls.Cells
             else
             {
                 builder.Append(string.Format(Strings.AccDescrReceivedDate, date));
-            }
-
-            if (chat.Type is ChatTypeSecret == false)
-            {
-                builder.Append(Automation.GetSummary(clientService, message));
             }
 
             //AutomationProperties.SetName(this, builder.ToString());
