@@ -102,6 +102,8 @@ namespace Telegram.Controls.Media
         public const string Color = "\uE2B1";
         public const string ColorFilled24 = "\uEA1B";
 
+        public const string HomeAdd = "\uEAA4";
+        public const string HomeDismiss = "\uEAA5";
         public const string ArrowClockwise = "\uE72C";
 
         public const string Info = "\uEA8C";

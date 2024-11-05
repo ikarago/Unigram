@@ -4,12 +4,15 @@
 // Distributed under the GNU General Public License v3.0. (See accompanying
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Numerics;
 using System.Text;
+using System.Threading.Tasks;
 using Telegram.Common;
 using Telegram.Controls;
 using Telegram.Controls.Media;
@@ -79,7 +82,7 @@ namespace Telegram.Views
             _launchId = launchId;
             _menuBot = menuBot;
             _sourceChat = sourceChat;
-            _sourceLink = sourceLink;
+            _sourceLink = sourceLink != null ? new InternalLinkTypeMainWebApp(botUser.ActiveUsername(), string.Empty, false) : null;
 
             TitleText.Text = botUser.FullName();
             Photo.SetUser(clientService, botUser, 24);
@@ -471,15 +474,15 @@ namespace Telegram.Views
             }
             else if (eventName == "web_app_start_accelerometer")
             {
-                PostEvent("accelerometer_failed");
+                PostEvent("accelerometer_failed", "{ error: \"UNSUPPORTED\" }");
             }
             else if (eventName == "web_app_start_device_orientation")
             {
-                PostEvent("device_orientation_failed");
+                PostEvent("device_orientation_failed", "{ error: \"UNSUPPORTED\" }");
             }
             else if (eventName == "web_app_start_gyroscope")
             {
-                PostEvent("gyroscope_failed");
+                PostEvent("gyroscope_failed", "{ error: \"UNSUPPORTED\" }");
             }
             // Games
             else if (eventName == "share_game")
@@ -535,7 +538,11 @@ namespace Telegram.Views
 
         private void ProcessCheckHomeScreen(JsonObject eventData)
         {
-            if (SecondaryTile.Exists("web_app_" + _clientService.SessionId + "_" + _botUser.Id))
+            if (_botUser.Type is not UserTypeBot { HasMainWebApp: true })
+            {
+                PostEvent("home_screen_checked", "{ status: \"unsupported\" }");
+            }
+            else if (SecondaryTile.Exists("web_app_" + _clientService.SessionId + "_" + _botUser.Id))
             {
                 PostEvent("home_screen_checked", "{ status: \"added\" }");
             }
@@ -545,85 +552,9 @@ namespace Telegram.Views
             }
         }
 
-        private async void ProcessAddToHomeScreen(JsonObject eventData)
+        private void ProcessAddToHomeScreen(JsonObject eventData)
         {
-            try
-            {
-                Uri square150x150Logo = new Uri("ms-appx:///Assets/Logos/Square150x150Logo.png");
-                Uri wide310x150Logo = new Uri("ms-appx:///Assets/Logos/Wide310x150Logo.png");
-                Uri square310x310Logo = new Uri("ms-appx:///Assets/Logos/Square310x310Logo.png");
-                Uri square71x71Logo = new Uri("ms-appx:///Assets/Logos/Square71x71Logo.png");
-                Uri square30x30Logo = new Uri("ms-appx:///Assets/Logos/WebAppLogo.png");
-
-                var user = _botUser;
-                if (user.ProfilePhoto?.Small.Local.IsDownloadingCompleted is true)
-                {
-                    var relative = System.IO.Path.GetRelativePath(ApplicationData.Current.LocalFolder.Path, user.ProfilePhoto.Small.Local.Path);
-                    var photo = new Uri("ms-appdata:///local/" + relative.Replace('\\', '/'));
-
-                    square150x150Logo = photo;
-                    wide310x150Logo = photo;
-                    square310x310Logo = photo;
-                    square71x71Logo = photo;
-                    square30x30Logo = photo;
-                }
-
-                var response = await _clientService.SendAsync(new GetInternalLink(_sourceLink, false));
-                if (response is not HttpUrl url)
-                {
-                    return;
-                }
-
-                var arguments = new Dictionary<string, string>();
-                arguments.Add("session", _clientService.SessionId.ToString());
-                arguments.Add("web_app", Toast.ToBase64(url.Url));
-
-                var builder = new StringBuilder();
-
-                foreach (var item in arguments)
-                {
-                    if (builder.Length > 0)
-                    {
-                        builder.Append("&");
-                    }
-
-                    builder.AppendFormat("{0}={1}", item.Key, item.Value);
-                }
-
-                // Create a Secondary tile with all the required arguments.
-                // Note the last argument specifies what size the Secondary tile should show up as by default in the Pin to start fly out.
-                // It can be set to TileSize.Square150x150, TileSize.Wide310x150, or TileSize.Default.  
-                // If set to TileSize.Wide310x150, then the asset for the wide size must be supplied as well.
-                // TileSize.Default will default to the wide size if a wide size is provided, and to the medium size otherwise. 
-                SecondaryTile secondaryTile = new SecondaryTile("web_app_" + _clientService.SessionId + "_" + _botUser.Id,
-                                                                _botUser.FirstName,
-                                                                builder.ToString(),
-                                                                square150x150Logo,
-                                                                TileSize.Square150x150);
-
-                secondaryTile.VisualElements.Wide310x150Logo = wide310x150Logo;
-                secondaryTile.VisualElements.Square310x310Logo = square310x310Logo;
-                secondaryTile.VisualElements.Square71x71Logo = square71x71Logo;
-                secondaryTile.VisualElements.Square30x30Logo = square30x30Logo;
-
-                // The display of the secondary tile name can be controlled for each tile size.
-                // The default is false.
-                secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;
-                secondaryTile.VisualElements.ShowNameOnWide310x150Logo = true;
-                secondaryTile.VisualElements.ShowNameOnSquare310x310Logo = true;
-
-                // The tile is created and we can now attempt to pin the tile.
-                // Note that the status message is updated when the async operation to pin the tile completes.
-                var pinned = await secondaryTile.RequestCreateForSelectionAsync(new Windows.Foundation.Rect(0, 0, ActualWidth, ActualHeight));
-                if (pinned)
-                {
-                    PostEvent("home_screen_added");
-                }
-            }
-            catch
-            {
-                //
-            }
+            MenuItemAddToStartMenu();
         }
 
         private async void ProcessShareGame(bool withMyScore)
@@ -1525,6 +1456,18 @@ namespace Telegram.Views
 
                 flyout.CreateFlyoutItem(MenuItemReloadPage, Strings.BotWebViewReloadPage, Icons.ArrowClockwise);
 
+                if (_botUser.Type is UserTypeBot { HasMainWebApp: true })
+                {
+                    if (SecondaryTile.Exists("web_app_" + _clientService.SessionId + "_" + _botUser.Id))
+                    {
+                        flyout.CreateFlyoutItem(MenuItemRemoveFromStartMenu, Strings.BotWebViewRemoveFromStart, Icons.HomeDismiss);
+                    }
+                    else
+                    {
+                        flyout.CreateFlyoutItem(MenuItemAddToStartMenu, Strings.BotWebViewAddToStart, Icons.HomeAdd);
+                    }
+                }
+
                 flyout.CreateFlyoutItem(MenuItemTerms, Strings.BotWebViewToS, Icons.Info);
 
                 if (_menuBot != null && _menuBot.IsAdded)
@@ -1559,6 +1502,117 @@ namespace Telegram.Views
         private void MenuItemReloadPage()
         {
             View.Reload();
+        }
+
+        private async void MenuItemRemoveFromStartMenu()
+        {
+            if (SecondaryTile.Exists("web_app_" + _clientService.SessionId + "_" + _botUser.Id))
+            {
+                var secondaryTile = new SecondaryTile("web_app_" + _clientService.SessionId + "_" + _botUser.Id);
+                await secondaryTile.RequestDeleteForSelectionAsync(new Windows.Foundation.Rect(0, 0, ActualWidth, ActualHeight));
+            }
+        }
+
+        private async void MenuItemAddToStartMenu()
+        {
+            try
+            {
+                var user = _botUser;
+                if (user.Type is not UserTypeBot { HasMainWebApp: true })
+                {
+                    return;
+                }
+
+                var response = await _clientService.SendAsync(new GetInternalLink(new InternalLinkTypeMainWebApp(_botUser.ActiveUsername(), string.Empty, false), false));
+                if (response is not HttpUrl url)
+                {
+                    return;
+                }
+
+                var arguments = new Dictionary<string, string>();
+                arguments.Add("session", _clientService.SessionId.ToString());
+                arguments.Add("web_app", Toast.ToBase64(url.Url));
+
+                var builder = new StringBuilder();
+
+                foreach (var item in arguments)
+                {
+                    if (builder.Length > 0)
+                    {
+                        builder.Append("&");
+                    }
+
+                    builder.AppendFormat("{0}={1}", item.Key, item.Value);
+                }
+
+                var photo = await GenerateTileLogoAsync(user.ProfilePhoto);
+                var secondaryTile = new SecondaryTile("web_app_" + _clientService.SessionId + "_" + _botUser.Id,
+                                                      _botUser.FirstName,
+                                                      builder.ToString(),
+                                                      photo,
+                                                      TileSize.Square150x150);
+
+                secondaryTile.VisualElements.Wide310x150Logo = photo;
+                secondaryTile.VisualElements.Square310x310Logo = photo;
+                secondaryTile.VisualElements.Square71x71Logo = photo;
+
+#pragma warning disable CS0618 // Type or member is obsolete
+                secondaryTile.VisualElements.Square30x30Logo = photo;
+#pragma warning restore CS0618 // Type or member is obsolete
+
+                secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;
+                secondaryTile.VisualElements.ShowNameOnWide310x150Logo = true;
+                secondaryTile.VisualElements.ShowNameOnSquare310x310Logo = true;
+
+                var pinned = await secondaryTile.RequestCreateForSelectionAsync(new Windows.Foundation.Rect(0, 0, ActualWidth, ActualHeight));
+                if (pinned)
+                {
+                    PostEvent("home_screen_added");
+                }
+            }
+            catch
+            {
+                //
+            }
+        }
+
+        private async Task<Uri> GenerateTileLogoAsync(ProfilePhoto photo)
+        {
+            try
+            {
+                if (photo != null && photo.Small.Local.IsDownloadingCompleted)
+                {
+                    var device = ElementComposition.GetSharedDevice();
+                    var bitmap = await CanvasBitmap.LoadAsync(device, _botUser.ProfilePhoto.Small.Local.Path, 96, CanvasAlphaMode.Premultiplied);
+
+                    var target = new CanvasRenderTarget(bitmap, bitmap.Size);
+                    var half = (float)bitmap.Size.Width / 2;
+
+                    using (var session = target.CreateDrawingSession())
+                    {
+                        using (var layer = session.CreateLayer(1, CanvasGeometry.CreateEllipse(device, half, half, half, half)))
+                        {
+                            session.DrawImage(bitmap);
+                        }
+                    }
+
+                    var folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("WebApps", CreationCollisionOption.OpenIfExists);
+                    var file = await folder.CreateFileAsync("web_app_" + _clientService.SessionId + "_" + _botUser.Id + ".png", CreationCollisionOption.ReplaceExisting);
+
+                    using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+                    {
+                        await target.SaveAsync(stream, CanvasBitmapFileFormat.Png);
+                    }
+
+                    return new Uri("ms-appdata:///local/WebApps/web_app_" + _clientService.SessionId + "_" + _botUser.Id + ".png");
+                }
+            }
+            catch
+            {
+                // Catching as this would break the UI otherwise
+            }
+
+            return new Uri("ms-appx:///Assets/Logos/WebAppLogo.png");
         }
 
         private async void MenuItemDeleteBot()

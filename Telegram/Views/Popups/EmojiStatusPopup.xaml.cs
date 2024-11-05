@@ -7,19 +7,12 @@
 using System;
 using Telegram.Common;
 using Telegram.Controls;
-using Telegram.Controls.Media;
-using Telegram.Converters;
-using Telegram.Navigation;
 using Telegram.Navigation.Services;
 using Telegram.Services;
 using Telegram.Streams;
 using Telegram.Td.Api;
-using Telegram.Views.Popups;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Media;
 
 namespace Telegram.Views.Popups
 {
@@ -101,8 +94,6 @@ namespace Telegram.Views.Popups
             visual1.StartAnimation("Translation.Y", translate1);
             visual2.StartAnimation("Translation.Y", translate2);
 
-            //await Task.Delay(2000);
-
             if (_clientService.IsPremium)
             {
                 var result = await _clientService.SendAsync(new SetEmojiStatus(new EmojiStatus(_customEmojiId, _expirationDate)));
@@ -115,7 +106,6 @@ namespace Telegram.Views.Popups
                 Hide();
                 _navigationService.ShowPromo(new PremiumSourceFeature(new PremiumFeatureEmojiStatus()));
             }
-            //ViewModel.Submit();
         }
     }
 }

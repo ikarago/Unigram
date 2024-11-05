@@ -2395,6 +2395,9 @@ It will be able to access your **IP address** and basic device info.</value>
   <data name="BotWebAppInstantViewOpen" xml:space="preserve">
     <value>Launch</value>
   </data>
+  <data name="BotWebViewAddToStart" xml:space="preserve">
+    <value>Add to Start</value>
+  </data>
   <data name="BotWebViewChangesMayNotBeSaved" xml:space="preserve">
     <value>Changes that you made may not be saved.</value>
   </data>
@@ -2409,6 +2412,9 @@ It will be able to access your **IP address** and basic device info.</value>
   </data>
   <data name="BotWebViewReloadPage" xml:space="preserve">
     <value>Reload Page</value>
+  </data>
+  <data name="BotWebViewRemoveFromStart" xml:space="preserve">
+    <value>Remove from Start</value>
   </data>
   <data name="BotWebViewRequestAllow" xml:space="preserve">
     <value>Allow</value>
