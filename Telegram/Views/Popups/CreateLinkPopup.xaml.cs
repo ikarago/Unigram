@@ -7,13 +7,14 @@
 using Microsoft.UI.Xaml.Controls;
 using System.Threading.Tasks;
 using Telegram.Common;
+using Telegram.Controls;
 using Telegram.Views.Host;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 
 namespace Telegram.Views.Popups
 {
-    public sealed partial class CreateLinkPopup : TeachingTip
+    public sealed partial class CreateLinkPopup : TeachingTipEx
     {
         public CreateLinkPopup()
         {

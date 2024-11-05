@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
 using Telegram.Common;
+using Telegram.Controls;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -15,7 +16,7 @@ using Windows.UI.Xaml.Input;
 
 namespace Telegram.Views.Popups
 {
-    public sealed partial class InputTeachingTip : TeachingTip
+    public sealed partial class InputTeachingTip : TeachingTipEx
     {
         public string Header { get; set; }
 

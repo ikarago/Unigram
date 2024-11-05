@@ -57,7 +57,7 @@ namespace Telegram.Views.Supergroups
                 return;
             }
 
-            var popup = new TeachingTip();
+            var popup = new TeachingTipEx();
             popup.Title = username.IsActive
                 ? Strings.UsernameDeactivateLink
                 : Strings.UsernameActivateLink;

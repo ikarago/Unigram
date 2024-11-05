@@ -98,7 +98,7 @@ namespace Telegram.Views.Settings.Popups
                 return;
             }
 
-            var popup = new TeachingTip
+            var popup = new TeachingTipEx
             {
                 Title = username.IsActive
                     ? Strings.UsernameDeactivateLink

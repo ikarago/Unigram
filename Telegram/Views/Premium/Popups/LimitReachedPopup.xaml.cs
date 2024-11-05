@@ -319,7 +319,7 @@ namespace Telegram.Views.Premium.Popups
                 return;
             }
 
-            var popup = new TeachingTip();
+            var popup = new TeachingTipEx();
             popup.Title = Strings.AppName;
             popup.Subtitle = string.Format(supergroup.IsChannel ? Strings.RevokeLinkAlertChannel : Strings.RevokeLinkAlert, MeUrlPrefixConverter.Convert(_clientService, supergroup.ActiveUsername(), true), chat.Title);
             popup.ActionButtonContent = Strings.RevokeButton;

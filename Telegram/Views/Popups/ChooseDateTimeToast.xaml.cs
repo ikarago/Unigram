@@ -8,13 +8,14 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Telegram.Controls;
 using Telegram.Native;
 using Windows.System.UserProfile;
 using Windows.UI.Xaml.Controls;
 
 namespace Telegram.Views.Popups
 {
-    public sealed partial class ChooseDateTimeToast : TeachingTip
+    public sealed partial class ChooseDateTimeToast : TeachingTipEx
     {
         private readonly TaskCompletionSource<ContentDialogResult> _tsc = new();
 
