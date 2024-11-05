@@ -1,3 +1,14 @@
+## Requirements
+
+The following tools and SDKs are mandatory for the project development:
+* Visual Studio 2022, with
+    * .NET desktop development
+    * Desktop development with C++
+    * Universal Windows Platform deveopment
+	    * Windows 11 SDK (10.0.22621.0)
+ 
+## Getting started
+
 1. First, check that you have the [necessary tools](#requirements) installed.
 2. Go to <https://my.telegram.org/apps> and register a new app.
 3. Clone the repository __*recursively*__ by using `git clone --recursive https://github.com/UnigramDev/Unigram.git`.
@@ -156,15 +167,6 @@ Since compiling WebRTC is time and resources consuming, it is possible to build 
   - Controls/Cells/GroupCallParticipantGridCell.xaml
   - Views/Calls/*
 
-## Requirements
-
-The following tools and SDKs are mandatory for the project development:
-* Visual Studio 2022, with
-    * .NET desktop development
-    * Desktop development with C++
-    * Universal Windows Platform deveopment
-	    * Windows 11 SDK (10.0.22621.0)
-    * [TDLib for Universal Windows Platform](https://tdlib.github.io/td/build.html?language=C%23)
 
 ### Code fails to build?
 
