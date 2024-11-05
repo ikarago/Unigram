@@ -179,8 +179,6 @@ namespace Telegram.Controls
             _pressed = false;
             ReleasePointerCapture(e.Pointer);
 
-            Logger.Info();
-
             var pointer = e.GetCurrentPoint(this);
             Calculate(pointer.Position.X, true);
             Arrange();
@@ -197,15 +195,13 @@ namespace Telegram.Controls
             if (_target == MinimumThumb)
             {
                 _minimum = delta / width;
-                _value = _minimum; //Math.Clamp(_value, _minimum, _maximum);
-
-                Logger.Info(string.Format("{0}, {1}, {2}", _minimum, _maximum, _value));
+                _value = _minimum;
             }
             else if (_target == MiddleThumb1)
             {
                 _minimum = delta / width;
                 _maximum = (delta / width) + _distance;
-                _value = _minimum; //Math.Clamp(_value, _minimum, _maximum);
+                _value = _minimum;
             }
             else if (_target == MiddleThumb2)
             {
@@ -214,7 +210,7 @@ namespace Telegram.Controls
             else if (_target == MaximumThumb)
             {
                 _maximum = delta / width;
-                _value = _maximum; //Math.Clamp(_value, _minimum, _maximum);
+                _value = _maximum;
             }
 
             if (set)

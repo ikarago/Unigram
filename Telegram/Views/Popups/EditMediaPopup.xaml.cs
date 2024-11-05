@@ -43,6 +43,8 @@ namespace Telegram.Views.Popups
         private BitmapRotation _rotation = BitmapRotation.None;
         private BitmapFlip _flip = BitmapFlip.None;
 
+        private TimeSpan _duration;
+
         public EditMediaPopup(StorageMedia media, ImageCropperMask mask = ImageCropperMask.Rectangle)
         {
             InitializeComponent();
@@ -203,7 +205,7 @@ namespace Telegram.Views.Popups
                     ? TimeSpan.FromSeconds(10)
                     : duration;
 
-                TrimRange.SetOriginalDuration(duration, maxLength);
+                TrimRange.SetOriginalDuration(_duration = duration, maxLength);
                 TrimThumbnails.Children.Clear();
 
                 if (mask != ImageCropperMask.Ellipse && media.EditState?.TrimStartTime != TimeSpan.Zero && media.EditState?.TrimStopTime != TimeSpan.Zero)
@@ -582,13 +584,13 @@ namespace Telegram.Views.Popups
                     return;
                 }
 
-                if (sender.Position.TotalMilliseconds >= TrimRange.Maximum * sender.NaturalDuration.TotalMilliseconds)
+                if (sender.Position.TotalMilliseconds >= TrimRange.Maximum * _duration.TotalMilliseconds)
                 {
-                    sender.Position = TimeSpan.FromMilliseconds(sender.NaturalDuration.TotalMilliseconds * TrimRange.Minimum);
+                    sender.Position = TimeSpan.FromMilliseconds(_duration.TotalMilliseconds * TrimRange.Minimum);
                     return;
                 }
 
-                TrimRange.Value = sender.Position.TotalMilliseconds / sender.NaturalDuration.TotalMilliseconds;
+                TrimRange.Value = sender.Position.TotalMilliseconds / _duration.TotalMilliseconds;
             });
         }
 
@@ -596,13 +598,13 @@ namespace Telegram.Views.Popups
         {
             Media.MediaPlayer.Pause();
             Media.MediaPlayer.PlaybackSession.Position =
-                TimeSpan.FromMilliseconds(Media.MediaPlayer.PlaybackSession.NaturalDuration.TotalMilliseconds * e);
+                TimeSpan.FromMilliseconds(_duration.TotalMilliseconds * e);
         }
 
         private void TrimRange_MaximumChanged(object sender, double e)
         {
             Media.MediaPlayer.PlaybackSession.Position =
-                TimeSpan.FromMilliseconds(Media.MediaPlayer.PlaybackSession.NaturalDuration.TotalMilliseconds * e);
+                TimeSpan.FromMilliseconds(_duration.TotalMilliseconds * e);
             Media.MediaPlayer.Play();
         }
     }
