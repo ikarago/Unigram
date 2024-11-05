@@ -44,6 +44,7 @@ namespace Telegram.Views.Popups
         private BitmapFlip _flip = BitmapFlip.None;
 
         private TimeSpan _duration;
+        private bool _resume;
 
         public EditMediaPopup(StorageMedia media, ImageCropperMask mask = ImageCropperMask.Rectangle)
         {
@@ -119,6 +120,27 @@ namespace Telegram.Views.Popups
             {
                 Accept_Click(null, null);
                 args.Handled = true;
+            }
+            else if (TrimToolbar?.Visibility == Visibility.Visible)
+            {
+                if (args.VirtualKey == Windows.System.VirtualKey.Space && args.OnlyKey)
+                {
+                    if (Media.MediaPlayer.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing)
+                    {
+                        Media.MediaPlayer.Pause();
+                    }
+                    else
+                    {
+                        Media.MediaPlayer.Play();
+                    }
+
+                    args.Handled = true;
+                }
+                else if (args.VirtualKey == Windows.System.VirtualKey.M && args.OnlyKey)
+                {
+                    Media.MediaPlayer.IsMuted = !Media.MediaPlayer.IsMuted;
+                    args.Handled = true;
+                }
             }
             else if (DrawToolbar?.Visibility == Visibility.Visible)
             {
@@ -596,7 +618,12 @@ namespace Telegram.Views.Popups
 
         private void TrimRange_MinimumChanged(object sender, double e)
         {
-            Media.MediaPlayer.Pause();
+            if (Media.MediaPlayer.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing)
+            {
+                _resume = true;
+                Media.MediaPlayer.Pause();
+            }
+
             Media.MediaPlayer.PlaybackSession.Position =
                 TimeSpan.FromMilliseconds(_duration.TotalMilliseconds * e);
         }
@@ -605,7 +632,12 @@ namespace Telegram.Views.Popups
         {
             Media.MediaPlayer.PlaybackSession.Position =
                 TimeSpan.FromMilliseconds(_duration.TotalMilliseconds * e);
-            Media.MediaPlayer.Play();
+
+            if (_resume)
+            {
+                _resume = false;
+                Media.MediaPlayer.Play();
+            }
         }
     }
 
