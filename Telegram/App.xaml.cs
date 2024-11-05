@@ -234,7 +234,7 @@ namespace Telegram
                 return new TLRootNavigationService(TypeResolver.Current.Resolve<ISessionService>(session), window, frame, session, id);
             }
 
-            return new TLNavigationService(TypeResolver.Current.Resolve<IClientService>(session), TypeResolver.Current.Resolve<IViewService>(session), window, frame, session, id);
+            return new TLNavigationService(TypeResolver.Current.Resolve<IClientService>(session), TypeResolver.Current.Resolve<IViewService>(session), window, frame, id);
         }
 
         private async void OnStartSync(StartKind startKind, INavigationService navigation, ICloudUpdateService updateService = null)

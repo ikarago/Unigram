@@ -23,16 +23,20 @@ namespace Telegram.Navigation.Services
         {
             NavigationService = navigationService;
             Frame = frame;
-            frame.Navigated += FacadeNavigatedEventHandler;
-            frame.Navigating += FacadeNavigatingCancelEventHandler;
 
-            // setup animations
-            var t = new NavigationThemeTransition
+            if (frame != null)
             {
-                DefaultNavigationTransitionInfo = new EntranceNavigationTransitionInfo()
-            };
-            Frame.ContentTransitions = new TransitionCollection { };
-            Frame.ContentTransitions.Add(t);
+                frame.Navigated += FacadeNavigatedEventHandler;
+                frame.Navigating += FacadeNavigatingCancelEventHandler;
+
+                // setup animations
+                var t = new NavigationThemeTransition
+                {
+                    DefaultNavigationTransitionInfo = new EntranceNavigationTransitionInfo()
+                };
+                frame.ContentTransitions = new TransitionCollection { };
+                frame.ContentTransitions.Add(t);
+            }
 
             FrameId = id;
         }

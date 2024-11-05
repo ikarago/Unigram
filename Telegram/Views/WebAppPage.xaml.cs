@@ -40,6 +40,8 @@ namespace Telegram.Views
     public sealed partial class WebAppPage : UserControlEx, IToastHost, IPopupHost
     {
         private readonly IClientService _clientService;
+        private readonly IViewService _viewService;
+        private readonly INavigationService _navigationService;
         private readonly IEventAggregator _aggregator;
 
         private readonly Chat _sourceChat;
@@ -65,6 +67,8 @@ namespace Telegram.Views
             InitializeComponent();
 
             _clientService = clientService;
+            _viewService = TypeResolver.Current.Resolve<IViewService>(clientService.SessionId);
+            _navigationService = new SecondaryNavigationService(clientService, _viewService, WindowContext.Current);
             _aggregator = TypeResolver.Current.Resolve<IEventAggregator>(clientService.SessionId);
 
             _aggregator.Subscribe<UpdateWebAppMessageSent>(this, Handle)
@@ -126,6 +130,8 @@ namespace Telegram.Views
             InitializeComponent();
 
             _clientService = clientService;
+            _viewService = TypeResolver.Current.Resolve<IViewService>(clientService.SessionId);
+            _navigationService = new SecondaryNavigationService(clientService, _viewService, WindowContext.Current);
             _aggregator = TypeResolver.Current.Resolve<IEventAggregator>(clientService.SessionId);
 
             _botUser = botUser;
@@ -282,7 +288,7 @@ namespace Telegram.Views
 
         private void View_NewWindowRequested(object sender, WebViewerNewWindowRequestedEventArgs e)
         {
-            ByNavigation(navigation => MessageHelper.OpenUrl(_clientService, navigation, e.Url));
+            MessageHelper.OpenUrl(_clientService, _navigationService, e.Url);
             e.Cancel = true;
         }
 
@@ -337,7 +343,7 @@ namespace Telegram.Views
 
                 if (host.Equals("t.me", StringComparison.OrdinalIgnoreCase))
                 {
-                    ByNavigation(navigation => MessageHelper.OpenTelegramUrl(_clientService, navigation, uri));
+                    MessageHelper.OpenTelegramUrl(_clientService, _navigationService, uri);
                     e.Cancel = true;
                 }
                 else if (uri.Scheme != "http" && uri.Scheme != "https")
@@ -913,7 +919,7 @@ namespace Telegram.Views
                 return;
             }
 
-            ByNavigation(navigationService => navigationService.NavigateToInvoice(new InputInvoiceName(value)));
+            _navigationService.NavigateToInvoice(new InputInvoiceName(value));
         }
 
         private void OpenExternalLink(JsonObject eventData)
@@ -937,7 +943,7 @@ namespace Telegram.Views
             }
 
             //Hide();
-            ByNavigation(navigationService => MessageHelper.OpenUrl(_clientService, navigationService, "https://t.me" + value));
+            MessageHelper.OpenUrl(_clientService, _navigationService, "https://t.me" + value);
         }
 
         private void SendViewport()
@@ -1370,7 +1376,7 @@ namespace Telegram.Views
             View.Margin = new Thickness(0, 0, 0, margin);
         }
 
-        private void SwitchInlineQueryMessage(JsonObject eventData)
+        private async void SwitchInlineQueryMessage(JsonObject eventData)
         {
             var query = eventData.GetNamedString("query", string.Empty);
             if (string.IsNullOrEmpty(query))
@@ -1399,18 +1405,21 @@ namespace Telegram.Views
                 AllowChannelChats = values.Contains("channels")
             };
 
-            _closeNeedConfirmation = false;
-            Close();
-
             if (target.AllowBotChats || target.AllowUserChats || target.AllowGroupChats || target.AllowChannelChats)
             {
-                ByNavigation(navigation => navigation.ShowPopupAsync(new ChooseChatsPopup(), new ChooseChatsConfigurationSwitchInline(query, target, _botUser)));
+                var confirm = await _navigationService.ShowPopupAsync(new ChooseChatsPopup(), new ChooseChatsConfigurationSwitchInline(query, target, _botUser));
+                if (confirm != ContentDialogResult.Primary)
+                {
+                    return;
+                }
             }
             else if (_sourceChat != null)
             {
-                var aggregator = TypeResolver.Current.Resolve<IEventAggregator>(_clientService.SessionId);
-                aggregator.Publish(new UpdateChatSwitchInlineQuery(_sourceChat.Id, _botUser.Id, query));
+                _aggregator.Publish(new UpdateChatSwitchInlineQuery(_sourceChat.Id, _botUser.Id, query));
             }
+
+            _closeNeedConfirmation = false;
+            Close();
         }
 
         private void SendDataMessage(JsonObject eventData)
@@ -1481,8 +1490,7 @@ namespace Telegram.Views
 
         private void MenuItemOpenBot()
         {
-            ByNavigation(navigationService => navigationService.NavigateToUser(_botUser.Id));
-            //Hide();
+            _navigationService.NavigateToUser(_botUser.Id);
         }
 
         private void MenuItemShare()
@@ -1563,6 +1571,22 @@ namespace Telegram.Views
         private void HideButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+    }
+
+    public partial class SecondaryNavigationService : TLNavigationService
+    {
+        public SecondaryNavigationService(IClientService clientService, IViewService viewService, WindowContext window)
+            : base(clientService, viewService, window, null, string.Empty)
+        {
+        }
+
+        public override bool Navigate(Type page, object parameter = null, NavigationState state = null, NavigationTransitionInfo infoOverride = null, bool navigationStackEnabled = true)
+        {
+            WindowContext.Main.Dispatcher.Dispatch(() => WindowContext.Main.GetNavigationService().Navigate(page, parameter, state, infoOverride, navigationStackEnabled));
+            _ = ApplicationViewSwitcher.SwitchAsync(WindowContext.Main.Id);
+
+            return true;
         }
     }
 }

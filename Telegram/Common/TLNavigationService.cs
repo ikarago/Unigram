@@ -45,8 +45,8 @@ namespace Telegram.Common
 
         private readonly Dictionary<string, AppWindow> _instantWindows = new Dictionary<string, AppWindow>();
 
-        public TLNavigationService(IClientService clientService, IViewService viewService, WindowContext window, Frame frame, int session, string id)
-            : base(window, frame, session, id)
+        public TLNavigationService(IClientService clientService, IViewService viewService, WindowContext window, Frame frame, string id)
+            : base(window, frame, clientService.SessionId, id)
         {
             _clientService = clientService;
             _passcodeService = TypeResolver.Current.Passcode;
@@ -105,7 +105,7 @@ namespace Telegram.Common
                 TabViewItem CreateTabViewItem(WindowContext window)
                 {
                     var frame = new Frame();
-                    var service = new TLNavigationService(ClientService, null, window, frame, ClientService.SessionId, "InstantView"); // BootStrapper.Current.NavigationServiceFactory(BootStrapper.BackButton.Ignore, frame, _clientService.SessionId, "ciccio", false);
+                    var service = new TLNavigationService(ClientService, null, window, frame, "InstantView"); // BootStrapper.Current.NavigationServiceFactory(BootStrapper.BackButton.Ignore, frame, _clientService.SessionId, "ciccio", false);
 
                     service.Navigate(typeof(InstantPage), new InstantPageArgs(instantView, url));
 
@@ -362,7 +362,7 @@ namespace Telegram.Common
             }
 
             // TODO: do current page matching for ChatSavedPage and ChatThreadPage as well.
-            if (Frame.Content is ChatPage page && page.ViewModel != null && chat.Id.Equals((long)CurrentPageParam) && thread == 0 && savedMessagesTopicId == 0 && !scheduled && !createNewWindow)
+            if (Frame?.Content is ChatPage page && page.ViewModel != null && chat.Id.Equals((long)CurrentPageParam) && thread == 0 && savedMessagesTopicId == 0 && !scheduled && !createNewWindow)
             {
                 var viewModel = page.ViewModel;
                 if (message != null)
@@ -468,7 +468,7 @@ namespace Telegram.Common
                 else
                 {
                     // TODO: do current page matching for ChatSavedPage and ChatThreadPage as well.
-                    if (Frame.Content is ChatPage chatPage && thread == 0 && savedMessagesTopicId == 0 && !scheduled && !force)
+                    if (Frame?.Content is ChatPage chatPage && thread == 0 && savedMessagesTopicId == 0 && !scheduled && !force)
                     {
                         chatPage.ViewModel.NavigatedFrom(null, false);
 

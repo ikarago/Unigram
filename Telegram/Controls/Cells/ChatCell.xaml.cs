@@ -1778,7 +1778,7 @@ namespace Telegram.Controls.Cells
 
             var context = WindowContext.ForXamlRoot(this);
 
-            var service = new TLNavigationService(_clientService, null, context, frame, _clientService.SessionId, "ChatPreview");
+            var service = new TLNavigationService(_clientService, null, context, frame, "ChatPreview");
             service.NavigateToChat(_chat);
 
             var chatPage = frame.Content as ChatPage;
