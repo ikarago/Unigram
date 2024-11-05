@@ -20,7 +20,7 @@ namespace Telegram.Common.Chats
 
         private DateTime? _lastTypingTime;
 
-        public OutputChatActionManager(IClientService clientService, Chat chat, long threadId = 0, double delay = 5.0)
+        public OutputChatActionManager(IClientService clientService, Chat chat, long threadId = 0, double delay = 4.0)
         {
             _chat = chat;
             _threadId = threadId;
