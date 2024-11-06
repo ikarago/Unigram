@@ -125,8 +125,8 @@ namespace Telegram.Controls.Messages
                 if (message.IsOutgoing)
                 {
                     title.Text = gift.IsPrivate
-                        ? string.Format(Strings.Gift2ActionTitleInAnonymous, user.FirstName)
-                        : string.Format(Strings.Gift2ActionTitle, self.FirstName);
+                        ? string.Format(Strings.Gift2ActionTitleInAnonymous, user.FullName(true))
+                        : string.Format(Strings.Gift2ActionTitle, self.FullName(true));
 
                     if (gift.Text.Text.Length > 0)
                     {
@@ -134,7 +134,7 @@ namespace Telegram.Controls.Messages
                     }
                     else
                     {
-                        subtitle.SetText(message.ClientService, ClientEx.ParseMarkdown(Locale.Declension(Strings.R.Gift2ActionOutInfo, gift.SellStarCount, user.FirstName)));
+                        subtitle.SetText(message.ClientService, ClientEx.ParseMarkdown(Locale.Declension(Strings.R.Gift2ActionOutInfo, gift.SellStarCount, user.FullName(true))));
                     }
 
                     view.Visibility = Visibility.Collapsed;
@@ -143,7 +143,7 @@ namespace Telegram.Controls.Messages
                 {
                     title.Text = gift.IsPrivate
                         ? Strings.Gift2ActionTitleAnonymous
-                        : string.Format(Strings.Gift2ActionTitle, user.FirstName);
+                        : string.Format(Strings.Gift2ActionTitle, user.FullName(true));
 
                     if (gift.Text.Text.Length > 0)
                     {
@@ -255,7 +255,7 @@ namespace Telegram.Controls.Messages
                 }
                 else if (message.ClientService.TryGetUser(giftedStars.ReceiverUserId, out User receiver))
                 {
-                    subtitle.SetText(message.ClientService, ClientEx.ParseMarkdown(string.Format(Strings.ActionGiftStarsSubtitle, receiver.FirstName)));
+                    subtitle.SetText(message.ClientService, ClientEx.ParseMarkdown(string.Format(Strings.ActionGiftStarsSubtitle, receiver.FullName(true))));
                 }
 
                 var animation = FindName("Animation") as AnimatedImage;
@@ -1749,7 +1749,7 @@ namespace Telegram.Controls.Messages
                 }
                 else if (message.ClientService.TryGetUser(message.SenderId, out User user))
                 {
-                    content = string.Format(Strings.ActionSetSameWallpaperForThisChat, user.FirstName);
+                    content = string.Format(Strings.ActionSetSameWallpaperForThisChat, user.FullName(true));
                 }
             }
             else if (message.IsOutgoing)
@@ -1760,14 +1760,14 @@ namespace Telegram.Controls.Messages
                 }
                 else if (message.ClientService.TryGetUser(message.Chat, out User user))
                 {
-                    content = string.Format(Strings.ActionSetWallpaperForThisChatSelfBoth, user.FirstName);
+                    content = string.Format(Strings.ActionSetWallpaperForThisChatSelfBoth, user.FullName(true));
                 }
             }
             else if (message.ClientService.TryGetUser(message.SenderId, out User user))
             {
                 content = chatSetBackground.OnlyForSelf
-                    ? string.Format(Strings.ActionSetWallpaperForThisChat, user.FirstName)
-                    : string.Format(Strings.ActionSetWallpaperForThisChatBoth, user.FirstName);
+                    ? string.Format(Strings.ActionSetWallpaperForThisChat, user.FullName(true))
+                    : string.Format(Strings.ActionSetWallpaperForThisChatBoth, user.FullName(true));
             }
             else
             {
@@ -2621,22 +2621,36 @@ namespace Telegram.Controls.Messages
             var content = string.Empty;
             var entities = active ? new List<TextEntity>() : null;
 
-            if (chatBoost.BoostCount > 1)
-            {
-                content = Locale.Declension(Strings.R.BoostingBoostsGroupByUserServiceMsgCount, chatBoost.BoostCount, "un1");
-            }
-            else
-            {
-                content = string.Format(Strings.BoostingBoostsGroupByUserServiceMsg, "un1");
-            }
-
             if (message.ClientService.TryGetUser(message.SenderId, out User user))
             {
-                content = ReplaceWithLink(content, "un1", user, entities);
+                content = user.FullName(true);
             }
             else if (message.ClientService.TryGetChat(message.SenderId, out Chat chat))
             {
-                content = ReplaceWithLink(content, "un1", chat, entities);
+                content = chat.Title;
+            }
+
+            if (message.IsChannelPost)
+            {
+                if (chatBoost.BoostCount > 1)
+                {
+                    content = Locale.Declension(message.IsOutgoing ? Strings.R.BoostingBoostsChannelByYouServiceMsgCount : Strings.R.BoostingBoostsChannelByUserServiceMsgCount, chatBoost.BoostCount, content);
+                }
+                else
+                {
+                    content = string.Format(message.IsOutgoing ? Strings.BoostingBoostsChannelByYouServiceMsg : Strings.BoostingBoostsChannelByUserServiceMsg, content);
+                }
+            }
+            else
+            {
+                if (chatBoost.BoostCount > 1)
+                {
+                    content = Locale.Declension(message.IsOutgoing ? Strings.R.BoostingBoostsGroupByYouServiceMsgCount : Strings.R.BoostingBoostsGroupByUserServiceMsgCount, chatBoost.BoostCount, content);
+                }
+                else
+                {
+                    content = string.Format(message.IsOutgoing ? Strings.BoostingBoostsGroupByYouServiceMsg : Strings.BoostingBoostsGroupByUserServiceMsg, content);
+                }
             }
 
             return (content, entities);
@@ -2652,11 +2666,11 @@ namespace Telegram.Controls.Messages
                 {
                     if (message.IsOutgoing)
                     {
-                        content = string.Format(story.State == MessageStoryState.Expired ? Icons.ExpiredStory + "\u00A0" + Strings.ExpiredStoryMentioned : Strings.StoryYouMentionedTitle, user.FirstName);
+                        content = string.Format(story.State == MessageStoryState.Expired ? Icons.ExpiredStory + "\u00A0" + Strings.ExpiredStoryMentioned : Strings.StoryYouMentionedTitle, user.FullName(true));
                     }
                     else
                     {
-                        content = string.Format(story.State == MessageStoryState.Expired ? Icons.ExpiredStory + "\u00A0" + Strings.ExpiredStoryMention : Strings.StoryMentionedTitle, user.FirstName);
+                        content = string.Format(story.State == MessageStoryState.Expired ? Icons.ExpiredStory + "\u00A0" + Strings.ExpiredStoryMention : Strings.StoryMentionedTitle, user.FullName(true));
                     }
                 }
 
@@ -2676,7 +2690,7 @@ namespace Telegram.Controls.Messages
             {
                 if (message.ClientService.TryGetUser(message.Chat, out User user))
                 {
-                    return (string.Format(Strings.StoryYouMentionInDialog, user.FirstName), null);
+                    return (string.Format(Strings.StoryYouMentionInDialog, user.FullName(true)), null);
                 }
             }
             else

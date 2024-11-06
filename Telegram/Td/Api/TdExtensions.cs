@@ -2060,14 +2060,14 @@ namespace Telegram.Td.Api
             return true;
         }
 
-        public static string FullName(this User user)
+        public static string FullName(this User user, bool firstName = false)
         {
             if (user == null || user.Type is UserTypeDeleted)
             {
                 return Strings.HiddenName;
             }
 
-            if (user.FirstName.Length > 0 && user.LastName.Length > 0)
+            if (user.FirstName.Length > 0 && user.LastName.Length > 0 && !firstName)
             {
                 return $"{user.FirstName} {user.LastName}";
             }

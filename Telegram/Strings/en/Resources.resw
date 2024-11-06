@@ -1742,11 +1742,23 @@ from this chat</value>
   <data name="BoostingAvailableIn" xml:space="preserve">
     <value>available in {0}</value>
   </data>
+  <data name="BoostingBoostsChannelByUserServiceMsg" xml:space="preserve">
+    <value>{0} boosted the channel</value>
+  </data>
+  <data name="BoostingBoostsChannelByYouServiceMsg" xml:space="preserve">
+    <value>You boosted the channel</value>
+  </data>
   <data name="BoostingBoostsGroupByUserServiceMsg" xml:space="preserve">
     <value>{0} boosted the group</value>
   </data>
   <data name="BoostingBoostsGroupByUserServiceMsgCount_other" xml:space="preserve">
     <value>{1} boosted the group {0} times</value>
+  </data>
+  <data name="BoostingBoostsGroupByYouServiceMsg" xml:space="preserve">
+    <value>You boosted the group</value>
+  </data>
+  <data name="BoostingBoostsGroupByYouServiceMsgCount_other" xml:space="preserve">
+    <value>You boosted the group {0} times</value>
   </data>
   <data name="BoostingCongratulations" xml:space="preserve">
     <value>Congratulations!</value>
