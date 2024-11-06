@@ -183,11 +183,11 @@
               VerticalAlignment="Bottom"
               Height="96"
               Grid.Row="1">
-            <Border x:Name="SecondaryButtonPanel"
-                    Visibility="Collapsed"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Top"
-                    Height="48">
+            <Grid x:Name="SecondaryButtonPanel"
+                  Visibility="Collapsed"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Top"
+                  Height="48">
                 <Button x:Name="SecondaryButton"
                         Click="SecondaryButton_Click"
                         Background="Transparent"
@@ -196,13 +196,16 @@
                         VerticalAlignment="Stretch"
                         HorizontalAlignment="Stretch"
                         FontWeight="SemiBold" />
-            </Border>
+                <muxc:ProgressRing x:Name="SecondaryProgress"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+            </Grid>
 
-            <Border x:Name="MainButtonPanel"
-                    Visibility="Collapsed"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Top"
-                    Height="48">
+            <Grid x:Name="MainButtonPanel"
+                  Visibility="Collapsed"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Top"
+                  Height="48">
                 <Button x:Name="MainButton"
                         Click="MainButton_Click"
                         Background="Transparent"
@@ -211,7 +214,10 @@
                         VerticalAlignment="Stretch"
                         HorizontalAlignment="Stretch"
                         FontWeight="SemiBold" />
-            </Border>
+                <muxc:ProgressRing x:Name="MainProgress"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+            </Grid>
         </Grid>
     </Grid>
 </controls:UserControlEx>

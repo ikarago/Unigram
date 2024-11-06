@@ -1072,11 +1072,14 @@ namespace Telegram.Views
                     }
                 }
 
-                SetColor(MainButtonPanel, color, Border.BackgroundProperty);
+                SetColor(MainButtonPanel, color, Grid.BackgroundProperty);
                 SetColor(MainButton, text_color, ForegroundProperty);
+                SetColor(MainProgress, text_color, Microsoft.UI.Xaml.Controls.ProgressRing.ForegroundProperty);
 
                 MainButton.Content = text;
-                MainButton.IsEnabled = is_active;
+                MainButton.IsEnabled = is_active || is_progress_visible;
+
+                ShowHideProgress(is_progress_visible, MainButton, MainProgress, ref _mainProgressCollapsed);
 
                 ShowHideButtons(true, !_secondaryButtonCollapsed, _secondaryButtonPosition);
             }
@@ -1112,11 +1115,14 @@ namespace Telegram.Views
                     }
                 }
 
-                SetColor(SecondaryButtonPanel, color, Border.BackgroundProperty);
+                SetColor(SecondaryButtonPanel, color, Grid.BackgroundProperty);
                 SetColor(SecondaryButton, text_color, ForegroundProperty);
+                SetColor(SecondaryProgress, text_color, Microsoft.UI.Xaml.Controls.ProgressRing.ForegroundProperty);
 
                 SecondaryButton.Content = text;
-                SecondaryButton.IsEnabled = is_active;
+                SecondaryButton.IsEnabled = is_active || is_progress_visible;
+
+                ShowHideProgress(is_progress_visible, SecondaryButton, SecondaryProgress, ref _secondaryProgressCollapsed);
 
                 ShowHideButtons(!_mainButtonCollapsed, true, position switch
                 {
@@ -1131,6 +1137,59 @@ namespace Telegram.Views
             {
                 ShowHideButtons(!_mainButtonCollapsed, false, _secondaryButtonPosition);
             }
+        }
+
+        private bool _mainProgressCollapsed = true;
+        private bool _secondaryProgressCollapsed = true;
+
+        private void ShowHideProgress(bool show, UIElement button, UIElement progress, ref bool collapsed)
+        {
+            if (collapsed == show)
+            {
+                return;
+            }
+
+            collapsed = show;
+
+            var visualShow = ElementComposition.GetElementVisual(show ? progress : button);
+            var visualHide = ElementComposition.GetElementVisual(show ? button : progress);
+
+            visualShow.CenterPoint = new Vector3(visualShow.Size / 2, 0);
+            visualHide.CenterPoint = new Vector3(visualHide.Size / 2, 0);
+
+            var batch = BootStrapper.Current.Compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
+            batch.Completed += (s, args) =>
+            {
+                button.Visibility = (button == MainButton ? _mainProgressCollapsed : _secondaryProgressCollapsed)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+
+                progress.Visibility = (button == MainButton ? _mainProgressCollapsed : _secondaryProgressCollapsed)
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
+            };
+
+            var hide1 = BootStrapper.Current.Compositor.CreateVector3KeyFrameAnimation();
+            hide1.InsertKeyFrame(0, new Vector3(1));
+            hide1.InsertKeyFrame(1, new Vector3(0));
+
+            var hide2 = BootStrapper.Current.Compositor.CreateScalarKeyFrameAnimation();
+            hide2.InsertKeyFrame(0, 1);
+            hide2.InsertKeyFrame(1, 0);
+
+            visualHide.StartAnimation("Scale", hide1);
+            visualHide.StartAnimation("Opacity", hide2);
+
+            var show1 = BootStrapper.Current.Compositor.CreateVector3KeyFrameAnimation();
+            show1.InsertKeyFrame(1, new Vector3(1));
+            show1.InsertKeyFrame(0, new Vector3(0));
+
+            var show2 = BootStrapper.Current.Compositor.CreateScalarKeyFrameAnimation();
+            show2.InsertKeyFrame(1, 1);
+            show2.InsertKeyFrame(0, 0);
+
+            visualShow.StartAnimation("Scale", show1);
+            visualShow.StartAnimation("Opacity", show2);
         }
 
         private bool _mainButtonCollapsed = true;

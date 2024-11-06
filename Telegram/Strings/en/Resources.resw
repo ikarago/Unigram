@@ -2419,6 +2419,12 @@ It will be able to access your **IP address** and basic device info.</value>
   <data name="BotWebViewDeleteBot" xml:space="preserve">
     <value>Remove from Menu</value>
   </data>
+  <data name="BotWebViewEnterFullScreen" xml:space="preserve">
+    <value>Enter Full Screen</value>
+  </data>
+  <data name="BotWebViewExitFullScreen" xml:space="preserve">
+    <value>Exit Full Screen</value>
+  </data>
   <data name="BotWebViewOpenBot" xml:space="preserve">
     <value>Open Bot</value>
   </data>
