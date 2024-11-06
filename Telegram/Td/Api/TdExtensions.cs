@@ -682,13 +682,8 @@ namespace Telegram.Td.Api
 
         public static Thumbnail GetThumbnail(this Photo photo)
         {
-            var small = photo.GetSmall();
-            if (small != null)
-            {
-                return small.ToThumbnail();
-            }
-
-            return null;
+            var small = photo?.GetSmall();
+            return small?.ToThumbnail();
         }
 
         public static Thumbnail ToThumbnail(this PhotoSize photo)
