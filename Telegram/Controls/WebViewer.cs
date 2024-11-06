@@ -435,7 +435,8 @@ namespace Telegram.Controls
                 View.CoreWebView2.NewWindowRequested += OnNewWindowRequested;
                 View.CoreWebView2.ScriptDialogOpening += OnScriptDialogOpening;
 
-                await View.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(@"window.external={invoke:s=>window.chrome.webview.postMessage(s)};
+                await View.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(@"Element.prototype.requestPointerLock = undefined;
+window.external={invoke:s=>window.chrome.webview.postMessage(s)};
 window.TelegramWebviewProxy = {
 postEvent: function(eventType, eventData) {
 	if (window.external && window.external.invoke) {
