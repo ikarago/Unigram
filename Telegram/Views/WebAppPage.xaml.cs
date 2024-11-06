@@ -1599,10 +1599,8 @@ namespace Telegram.Views
                                                       _botUser.FirstName,
                                                       builder.ToString(),
                                                       photo,
-                                                      TileSize.Square150x150);
+                                                      TileSize.Default);
 
-                secondaryTile.VisualElements.Wide310x150Logo = photo;
-                secondaryTile.VisualElements.Square310x310Logo = photo;
                 secondaryTile.VisualElements.Square71x71Logo = photo;
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -1610,8 +1608,6 @@ namespace Telegram.Views
 #pragma warning restore CS0618 // Type or member is obsolete
 
                 secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;
-                secondaryTile.VisualElements.ShowNameOnWide310x150Logo = true;
-                secondaryTile.VisualElements.ShowNameOnSquare310x310Logo = true;
 
                 var pinned = await secondaryTile.RequestCreateForSelectionAsync(new Windows.Foundation.Rect(0, 0, ActualWidth, ActualHeight));
                 if (pinned)
