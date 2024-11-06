@@ -244,11 +244,11 @@ namespace Telegram.Controls.Messages
 
                 if (e.ClickedItem is AddedReaction addedReaction)
                 {
-                    //ViewModel.NavigationService.NavigateToSender(addedReaction.SenderId);
+                    message.Delegate.NavigationService.NavigateToSender(addedReaction.SenderId);
                 }
                 else if (e.ClickedItem is MessageViewer messageViewer)
                 {
-                    //ViewModel.NavigationService.NavigateToUser(messageViewer.UserId);
+                    message.Delegate.NavigationService.NavigateToUser(messageViewer.UserId);
                 }
             }
 
