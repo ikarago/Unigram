@@ -36,7 +36,7 @@ namespace Telegram.Common
             // This should be not needed
             _dispatcherQueue ??= WindowContext.Main.Dispatcher;
 
-            // Generating plugins cache requires a breakpoint in bank.c#662
+            // Generating plugins cache requires a breakpoint in bank.c#504
             _library = new LibVLC(options); //"--quiet", "--reset-plugins-cache");
             //_library.Log += _library_Log;
 

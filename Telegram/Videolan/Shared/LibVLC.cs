@@ -306,15 +306,16 @@ namespace LibVLCSharp.Shared
 
             if (enableDebugLogs)
             {
-                newOptions = new string[options.Length + 2];
-                newOptions[options.Length] = "--verbose=2";
+                newOptions = new string[options.Length + 3];
+                newOptions[^3] = "--verbose=2";
             }
             else
             {
-                newOptions = new string[options.Length + 1];
+                newOptions = new string[options.Length + 2];
             }
 
             newOptions[^1] = "--aout=winstore";
+            newOptions[^2] = "--audio-resampler=speex_resampler";
 
             if (options.Length > 0)
             {
