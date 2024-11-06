@@ -2631,6 +2631,18 @@ public static class VisualCollection_stub
             throw new RuntimeException(ex);
         }
     }
+    public static void Remove_stub(this Windows.UI.Composition.VisualCollection sender, Windows.UI.Composition.Visual child)
+    {
+        try
+        {
+            sender.Remove(child);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(Environment.StackTrace);
+            throw new RuntimeException(ex);
+        }
+    }
     public static void RemoveAll_stub(this Windows.UI.Composition.VisualCollection sender)
     {
         try
@@ -4866,6 +4878,18 @@ public static class ElementCompositionPreview_stub
 }
 public static class BitmapEncoder_stub
 {
+    public static void SetPixelData_stub(this Windows.Graphics.Imaging.BitmapEncoder sender, Windows.Graphics.Imaging.BitmapPixelFormat pixelFormat, Windows.Graphics.Imaging.BitmapAlphaMode alphaMode, uint width, uint height, double dpiX, double dpiY, byte[] pixels)
+    {
+        try
+        {
+            sender.SetPixelData(pixelFormat, alphaMode, width, height, dpiX, dpiY, pixels);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(Environment.StackTrace);
+            throw new RuntimeException(ex);
+        }
+    }
     public static void SetSoftwareBitmap_stub(this Windows.Graphics.Imaging.BitmapEncoder sender, Windows.Graphics.Imaging.SoftwareBitmap bitmap)
     {
         try
@@ -5366,18 +5390,6 @@ public static class JsonObject_stub
         try
         {
             return sender.GetNamedNumber(name, defaultValue);
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(Environment.StackTrace);
-            throw new RuntimeException(ex);
-        }
-    }
-    public static double GetNamedNumber_stub(this Windows.Data.Json.JsonObject sender, string name)
-    {
-        try
-        {
-            return sender.GetNamedNumber(name);
         }
         catch (Exception ex)
         {
@@ -7061,6 +7073,21 @@ public static class JumpListItem_stub
         try
         {
             return Windows.UI.StartScreen.JumpListItem.CreateWithArguments(arguments, displayName);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(Environment.StackTrace);
+            throw new RuntimeException(ex);
+        }
+    }
+}
+public static class SecondaryTile_stub
+{
+    public static bool Exists_stub(string tileId)
+    {
+        try
+        {
+            return Windows.UI.StartScreen.SecondaryTile.Exists(tileId);
         }
         catch (Exception ex)
         {
