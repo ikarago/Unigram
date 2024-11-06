@@ -511,11 +511,13 @@ namespace Telegram.Views.Host
         private void OnContextRequested(UIElement sender, Windows.UI.Xaml.Input.ContextRequestedEventArgs args)
         {
             var container = sender as ListViewItem;
-            if (container.Content is ISessionService session && !session.IsActive)
+
+            var item = NavigationViewList.ItemFromContainer(container);
+            if (item is ISessionService session && !session.IsActive)
             {
 
             }
-            else if (container.Content is AttachmentMenuBot menuBot)
+            else if (item is AttachmentMenuBot menuBot)
             {
                 if (_navigationService.Content is MainPage page)
                 {
@@ -526,7 +528,7 @@ namespace Telegram.Views.Host
                     flyout.ShowAt(sender, args);
                 }
             }
-            else if (container.Content is RootDestination.AddAccount)
+            else if (item is RootDestination.AddAccount)
             {
                 var alt = WindowContext.IsKeyDown(Windows.System.VirtualKey.Menu);
                 var ctrl = WindowContext.IsKeyDown(Windows.System.VirtualKey.Control);
@@ -540,7 +542,7 @@ namespace Telegram.Views.Host
                     flyout.ShowAt(sender, args);
                 }
             }
-            else if (container.Content is RootDestination.ArchivedChats)
+            else if (item is RootDestination.ArchivedChats)
             {
                 if (_navigationService.Content is MainPage page)
                 {
@@ -570,6 +572,7 @@ namespace Telegram.Views.Host
             }
 
             UpdateContainerContent(args.ItemContainer, args.Item);
+            args.Handled = true;
         }
 
         private void UpdateContainerContent(SelectorItem container, object item)
@@ -612,7 +615,7 @@ namespace Telegram.Views.Host
                 content.Glyph = menuBot.BotUserId == 1985737506 ? Icons.Wallet : Icons.Bot;
                 content.BadgeVisibility = menuBot.ShowDisclaimerInSideMenu ? Visibility.Visible : Visibility.Collapsed;
             }
-            else if (item is RootDestination destination && _navigationService.Content is MainPage page)
+            else if (item is RootDestination destination)
             {
                 var content = container as Controls.NavigationViewItem;
                 if (content != null)
@@ -663,7 +666,7 @@ namespace Telegram.Views.Host
                         break;
 
                     case RootDestination.Status:
-                        if (page.ViewModel.ClientService.TryGetUser(page.ViewModel.ClientService.Options.MyId, out User user))
+                        if (_navigationService.Content is MainPage page && page.ViewModel.ClientService.TryGetUser(page.ViewModel.ClientService.Options.MyId, out User user))
                         {
                             content.Text = user.EmojiStatus == null ? Strings.SetEmojiStatus : Strings.ChangeEmojiStatus;
                             content.Glyph = user.EmojiStatus == null ? Icons.EmojiAdd : Icons.EmojiEdit;
@@ -1066,16 +1069,18 @@ namespace Telegram.Views.Host
                         index = i--;
                     }
                 }
+
+                // The list was not initiated yet
+                if (index == -1 && bots.Count > 0)
+                {
+                    InitializeSessions(SettingsService.Current.IsAccountsSelectorExpanded, _lifetime.Items);
+                    return;
+                }
             }
 
             NavigationViewList.ForEach(container =>
             {
-                UpdateContainerContent(container, container.Content);
-
-                if (container.Content is RootDestination.Status)
-                {
-                    return;
-                }
+                UpdateContainerContent(container, NavigationViewList.ItemFromContainer(container));
             });
 
             if (_attachmentMenuBots != botsHash && index != -1)
