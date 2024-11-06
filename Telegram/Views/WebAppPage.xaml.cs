@@ -59,6 +59,8 @@ namespace Telegram.Views
         private readonly long _gameChatId;
         private readonly long _gameMessageId;
 
+        private bool _fullscreen;
+
         private bool _blockingAction;
         private bool _closeNeedConfirmation;
 
@@ -97,6 +99,7 @@ namespace Telegram.Views
             Window.Current.SetTitleBar(TitleBar);
 
             SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += OnCloseRequested;
+            ApplicationView.GetForCurrentView().VisibleBoundsChanged += OnVisibleBoundsChanged;
 
             var coreWindow = (IInternalCoreWindowPhone)(object)Window.Current.CoreWindow;
             var navigationClient = (IApplicationWindowTitleBarNavigationClient)coreWindow.NavigationClient;
@@ -155,6 +158,7 @@ namespace Telegram.Views
             Window.Current.SetTitleBar(TitleBar);
 
             SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += OnCloseRequested;
+            ApplicationView.GetForCurrentView().VisibleBoundsChanged += OnVisibleBoundsChanged;
 
             var coreWindow = (IInternalCoreWindowPhone)(object)Window.Current.CoreWindow;
             var navigationClient = (IApplicationWindowTitleBarNavigationClient)coreWindow.NavigationClient;
@@ -272,6 +276,15 @@ namespace Telegram.Views
                 }
 
                 deferral.Complete();
+            }
+        }
+
+        private void OnVisibleBoundsChanged(ApplicationView sender, object args)
+        {
+            if (_fullscreen != sender.IsFullScreenMode)
+            {
+                _fullscreen = sender.IsFullScreenMode;
+                PostEvent("fullscreen_changed", "{ is_fullscreen: \"" + (_fullscreen ? "true" : "false") + "\" }");
             }
         }
 
@@ -460,6 +473,14 @@ namespace Telegram.Views
             {
                 ProcessShareToStory(eventData);
             }
+            else if (eventName == "web_app_request_fullscreen")
+            {
+                ProcessRequestFullScreen();
+            }
+            else if (eventName == "web_app_exit_fullscreen")
+            {
+                ProcessExitFullScreen();
+            }
             else if (eventName == "web_app_check_home_screen")
             {
                 ProcessCheckHomeScreen(eventData);
@@ -493,6 +514,16 @@ namespace Telegram.Views
             {
                 ProcessShareGame(true);
             }
+        }
+
+        private void ProcessRequestFullScreen()
+        {
+            ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+        }
+
+        private void ProcessExitFullScreen()
+        {
+            ApplicationView.GetForCurrentView().ExitFullScreenMode();
         }
 
         private async void ProcessSetEmojiStatus(JsonObject eventData)
@@ -1441,6 +1472,15 @@ namespace Telegram.Views
 
             if (_gameChatId != 0 && _gameMessageId != 0)
             {
+                if (_fullscreen)
+                {
+                    flyout.CreateFlyoutItem(ProcessExitFullScreen, Strings.BotWebViewExitFullScreen, Icons.ArrowMinimize);
+                }
+                else
+                {
+                    flyout.CreateFlyoutItem(ProcessRequestFullScreen, Strings.BotWebViewEnterFullScreen, Icons.ArrowMaximize);
+                }
+
                 flyout.CreateFlyoutItem(MenuItemShare, Strings.ShareFile, Icons.Share);
                 flyout.CreateFlyoutItem(MenuItemReloadPage, Strings.BotWebViewReloadPage, Icons.ArrowClockwise);
             }
@@ -1449,6 +1489,15 @@ namespace Telegram.Views
                 if (_settingsVisible)
                 {
                     flyout.CreateFlyoutItem(MenuItemSettings, Strings.BotWebViewSettings, Icons.Settings);
+                }
+
+                if (_fullscreen)
+                {
+                    flyout.CreateFlyoutItem(ProcessExitFullScreen, Strings.BotWebViewExitFullScreen, Icons.ArrowMinimize);
+                }
+                else
+                {
+                    flyout.CreateFlyoutItem(ProcessRequestFullScreen, Strings.BotWebViewEnterFullScreen, Icons.ArrowMaximize);
                 }
 
                 // TODO: check opening chat?
