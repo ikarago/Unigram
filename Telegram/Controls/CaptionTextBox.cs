@@ -39,11 +39,8 @@ namespace Telegram.Controls
         {
             if (e.Key is VirtualKey.Up or VirtualKey.Down)
             {
-                var alt = WindowContext.IsKeyDown(VirtualKey.Menu);
-                var ctrl = WindowContext.IsKeyDown(VirtualKey.Control);
-                var shift = WindowContext.IsKeyDown(VirtualKey.Shift);
-
-                if (!alt && !ctrl && !shift)
+                var modifiers = WindowContext.KeyModifiers();
+                if (modifiers == VirtualKeyModifiers.None)
                 {
                     if (Autocomplete != null && View.Autocomplete != null)
                     {

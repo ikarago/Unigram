@@ -24,7 +24,6 @@ using Telegram.Navigation;
 using Telegram.Navigation.Services;
 using Telegram.Services;
 using Telegram.Services.Calls;
-using Telegram.Services.Keyboard;
 using Telegram.Services.Updates;
 using Telegram.Streams;
 using Telegram.Td.Api;
@@ -954,7 +953,6 @@ namespace Telegram.Views
             if (context != null)
             {
                 context.CoreWindow.CharacterReceived += OnCharacterReceived;
-                context.InputListener.KeyDown += OnAcceleratorKeyActivated;
             }
 
             OnStateChanged(null, null);
@@ -1118,7 +1116,6 @@ namespace Telegram.Views
             if (context != null)
             {
                 context.CoreWindow.CharacterReceived -= OnCharacterReceived;
-                context.InputListener.KeyDown -= OnAcceleratorKeyActivated;
             }
 
             Bindings.StopTracking();
@@ -1159,7 +1156,7 @@ namespace Telegram.Views
             }
         }
 
-        private void OnAcceleratorKeyActivated(Window sender, InputKeyDownEventArgs args)
+        public new void ProcessKeyboardAccelerators(ProcessKeyboardAcceleratorEventArgs args)
         {
             var invoked = ViewModel?.ShortcutService.Process(args);
             if (invoked == null)
@@ -1214,7 +1211,7 @@ namespace Telegram.Views
             }
         }
 
-        private async void ProcessAppCommands(ShortcutCommand command, InputKeyDownEventArgs args)
+        private async void ProcessAppCommands(ShortcutCommand command, ProcessKeyboardAcceleratorEventArgs args)
         {
             if (command is ShortcutCommand.SetStatus)
             {
@@ -1273,7 +1270,7 @@ namespace Telegram.Views
             }
         }
 
-        private void ProcessFolderCommands(ShortcutCommand command, InputKeyDownEventArgs args)
+        private void ProcessFolderCommands(ShortcutCommand command, ProcessKeyboardAcceleratorEventArgs args)
         {
             var folders = ViewModel.Folders;
             if (folders.Empty())
@@ -1316,7 +1313,7 @@ namespace Telegram.Views
             }
         }
 
-        private async void ProcessChatCommands(ShortcutCommand command, InputKeyDownEventArgs args)
+        private async void ProcessChatCommands(ShortcutCommand command, ProcessKeyboardAcceleratorEventArgs args)
         {
             if (command == ShortcutCommand.ChatPrevious)
             {

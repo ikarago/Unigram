@@ -936,7 +936,6 @@
     <Compile Include="Controls\WalkthroughControl.cs" />
     <Compile Include="Controls\WrapPanel.cs" />
     <Compile Include="Entities\StorageAudio.cs" />
-    <Compile Include="Navigation\InputKeyDownEventArgs.cs" />
     <Compile Include="Navigation\InputListener.cs" />
     <Compile Include="Navigation\Services\FrameFacade.cs" />
     <Compile Include="Navigation\Services\INavigable.cs" />

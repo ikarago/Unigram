@@ -10,7 +10,8 @@
                         VerticalAlignment="Stretch"
                         HorizontalAlignment="Stretch"
                         Background="{x:Null}"
-                        RequestedTheme="Dark">
+                        RequestedTheme="Dark"
+                        ProcessKeyboardAccelerators="OnProcessKeyboardAccelerators">
 
     <Grid>
         <Grid.RowDefinitions>

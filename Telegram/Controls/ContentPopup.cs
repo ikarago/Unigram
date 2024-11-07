@@ -23,6 +23,8 @@ using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
+using VirtualKey = Windows.System.VirtualKey;
+using VirtualKeyModifiers = Windows.System.VirtualKeyModifiers;
 
 namespace Telegram.Controls
 {
@@ -165,15 +167,17 @@ namespace Telegram.Controls
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (XamlRoot.Content is IPopupHost host)
+            try
             {
-                host.PopupOpened();
+                if (XamlRoot.Content is IPopupHost host)
+                {
+                    host.PopupOpened();
+                }
             }
-
-            var context = WindowContext.ForXamlRoot(this);
-            if (context != null)
+            catch
             {
-                context.InputListener.KeyDown += OnKeyDown;
+                // XamlRoot.Content seems to throw a NullReferenceException
+                // whenever corresponding window has been already closed.
             }
 
             var canvas = VisualTreeHelper.GetParent(this) as Canvas;
@@ -209,21 +213,15 @@ namespace Telegram.Controls
                 // whenever corresponding window has been already closed.
             }
 
-            var context = WindowContext.ForXamlRoot(this);
-            if (context != null)
-            {
-                context.InputListener.KeyDown -= OnKeyDown;
-            }
-
             if (Smoke != null)
             {
                 Smoke.Visibility = Visibility.Collapsed;
             }
         }
 
-        private void OnKeyDown(Window sender, Services.Keyboard.InputKeyDownEventArgs args)
+        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
         {
-            if (args.VirtualKey == Windows.System.VirtualKey.Enter && args.OnlyKey && DefaultButton != ContentDialogButton.Primary)
+            if (args.Key == VirtualKey.Enter && args.Modifiers == VirtualKeyModifiers.None && DefaultButton != ContentDialogButton.Primary)
             {
                 // TODO: should the if be simplified to focused is null or not Control?
 
@@ -280,6 +278,7 @@ namespace Telegram.Controls
 
             if (LayoutRoot != null)
             {
+                LayoutRoot.ProcessKeyboardAccelerators += OnProcessKeyboardAccelerators;
                 ElementCompositionPreview.SetIsTranslationEnabled(LayoutRoot, true);
             }
         }

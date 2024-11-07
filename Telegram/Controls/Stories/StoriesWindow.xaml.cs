@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using DispatcherQueue = Windows.System.DispatcherQueue;
 using VirtualKey = Windows.System.VirtualKey;
+using VirtualKeyModifiers = Windows.System.VirtualKeyModifiers;
 
 namespace Telegram.Controls.Stories
 {
@@ -783,7 +784,6 @@ namespace Telegram.Controls.Stories
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             _viewModel.NavigationService.Window.Activated += OnActivated;
-            _viewModel.NavigationService.Window.InputListener.KeyDown += OnAcceleratorKeyActivated;
 
             StoriesWindow_Loaded(sender, e);
         }
@@ -791,7 +791,6 @@ namespace Telegram.Controls.Stories
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
             _viewModel.NavigationService.Window.Activated -= OnActivated;
-            _viewModel.NavigationService.Window.InputListener.KeyDown -= OnAcceleratorKeyActivated;
 
             _viewModel?.Aggregator.Unsubscribe(this);
             _stealthTimer.Stop();
@@ -809,21 +808,21 @@ namespace Telegram.Controls.Stories
             }
         }
 
-        private void OnAcceleratorKeyActivated(Window sender, InputKeyDownEventArgs args)
+        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
         {
-            var keyCode = (int)args.VirtualKey;
+            var keyCode = (int)args.Key;
 
-            if (args.VirtualKey is VirtualKey.Left or VirtualKey.GamepadLeftShoulder or VirtualKey.PageUp)
+            if (args.Key is VirtualKey.Left or VirtualKey.GamepadLeftShoulder or VirtualKey.PageUp && args.Modifiers == VirtualKeyModifiers.None)
             {
-                Move(Direction.Backward, force: args.VirtualKey is VirtualKey.PageUp);
+                Move(Direction.Backward, force: args.Key is VirtualKey.PageUp);
                 args.Handled = true;
             }
-            else if (args.VirtualKey is VirtualKey.Right or VirtualKey.GamepadRightShoulder or VirtualKey.PageDown)
+            else if (args.Key is VirtualKey.Right or VirtualKey.GamepadRightShoulder or VirtualKey.PageDown && args.Modifiers == VirtualKeyModifiers.None)
             {
-                Move(Direction.Forward, force: args.VirtualKey is VirtualKey.PageDown);
+                Move(Direction.Forward, force: args.Key is VirtualKey.PageDown);
                 args.Handled = true;
             }
-            else if (args.VirtualKey is VirtualKey.Space && args.OnlyKey)
+            else if (args.Key is VirtualKey.Space && args.Modifiers == VirtualKeyModifiers.None)
             {
                 ActiveCard.Toggle();
                 args.Handled = true;

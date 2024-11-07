@@ -10,10 +10,10 @@ using Telegram.Controls;
 using Telegram.Navigation;
 using Telegram.Navigation.Services;
 using Telegram.Services;
-using Telegram.Services.Keyboard;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace Telegram.Views.Host
 {
@@ -118,12 +118,6 @@ namespace Telegram.Views.Host
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            var context = WindowContext.ForXamlRoot(this);
-            if (context != null)
-            {
-                context.InputListener.KeyDown += OnAcceleratorKeyActivated;
-            }
-
             InitializeTitleBar();
         }
 
@@ -131,12 +125,6 @@ namespace Telegram.Views.Host
         {
             MasterDetail.NavigationService.FrameFacade.Navigating -= OnNavigating;
             MasterDetail.Dispose();
-
-            var context = WindowContext.ForXamlRoot(this);
-            if (context != null)
-            {
-                context.InputListener.KeyDown -= OnAcceleratorKeyActivated;
-            }
 
             UnloadTitleBar();
         }
@@ -175,7 +163,7 @@ namespace Telegram.Views.Host
             }
         }
 
-        private void OnAcceleratorKeyActivated(Window sender, InputKeyDownEventArgs args)
+        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
         {
             var invoked = _shortcutsService.Process(args);
             if (invoked == null)
@@ -189,7 +177,7 @@ namespace Telegram.Views.Host
             }
         }
 
-        private async void ProcessAppCommands(ShortcutCommand command, InputKeyDownEventArgs args)
+        private async void ProcessAppCommands(ShortcutCommand command, ProcessKeyboardAcceleratorEventArgs args)
         {
             if (command == ShortcutCommand.Search)
             {

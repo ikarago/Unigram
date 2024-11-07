@@ -18,7 +18,6 @@ using Telegram.Entities;
 using Telegram.Native;
 using Telegram.Navigation;
 using Telegram.Services;
-using Telegram.Services.Keyboard;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Media.Core;
@@ -26,8 +25,11 @@ using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
+using VirtualKey = Windows.System.VirtualKey;
+using VirtualKeyModifiers = Windows.System.VirtualKeyModifiers;
 
 namespace Telegram.Views.Popups
 {
@@ -81,12 +83,6 @@ namespace Telegram.Views.Popups
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            var context = WindowContext.ForXamlRoot(this);
-            if (context != null)
-            {
-                context.InputListener.KeyDown += OnAcceleratorKeyActivated;
-            }
-
             if (_mask == ImageCropperMask.Ellipse)
             {
                 await Cropper.SetSourceAsync(_media.File, proportions: BitmapProportions.Square);
@@ -105,25 +101,19 @@ namespace Telegram.Views.Popups
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            var context = WindowContext.ForXamlRoot(this);
-            if (context != null)
-            {
-                context.InputListener.KeyDown -= OnAcceleratorKeyActivated;
-            }
-
             Media.Source = null;
         }
 
-        private void OnAcceleratorKeyActivated(Window sender, InputKeyDownEventArgs args)
+        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
         {
-            if (args.VirtualKey == Windows.System.VirtualKey.Enter && args.OnlyKey)
+            if (args.Key == VirtualKey.Enter && args.Modifiers == VirtualKeyModifiers.None)
             {
                 Accept_Click(null, null);
                 args.Handled = true;
             }
             else if (TrimToolbar?.Visibility == Visibility.Visible)
             {
-                if (args.VirtualKey == Windows.System.VirtualKey.Space && args.OnlyKey)
+                if (args.Key == VirtualKey.Space && args.Modifiers == VirtualKeyModifiers.None)
                 {
                     if (Media.MediaPlayer.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing)
                     {
@@ -136,7 +126,7 @@ namespace Telegram.Views.Popups
 
                     args.Handled = true;
                 }
-                else if (args.VirtualKey == Windows.System.VirtualKey.M && args.OnlyKey)
+                else if (args.Key == VirtualKey.M && args.Modifiers == VirtualKeyModifiers.None)
                 {
                     Media.MediaPlayer.IsMuted = !Media.MediaPlayer.IsMuted;
                     args.Handled = true;
@@ -144,22 +134,22 @@ namespace Telegram.Views.Popups
             }
             else if (DrawToolbar?.Visibility == Visibility.Visible)
             {
-                if (args.VirtualKey == Windows.System.VirtualKey.Z && args.OnlyControl && Canvas.CanUndo)
+                if (args.Key == VirtualKey.Z && args.Modifiers == VirtualKeyModifiers.Control && Canvas.CanUndo)
                 {
                     Canvas.Undo();
                     args.Handled = true;
                 }
-                else if (args.VirtualKey == Windows.System.VirtualKey.Y && args.OnlyControl && Canvas.CanRedo)
+                else if (args.Key == VirtualKey.Y && args.Modifiers == VirtualKeyModifiers.Control && Canvas.CanRedo)
                 {
                     Canvas.Redo();
                     args.Handled = true;
                 }
-                else if (args.VirtualKey == Windows.System.VirtualKey.D && args.OnlyControl)
+                else if (args.Key == VirtualKey.D && args.Modifiers == VirtualKeyModifiers.Control)
                 {
                     Brush_Click(null, null);
                     args.Handled = true;
                 }
-                else if (args.VirtualKey == Windows.System.VirtualKey.E && args.OnlyControl)
+                else if (args.Key == VirtualKey.E && args.Modifiers == VirtualKeyModifiers.Control)
                 {
                     Erase_Click(null, null);
                     args.Handled = true;
@@ -167,12 +157,12 @@ namespace Telegram.Views.Popups
             }
             else if (BasicToolbar.Visibility == Visibility.Visible)
             {
-                if (args.VirtualKey == Windows.System.VirtualKey.R && args.OnlyControl)
+                if (args.Key == VirtualKey.R && args.Modifiers == VirtualKeyModifiers.Control)
                 {
                     Rotate_Click(null, null);
                     args.Handled = true;
                 }
-                else if (args.VirtualKey == Windows.System.VirtualKey.D && args.OnlyControl)
+                else if (args.Key == VirtualKey.D && args.Modifiers == VirtualKeyModifiers.Control)
                 {
                     Draw_Click(null, null);
                     args.Handled = true;

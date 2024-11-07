@@ -112,9 +112,6 @@ namespace Telegram.Controls
             // Used for special characters
             CreateKeyboardAccelerator(VirtualKey.X, VirtualKeyModifiers.Menu);
 
-            // Overridden but not used
-            ProcessKeyboardAccelerators += OnProcessKeyboardAccelerators;
-
             Loaded += OnLoaded;
             Unloaded += OnUnloaded;
             SizeChanged += OnSizeChanged;
@@ -123,19 +120,6 @@ namespace Telegram.Controls
             TextChanged += OnTextChanged;
 
             SelectionChanged += OnSelectionChanged;
-        }
-
-        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
-        {
-            if (args.Modifiers == (VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift))
-            {
-                args.Handled = args.Key is VirtualKey.A or VirtualKey.L;
-                args.Handled |= (int)args.Key is 188 or 190;
-            }
-            else if (args.Modifiers == VirtualKeyModifiers.Control)
-            {
-                args.Handled = args.Key is VirtualKey.E or VirtualKey.L or VirtualKey.R or VirtualKey.J;
-            }
         }
 
         private void OnCopyingToClipboard(RichEditBox sender, TextControlCopyingToClipboardEventArgs args)
@@ -318,12 +302,10 @@ namespace Telegram.Controls
             }
             else if (e.Key == VirtualKey.Enter && CanAccept())
             {
-                var ctrl = WindowContext.IsKeyDown(VirtualKey.Control);
-                var shift = WindowContext.IsKeyDown(VirtualKey.Shift);
-
+                var modifiers = WindowContext.KeyModifiers();
                 var send = SettingsService.Current.IsSendByEnterEnabled
-                    ? !ctrl && !shift
-                    : ctrl && !shift;
+                    ? modifiers == VirtualKeyModifiers.None
+                    : modifiers == VirtualKeyModifiers.Control;
 
                 AcceptsReturn = !send;
                 e.Handled = send;
@@ -352,11 +334,8 @@ namespace Telegram.Controls
             }
             else if (e.Key == VirtualKey.Z)
             {
-                var alt = WindowContext.IsKeyDown(VirtualKey.Menu);
-                var ctrl = WindowContext.IsKeyDown(VirtualKey.Control);
-                var shift = WindowContext.IsKeyDown(VirtualKey.Shift);
-
-                if (ctrl && shift && !alt)
+                var modifiers = WindowContext.KeyModifiers();
+                if (modifiers == (VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift))
                 {
                     if (Document.CanRedo())
                     {
@@ -364,6 +343,22 @@ namespace Telegram.Controls
                     }
 
                     e.Handled = true;
+                }
+            }
+            else if (e.Key is VirtualKey.A or VirtualKey.L || (int)e.Key is 188 or 190)
+            {
+                var modifiers = WindowContext.KeyModifiers();
+                if (modifiers == (VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift))
+                {
+                    return;
+                }
+            }
+            else if (e.Key is VirtualKey.E or VirtualKey.L or VirtualKey.R or VirtualKey.J)
+            {
+                var modifiers = WindowContext.KeyModifiers();
+                if (modifiers == VirtualKeyModifiers.Control)
+                {
+                    return;
                 }
             }
 

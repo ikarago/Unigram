@@ -30,7 +30,6 @@ using Telegram.Converters;
 using Telegram.Navigation;
 using Telegram.Navigation.Services;
 using Telegram.Services;
-using Telegram.Services.Keyboard;
 using Telegram.Streams;
 using Telegram.Td;
 using Telegram.Td.Api;
@@ -58,6 +57,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Point = Windows.Foundation.Point;
 using VirtualKey = Windows.System.VirtualKey;
+using VirtualKeyModifiers = Windows.System.VirtualKeyModifiers;
 
 namespace Telegram.Views
 {
@@ -748,7 +748,6 @@ namespace Telegram.Views
             ViewModel.NavigationService.Window.VisibilityChanged += Window_VisibilityChanged;
 
             ViewModel.NavigationService.Window.CoreWindow.CharacterReceived += OnCharacterReceived;
-            ViewModel.NavigationService.Window.InputListener.KeyDown += OnAcceleratorKeyActivated;
 
             ViewVisibleMessages();
 
@@ -765,7 +764,6 @@ namespace Telegram.Views
             ViewModel.NavigationService.Window.VisibilityChanged -= Window_VisibilityChanged;
 
             ViewModel.NavigationService.Window.CoreWindow.CharacterReceived -= OnCharacterReceived;
-            ViewModel.NavigationService.Window.InputListener.KeyDown -= OnAcceleratorKeyActivated;
 
             _loadedThemeTask?.TrySetResult(true);
             _updateThemeTask?.TrySetResult(true);
@@ -1000,9 +998,9 @@ namespace Telegram.Views
             }
         }
 
-        private void OnAcceleratorKeyActivated(Window sender, InputKeyDownEventArgs args)
+        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
         {
-            if (args.VirtualKey == VirtualKey.Delete)
+            if (args.Key == VirtualKey.Delete)
             {
                 if (ViewModel.IsSelectionEnabled && ViewModel.SelectedItems.Count > 0 && ViewModel.CanDeleteSelectedMessages)
                 {
@@ -1019,7 +1017,7 @@ namespace Telegram.Views
                     }
                 }
             }
-            else if (args.VirtualKey == VirtualKey.C && args.OnlyControl)
+            else if (args.Key == VirtualKey.C && args.Modifiers == VirtualKeyModifiers.Control)
             {
                 if (ViewModel.IsSelectionEnabled && ViewModel.SelectedItems.Count > 0 && ViewModel.CanCopySelectedMessage)
                 {
@@ -1066,17 +1064,17 @@ namespace Telegram.Views
                     }
                 }
             }
-            else if (args.VirtualKey == VirtualKey.R && args.RepeatCount == 1 && args.OnlyControl)
+            else if (args.Key == VirtualKey.R && /*args.RepeatCount == 1 &&*/ args.Modifiers == VirtualKeyModifiers.Control)
             {
                 btnVoiceMessage.ToggleRecording();
                 args.Handled = true;
             }
-            else if (args.VirtualKey == VirtualKey.D && args.RepeatCount == 1 && args.OnlyControl)
+            else if (args.Key == VirtualKey.D && /*args.RepeatCount == 1 &&*/ args.Modifiers == VirtualKeyModifiers.Control)
             {
                 btnVoiceMessage.StopRecording(true);
                 args.Handled = true;
             }
-            else if (args.VirtualKey == VirtualKey.P && args.RepeatCount == 1 && args.OnlyControl)
+            else if (args.Key == VirtualKey.P && /*args.RepeatCount == 1 &&*/ args.Modifiers == VirtualKeyModifiers.Control)
             {
                 if (btnVoiceMessage.IsLocked)
                 {
@@ -1084,7 +1082,7 @@ namespace Telegram.Views
                     args.Handled = true;
                 }
             }
-            else if (args.VirtualKey == VirtualKey.Space && args.RepeatCount == 1 && args.OnlyKey)
+            else if (args.Key == VirtualKey.Space && /*args.RepeatCount == 1 &&*/ args.Modifiers == VirtualKeyModifiers.None)
             {
                 if (btnVoiceMessage.IsLocked)
                 {
@@ -1092,12 +1090,12 @@ namespace Telegram.Views
                     args.Handled = true;
                 }
             }
-            else if (args.VirtualKey == VirtualKey.O && args.RepeatCount == 1 && args.OnlyControl)
+            else if (args.Key == VirtualKey.O && /*args.RepeatCount == 1 &&*/ args.Modifiers == VirtualKeyModifiers.Control)
             {
                 ViewModel.SendDocument();
                 args.Handled = true;
             }
-            else if (args.VirtualKey == VirtualKey.PageUp && args.OnlyKey && TextField.Document.Selection.StartPosition == 0 && ViewModel.Autocomplete == null)
+            else if (args.Key == VirtualKey.PageUp && args.Modifiers == VirtualKeyModifiers.None && TextField.Document.Selection.StartPosition == 0 && ViewModel.Autocomplete == null)
             {
                 var popups = VisualTreeHelper.GetOpenPopupsForXamlRoot(XamlRoot);
                 if (popups.Count > 0)
@@ -1111,7 +1109,7 @@ namespace Telegram.Views
                     return;
                 }
 
-                if (args.VirtualKey == VirtualKey.Up && (focused is TextBox or RichEditBox or ReactionButton))
+                if (args.Key == VirtualKey.Up && (focused is TextBox or RichEditBox or ReactionButton))
                 {
                     return;
                 }
@@ -1123,7 +1121,7 @@ namespace Telegram.Views
                 }
 
                 SelectorItem target;
-                if (args.VirtualKey == VirtualKey.PageUp)
+                if (args.Key == VirtualKey.PageUp)
                 {
                     target = Messages.ContainerFromIndex(panel.FirstVisibleIndex) as SelectorItem;
                 }
@@ -1140,7 +1138,7 @@ namespace Telegram.Views
                 target.Focus(FocusState.Keyboard);
                 args.Handled = true;
             }
-            else if ((args.VirtualKey == VirtualKey.PageDown || args.VirtualKey == VirtualKey.Down) && args.OnlyKey && TextField.Document.Selection.StartPosition == TextField.Document.GetRange(int.MaxValue, int.MaxValue).EndPosition && ViewModel.Autocomplete == null)
+            else if (args.Key is VirtualKey.PageDown or VirtualKey.Down && args.Modifiers == VirtualKeyModifiers.None && TextField.Document.Selection.StartPosition == TextField.Document.GetRange(int.MaxValue, int.MaxValue).EndPosition && ViewModel.Autocomplete == null)
             {
                 var popups = VisualTreeHelper.GetOpenPopupsForXamlRoot(XamlRoot);
                 if (popups.Count > 0)
@@ -1154,7 +1152,7 @@ namespace Telegram.Views
                     return;
                 }
 
-                if (args.VirtualKey == VirtualKey.Down && (focused is TextBox or RichEditBox or ReactionButton))
+                if (args.Key == VirtualKey.Down && (focused is TextBox or RichEditBox or ReactionButton))
                 {
                     return;
                 }
@@ -1166,7 +1164,7 @@ namespace Telegram.Views
                 }
 
                 SelectorItem target;
-                if (args.VirtualKey == VirtualKey.PageUp)
+                if (args.Key == VirtualKey.PageUp)
                 {
                     target = Messages.ContainerFromIndex(panel.FirstVisibleIndex) as SelectorItem;
                 }

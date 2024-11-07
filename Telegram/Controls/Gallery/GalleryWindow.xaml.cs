@@ -15,7 +15,6 @@ using Telegram.Controls.Media;
 using Telegram.Converters;
 using Telegram.Navigation;
 using Telegram.Services;
-using Telegram.Services.Keyboard;
 using Telegram.Td.Api;
 using Telegram.ViewModels.Chats;
 using Telegram.ViewModels.Delegates;
@@ -35,6 +34,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using VirtualKey = Windows.System.VirtualKey;
+using VirtualKeyModifiers = Windows.System.VirtualKeyModifiers;
 
 namespace Telegram.Controls.Gallery
 {
@@ -689,15 +689,6 @@ namespace Telegram.Controls.Gallery
             }
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            var context = WindowContext.ForXamlRoot(this);
-            if (context != null)
-            {
-                context.InputListener.KeyDown += OnAcceleratorKeyActivated;
-            }
-        }
-
         private void Load(object parameter)
         {
             DataContext = parameter;
@@ -707,15 +698,13 @@ namespace Telegram.Controls.Gallery
                     .Subscribe<UpdateMessageContent>(Handle);
         }
 
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+        }
+
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
             Unload();
-
-            var context = WindowContext.ForXamlRoot(this);
-            if (context != null)
-            {
-                context.InputListener.KeyDown -= OnAcceleratorKeyActivated;
-            }
         }
 
         private void Unload()
@@ -739,48 +728,48 @@ namespace Telegram.Controls.Gallery
             Element2.Unload();
         }
 
-        private void OnAcceleratorKeyActivated(Window sender, InputKeyDownEventArgs args)
+        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
         {
-            var keyCode = (int)args.VirtualKey;
+            var keyCode = (int)args.Key;
 
-            if (args.VirtualKey is VirtualKey.Left or VirtualKey.GamepadLeftShoulder && args.OnlyKey)
+            if (args.Key is VirtualKey.Left or VirtualKey.GamepadLeftShoulder && args.Modifiers == VirtualKeyModifiers.None)
             {
+                args.Handled = true;
                 ChangeView(CarouselDirection.Previous, false);
-                args.Handled = true;
             }
-            else if (args.VirtualKey is VirtualKey.Right or VirtualKey.GamepadRightShoulder && args.OnlyKey)
+            else if (args.Key is VirtualKey.Right or VirtualKey.GamepadRightShoulder && args.Modifiers == VirtualKeyModifiers.None)
             {
-                ChangeView(CarouselDirection.Next, false);
                 args.Handled = true;
+                ChangeView(CarouselDirection.Next, false);
             }
-            else if (args.VirtualKey is VirtualKey.R && args.OnlyControl)
+            else if (args.Key is VirtualKey.R && args.Modifiers == VirtualKeyModifiers.Control)
             {
                 Rotate_Click(null, null);
                 args.Handled = true;
             }
-            else if (args.VirtualKey is VirtualKey.C && args.OnlyControl)
+            else if (args.Key is VirtualKey.C && args.Modifiers == VirtualKeyModifiers.Control)
             {
                 ViewModel?.Copy();
                 args.Handled = true;
             }
-            else if (args.VirtualKey is VirtualKey.S && args.OnlyControl)
+            else if (args.Key is VirtualKey.S && args.Modifiers == VirtualKeyModifiers.Control)
             {
                 ViewModel?.Save();
                 args.Handled = true;
             }
-            else if (args.VirtualKey is VirtualKey.F11 || (args.VirtualKey is VirtualKey.F && args.OnlyControl))
+            else if (args.Key is VirtualKey.F11 || (args.Key is VirtualKey.F && args.Modifiers == VirtualKeyModifiers.Control))
             {
                 FullScreen_Click(null, null);
                 args.Handled = true;
             }
-            else if (keyCode is 187 or 189 || args.VirtualKey is VirtualKey.Add or VirtualKey.Subtract)
+            else if (keyCode is 187 or 189 || args.Key is VirtualKey.Add or VirtualKey.Subtract)
             {
-                ScrollingHost.Zoom(keyCode is 187 || args.VirtualKey is VirtualKey.Add);
+                ScrollingHost.Zoom(keyCode is 187 || args.Key is VirtualKey.Add);
                 args.Handled = true;
             }
             else
             {
-                Controls.OnAcceleratorKeyActivated(args);
+                Controls.ProcessKeyboardAccelerators(args);
             }
         }
 
@@ -900,8 +889,8 @@ namespace Telegram.Controls.Gallery
                 out GalleryContent target,
                 out GalleryContent next);
 
-            previous.IsEnabled = false;
             target.IsEnabled = true;
+            previous.IsEnabled = false;
             next.IsEnabled = false;
 
             var index = viewModel.SelectedIndex;

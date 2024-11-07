@@ -4,7 +4,6 @@ using Telegram.Common;
 using Telegram.Controls.Media;
 using Telegram.Navigation;
 using Telegram.Services;
-using Telegram.Services.Keyboard;
 using Telegram.Td.Api;
 using Telegram.ViewModels.Gallery;
 using Windows.System;
@@ -546,46 +545,46 @@ namespace Telegram.Controls.Gallery
             }
         }
 
-        public void OnAcceleratorKeyActivated(InputKeyDownEventArgs args)
+        public new void ProcessKeyboardAccelerators(ProcessKeyboardAcceleratorEventArgs args)
         {
             if (_player == null)
             {
                 return;
             }
 
-            var keyCode = (int)args.VirtualKey;
+            var keyCode = (int)args.Key;
 
-            if (args.VirtualKey is VirtualKey.Space or VirtualKey.K && args.OnlyKey)
+            if (args.Key is VirtualKey.Space or VirtualKey.K && args.Modifiers == VirtualKeyModifiers.None)
             {
                 TogglePlaybackState();
                 args.Handled = true;
             }
-            else if (args.VirtualKey is VirtualKey.M && args.OnlyKey)
+            else if (args.Key is VirtualKey.M && args.Modifiers == VirtualKeyModifiers.None)
             {
                 Volume_Click(null, null);
                 args.Handled = true;
             }
-            else if (args.VirtualKey is VirtualKey.Up && args.OnlyKey)
+            else if (args.Key is VirtualKey.Up && args.Modifiers == VirtualKeyModifiers.None)
             {
                 VolumeSlider.Value += 10;
                 args.Handled = true;
             }
-            else if (args.VirtualKey is VirtualKey.Down && args.OnlyKey)
+            else if (args.Key is VirtualKey.Down && args.Modifiers == VirtualKeyModifiers.None)
             {
                 VolumeSlider.Value -= 10;
                 args.Handled = true;
             }
-            else if ((args.VirtualKey is VirtualKey.J && args.OnlyKey) || (args.VirtualKey is VirtualKey.Left && args.OnlyControl))
+            else if ((args.Key is VirtualKey.J && args.Modifiers == VirtualKeyModifiers.None) || (args.Key is VirtualKey.Left && args.Modifiers == VirtualKeyModifiers.Control))
             {
                 _player.AddTime(-10000);
                 args.Handled = true;
             }
-            else if ((args.VirtualKey is VirtualKey.L && args.OnlyKey) || (args.VirtualKey is VirtualKey.Right && args.OnlyControl))
+            else if ((args.Key is VirtualKey.L && args.Modifiers == VirtualKeyModifiers.None) || (args.Key is VirtualKey.Right && args.Modifiers == VirtualKeyModifiers.Control))
             {
                 _player.AddTime(10000);
                 args.Handled = true;
             }
-            else if (keyCode is 188 or 190 && args.OnlyShift)
+            else if (keyCode is 188 or 190 && args.Modifiers == VirtualKeyModifiers.Shift)
             {
                 ChangePlaybackSpeed(keyCode is 188 ? -0.25f : 0.25f);
                 args.Handled = true;

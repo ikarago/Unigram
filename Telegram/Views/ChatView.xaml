@@ -12,7 +12,8 @@
                         mc:Ignorable="d"
                         Connected="OnLoaded"
                         Disconnected="OnUnloaded"
-                        SizeChanged="OnSizeChanged">
+                        SizeChanged="OnSizeChanged"
+                        ProcessKeyboardAccelerators="OnProcessKeyboardAccelerators">
 
     <!--<Page.Transitions>
         <TransitionCollection>

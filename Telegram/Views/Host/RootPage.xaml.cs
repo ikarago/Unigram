@@ -33,8 +33,10 @@ using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using VirtualKeyModifiers = Windows.System.VirtualKeyModifiers;
 
 namespace Telegram.Views.Host
 {
@@ -530,11 +532,8 @@ namespace Telegram.Views.Host
             }
             else if (item is RootDestination.AddAccount)
             {
-                var alt = WindowContext.IsKeyDown(Windows.System.VirtualKey.Menu);
-                var ctrl = WindowContext.IsKeyDown(Windows.System.VirtualKey.Control);
-                var shift = WindowContext.IsKeyDown(Windows.System.VirtualKey.Shift);
-
-                if (alt && !ctrl && shift)
+                var modifiers = WindowContext.KeyModifiers();
+                if (modifiers == (VirtualKeyModifiers.Menu | VirtualKeyModifiers.Shift))
                 {
                     var flyout = new MenuFlyout();
                     flyout.CreateFlyoutItem(() => Switch(_lifetime.Create(test: false)), "Production Server", Icons.Globe);
@@ -795,11 +794,9 @@ namespace Telegram.Views.Host
             {
                 if (session.IsActive)
                 {
-                    var alt = WindowContext.IsKeyDown(Windows.System.VirtualKey.Menu);
-                    var ctrl = WindowContext.IsKeyDown(Windows.System.VirtualKey.Control);
-                    var shift = WindowContext.IsKeyDown(Windows.System.VirtualKey.Shift);
+                    var modifiers = WindowContext.KeyModifiers();
 
-                    if (SettingsService.Current.Diagnostics.ShowMemoryUsage && alt && !ctrl && !shift)
+                    if (SettingsService.Current.Diagnostics.ShowMemoryUsage && modifiers == VirtualKeyModifiers.Menu)
                     {
                         TestDestroy();
                     }
@@ -1256,6 +1253,14 @@ namespace Telegram.Views.Host
                 {
                     InitializeSessions(SettingsService.Current.IsAccountsSelectorExpanded, _lifetime.Items);
                 }
+            }
+        }
+
+        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
+        {
+            if (_navigationService?.Frame.Content is MainPage mainPage)
+            {
+                mainPage.ProcessKeyboardAccelerators(args);
             }
         }
     }

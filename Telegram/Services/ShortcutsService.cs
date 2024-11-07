@@ -10,18 +10,18 @@ using System.Linq;
 using System.Text;
 using Telegram.Collections;
 using Telegram.Navigation;
-using Telegram.Services.Keyboard;
 using Windows.Data.Json;
 using Windows.Storage;
 using Windows.System;
+using Windows.UI.Xaml.Input;
 
 namespace Telegram.Services
 {
     public interface IShortcutsService
     {
-        InvokedShortcut Process(InputKeyDownEventArgs args);
+        InvokedShortcut Process(ProcessKeyboardAcceleratorEventArgs args);
 
-        bool TryGetShortcut(InputKeyDownEventArgs args, out Shortcut shortcut);
+        bool TryGetShortcut(ProcessKeyboardAcceleratorEventArgs args, out Shortcut shortcut);
 
         IList<ShortcutList> GetShortcuts();
         IList<ShortcutList> Update(Shortcut shortcut, ShortcutCommand command);
@@ -184,28 +184,14 @@ namespace Telegram.Services
             InitializeCustom();
         }
 
-        public InvokedShortcut Process(InputKeyDownEventArgs args)
+        public InvokedShortcut Process(ProcessKeyboardAcceleratorEventArgs args)
         {
-            var modifiers = VirtualKeyModifiers.None;
-            if (args.AltKey)
+            if (args.Key is >= VirtualKey.NumberPad0 and <= VirtualKey.NumberPad9)
             {
-                modifiers |= VirtualKeyModifiers.Menu;
-            }
-            if (args.ControlKey)
-            {
-                modifiers |= VirtualKeyModifiers.Control;
-            }
-            if (args.ShiftKey)
-            {
-                modifiers |= VirtualKeyModifiers.Shift;
+                return Process(args.Modifiers, VirtualKey.Number0 + (args.Key - VirtualKey.NumberPad0));
             }
 
-            if (args.VirtualKey is >= VirtualKey.NumberPad0 and <= VirtualKey.NumberPad9)
-            {
-                return Process(modifiers, VirtualKey.Number0 + (args.VirtualKey - VirtualKey.NumberPad0));
-            }
-
-            return Process(modifiers, args.VirtualKey);
+            return Process(args.Modifiers, args.Key);
         }
 
         private InvokedShortcut Process(VirtualKeyModifiers modifiers, VirtualKey key)
@@ -225,23 +211,9 @@ namespace Telegram.Services
         //int nonVirtualKey = MapVirtualKey((uint)args.VirtualKey, 2);
         //char mappedChar = Convert.ToChar(nonVirtualKey);
 
-        public bool TryGetShortcut(InputKeyDownEventArgs args, out Shortcut shortcut)
+        public bool TryGetShortcut(ProcessKeyboardAcceleratorEventArgs args, out Shortcut shortcut)
         {
-            var modifiers = VirtualKeyModifiers.None;
-            if (args.AltKey)
-            {
-                modifiers |= VirtualKeyModifiers.Menu;
-            }
-            if (args.ControlKey)
-            {
-                modifiers |= VirtualKeyModifiers.Control;
-            }
-            if (args.ShiftKey)
-            {
-                modifiers |= VirtualKeyModifiers.Shift;
-            }
-
-            return TryGetShortcut(modifiers, args.VirtualKey, out shortcut);
+            return TryGetShortcut(args.Modifiers, args.Key, out shortcut);
         }
 
         private bool TryGetShortcut(VirtualKeyModifiers modifiers, VirtualKey key, out Shortcut shortcut)

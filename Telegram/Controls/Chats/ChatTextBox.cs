@@ -175,13 +175,11 @@ namespace Telegram.Controls.Chats
                     autocompleteList = ControlledList;
                 }
 
-                var alt = WindowContext.IsKeyDown(VirtualKey.Menu);
-                var ctrl = WindowContext.IsKeyDown(VirtualKey.Control);
-                var shift = WindowContext.IsKeyDown(VirtualKey.Shift);
+                var modifiers = WindowContext.KeyModifiers();
 
                 if (e.Key is VirtualKey.Up or VirtualKey.Down)
                 {
-                    if (e.Key is VirtualKey.Up or VirtualKey.Down && !alt && !ctrl && !shift && autocomplete == null)
+                    if (e.Key is VirtualKey.Up or VirtualKey.Down && modifiers == VirtualKeyModifiers.None && autocomplete == null)
                     {
                         if (e.Key == VirtualKey.Up && IsEmpty)
                         {
@@ -204,12 +202,12 @@ namespace Telegram.Controls.Chats
                             }
                         }
                     }
-                    else if (e.Key == VirtualKey.Up && ctrl && !alt && !shift)
+                    else if (e.Key == VirtualKey.Up && modifiers == VirtualKeyModifiers.Control)
                     {
                         ViewModel.MessageReplyPrevious();
                         e.Handled = true;
                     }
-                    else if (e.Key == VirtualKey.Down && ctrl && !alt && !shift)
+                    else if (e.Key == VirtualKey.Down && modifiers == VirtualKeyModifiers.Control)
                     {
                         ViewModel.MessageReplyNext();
                         e.Handled = true;
@@ -232,7 +230,7 @@ namespace Telegram.Controls.Chats
                         }
                     }
                 }
-                else if (e.Key is VirtualKey.Left or VirtualKey.Right && !ctrl && !alt && !shift)
+                else if (e.Key is VirtualKey.Left or VirtualKey.Right && modifiers == VirtualKeyModifiers.None)
                 {
                     if (autocompleteList != null && autocompleteList.Items.Count > 0 && autocomplete?.Orientation == Orientation.Horizontal)
                     {
@@ -265,7 +263,7 @@ namespace Telegram.Controls.Chats
                 else if (e.Key is VirtualKey.Tab or VirtualKey.Enter && autocompleteList != null && autocompleteList.Items.Count > 0 && autocomplete != null
                     && ((autocomplete.InsertOnKeyDown is false && autocompleteList.SelectedItem != null) || autocomplete.InsertOnKeyDown))
                 {
-                    if (shift)
+                    if (modifiers == VirtualKeyModifiers.Shift)
                     {
                         return;
                     }
@@ -283,7 +281,7 @@ namespace Telegram.Controls.Chats
                 }
                 else if (e.Key == VirtualKey.Tab)
                 {
-                    if (ctrl)
+                    if (modifiers == VirtualKeyModifiers.Control)
                     {
                         return;
                     }

@@ -117,10 +117,10 @@ namespace Telegram.Controls
                 return;
             }
 
-            var ctrl = WindowContext.IsKeyDown(VirtualKey.Control);
+            var modifiers = WindowContext.KeyModifiers();
 
             var point = e.GetCurrentPoint(this);
-            if (point.Properties.IsHorizontalMouseWheel || ctrl)
+            if (point.Properties.IsHorizontalMouseWheel || modifiers != VirtualKeyModifiers.None)
             {
                 return;
             }

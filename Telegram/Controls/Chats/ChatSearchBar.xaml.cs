@@ -19,6 +19,8 @@ using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using static Telegram.Controls.Chats.ChatTextBox;
+using VirtualKey = Windows.System.VirtualKey;
+using VirtualKeyModifiers = Windows.System.VirtualKeyModifiers;
 
 namespace Telegram.Controls.Chats
 {
@@ -308,20 +310,20 @@ namespace Telegram.Controls.Chats
 
         private void OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            var shift = WindowContext.IsKeyDown(Windows.System.VirtualKey.Shift);
+            var modifiers = WindowContext.KeyModifiers();
 
-            if (e.Key == Windows.System.VirtualKey.Enter && !shift && Field.State != ChatSearchState.Members)
+            if (e.Key == VirtualKey.Enter && modifiers == VirtualKeyModifiers.None && Field.State != ChatSearchState.Members)
             {
                 _debouncer.Cancel();
                 ViewModel?.Search(Field.Text, Field.From, Field.Filter?.Filter, ViewModel.SavedMessagesTag);
                 e.Handled = true;
             }
-            else if (e.Key == Windows.System.VirtualKey.Enter && shift && Field.State != ChatSearchState.Members)
+            else if (e.Key == VirtualKey.Enter && modifiers == VirtualKeyModifiers.Shift && Field.State != ChatSearchState.Members)
             {
                 ViewModel?.NextCommand.Execute();
                 e.Handled = true;
             }
-            else if (e.Key == Windows.System.VirtualKey.Back && string.IsNullOrEmpty(Field.Text))
+            else if (e.Key == VirtualKey.Back && string.IsNullOrEmpty(Field.Text))
             {
                 Delete(false);
                 e.Handled = true;

@@ -9,7 +9,8 @@
       muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
       mc:Ignorable="d"
       Loaded="OnLoaded"
-      Unloaded="OnUnloaded">
+      Unloaded="OnUnloaded"
+      ProcessKeyboardAccelerators="OnProcessKeyboardAccelerators">
 
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
