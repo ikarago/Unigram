@@ -835,6 +835,7 @@ namespace Telegram.Views
             var label = new TextBlock
             {
                 Text = message,
+                TextWrapping = TextWrapping.Wrap
             };
 
             Grid.SetColumnSpan(label, int.MaxValue);
