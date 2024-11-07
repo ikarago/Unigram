@@ -6960,6 +6960,12 @@ Upgrade to **Telegram Premium** to increase this limit to **{1}**.</value>
   <data name="Media_other" xml:space="preserve">
     <value>{0} media</value>
   </data>
+  <data name="MediaShowPhotos" xml:space="preserve">
+    <value>Show Photos</value>
+  </data>
+  <data name="MediaShowVideos" xml:space="preserve">
+    <value>Show Videos</value>
+  </data>
   <data name="MediaZoomIn" xml:space="preserve">
     <value>Zoom In</value>
   </data>

@@ -25,6 +25,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
@@ -520,6 +521,60 @@ namespace Telegram.Views
             }
 
             flyout.ShowAt(sender as Button, FlyoutPlacementMode.BottomEdgeAlignedRight);
+        }
+
+        private void Navigation_ItemContextRequested(UIElement sender, ContextRequestedEventArgs args)
+        {
+            var item = Navigation.ItemFromContainer(sender) as ProfileTabItem;
+            if (item != ViewModel.SelectedItem || item.Type != typeof(ProfileMediaTabPage))
+            {
+                return;
+            }
+
+            var photos = new ToggleMenuFlyoutItem
+            {
+                Text = Strings.MediaShowPhotos,
+                IsChecked = ViewModel.Media.Source.Filter is SearchMessagesFilterPhoto or SearchMessagesFilterPhotoAndVideo
+            };
+
+            var videos = new ToggleMenuFlyoutItem
+            {
+                Text = Strings.MediaShowVideos,
+                IsChecked = ViewModel.Media.Source.Filter is SearchMessagesFilterVideo or SearchMessagesFilterPhotoAndVideo
+            };
+
+            photos.Click += MediaShowPhotos_Click;
+            videos.Click += MediaShowVideos_Click;
+
+            var flyout = new MenuFlyout();
+            flyout.Items.Add(photos);
+            flyout.Items.Add(videos);
+
+            flyout.ShowAt(sender, FlyoutPlacementMode.Bottom);
+        }
+
+        private void MediaShowPhotos_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.Media.Source.Filter is SearchMessagesFilterPhotoAndVideo)
+            {
+                ViewModel.Media.UpdateSender(new SearchMessagesFilterVideo());
+            }
+            else if (ViewModel.Media.Source.Filter is SearchMessagesFilterVideo)
+            {
+                ViewModel.Media.UpdateSender(new SearchMessagesFilterPhotoAndVideo());
+            }
+        }
+
+        private void MediaShowVideos_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.Media.Source.Filter is SearchMessagesFilterPhotoAndVideo)
+            {
+                ViewModel.Media.UpdateSender(new SearchMessagesFilterPhoto());
+            }
+            else if (ViewModel.Media.Source.Filter is SearchMessagesFilterPhoto)
+            {
+                ViewModel.Media.UpdateSender(new SearchMessagesFilterPhotoAndVideo());
+            }
         }
 
         #region Selection

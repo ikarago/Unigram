@@ -20,7 +20,7 @@ namespace Telegram.Collections
     public partial class SearchCollection<T, TSource> : DiffObservableCollection<T>, ISupportIncrementalLoading where TSource : IEnumerable<T>
     {
         private readonly Func<object, string, TSource> _factory;
-        private readonly object _sender;
+        private object _sender;
 
         private CancellationTokenSource _cancellation;
 
@@ -61,6 +61,11 @@ namespace Telegram.Collections
         public void Reload()
         {
             Update(_factory(_sender ?? this, _query.Value));
+        }
+
+        public void UpdateSender(object sender)
+        {
+            Update(_factory((_sender = sender) ?? this, _query.Value));
         }
 
         public void UpdateQuery(string value)
