@@ -104,16 +104,11 @@ namespace Telegram.Views.Popups
             Media.Source = null;
         }
 
-        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
+        private void OnPreviewKeyDown(object sender, KeyRoutedEventArgs args)
         {
-            if (args.Key == VirtualKey.Enter && args.Modifiers == VirtualKeyModifiers.None)
+            if (TrimToolbar?.Visibility == Visibility.Visible)
             {
-                Accept_Click(null, null);
-                args.Handled = true;
-            }
-            else if (TrimToolbar?.Visibility == Visibility.Visible)
-            {
-                if (args.Key == VirtualKey.Space && args.Modifiers == VirtualKeyModifiers.None)
+                if (args.Key == VirtualKey.Space /*&& args.Modifiers == VirtualKeyModifiers.None*/)
                 {
                     if (Media.MediaPlayer.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing)
                     {
@@ -126,7 +121,19 @@ namespace Telegram.Views.Popups
 
                     args.Handled = true;
                 }
-                else if (args.Key == VirtualKey.M && args.Modifiers == VirtualKeyModifiers.None)
+            }
+        }
+
+        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
+        {
+            if (args.Key == VirtualKey.Enter && args.Modifiers == VirtualKeyModifiers.None)
+            {
+                Accept_Click(null, null);
+                args.Handled = true;
+            }
+            else if (TrimToolbar?.Visibility == Visibility.Visible)
+            {
+                if (args.Key == VirtualKey.M && args.Modifiers == VirtualKeyModifiers.None)
                 {
                     Media.MediaPlayer.IsMuted = !Media.MediaPlayer.IsMuted;
                     args.Handled = true;

@@ -808,6 +808,15 @@ namespace Telegram.Controls.Stories
             }
         }
 
+        private void OnPreviewKeyDown(object sender, KeyRoutedEventArgs args)
+        {
+            if (args.Key is VirtualKey.Space /*&& args.Modifiers == VirtualKeyModifiers.None*/)
+            {
+                ActiveCard.Toggle();
+                args.Handled = true;
+            }
+        }
+
         private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
         {
             var keyCode = (int)args.Key;
@@ -820,11 +829,6 @@ namespace Telegram.Controls.Stories
             else if (args.Key is VirtualKey.Right or VirtualKey.GamepadRightShoulder or VirtualKey.PageDown && args.Modifiers == VirtualKeyModifiers.None)
             {
                 Move(Direction.Forward, force: args.Key is VirtualKey.PageDown);
-                args.Handled = true;
-            }
-            else if (args.Key is VirtualKey.Space && args.Modifiers == VirtualKeyModifiers.None)
-            {
-                ActiveCard.Toggle();
                 args.Handled = true;
             }
             //else if (args.VirtualKey is VirtualKey.C && args.OnlyControl)

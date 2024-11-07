@@ -15,6 +15,7 @@
                         VerticalAlignment="Stretch"
                         Loaded="OnLoaded"
                         Unloaded="OnUnloaded"
+                        PreviewKeyDown="OnPreviewKeyDown"
                         ProcessKeyboardAccelerators="OnProcessKeyboardAccelerators">
 
     <Grid RequestedTheme="Dark">

@@ -554,7 +554,7 @@ namespace Telegram.Controls.Gallery
 
             var keyCode = (int)args.Key;
 
-            if (args.Key is VirtualKey.Space or VirtualKey.K && args.Modifiers == VirtualKeyModifiers.None)
+            if (args.Key is VirtualKey.K && args.Modifiers == VirtualKeyModifiers.None)
             {
                 TogglePlaybackState();
                 args.Handled = true;

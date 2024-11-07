@@ -108,7 +108,7 @@ namespace Telegram.Controls.Gallery
             if (e.OriginalSource is FrameworkElement element)
             {
                 var button = element.GetParentOrSelf<ButtonBase>();
-                if (button != null)
+                if (button is not null and not FileButton)
                 {
                     return;
                 }
@@ -728,24 +728,33 @@ namespace Telegram.Controls.Gallery
             Element2.Unload();
         }
 
+        private void OnPreviewKeyDown(object sender, KeyRoutedEventArgs args)
+        {
+            if (args.Key is VirtualKey.Space /*&& args.Modifiers == VirtualKeyModifiers.None*/)
+            {
+                Controls.TogglePlaybackState();
+                args.Handled = true;
+            }
+        }
+
         private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
         {
             var keyCode = (int)args.Key;
 
             if (args.Key is VirtualKey.Left or VirtualKey.GamepadLeftShoulder && args.Modifiers == VirtualKeyModifiers.None)
             {
-                args.Handled = true;
                 ChangeView(CarouselDirection.Previous, false);
+                args.Handled = true;
             }
             else if (args.Key is VirtualKey.Right or VirtualKey.GamepadRightShoulder && args.Modifiers == VirtualKeyModifiers.None)
             {
-                args.Handled = true;
                 ChangeView(CarouselDirection.Next, false);
+                args.Handled = true;
             }
             else if (args.Key is VirtualKey.R && args.Modifiers == VirtualKeyModifiers.Control)
             {
-                Rotate_Click(null, null);
                 args.Handled = true;
+                Rotate_Click(null, null);
             }
             else if (args.Key is VirtualKey.C && args.Modifiers == VirtualKeyModifiers.Control)
             {

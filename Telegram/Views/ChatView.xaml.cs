@@ -998,6 +998,18 @@ namespace Telegram.Views
             }
         }
 
+        private void OnPreviewKeyDown(object sender, KeyRoutedEventArgs args)
+        {
+            if (args.Key == VirtualKey.Space /*&& args.RepeatCount == 1 && args.Modifiers == VirtualKeyModifiers.None*/)
+            {
+                if (btnVoiceMessage.IsLocked)
+                {
+                    ChatRecord.Pause();
+                    args.Handled = true;
+                }
+            }
+        }
+
         private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
         {
             if (args.Key == VirtualKey.Delete)
@@ -1082,15 +1094,7 @@ namespace Telegram.Views
                     args.Handled = true;
                 }
             }
-            else if (args.Key == VirtualKey.Space && /*args.RepeatCount == 1 &&*/ args.Modifiers == VirtualKeyModifiers.None)
-            {
-                if (btnVoiceMessage.IsLocked)
-                {
-                    ChatRecord.Pause();
-                    args.Handled = true;
-                }
-            }
-            else if (args.Key == VirtualKey.O && /*args.RepeatCount == 1 &&*/ args.Modifiers == VirtualKeyModifiers.Control)
+            if (args.Key == VirtualKey.O && /*args.RepeatCount == 1 &&*/ args.Modifiers == VirtualKeyModifiers.Control)
             {
                 ViewModel.SendDocument();
                 args.Handled = true;

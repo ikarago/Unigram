@@ -14,6 +14,7 @@
                         OverlayBrush="{x:Null}"
                         Loaded="OnLoaded"
                         Unloaded="OnUnloaded"
+                        PreviewKeyDown="OnPreviewKeyDown"
                         ProcessKeyboardAccelerators="OnProcessKeyboardAccelerators">
 
     <controls:OverlayWindow.Resources>

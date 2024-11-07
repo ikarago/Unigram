@@ -11,6 +11,7 @@
                         HorizontalAlignment="Stretch"
                         Background="{x:Null}"
                         RequestedTheme="Dark"
+                        PreviewKeyDown="OnPreviewKeyDown"
                         ProcessKeyboardAccelerators="OnProcessKeyboardAccelerators">
 
     <Grid>
