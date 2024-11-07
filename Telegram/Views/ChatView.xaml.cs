@@ -3712,44 +3712,12 @@ namespace Telegram.Views
             {
                 InsertText($"{hashtag} ");
             }
-            else if (e.ClickedItem is EmojiData emoji)
-            {
-                InsertText($"{emoji.Value}");
-            }
             else if (e.ClickedItem is Sticker sticker)
             {
-                if (sticker.FullType is StickerFullTypeCustomEmoji customEmoji)
-                {
-                    var range = TextField.Document.GetRange(index, TextField.Document.Selection.StartPosition);
+                TextField.SetText(null, null);
+                ViewModel.SendSticker(sticker, null, null, result);
 
-                    TextField.InsertEmoji(range, sticker.Emoji, customEmoji.CustomEmojiId);
-                    TextField.Document.Selection.StartPosition = range.EndPosition + 1;
-
-                    var precedingRange = TextField.Document.GetRange(index, index);
-                    var offset = index;
-
-                    // Let's see if the current emoji is preceded by the same emoji and replace all the occurrences
-                    while (AutocompleteEntityFinder.TrySearch(precedingRange, out AutocompleteEntity precedingEntity, out string precedingResult, out int precedingIndex))
-                    {
-                        if (precedingEntity != entity || precedingResult != result)
-                        {
-                            break;
-                        }
-
-                        precedingRange = TextField.Document.GetRange(precedingIndex, offset);
-                        TextField.InsertEmoji(precedingRange, sticker.Emoji, customEmoji.CustomEmojiId);
-
-                        precedingRange = TextField.Document.GetRange(precedingIndex, precedingIndex);
-                        offset = precedingIndex;
-                    }
-                }
-                else
-                {
-                    TextField.SetText(null, null);
-                    ViewModel.SendSticker(sticker, null, null, result);
-
-                    ButtonStickers.Collapse();
-                }
+                ButtonStickers.Collapse();
             }
             else if (e.ClickedItem is QuickReplyShortcut shortcut)
             {

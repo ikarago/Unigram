@@ -276,6 +276,9 @@
     <Compile Include="Controls\Drawers\EffectDrawer.xaml.cs">
       <DependentUpon>EffectDrawer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Chats\ChatTextFlyout.xaml.cs">
+      <DependentUpon>ChatTextFlyout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Gallery\GalleryCompactOverlay.xaml.cs">
       <DependentUpon>GalleryCompactOverlay.xaml</DependentUpon>
     </Compile>
@@ -2531,6 +2534,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Drawers\StickerDrawer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Chats\ChatTextFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

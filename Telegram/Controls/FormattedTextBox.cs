@@ -109,6 +109,9 @@ namespace Telegram.Controls
             CreateKeyboardAccelerator(VirtualKey.K);
             CreateKeyboardAccelerator(VirtualKey.N, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift);
 
+            // Used for special characters
+            CreateKeyboardAccelerator(VirtualKey.X, VirtualKeyModifiers.Menu);
+
             // Overridden but not used
             ProcessKeyboardAccelerators += OnProcessKeyboardAccelerators;
 
@@ -882,6 +885,17 @@ namespace Telegram.Controls
             else if (sender.Key == VirtualKey.N && sender.Modifiers == (VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift) && length /*&& !IsDefault(format)*/)
             {
                 ToggleRegular();
+            }
+            else if (sender.Key == VirtualKey.X && sender.Modifiers == VirtualKeyModifiers.Menu && Math.Abs(Document.Selection.Length) == 4)
+            {
+                args.Handled = true;
+
+                Document.Selection.GetText(TextGetOptions.NoHidden, out string hex);
+
+                if (int.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result))
+                {
+                    Document.Selection.SetText(TextSetOptions.None, new string((char)result, 1));
+                }
             }
         }
 

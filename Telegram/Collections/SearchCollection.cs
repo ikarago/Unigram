@@ -22,7 +22,6 @@ namespace Telegram.Collections
         private readonly Func<object, string, TSource> _factory;
         private readonly object _sender;
 
-        private readonly DisposableMutex _mutex = new();
         private CancellationTokenSource _cancellation;
 
         private TSource _source;
