@@ -480,7 +480,7 @@ namespace Telegram.Services
 
             foreach (var notification in update.AddedNotifications)
             {
-                ProcessNotification(update.NotificationGroupId, update.NotificationSoundId, update.ChatId, notification);
+                await ProcessNotification(update.NotificationGroupId, update.NotificationSoundId, update.ChatId, notification);
                 //_clientService.Send(new RemoveNotification(update.NotificationGroupId, notification.Id));
             }
         }
@@ -496,7 +496,7 @@ namespace Telegram.Services
             //ProcessNotification(update.NotificationGroupId, 0, update.Notification);
         }
 
-        private void ProcessNotification(int group, long soundId, long chatId, Td.Api.Notification notification)
+        private async Task ProcessNotification(int group, long soundId, long chatId, Td.Api.Notification notification)
         {
             var time = Formatter.ToLocalTime(notification.Date);
             if (time < DateTime.Now.AddHours(-1))
@@ -512,14 +512,14 @@ namespace Telegram.Services
                 case NotificationTypeNewCall:
                     break;
                 case NotificationTypeNewMessage newMessage:
-                    ProcessNewMessage(group, notification.Id, newMessage.Message, time, soundId, notification.IsSilent);
+                    await ProcessNewMessage(group, notification.Id, newMessage.Message, time, soundId, notification.IsSilent);
                     break;
                 case NotificationTypeNewSecretChat:
                     break;
             }
         }
 
-        private async void ProcessNewMessage(int groupId, int id, Message message, DateTime date, long soundId, bool silent)
+        private async Task ProcessNewMessage(int groupId, int id, Message message, DateTime date, long soundId, bool silent)
         {
             var chat = _clientService.GetChat(message.ChatId);
             if (chat == null)
@@ -659,13 +659,19 @@ namespace Telegram.Services
                     notification.RemoteId += group;
                 }
 
-                notification.SuppressPopup = suppressPopup;
+                var ticks = Logger.TickCount;
 
+                notification.SuppressPopup = suppressPopup || ticks - _lastShownToast <= 7000;
                 notifier.Show(notification);
 
                 if (soundFile != null && notifier.Setting == NotificationSetting.Enabled)
                 {
                     SoundEffects.Play(soundFile);
+                }
+
+                if (_lastShownToast == 0 || ticks - _lastShownToast > 7000)
+                {
+                    _lastShownToast = ticks;
                 }
             }
             catch (Exception ex)
@@ -673,6 +679,8 @@ namespace Telegram.Services
                 Logger.Error(ex.ToString());
             }
         }
+
+        private ulong _lastShownToast;
 
         private string GetGroup(Chat chat)
         {
@@ -760,14 +768,8 @@ namespace Telegram.Services
                 var chat = default(Chat);
                 if (data.TryGetValue("chat_id", out string chat_id) && long.TryParse(chat_id, out long chatId))
                 {
-                    if (_clientService.TryGetChat(chatId, out chat))
-                    {
-
-                    }
-                    else
-                    {
-                        chat = await _clientService.SendAsync(new GetChat(chatId)) as Chat;
-                    }
+                    _clientService.TryGetChat(chatId, out chat);
+                    chat ??= await _clientService.SendAsync(new GetChat(chatId)) as Chat;
                 }
 
                 if (chat == null)
@@ -780,21 +782,16 @@ namespace Telegram.Services
                     var messageText = text.Replace("\r\n", "\n").Replace('\v', '\n').Replace('\r', '\n');
                     var formatted = ClientEx.ParseMarkdown(messageText);
 
-                    var replyToMsgId = data.ContainsKey("msg_id") ? new InputMessageReplyToMessage(long.Parse(data["msg_id"]), null) : null;
-                    var response = await _clientService.SendAsync(new SendMessage(chat.Id, 0, replyToMsgId, new MessageSendOptions(false, true, false, false, false, null, 0, 0, false), null, new InputMessageText(formatted, null, false)));
+                    var replyToMessage = data.TryGetValue("msg_id", out string msg_id) && long.TryParse(msg_id, out long messageId) ? new InputMessageReplyToMessage(messageId, null) : null;
+                    var response = await _clientService.SendAsync(new SendMessage(chat.Id, 0, replyToMessage, new MessageSendOptions(false, true, false, false, false, null, 0, 0, false), null, new InputMessageText(formatted, null, false)));
 
                     if (chat.Type is ChatTypePrivate && chat.LastMessage != null)
                     {
                         await _clientService.SendAsync(new ViewMessages(chat.Id, new long[] { chat.LastMessage.Id }, new MessageSourceNotification(), true));
                     }
                 }
-                else if (string.Equals(action, "markasread", StringComparison.OrdinalIgnoreCase))
+                else if (string.Equals(action, "markasread", StringComparison.OrdinalIgnoreCase) && chat.LastMessage != null)
                 {
-                    if (chat.LastMessage == null)
-                    {
-                        return;
-                    }
-
                     await _clientService.SendAsync(new ViewMessages(chat.Id, new long[] { chat.LastMessage.Id }, new MessageSourceNotification(), true));
                 }
             }
