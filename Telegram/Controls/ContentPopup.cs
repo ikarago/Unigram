@@ -19,6 +19,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Automation.Provider;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
@@ -189,13 +190,23 @@ namespace Telegram.Controls
                     {
                         // TODO: I don't remember why it is needed to show-hide it.
                         Smoke = rectangle;
-                        Smoke.Visibility = Visibility.Visible;
                         Smoke.Fill = new SolidColorBrush(ActualTheme == ElementTheme.Light
                             ? Color.FromArgb(0x99, 0xFF, 0xFF, 0xFF)
                             : Color.FromArgb(0x99, 0x00, 0x00, 0x00));
                     }
                 }
             }
+
+            // This won't look great because the smoke will disappear instantly, but at least it won't flash
+            if (Smoke != null && Parent is Popup popup)
+            {
+                popup.Closed += OnClosed;
+            }
+        }
+
+        private void OnClosed(object sender, object e)
+        {
+            Smoke.Visibility = Visibility.Collapsed;
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
@@ -211,11 +222,6 @@ namespace Telegram.Controls
             {
                 // XamlRoot.Content seems to throw a NullReferenceException
                 // whenever corresponding window has been already closed.
-            }
-
-            if (Smoke != null)
-            {
-                Smoke.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -274,7 +280,6 @@ namespace Telegram.Controls
             {
                 ContentElement.SizeChanged += OnSizeChanged;
             }
-
 
             if (LayoutRoot != null)
             {
