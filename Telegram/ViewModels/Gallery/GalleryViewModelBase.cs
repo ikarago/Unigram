@@ -13,6 +13,7 @@ using Telegram.Td.Api;
 using Telegram.Views.Popups;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml;
 
 namespace Telegram.ViewModels.Gallery
 {
@@ -226,7 +227,7 @@ namespace Telegram.ViewModels.Gallery
         {
             if (_selectedItem is GalleryMessage message)
             {
-                await ShowPopupAsync(new ChooseChatsPopup(), new ChooseChatsConfigurationShareMessage(message.ChatId, message.Id));
+                await ShowPopupAsync(new ChooseChatsPopup { RequestedTheme = ElementTheme.Dark }, new ChooseChatsConfigurationShareMessage(message.ChatId, message.Id));
             }
             else
             {
@@ -236,7 +237,7 @@ namespace Telegram.ViewModels.Gallery
                     return;
                 }
 
-                await ShowPopupAsync(new ChooseChatsPopup(), new ChooseChatsConfigurationPostMessage(input));
+                await ShowPopupAsync(new ChooseChatsPopup { RequestedTheme = ElementTheme.Dark }, new ChooseChatsConfigurationPostMessage(input));
             }
         }
 
