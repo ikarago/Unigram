@@ -94,6 +94,6 @@ namespace Telegram.Collections
 
         public Orientation Orientation => Orientation.Horizontal;
 
-        public bool InsertOnKeyDown => IsCustomEmoji;
+        public bool InsertOnKeyDown => false;
     }
 }
