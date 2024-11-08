@@ -49,6 +49,8 @@
                 Value="Wrap" />
         <Setter Property="Padding"
                 Value="48,0,0,0" />
+        <Setter Property="MaxHeight"
+                Value="192" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:FormattedTextBox">
