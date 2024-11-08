@@ -561,12 +561,20 @@ namespace Telegram.Services
 
                 var showPreview = _settings.Notifications.GetShowPreview(chat);
 
-                if (chat.Type is ChatTypeSecret || !showPreview || TypeResolver.Current.Passcode.IsLockscreenRequired)
+                if (chat.Type is ChatTypeSecret || !showPreview || !_settings.Notifications.ShowName || TypeResolver.Current.Passcode.IsLockscreenRequired)
                 {
+                    picture = string.Empty;
                     caption = Strings.AppName;
                     content = Strings.YouHaveNewMessage;
-                    picture = string.Empty;
-
+                    canReply = false;
+                }
+                else if (!_settings.Notifications.ShowText)
+                {
+                    content = Strings.YouHaveNewMessage;
+                    canReply = false;
+                }
+                else if (!_settings.Notifications.ShowReply)
+                {
                     canReply = false;
                 }
 
@@ -619,7 +627,7 @@ namespace Telegram.Services
 
             if (!string.IsNullOrEmpty(group) && canReply)
             {
-                xml += string.Format("<actions><input id='input' type='text' placeHolderContent='{0}' /><action activationType='background' arguments='action=markAsRead&amp;", Strings.Reply);
+                xml += string.Format("<actions><input id='input' type='text' placeHolderContent='{0}' /><action activationType='background' placement='contextMenu' arguments='action=markAsRead&amp;", Strings.Reply);
                 xml += launch;
                 xml += string.Format("' content='{0}'/><action activationType='background' arguments='action=reply&amp;", Strings.MarkAsRead);
                 xml += launch;

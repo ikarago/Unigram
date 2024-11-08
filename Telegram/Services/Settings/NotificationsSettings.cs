@@ -107,6 +107,27 @@ namespace Telegram.Services.Settings
             set => AddOrUpdateValue(ref _inAppPreview, "InAppPreview", value);
         }
 
+        private bool? _showName;
+        public bool ShowName
+        {
+            get => _showName ??= GetValueOrDefault("ShowName", true);
+            set => AddOrUpdateValue(ref _showName, "ShowName", value);
+        }
+
+        private bool? _showText;
+        public bool ShowText
+        {
+            get => _showText ??= GetValueOrDefault("ShowText", true);
+            set => AddOrUpdateValue(ref _showText, "ShowText", value);
+        }
+
+        private bool? _showReply;
+        public bool ShowReply
+        {
+            get => _showReply ??= GetValueOrDefault("ShowReply", true);
+            set => AddOrUpdateValue(ref _showReply, "ShowReply", value);
+        }
+
         private bool? _inAppVibrate;
         public bool InAppVibrate
         {

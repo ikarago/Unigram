@@ -7633,6 +7633,21 @@ Please make sure you entered the right Server URL and Stream Key in your app.</v
   <data name="NotificationMessageGame" xml:space="preserve">
     <value>{0} invited you to play {1}</value>
   </data>
+  <data name="NotificationPreviewLine1" xml:space="preserve">
+    <value>Dino Rex</value>
+  </data>
+  <data name="NotificationPreviewLine2" xml:space="preserve">
+    <value>It&apos;s morning in Tokyo 😎</value>
+  </data>
+  <data name="NotificationPreviewName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NotificationPreviewReply" xml:space="preserve">
+    <value>Reply</value>
+  </data>
+  <data name="NotificationPreviewText" xml:space="preserve">
+    <value>Text</value>
+  </data>
   <data name="Notifications" xml:space="preserve">
     <value>Notifications</value>
   </data>

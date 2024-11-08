@@ -85,6 +85,66 @@ namespace Telegram.ViewModels.Settings
 
         #endregion
 
+        public bool ShowName
+        {
+            get => Settings.Notifications.ShowName;
+            set
+            {
+                if (Settings.Notifications.ShowName != value)
+                {
+                    Settings.Notifications.ShowName = value;
+                    RaisePropertyChanged();
+
+                    if (value is false)
+                    {
+                        ShowText = false;
+                        ShowReply = false;
+                    }
+                }
+            }
+        }
+
+        public bool ShowText
+        {
+            get => Settings.Notifications.ShowText;
+            set
+            {
+                if (Settings.Notifications.ShowText != value)
+                {
+                    Settings.Notifications.ShowText = value;
+                    RaisePropertyChanged();
+
+                    if (value)
+                    {
+                        ShowName = true;
+                    }
+                    else
+                    {
+                        ShowReply = false;
+                    }
+                }
+            }
+        }
+
+        public bool ShowReply
+        {
+            get => Settings.Notifications.ShowReply;
+            set
+            {
+                if (Settings.Notifications.ShowReply != value)
+                {
+                    Settings.Notifications.ShowReply = value;
+                    RaisePropertyChanged();
+
+                    if (value)
+                    {
+                        ShowName = true;
+                        ShowText = true;
+                    }
+                }
+            }
+        }
+
         public bool IsContactEnabled
         {
             get => !ClientService.Options.DisableContactRegisteredNotifications;
