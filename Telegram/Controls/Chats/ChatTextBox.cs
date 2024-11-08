@@ -546,12 +546,13 @@ namespace Telegram.Controls.Chats
             var result = await source.LoadMoreItemsAsync(0);
             if (result.Count == 0 || token.IsCancellationRequested)
             {
-                if (_emojiFlyout != null)
+                // Only reset if this is the active query
+                if (token == _emojiToken)
                 {
-                    _emojiFlyout.Hide();
+                    _emojiQuery = null;
+                    _emojiFlyout?.Hide();
                 }
 
-                _emojiQuery = null;
                 return;
             }
 
