@@ -16,7 +16,7 @@
     <tr>
       <td>Alt + Arrow Up</td>
     <tr>
-      <td>Ctrl + Page Down</td>
+      <td>Ctrl + Page Up</td>
     <tr>
       <td rowspan="3">Previous chat</td>
       <td>Ctrl + Shift + Tab</td>
@@ -24,7 +24,7 @@
     <tr>
       <td>Alt + Arrow Down</td>
     <tr>
-      <td>Ctrl + Page Up</td>
+      <td>Ctrl + Page Down</td>
     </tr>
     <tr>
       <td rowspan="2">Search</td>
