@@ -162,7 +162,7 @@
       <td>Ctrl + Shift + Y</td>
     </tr>
     <tr>
-      <td rowspan="4">Record Notes</td>
+      <td rowspan="5">Record Notes</td>
       <td>Start Record</td>
       <td>Ctrl + R</td>
     </tr>
@@ -175,8 +175,11 @@
       <td>Ctrl + D</td>
     </tr>
     <tr>
-      <td>Pause Recording</td>
+      <td rowspan="2">Pause Recording</td>
       <td>Space (when Recording)</td>
+    </tr>
+    <tr>
+      <td>Ctrl + P</td>
     </tr>
     <tr>
       <td rowspan="4">Calls</td>
