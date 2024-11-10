@@ -150,6 +150,13 @@ namespace Telegram.Controls
 
             if (args.IsContentChanging)
             {
+                // Fixes insertion of some fully qualified emoji from WIN+.
+                var inserted = Document.GetRange(Document.Selection.StartPosition - 1, Document.Selection.StartPosition);
+                if (inserted.Text.EndsWith('\uFE0F'))
+                {
+                    inserted.Text = inserted.Text;
+                }
+
                 UpdateFormat();
             }
         }
