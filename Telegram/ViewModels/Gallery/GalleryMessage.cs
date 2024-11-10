@@ -19,7 +19,8 @@ namespace Telegram.ViewModels.Gallery
         public GalleryMessage(IClientService clientService, Message message)
             : base(clientService)
         {
-            _message = message;
+            // Create a copy so that content doesn't get updated while the gallery is open
+            _message = new(message.Id, message.SenderId, message.ChatId, message.SendingState, message.SchedulingState, message.IsOutgoing, message.IsPinned, message.IsFromOffline, message.CanBeSaved, message.HasTimestampedMedia, message.IsChannelPost, message.IsTopicMessage, message.ContainsUnreadMention, message.Date, message.EditDate, message.ForwardInfo, message.ImportInfo, message.InteractionInfo, message.UnreadReactions, message.FactCheck, message.ReplyTo, message.MessageThreadId, message.SavedMessagesTopicId, message.SelfDestructType, message.SelfDestructIn, message.AutoDeleteIn, message.ViaBotUserId, message.SenderBusinessBotUserId, message.SenderBoostCount, message.AuthorSignature, message.MediaAlbumId, message.EffectId, message.HasSensitiveContent, message.RestrictionReason, message.Content, message.ReplyMarkup);
 
             if (clientService.TryGetChat(message.ChatId, out Chat chat))
             {

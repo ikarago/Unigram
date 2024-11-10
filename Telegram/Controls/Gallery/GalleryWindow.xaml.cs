@@ -479,10 +479,10 @@ namespace Telegram.Controls.Gallery
                     var root = LayoutRoot.CurrentElement;
                     if (root != null && root.IsLoaded && IsConstrainedToRootBounds && !_lastFullScreen)
                     {
-                        var animation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("FullScreenPicture", root);
-                        if (animation != null)
+                        if (_closing.TryGetTarget(out FrameworkElement element) && element.IsConnected())
                         {
-                            if (_closing.TryGetTarget(out FrameworkElement element) && element.IsConnected())
+                            var animation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("FullScreenPicture", root);
+                            if (animation != null)
                             {
                                 void handler(ConnectedAnimation s, object e)
                                 {
