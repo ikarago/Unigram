@@ -4252,6 +4252,12 @@ namespace Telegram.ViewModels
             _messages[message.Id] = message;
         }
 
+        public void UpdateMessageSendSucceeded(long oldMessageId, long newMessageId, MessageViewModel message)
+        {
+            _messages.Remove(oldMessageId);
+            _messages[newMessageId] = message;
+        }
+
         public void RawAddRange(IList<MessageViewModel> source, bool filter, out bool empty)
         {
             empty = true;

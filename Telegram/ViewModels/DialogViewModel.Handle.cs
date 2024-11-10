@@ -1058,10 +1058,12 @@ namespace Telegram.ViewModels
                             update?.Invoke(child);
 
                             // UpdateMessageSendSucceeded changes the message id
-                            if (messageId != child.Id)
+                            if (messageId != child.Id && newMessageId.HasValue)
                             {
                                 album.Messages.Remove(messageId);
                                 album.Messages.Add(child);
+
+                                Items.UpdateMessageSendSucceeded(messageId, child.Id, message);
                             }
 
                             message.UpdateWith(album.Messages[0]);
@@ -1093,7 +1095,7 @@ namespace Telegram.ViewModels
                         }
                     }
 
-                    if (messageId != message.Id)
+                    if (messageId != message.Id && newMessageId.HasValue)
                     {
                         Items.UpdateMessageSendSucceeded(messageId, message);
                         Delegate?.UpdateMessageSendSucceeded(messageId, message);
