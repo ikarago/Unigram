@@ -3104,7 +3104,7 @@ namespace Telegram.ViewModels
             ClientService.Send(new RemoveChatActionBar(chat.Id));
         }
 
-        public async void ReportSpam(ReportReason reason)
+        public async void ReportUser()
         {
             var chat = _chat;
             if (chat == null)
@@ -3112,33 +3112,76 @@ namespace Telegram.ViewModels
                 return;
             }
 
+            var popup = new ContentPopup();
+            var content = new StackPanel();
+            var reportSpam = new CheckBox { Content = Strings.DeleteReportSpam, IsChecked = true, Margin = new Thickness(0, 16, 0, 0) };
+            var deleteChat = new CheckBox { Content = Strings.DeleteThisChat, IsChecked = true, Margin = new Thickness(0, 0, 0, -4) };
+
+            var text = new TextBlock
+            {
+                Style = BootStrapper.Current.Resources["BodyTextBlockStyle"] as Style
+            };
+
+            TextBlockHelper.SetMarkdown(text, string.Format(Strings.BlockUserAlert, chat.Title));
+
+            content.Children.Add(text);
+            content.Children.Add(reportSpam);
+            content.Children.Add(deleteChat);
+
+            popup.Title = string.Format(Strings.BlockUserTitle, chat.Title);
+            popup.Content = content;
+            popup.PrimaryButtonText = Strings.ClearButton;
+            popup.SecondaryButtonText = Strings.Cancel;
+
+            var confirm = await ShowPopupAsync(popup);
+            if (confirm != ContentDialogResult.Primary)
+            {
+                return;
+            }
+
+            if (reportSpam.IsChecked is true)
+            {
+                Report();
+            }
+
+            if (chat.Type is ChatTypePrivate privata)
+            {
+                ClientService.Send(new SetMessageSenderBlockList(new MessageSenderUser(privata.UserId), new BlockListMain()));
+            }
+            else if (chat.Type is ChatTypeSecret secret)
+            {
+                ClientService.Send(new SetMessageSenderBlockList(new MessageSenderUser(secret.UserId), new BlockListMain()));
+            }
+
+            if (deleteChat.IsChecked is true)
+            {
+                ClientService.Send(new DeleteChatHistory(chat.Id, true, false));
+            }
+        }
+
+        public async void ReportSpam()
+        {
+            var chat = _chat;
+            if (chat == null)
+            {
+                return;
+            }
+            else if (chat.Type is ChatTypePrivate or ChatTypeSecret)
+            {
+                ReportUser();
+                return;
+            }
+
             var title = Strings.AppName;
             var message = Strings.ReportSpamAlert;
 
-            if (reason is ReportReasonUnrelatedLocation)
+            if (chat.Type is ChatTypeSupergroup supergroup)
             {
-                title = Strings.ReportUnrelatedGroup;
-
-                var fullInfo = ClientService.GetSupergroupFull(chat);
-                if (fullInfo != null && fullInfo.Location.Address.Length > 0)
-                {
-                    message = string.Format(Strings.ReportUnrelatedGroupText, fullInfo.Location.Address);
-                }
-                else
-                {
-                    message = Strings.ReportUnrelatedGroupTextNoAddress;
-                }
+                message = supergroup.IsChannel ? Strings.ReportSpamAlertChannel : Strings.ReportSpamAlertGroup;
             }
-            else if (reason is ReportReasonSpam)
+            else if (chat.Type is ChatTypeBasicGroup)
             {
-                if (chat.Type is ChatTypeSupergroup supergroup)
-                {
-                    message = supergroup.IsChannel ? Strings.ReportSpamAlertChannel : Strings.ReportSpamAlertGroup;
-                }
-                else if (chat.Type is ChatTypeBasicGroup)
-                {
-                    message = Strings.ReportSpamAlertGroup;
-                }
+                message = Strings.ReportSpamAlertGroup;
             }
 
             var confirm = await ShowPopupAsync(message, title, Strings.OK, Strings.Cancel);
