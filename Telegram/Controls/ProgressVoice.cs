@@ -9,12 +9,15 @@ using System.Collections.Generic;
 using Telegram.Td.Api;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 using Point = Windows.Foundation.Point;
 
 namespace Telegram.Controls
 {
+    public record ProgressVoiceValueChanged(double NewValue);
+
     public partial class ProgressVoice : ProgressBar
     {
         private Path ProgressBarIndicator;
@@ -149,6 +152,56 @@ namespace Telegram.Controls
             {
                 Width = waveformWidth;
             }
+        }
+
+        private bool _pressed;
+
+        public bool IsChanging => _pressed;
+
+        public new event TypedEventHandler<ProgressVoice, ProgressVoiceValueChanged> ValueChanged;
+
+        protected override void OnPointerPressed(PointerRoutedEventArgs e)
+        {
+            _pressed = true;
+            CapturePointer(e.Pointer);
+
+            var point = e.GetCurrentPoint(this);
+            Value = point.Position.X / ActualWidth * Maximum;
+
+            base.OnPointerPressed(e);
+        }
+
+        protected override void OnPointerMoved(PointerRoutedEventArgs e)
+        {
+            if (_pressed)
+            {
+                var point = e.GetCurrentPoint(this);
+                Value = point.Position.X / ActualWidth * Maximum;
+            }
+
+            base.OnPointerMoved(e);
+        }
+
+        protected override void OnPointerCanceled(PointerRoutedEventArgs e)
+        {
+            _pressed = false;
+            base.OnPointerCanceled(e);
+        }
+
+        protected override void OnPointerCaptureLost(PointerRoutedEventArgs e)
+        {
+            _pressed = false;
+            base.OnPointerCaptureLost(e);
+        }
+
+        protected override void OnPointerReleased(PointerRoutedEventArgs e)
+        {
+            _pressed = false;
+            ReleasePointerCapture(e.Pointer);
+
+            ValueChanged?.Invoke(this, new ProgressVoiceValueChanged(Value));
+
+            base.OnPointerReleased(e);
         }
     }
 }

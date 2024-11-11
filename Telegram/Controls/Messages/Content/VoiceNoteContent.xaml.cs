@@ -80,6 +80,8 @@ namespace Telegram.Controls.Messages.Content
             ButtonDrag = new AutomaticDragHelper(Button, true);
             ButtonDrag.StartDetectingDrag();
 
+            Progress.ValueChanged += Progress_ValueChanged;
+
             Button.Click += Button_Click;
             Button.DragStarting += Button_DragStarting;
 
@@ -300,7 +302,7 @@ namespace Telegram.Controls.Messages.Content
         private void UpdatePosition(TimeSpan position, TimeSpan duration)
         {
             var message = _message;
-            if (message == null)
+            if (message == null || Progress.IsChanging)
             {
                 return;
             }
@@ -308,8 +310,8 @@ namespace Telegram.Controls.Messages.Content
             if (message.AreTheSame(message.PlaybackService.CurrentItem) /*&& !_pressed*/)
             {
                 Subtitle.Text = FormatTime(position) + " / " + FormatTime(duration);
-                Progress.Maximum = /*Slider.Maximum =*/ duration.TotalMilliseconds;
-                Progress.Value = /*Slider.Value =*/ position.TotalMilliseconds;
+                Progress.Maximum = /*Slider.Maximum =*/ duration.TotalSeconds;
+                Progress.Value = /*Slider.Value =*/ position.TotalSeconds;
             }
         }
 
@@ -459,6 +461,11 @@ namespace Telegram.Controls.Messages.Content
             }
 
             return null;
+        }
+
+        private void Progress_ValueChanged(ProgressVoice sender, ProgressVoiceValueChanged args)
+        {
+            _message?.PlaybackService.Seek(TimeSpan.FromSeconds(args.NewValue));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -312,6 +312,7 @@ namespace Telegram.ViewModels
             {
                 FormattedText caption = null;
                 StyledText text = null;
+                int editDate = 0;
 
                 if (album.IsMedia)
                 {
@@ -324,6 +325,7 @@ namespace Telegram.ViewModels
                             {
                                 caption = childCaption;
                                 text = child.Text;
+                                editDate = child.EditDate;
                             }
                             else
                             {
@@ -338,10 +340,12 @@ namespace Telegram.ViewModels
                 {
                     caption = album.Messages[^1].GetCaption();
                     text = album.Messages[^1].Text;
+                    editDate = album.Messages[^1].EditDate;
                 }
 
                 album.Caption = caption ?? new FormattedText();
                 Text = text;
+                EditDate = editDate;
             }
         }
     }

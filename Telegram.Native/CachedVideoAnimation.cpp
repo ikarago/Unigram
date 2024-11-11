@@ -159,7 +159,7 @@ namespace winrt::Telegram::Native::implementation
         auto neededWidth = pixelWidth + ((pixelWidth % widthalign) ? (widthalign - (pixelWidth % widthalign)) : 0);
 
         m_pixelWidth = neededWidth; //pixelWidth + (pixelWidth % 4);
-        m_pixelHeight = pixelHeight; //+(pixelHeight % 4);
+        m_pixelHeight = (int)((double)neededWidth / pixelWidth * pixelHeight); //+(pixelHeight % 4);
 
         m_fps = m_animation->FrameRate();
         return true;

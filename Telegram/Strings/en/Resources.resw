@@ -1637,6 +1637,12 @@ from this chat</value>
   <data name="BlockUser" xml:space="preserve">
     <value>Block user</value>
   </data>
+  <data name="BlockUserAlert" xml:space="preserve">
+    <value>Do you want to block **{0}** from messaging and calling you on Telegram?</value>
+  </data>
+  <data name="BlockUserTitle" xml:space="preserve">
+    <value>Block {0}</value>
+  </data>
   <data name="Blue" xml:space="preserve">
     <value>Blue</value>
   </data>
