@@ -55,7 +55,14 @@ namespace Telegram.Controls.Messages
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            _strokeBrush?.Register();
+            try
+            {
+                _strokeBrush?.Register();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
 
             if (_message?.SchedulingState is MessageSchedulingStateSendWhenVideoProcessed)
             {
@@ -65,7 +72,14 @@ namespace Telegram.Controls.Messages
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            _strokeBrush?.Unregister();
+            try
+            {
+                _strokeBrush?.Unregister();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
         }
 
         #region InitializeComponent
@@ -601,7 +615,14 @@ namespace Telegram.Controls.Messages
 
         private void OnStrokeChanged(SolidColorBrush newValue, SolidColorBrush oldValue)
         {
-            _strokeBrush?.PropertyChanged(newValue, oldValue, IsConnected);
+            try
+            {
+                _strokeBrush?.PropertyChanged(newValue, IsConnected);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
         }
 
         #endregion
@@ -635,150 +656,170 @@ namespace Telegram.Controls.Messages
                 return new CompositionPath(result);
             }
 
-            var shape11 = BootStrapper.Current.Compositor.CreateSpriteShape(BootStrapper.Current.Compositor.CreatePathGeometry(GetClock()));
-            shape11.StrokeThickness = stroke;
-            shape11.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
-            shape11.IsStrokeNonScaling = true;
-            shape11.StrokeStartCap = CompositionStrokeCap.Round;
+            try
+            {
+                var shape11 = BootStrapper.Current.Compositor.CreateSpriteShape(BootStrapper.Current.Compositor.CreatePathGeometry(GetClock()));
+                shape11.StrokeThickness = stroke;
+                shape11.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
+                shape11.IsStrokeNonScaling = true;
+                shape11.StrokeStartCap = CompositionStrokeCap.Round;
 
-            var visual1 = BootStrapper.Current.Compositor.CreateShapeVisual();
-            visual1.Shapes.Add(shape11);
-            visual1.Size = new Vector2(width, height);
-            visual1.CenterPoint = new Vector3(width, height / 2f, 0);
+                var visual1 = BootStrapper.Current.Compositor.CreateShapeVisual();
+                visual1.Shapes.Add(shape11);
+                visual1.Size = new Vector2(width, height);
+                visual1.CenterPoint = new Vector3(width, height / 2f, 0);
 
-            _clock = visual1;
-            _container.Children.InsertAtBottom(visual1);
+                _clock = visual1;
+                _container.Children.InsertAtBottom(visual1);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
         }
 
         private void InitializeTicks()
         {
-            var width = 18f;
-            var height = 10f;
-            var stroke = 1.33f;
-            var distance = 4;
+            try
+            {
+                var width = 18f;
+                var height = 10f;
+                var stroke = 1.33f;
+                var distance = 4;
 
-            var sqrt = MathF.Sqrt(2);
+                var sqrt = MathF.Sqrt(2);
 
-            var side = stroke / sqrt / 2f;
-            var diagonal = height * sqrt;
-            var length = diagonal / 2f / sqrt;
+                var side = stroke / sqrt / 2f;
+                var diagonal = height * sqrt;
+                var length = diagonal / 2f / sqrt;
 
-            var join = stroke / 2 * sqrt;
+                var join = stroke / 2 * sqrt;
 
-            var line11 = BootStrapper.Current.Compositor.CreateLineGeometry();
-            var line12 = BootStrapper.Current.Compositor.CreateLineGeometry();
+                var line11 = BootStrapper.Current.Compositor.CreateLineGeometry();
+                var line12 = BootStrapper.Current.Compositor.CreateLineGeometry();
 
-            line11.Start = new Vector2(width - height + side + join - length - distance, height - side - length);
-            line11.End = new Vector2(width - height + side + join - distance, height - side);
+                line11.Start = new Vector2(width - height + side + join - length - distance, height - side - length);
+                line11.End = new Vector2(width - height + side + join - distance, height - side);
 
-            line12.Start = new Vector2(width - height + side - distance, height - side);
-            line12.End = new Vector2(width - side - distance, side);
+                line12.Start = new Vector2(width - height + side - distance, height - side);
+                line12.End = new Vector2(width - side - distance, side);
 
-            var shape11 = BootStrapper.Current.Compositor.CreateSpriteShape(line11);
-            shape11.StrokeThickness = stroke;
-            shape11.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
-            shape11.IsStrokeNonScaling = true;
-            shape11.StrokeStartCap = CompositionStrokeCap.Round;
+                var shape11 = BootStrapper.Current.Compositor.CreateSpriteShape(line11);
+                shape11.StrokeThickness = stroke;
+                shape11.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
+                shape11.IsStrokeNonScaling = true;
+                shape11.StrokeStartCap = CompositionStrokeCap.Round;
 
-            var shape12 = BootStrapper.Current.Compositor.CreateSpriteShape(line12);
-            shape12.StrokeThickness = stroke;
-            shape12.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
-            shape12.IsStrokeNonScaling = true;
-            shape12.StrokeEndCap = CompositionStrokeCap.Round;
+                var shape12 = BootStrapper.Current.Compositor.CreateSpriteShape(line12);
+                shape12.StrokeThickness = stroke;
+                shape12.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
+                shape12.IsStrokeNonScaling = true;
+                shape12.StrokeEndCap = CompositionStrokeCap.Round;
 
-            var visual1 = BootStrapper.Current.Compositor.CreateShapeVisual();
-            visual1.Shapes.Add(shape12);
-            visual1.Shapes.Add(shape11);
-            visual1.Size = new Vector2(width, height);
-            visual1.CenterPoint = new Vector3(width, height / 2f, 0);
-
-
-            var line21 = BootStrapper.Current.Compositor.CreateLineGeometry();
-            var line22 = BootStrapper.Current.Compositor.CreateLineGeometry();
-
-            line21.Start = new Vector2(width - height + side + join - length, height - side - length);
-            line21.End = new Vector2(width - height + side + join, height - side);
-
-            line22.Start = new Vector2(width - height + side, height - side);
-            line22.End = new Vector2(width - side, side);
-
-            var shape21 = BootStrapper.Current.Compositor.CreateSpriteShape(line21);
-            shape21.StrokeThickness = stroke;
-            shape21.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
-            shape21.StrokeStartCap = CompositionStrokeCap.Round;
-
-            var shape22 = BootStrapper.Current.Compositor.CreateSpriteShape(line22);
-            shape22.StrokeThickness = stroke;
-            shape22.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
-            shape22.StrokeEndCap = CompositionStrokeCap.Round;
-
-            var visual2 = BootStrapper.Current.Compositor.CreateShapeVisual();
-            visual2.Shapes.Add(shape22);
-            visual2.Shapes.Add(shape21);
-            visual2.Size = new Vector2(width, height);
+                var visual1 = BootStrapper.Current.Compositor.CreateShapeVisual();
+                visual1.Shapes.Add(shape12);
+                visual1.Shapes.Add(shape11);
+                visual1.Size = new Vector2(width, height);
+                visual1.CenterPoint = new Vector3(width, height / 2f, 0);
 
 
-            var container = BootStrapper.Current.Compositor.CreateSpriteVisual();
-            container.Children.InsertAtTop(visual2);
-            container.Children.InsertAtTop(visual1);
-            container.Size = new Vector2(width, height);
-            container.AnchorPoint = new Vector2(1, 0);
-            container.Offset = new Vector3(0, 4, 0);
-            container.RelativeOffsetAdjustment = new Vector3(1, 0, 0);
+                var line21 = BootStrapper.Current.Compositor.CreateLineGeometry();
+                var line22 = BootStrapper.Current.Compositor.CreateLineGeometry();
 
-            ElementCompositionPreview.SetElementChildVisual(Label, container);
+                line21.Start = new Vector2(width - height + side + join - length, height - side - length);
+                line21.End = new Vector2(width - height + side + join, height - side);
 
-            _line11 = line11;
-            _line12 = line12;
-            _line21 = line21;
-            _line22 = line22;
-            _visual1 = visual1;
-            _visual2 = visual2;
-            _container = container;
+                line22.Start = new Vector2(width - height + side, height - side);
+                line22.End = new Vector2(width - side, side);
+
+                var shape21 = BootStrapper.Current.Compositor.CreateSpriteShape(line21);
+                shape21.StrokeThickness = stroke;
+                shape21.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
+                shape21.StrokeStartCap = CompositionStrokeCap.Round;
+
+                var shape22 = BootStrapper.Current.Compositor.CreateSpriteShape(line22);
+                shape22.StrokeThickness = stroke;
+                shape22.StrokeBrush = _strokeBrush ??= new CompositionColorSource(Stroke, IsConnected);
+                shape22.StrokeEndCap = CompositionStrokeCap.Round;
+
+                var visual2 = BootStrapper.Current.Compositor.CreateShapeVisual();
+                visual2.Shapes.Add(shape22);
+                visual2.Shapes.Add(shape21);
+                visual2.Size = new Vector2(width, height);
+
+
+                var container = BootStrapper.Current.Compositor.CreateSpriteVisual();
+                container.Children.InsertAtTop(visual2);
+                container.Children.InsertAtTop(visual1);
+                container.Size = new Vector2(width, height);
+                container.AnchorPoint = new Vector2(1, 0);
+                container.Offset = new Vector3(0, 4, 0);
+                container.RelativeOffsetAdjustment = new Vector3(1, 0, 0);
+
+                ElementCompositionPreview.SetElementChildVisual(Label, container);
+
+                _line11 = line11;
+                _line12 = line12;
+                _line21 = line21;
+                _line22 = line22;
+                _visual1 = visual1;
+                _visual2 = visual2;
+                _container = container;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
         }
 
         private void UpdateTicks(bool outgoing, bool? read, bool animate = false)
         {
-            if (read == null)
+            try
             {
-                if (outgoing)
+                if (read == null)
                 {
-                    InitializeTicks();
-                }
+                    if (outgoing)
+                    {
+                        InitializeTicks();
+                    }
 
-                if (_container != null)
-                {
-                    _visual1.IsVisible = false;
-                    _visual2.IsVisible = false;
-                }
-            }
-            else
-            {
-                if (_container == null)
-                {
-                    InitializeTicks();
-                }
-
-                if (_clock != null)
-                {
-                    _container.Children.Remove(_clock);
-                    _clock = null;
-                }
-
-                if (animate)
-                {
-                    AnimateTicks(read == true);
+                    if (_container != null)
+                    {
+                        _visual1.IsVisible = false;
+                        _visual2.IsVisible = false;
+                    }
                 }
                 else
                 {
-                    _line11.TrimEnd = read == true ? 1 : 0;
-                    _line12.TrimEnd = read == true ? 1 : 0;
+                    if (_container == null)
+                    {
+                        InitializeTicks();
+                    }
 
-                    _line21.TrimStart = read == true ? 1 : 0;
+                    if (_clock != null)
+                    {
+                        _clock.IsVisible = false;
+                    }
 
-                    _visual1.IsVisible = true;
-                    _visual2.IsVisible = true;
+                    if (animate)
+                    {
+                        AnimateTicks(read == true);
+                    }
+                    else
+                    {
+                        _line11.TrimEnd = read == true ? 1 : 0;
+                        _line12.TrimEnd = read == true ? 1 : 0;
+
+                        _line21.TrimStart = read == true ? 1 : 0;
+
+                        _visual1.IsVisible = true;
+                        _visual2.IsVisible = true;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
             }
         }
 

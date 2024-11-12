@@ -49,7 +49,7 @@ namespace Telegram
 
         public static void Error(Exception exception, [CallerMemberName] string member = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int line = 0)
         {
-            Log(LogLevel.Error, exception.ToString(), member, filePath, line);
+            Log(LogLevel.Error, Environment.StackTrace, member, filePath, line);
 
 #if !DEBUG
             var report = WatchDog.BuildReport(exception);
