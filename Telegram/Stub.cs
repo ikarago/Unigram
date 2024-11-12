@@ -2631,18 +2631,6 @@ public static class VisualCollection_stub
             throw new RuntimeException(ex);
         }
     }
-    public static void Remove_stub(this Windows.UI.Composition.VisualCollection sender, Windows.UI.Composition.Visual child)
-    {
-        try
-        {
-            sender.Remove(child);
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(Environment.StackTrace);
-            throw new RuntimeException(ex);
-        }
-    }
     public static void RemoveAll_stub(this Windows.UI.Composition.VisualCollection sender)
     {
         try
