@@ -281,7 +281,8 @@ namespace Telegram.Controls.Chats
                 }
                 else if (e.Key == VirtualKey.Tab)
                 {
-                    if (modifiers == VirtualKeyModifiers.Control)
+                    // Ignored to allow Ctrl+Tab and Ctrl+Shift+Tab to switch chats
+                    if (modifiers != VirtualKeyModifiers.None)
                     {
                         return;
                     }
