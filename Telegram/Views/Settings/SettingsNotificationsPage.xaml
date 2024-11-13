@@ -503,7 +503,7 @@
                                                        Style="{StaticResource BodyTextBlockStyle}"
                                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                        FontFamily="Segoe UI Variable" />
-                                            <TextBlock Text="via Unigram"
+                                            <TextBlock Text="{CustomResource NotificationPreviewAttribution}"
                                                        Style="{StaticResource CaptionTextBlockStyle}"
                                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                        FontFamily="Segoe UI Variable"
