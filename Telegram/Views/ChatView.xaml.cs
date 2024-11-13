@@ -2936,7 +2936,7 @@ namespace Telegram.Views
                 {
                     if (reacted < viewers.Count)
                     {
-                        text = string.Format(Locale.Declension(Strings.R.Reacted, reacted, false), string.Format("{0}/{1}", message.InteractionInfo.Reactions.Reactions.Count, viewers.Count));
+                        text = string.Format(Locale.Declension(Strings.R.Reacted, reacted, false), string.Format("{0}/{1}", reacted, viewers.Count));
                     }
                     else
                     {
