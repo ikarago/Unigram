@@ -634,6 +634,21 @@ namespace Telegram.Services
                 xml += string.Format("' hint-inputId='input' content='{0}'/></actions>", Strings.Send);
             }
 
+            /* Single notification with unread count:
+<toast>
+  <visual>
+    <binding template="ToastGeneric">
+      <text>Hello World</text>
+      <text>This is a simple toast message</text>
+
+      <group>
+          <subgroup>
+              <text hint-style="bodySubtle" hint-align="center">text</text>
+          </subgroup>
+      </group>
+    </binding>
+  </visual>
+</toast>    */
             if (silent || soundFile != null)
             {
                 xml += "<audio silent='true'/>";
