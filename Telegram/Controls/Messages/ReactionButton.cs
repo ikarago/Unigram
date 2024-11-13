@@ -232,9 +232,8 @@ namespace Telegram.Controls.Messages
             {
                 Width = 264,
                 Height = 48 * _reaction.TotalCount,
-                MinHeight = 50,
-                MaxHeight = 360,
-                Margin = new Thickness(0, 0, 0, -2)
+                MinHeight = 48,
+                MaxHeight = 360
             };
 
             void handler(InteractionsView sender, ItemClickEventArgs e)
