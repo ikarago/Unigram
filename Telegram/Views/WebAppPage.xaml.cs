@@ -539,6 +539,10 @@ namespace Telegram.Views
             {
                 ProcessSetEmojiStatus(eventData);
             }
+            else if (eventName == "web_app_request_file_download")
+            {
+                ProcessRequestFileDownload(eventData);
+            }
             else if (eventName == "web_app_start_accelerometer")
             {
                 PostEvent("accelerometer_failed", "{ error: \"UNSUPPORTED\" }");
@@ -559,6 +563,17 @@ namespace Telegram.Views
             else if (eventName == "share_score")
             {
                 ProcessShareGame(true);
+            }
+        }
+
+        private void ProcessRequestFileDownload(JsonObject eventData)
+        {
+            var url = eventData.GetNamedString("url", string.Empty);
+            var fileName = eventData.GetNamedString("file_name", string.Empty);
+
+            if (string.IsNullOrEmpty(fileName) || !Uri.TryCreate(url, UriKind.Absolute, out Uri result))
+            {
+
             }
         }
 

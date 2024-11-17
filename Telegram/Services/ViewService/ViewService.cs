@@ -36,7 +36,8 @@ namespace Telegram.Services
     public enum ViewServiceMode
     {
         Default,
-        CompactOverlay
+        CompactOverlay,
+        FullScreen,
     }
 
     public partial class ViewServiceOptions
@@ -166,7 +167,11 @@ namespace Telegram.Services
 
                 await ApplicationViewSwitcher.TryShowAsViewModeAsync(control.Id, viewMode, preferences);
 
-                if (options.Width != 0 && options.Height != 0)
+                if (options.ViewMode == ViewServiceMode.FullScreen)
+                {
+                    newView.DispatcherQueue.TryEnqueue(() => ApplicationView.GetForCurrentView().TryEnterFullScreenMode());
+                }
+                else if (options.Width != 0 && options.Height != 0)
                 {
                     newView.DispatcherQueue.TryEnqueue(() => ApplicationView.GetForCurrentView().TryResizeView(new Size(options.Width, options.Height)));
                 }
