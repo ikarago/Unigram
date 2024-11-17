@@ -360,7 +360,7 @@ namespace Telegram.Controls
                     return;
                 }
             }
-            else if (e.Key is VirtualKey.E or VirtualKey.L or VirtualKey.R or VirtualKey.J)
+            else if (e.Key is VirtualKey.E or VirtualKey.L or VirtualKey.R or VirtualKey.J or VirtualKey.Q)
             {
                 var modifiers = WindowContext.KeyModifiers();
                 if (modifiers == VirtualKeyModifiers.Control)
