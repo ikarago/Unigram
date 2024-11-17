@@ -12,7 +12,6 @@ using System.Linq;
 using System.Numerics;
 using Telegram.Navigation;
 using Telegram.Td.Api;
-using Telegram.ViewModels.Drawers;
 using Windows.UI;
 using Windows.UI.Composition;
 
@@ -85,16 +84,6 @@ namespace Telegram.Common
             }
 
             return CanvasGeometry.CreatePath(builder);
-        }
-
-        public static CompositionAnimation ParseThumbnail(Sticker sticker, out ShapeVisual visual, bool animated = true)
-        {
-            return ParseThumbnail(sticker.Width, sticker.Height, sticker.Outline, out visual, animated);
-        }
-
-        public static CompositionAnimation ParseThumbnail(StickerViewModel sticker, out ShapeVisual visual, bool animated = true)
-        {
-            return ParseThumbnail(sticker.Width, sticker.Height, sticker.Outline, out visual, animated);
         }
 
         public static CompositionAnimation ParseThumbnail(float width, float height, IList<ClosedVectorPath> contours, out ShapeVisual visual, bool animated = true)

@@ -100,10 +100,10 @@ namespace Telegram.ViewModels
 
                 if (configurationSwitchInline.TargetChat is TargetChatChosen chosen)
                 {
-                    Options.AllowBotChats = chosen.AllowBotChats;
-                    Options.AllowUserChats = chosen.AllowUserChats;
-                    Options.AllowGroupChats = chosen.AllowGroupChats;
-                    Options.AllowChannelChats = chosen.AllowChannelChats;
+                    Options.AllowBotChats = chosen.Types.AllowBotChats;
+                    Options.AllowUserChats = chosen.Types.AllowUserChats;
+                    Options.AllowGroupChats = chosen.Types.AllowGroupChats;
+                    Options.AllowChannelChats = chosen.Types.AllowChannelChats;
                 }
             }
             else if (parameter is ChooseChatsConfigurationPostText configurationPostText)

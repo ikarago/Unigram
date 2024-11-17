@@ -226,7 +226,7 @@ namespace Telegram.Controls.Views
 
                 if (user.Type is UserTypeBot { HasMainWebApp: true })
                 {
-                    MessageHelper.NavigateToMainWebApp(ViewModel.ClientService, ViewModel.NavigationService, user, string.Empty);
+                    MessageHelper.NavigateToMainWebApp(ViewModel.ClientService, ViewModel.NavigationService, user, string.Empty, new WebAppOpenModeFullSize());
                     ItemClick?.Invoke(this, null);
                     return;
                 }

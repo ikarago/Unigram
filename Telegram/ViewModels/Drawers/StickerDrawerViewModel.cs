@@ -239,8 +239,8 @@ namespace Telegram.ViewModels.Drawers
                 if (response is Stickers stickers)
                 {
                     items.Add(new StickerSetViewModel(ClientService,
-                        new StickerSetInfo(0, string.Empty, "emoji", null, Array.Empty<ClosedVectorPath>(), false, false, false, false, new StickerTypeRegular(), false, false, false, stickers.StickersValue.Count, stickers.StickersValue),
-                        new StickerSet(0, string.Empty, "emoji", null, Array.Empty<ClosedVectorPath>(), false, false, false, false, new StickerTypeRegular(), false, false, false, stickers.StickersValue, Array.Empty<Emojis>())));
+                        new StickerSetInfo(0, string.Empty, "emoji", null, null, false, false, false, false, new StickerTypeRegular(), false, false, false, stickers.StickersValue.Count, stickers.StickersValue),
+                        new StickerSet(0, string.Empty, "emoji", null, null, false, false, false, false, new StickerTypeRegular(), false, false, false, stickers.StickersValue, Array.Empty<Emojis>())));
                 }
             }
         }
@@ -568,25 +568,27 @@ namespace Telegram.ViewModels.Drawers
         public bool IsOfficial => _set?.IsOfficial ?? _info.IsOfficial;
         public bool IsArchived => _set?.IsArchived ?? _info.IsArchived;
         public bool IsInstalled => _set?.IsInstalled ?? _info.IsInstalled;
+        public bool IsAllowedAsChatEmojiStatus => _set?.IsAllowedAsChatEmojiStatus ?? _info.IsAllowedAsChatEmojiStatus;
+        public bool NeedsRepainting => _set?.NeedsRepainting ?? _info.NeedsRepainting;
         public string Name => _set?.Name ?? _info.Name;
         public string Title => _set?.Title ?? _info.Title;
         public long Id => _set?.Id ?? _info.Id;
 
         public Thumbnail Thumbnail => _set?.Thumbnail ?? _info.Thumbnail;
+        public Outline ThumbnailOutline => _set?.ThumbnailOutline ?? _info.ThumbnailOutline;
 
         public IList<Sticker> Covers { get; private set; }
 
         public int Size => Covers.Count;
 
-        private Sticker _thumbnail;
-        public Sticker GetThumbnail()
-        {
-            return _thumbnail ??= _info?.GetThumbnail();
-        }
-
         public override string ToString()
         {
             return Title ?? base.ToString();
+        }
+
+        public static implicit operator StickerSetInfo(StickerSetViewModel viewModel)
+        {
+            return viewModel._info;
         }
     }
 
@@ -612,7 +614,6 @@ namespace Telegram.ViewModels.Drawers
             Id = sticker.Id;
             StickerValue = sticker.StickerValue;
             Thumbnail = sticker.Thumbnail;
-            Outline = sticker.Outline;
             FullType = sticker.FullType;
             Format = sticker.Format;
             Emoji = sticker.Emoji;
@@ -625,13 +626,12 @@ namespace Telegram.ViewModels.Drawers
 
         public static implicit operator Sticker(StickerViewModel viewModel)
         {
-            return new Sticker(viewModel.Id, viewModel.SetId, viewModel.Width, viewModel.Height, viewModel.Emoji ?? string.Empty, viewModel.Format, viewModel.FullType, viewModel.Outline, viewModel.Thumbnail, viewModel.StickerValue); //viewModel._sticker;
+            return new Sticker(viewModel.Id, viewModel.SetId, viewModel.Width, viewModel.Height, viewModel.Emoji ?? string.Empty, viewModel.Format, viewModel.FullType, viewModel.Thumbnail, viewModel.StickerValue); //viewModel._sticker;
         }
 
         public long Id { get; private set; }
         public File StickerValue { get; private set; }
         public Thumbnail Thumbnail { get; private set; }
-        public IList<ClosedVectorPath> Outline { get; private set; }
         public StickerFullType FullType { get; private set; }
         public StickerFormat Format { get; private set; }
         public string Emoji { get; private set; }
@@ -715,8 +715,8 @@ namespace Telegram.ViewModels.Drawers
                     else if (response is Stickers stickers)
                     {
                         Add(new StickerSetViewModel(_clientService,
-                            new StickerSetInfo(0, string.Empty, "emoji", null, Array.Empty<ClosedVectorPath>(), false, false, false, false, _type, false, false, false, stickers.StickersValue.Count, stickers.StickersValue),
-                            new StickerSet(0, string.Empty, "emoji", null, Array.Empty<ClosedVectorPath>(), false, false, false, false, _type, false, false, false, stickers.StickersValue, Array.Empty<Emojis>())));
+                            new StickerSetInfo(0, string.Empty, "emoji", null, null, false, false, false, false, _type, false, false, false, stickers.StickersValue.Count, stickers.StickersValue),
+                            new StickerSet(0, string.Empty, "emoji", null, null, false, false, false, false, _type, false, false, false, stickers.StickersValue, Array.Empty<Emojis>())));
                     }
                 }
                 else if (phase == 1 && _query.Length > 1 && !_emojiOnly)
@@ -727,8 +727,8 @@ namespace Telegram.ViewModels.Drawers
                         if (response is Stickers stickers && stickers.StickersValue.Count > 0)
                         {
                             Add(new StickerSetViewModel(_clientService,
-                                new StickerSetInfo(0, _query, "emoji", null, Array.Empty<ClosedVectorPath>(), false, false, false, false, _type, false, false, false, stickers.StickersValue.Count, stickers.StickersValue),
-                                new StickerSet(0, _query, "emoji", null, Array.Empty<ClosedVectorPath>(), false, false, false, false, _type, false, false, false, stickers.StickersValue, Array.Empty<Emojis>())));
+                                new StickerSetInfo(0, _query, "emoji", null, null, false, false, false, false, _type, false, false, false, stickers.StickersValue.Count, stickers.StickersValue),
+                                new StickerSet(0, _query, "emoji", null, null, false, false, false, false, _type, false, false, false, stickers.StickersValue, Array.Empty<Emojis>())));
                         }
                     }
                     else
@@ -767,8 +767,8 @@ namespace Telegram.ViewModels.Drawers
                             }
 
                             Add(new StickerSetViewModel(_clientService,
-                                new StickerSetInfo(0, string.Empty, "emoji", null, Array.Empty<ClosedVectorPath>(), false, false, false, false, _type, false, false, false, items.Count, items),
-                                new StickerSet(0, string.Empty, "emoji", null, Array.Empty<ClosedVectorPath>(), false, false, false, false, _type, false, false, false, items, Array.Empty<Emojis>())));
+                                new StickerSetInfo(0, string.Empty, "emoji", null, null, false, false, false, false, _type, false, false, false, items.Count, items),
+                                new StickerSet(0, string.Empty, "emoji", null, null, false, false, false, false, _type, false, false, false, items, Array.Empty<Emojis>())));
                         }
                     }
                 }

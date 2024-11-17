@@ -570,7 +570,7 @@ namespace Telegram.ViewModels.Drawers
                     }
                     else if (item.Type is ReactionTypePaid)
                     {
-                        target.Add((item, new Sticker(0, 0, 512, 512, "\u2B50", new StickerFormatTgs(), new StickerFullTypeRegular(), Array.Empty<ClosedVectorPath>(), null, TdExtensions.GetLocalFile("Assets\\Animations\\PaidReactionActivate.tgs"))));
+                        target.Add((item, new Sticker(0, 0, 512, 512, "\u2B50", new StickerFormatTgs(), new StickerFullTypeRegular(), null, TdExtensions.GetLocalFile("Assets\\Animations\\PaidReactionActivate.tgs"))));
                     }
                 }
             }

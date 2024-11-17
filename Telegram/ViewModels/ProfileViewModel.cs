@@ -1220,7 +1220,7 @@ namespace Telegram.ViewModels
                 return;
             }
 
-            MessageHelper.NavigateToMainWebApp(ClientService, NavigationService, user, string.Empty);
+            MessageHelper.NavigateToMainWebApp(ClientService, NavigationService, user, string.Empty, new WebAppOpenModeFullSize());
         }
 
         #region Supergroup

@@ -153,8 +153,8 @@ namespace Telegram.Controls.Messages.Content
 
         private void UpdateThumbnail(MessageViewModel message, Sticker sticker)
         {
-            _thumbnailShimmer = CompositionPathParser.ParseThumbnail(sticker, out ShapeVisual visual);
-            ElementCompositionPreview.SetElementChildVisual(Player, visual);
+            //_thumbnailShimmer = CompositionPathParser.ParseThumbnail(sticker, out ShapeVisual visual);
+            //ElementCompositionPreview.SetElementChildVisual(Player, visual);
         }
 
         private void Player_FirstFrameRendered(object sender, EventArgs e)

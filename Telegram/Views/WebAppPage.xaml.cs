@@ -84,7 +84,7 @@ namespace Telegram.Views
             _launchId = launchId;
             _menuBot = menuBot;
             _sourceChat = sourceChat;
-            _sourceLink = sourceLink != null ? new InternalLinkTypeMainWebApp(botUser.ActiveUsername(), string.Empty, false) : null;
+            _sourceLink = sourceLink != null ? new InternalLinkTypeMainWebApp(botUser.ActiveUsername(), string.Empty, new WebAppOpenModeFullSize()) : null;
 
             TitleText.Text = botUser.FullName();
             Photo.SetUser(clientService, botUser, 24);
@@ -1479,13 +1479,16 @@ namespace Telegram.Views
 
             var target = new TargetChatChosen
             {
-                AllowBotChats = values.Contains("bots"),
-                AllowUserChats = values.Contains("users"),
-                AllowGroupChats = values.Contains("groups"),
-                AllowChannelChats = values.Contains("channels")
+                Types = new TargetChatTypes
+                {
+                    AllowBotChats = values.Contains("bots"),
+                    AllowUserChats = values.Contains("users"),
+                    AllowGroupChats = values.Contains("groups"),
+                    AllowChannelChats = values.Contains("channels")
+                }
             };
 
-            if (target.AllowBotChats || target.AllowUserChats || target.AllowGroupChats || target.AllowChannelChats)
+            if (target.Types.AllowBotChats || target.Types.AllowUserChats || target.Types.AllowGroupChats || target.Types.AllowChannelChats)
             {
                 var confirm = await _navigationService.ShowPopupAsync(new ChooseChatsPopup(), new ChooseChatsConfigurationSwitchInline(query, target, _botUser));
                 if (confirm != ContentDialogResult.Primary)
@@ -1632,7 +1635,7 @@ namespace Telegram.Views
                     return;
                 }
 
-                var response = await _clientService.SendAsync(new GetInternalLink(new InternalLinkTypeMainWebApp(_botUser.ActiveUsername(), string.Empty, false), false));
+                var response = await _clientService.SendAsync(new GetInternalLink(new InternalLinkTypeMainWebApp(_botUser.ActiveUsername(), string.Empty, new WebAppOpenModeFullSize()), false));
                 if (response is not HttpUrl url)
                 {
                     return;

@@ -185,16 +185,9 @@ namespace Telegram.Views.Premium.Popups
             {
                 userGiftCell.UpdateGift(_clientService, gift);
             }
-            else if (args.ItemContainer.ContentTemplateRoot is PremiumGiftCell premiumGiftCell)
+            else if (args.ItemContainer.ContentTemplateRoot is PremiumGiftCell premiumGiftCell && args.Item is PremiumGiftCodePaymentOption option)
             {
-                if (args.Item is PremiumPaymentOption option)
-                {
-                    premiumGiftCell.UpdatePremiumGift(_clientService, option);
-                }
-                else if (args.Item is PremiumGiftCodePaymentOption option2)
-                {
-                    premiumGiftCell.UpdatePremiumGift(_clientService, option2);
-                }
+                premiumGiftCell.UpdatePremiumGift(_clientService, option);
             }
 
             args.Handled = true;

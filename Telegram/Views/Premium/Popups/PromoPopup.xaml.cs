@@ -61,7 +61,7 @@ namespace Telegram.Views.Premium.Popups
 
                 var player = new CustomEmojiIcon();
                 player.LoopCount = 0;
-                player.Source = new DelayedFileSource(clientService, stickerSet.GetThumbnail());
+                player.Source = DelayedFileSource.FromStickerSet(clientService, stickerSet);
 
                 player.HorizontalAlignment = HorizontalAlignment.Left;
                 player.FlowDirection = FlowDirection.LeftToRight;

@@ -338,17 +338,8 @@ namespace Telegram.Controls.Drawers
                     return;
                 }
 
-                var cover = sticker.GetThumbnail();
-                if (cover != null)
-                {
-                    var animation = content.Children[0] as AnimatedImage;
-                    animation.Source = new DelayedFileSource(ViewModel.ClientService, cover);
-                }
-                else
-                {
-                    var animation = content.Children[0] as AnimatedImage;
-                    animation.Source = null;
-                }
+                var animation = content.Children[0] as AnimatedImage;
+                animation.Source = DelayedFileSource.FromStickerSetInfo(ViewModel.ClientService, sticker);
 
                 args.Handled = true;
             }
