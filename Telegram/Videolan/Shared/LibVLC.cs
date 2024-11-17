@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
+using Windows.System;
 
 namespace LibVLCSharp.Shared
 {
@@ -303,19 +305,24 @@ namespace LibVLCSharp.Shared
         static string[] PatchOptions(string[] options, bool enableDebugLogs = false)
         {
             string[] newOptions;
+            int newCount = Core.UseSpeex ? 2 : 1;
 
             if (enableDebugLogs)
             {
-                newOptions = new string[options.Length + 2];
-                newOptions[^2] = "--verbose=2";
+                newOptions = new string[options.Length + newCount + 1];
+                newOptions[options.Length] = "--verbose=2";
             }
             else
             {
-                newOptions = new string[options.Length + 1];
+                newOptions = new string[options.Length + newCount];
             }
 
             newOptions[^1] = "--aout=winstore";
-            //newOptions[^2] = "--audio-resampler=speex_resampler";
+
+            if (Core.UseSpeex)
+            {
+                newOptions[^2] = "--audio-resampler=speex_resampler";
+            }
 
             if (options.Length > 0)
             {

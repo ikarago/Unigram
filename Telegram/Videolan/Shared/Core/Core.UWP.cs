@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Windows.ApplicationModel;
+using Windows.System;
 
 namespace LibVLCSharp.Shared
 {
@@ -46,5 +48,6 @@ namespace LibVLCSharp.Shared
             }
         }
 
+        public static bool UseSpeex => Package.Current.Id.Architecture == ProcessorArchitecture.Arm64;
     }
 }
