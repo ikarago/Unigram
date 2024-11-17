@@ -66,6 +66,9 @@ namespace Telegram.Views
 
         private bool _settingsVisible;
 
+        private CompositionAnimation _placeholderShimmer;
+        private ShapeVisual _placeholderVisual;
+
         // TODO: constructor should take a function and URL should be loaded asynchronously
         public WebAppPage(IClientService clientService, User botUser, string url, long launchId = 0, AttachmentMenuBot menuBot = null, Chat sourceChat = null, InternalLinkType sourceLink = null)
         {
@@ -89,7 +92,7 @@ namespace Telegram.Views
             TitleText.Text = botUser.FullName();
             Photo.SetUser(clientService, botUser, 24);
 
-            View.Navigate(url.Replace("7.10", "7.12"));
+            View.Navigate(url);
 
             var panel = ElementComposition.GetElementVisual(BottomBarPanel);
             panel.Clip = panel.Compositor.CreateInsetClip(0, 96, 0, 0);
@@ -105,6 +108,43 @@ namespace Telegram.Views
             var navigationClient = (IApplicationWindowTitleBarNavigationClient)coreWindow.NavigationClient;
 
             navigationClient.TitleBarPreferredVisibilityMode = AppWindowTitleBarVisibility.AlwaysHidden;
+
+            LoadPlaceholder();
+        }
+
+        private async void LoadPlaceholder()
+        {
+            _clientService.TryGetUserFull(_botUser.Id, out UserFullInfo fullInfo);
+            fullInfo ??= await _clientService.SendAsync(new GetUserFullInfo(_botUser.Id)) as UserFullInfo;
+
+            if (fullInfo?.BotInfo == null)
+            {
+                return;
+            }
+
+            var header = RequestedTheme == ElementTheme.Light
+                ? fullInfo.BotInfo.WebAppHeaderLightColor
+                : fullInfo.BotInfo.WebAppHeaderDarkColor;
+            var background = RequestedTheme == ElementTheme.Light
+                ? fullInfo.BotInfo.WebAppBackgroundLightColor
+                : fullInfo.BotInfo.WebAppBackgroundDarkColor;
+
+            if (header != -1)
+            {
+                ProcessHeaderColor(header.ToColor());
+            }
+
+            if (background != -1)
+            {
+                ProcessBackgroundColor(background.ToColor());
+            }
+
+            var response = await _clientService.SendAsync(new GetWebAppPlaceholder(_botUser.Id));
+            if (response is Outline outline && outline.Paths.Count > 0)
+            {
+                _placeholderShimmer = CompositionPathParser.ParseThumbnail(512, 512, outline.Paths, out _placeholderVisual);
+                ElementCompositionPreview.SetElementChildVisual(PlaceholderPanel, _placeholderVisual);
+            }
         }
 
         public bool AreTheSame(InternalLinkType internalLink)
@@ -290,7 +330,7 @@ namespace Telegram.Views
 
         private void View_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            SendViewport();
+            PostViewportChanged();
         }
 
         private void MainButton_Click(object sender, RoutedEventArgs e)
@@ -372,7 +412,13 @@ namespace Telegram.Views
 
         private void View_Navigated(object sender, WebViewerNavigatedEventArgs e)
         {
-            SendViewport();
+            PostViewportChanged();
+            PostThemeChanged();
+
+            _placeholderShimmer = null;
+            _placeholderVisual = null;
+
+            PlaceholderPanel.Visibility = Visibility.Collapsed;
         }
 
         private void View_EventReceived(object sender, WebViewerEventReceivedEventArgs e)
@@ -419,7 +465,7 @@ namespace Telegram.Views
             }
             else if (eventName == "web_app_request_viewport")
             {
-                SendViewport();
+                PostViewportChanged();
             }
             else if (eventName == "web_app_open_tg_link")
             {
@@ -967,7 +1013,7 @@ namespace Telegram.Views
             MessageHelper.OpenUrl(_clientService, _navigationService, "https://t.me" + value);
         }
 
-        private void SendViewport()
+        private void PostViewportChanged()
         {
             PostEvent("viewport_changed", "{ height: " + View.ActualHeight + ", is_state_stable: true, is_expanded: true }");
         }
