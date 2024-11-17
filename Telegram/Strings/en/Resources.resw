@@ -3988,6 +3988,9 @@ You can always switch back to the default Telegram theme here.</value>
   <data name="CustomP2PInfo" xml:space="preserve">
     <value>Peer-to-peer in calls will or will not be used with these users regardless of the settings above.</value>
   </data>
+  <data name="CustomShareGiftsInfo" xml:space="preserve">
+    <value>You can add users or entire groups as exceptions that will override the settings above.</value>
+  </data>
   <data name="CustomShareInfo" xml:space="preserve">
     <value>These users will or will not be able to add you to groups and channels regardless of the settings above.</value>
   </data>
@@ -8734,6 +8737,9 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   <data name="PrivacyBotsInfo" xml:space="preserve">
     <value>Websites where you&apos;ve used Telegram to log in.</value>
   </data>
+  <data name="PrivacyBotUsersAnd" xml:space="preserve">
+    <value>Mini Apps &amp; {0}</value>
+  </data>
   <data name="PrivacyCallsP2PHelp" xml:space="preserve">
     <value>Disabling peer-to-peer will relay all calls through Telegram servers to avoid revealing your IP address, but may decrease audio and video quality.</value>
   </data>
@@ -8743,8 +8749,14 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   <data name="PrivacyClearShipping" xml:space="preserve">
     <value>Shipping info</value>
   </data>
+  <data name="PrivacyContactsAndBotUsers" xml:space="preserve">
+    <value>Contacts &amp; Mini Apps</value>
+  </data>
   <data name="PrivacyDeleteCloudDrafts" xml:space="preserve">
     <value>Delete All Cloud Drafts</value>
+  </data>
+  <data name="PrivacyExcludeBotUsers" xml:space="preserve">
+    <value>Mini Apps</value>
   </data>
   <data name="PrivacyForwards" xml:space="preserve">
     <value>Forwarded Messages</value>
@@ -8769,6 +8781,15 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   </data>
   <data name="PrivacyForwardsTitle" xml:space="preserve">
     <value>Who can add a link to my account when forwarding my messages?</value>
+  </data>
+  <data name="PrivacyGifts" xml:space="preserve">
+    <value>Gifts</value>
+  </data>
+  <data name="PrivacyGiftsInfo" xml:space="preserve">
+    <value>Choose whether gifts from specific senders need your approval before they’re visible to others on your profile.</value>
+  </data>
+  <data name="PrivacyGiftsTitle" xml:space="preserve">
+    <value>Who can display gifts on my profile</value>
   </data>
   <data name="PrivacyInvites" xml:space="preserve">
     <value>Invites</value>
@@ -8801,6 +8822,12 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   </data>
   <data name="PrivacyMessagesTitle" xml:space="preserve">
     <value>Who can send me messages?</value>
+  </data>
+  <data name="PrivacyMiniapps" xml:space="preserve">
+    <value>Mini Apps &amp; Bots</value>
+  </data>
+  <data name="PrivacyMiniappsText" xml:space="preserve">
+    <value>all bots</value>
   </data>
   <data name="PrivacyP2P" xml:space="preserve">
     <value>Peer-to-Peer Calls</value>
@@ -8873,6 +8900,18 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   </data>
   <data name="PrivacyTitle" xml:space="preserve">
     <value>Privacy</value>
+  </data>
+  <data name="PrivacyValueBots" xml:space="preserve">
+    <value>Mini Apps</value>
+  </data>
+  <data name="PrivacyValueBotsAnd" xml:space="preserve">
+    <value>Mini Apps &amp; {0}</value>
+  </data>
+  <data name="PrivacyValueEveryoneExceptBots" xml:space="preserve">
+    <value>Except Mini Apps</value>
+  </data>
+  <data name="PrivacyValueOnlyBots" xml:space="preserve">
+    <value>Mini Apps</value>
   </data>
   <data name="PrivacyVoiceMessages" xml:space="preserve">
     <value>Voice Messages</value>

@@ -618,6 +618,11 @@ namespace Telegram.Views
                         _clientService,
                         _settingsService,
                         _eventAggregator);
+                case "Telegram.ViewModels.Settings.Privacy.SettingsPrivacyAutosaveGiftsViewModel":
+                    return (T)(object)new Telegram.ViewModels.Settings.Privacy.SettingsPrivacyAutosaveGiftsViewModel(
+                        _clientService,
+                        _settingsService,
+                        _eventAggregator);
                 case "Telegram.ViewModels.Settings.Privacy.SettingsPrivacyAllowFindingByPhoneNumberViewModel":
                     return (T)(object)new Telegram.ViewModels.Settings.Privacy.SettingsPrivacyAllowFindingByPhoneNumberViewModel(
                         _clientService,

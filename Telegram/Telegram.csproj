@@ -975,6 +975,7 @@
     <Compile Include="ViewModels\Settings\Privacy\SettingsPrivacyShowBirthdateViewModel.cs" />
     <Compile Include="ViewModels\Settings\Privacy\SettingsPrivacyShowBioViewModel.cs" />
     <Compile Include="ViewModels\Settings\Privacy\SettingsPrivacyNewChatViewModel.cs" />
+    <Compile Include="ViewModels\Settings\Privacy\SettingsPrivacyAutosaveGiftsViewModel.cs" />
     <Compile Include="ViewModels\Settings\SettingsPowerSavingViewModel.cs" />
     <Compile Include="ViewModels\Stars\PayViewModel.cs" />
     <Compile Include="ViewModels\Stars\StarsViewModel.cs" />
@@ -1265,6 +1266,9 @@
     </Compile>
     <Compile Include="Views\Settings\Popups\SettingsBirthdatePopup.xaml.cs">
       <DependentUpon>SettingsBirthdatePopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\Privacy\SettingsPrivacyAutosaveGiftsPage.xaml.cs">
+      <DependentUpon>SettingsPrivacyAutosaveGiftsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\Privacy\SettingsPrivacyNewChatPage.xaml.cs">
       <DependentUpon>SettingsPrivacyNewChatPage.xaml</DependentUpon>
@@ -3154,6 +3158,10 @@
     <Page Include="Views\Settings\Popups\SettingsBirthdatePopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Settings\Privacy\SettingsPrivacyAutosaveGiftsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Settings\Privacy\SettingsPrivacyNewChatPage.xaml">
       <Generator>MSBuild:Compile</Generator>

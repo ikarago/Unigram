@@ -153,6 +153,7 @@ namespace Telegram
                 typeof(SettingsPrivacyShowForwardedViewModel),
                 typeof(SettingsPrivacyPhoneViewModel),
                 typeof(SettingsPrivacyShowPhoneViewModel),
+                typeof(SettingsPrivacyAutosaveGiftsViewModel),
                 typeof(SettingsPrivacyAllowFindingByPhoneNumberViewModel),
                 typeof(SettingsPrivacyAllowPrivateVoiceAndVideoNoteMessagesViewModel),
                 typeof(SettingsPrivacyShowPhotoViewModel),
