@@ -1751,8 +1751,14 @@ from this chat</value>
   <data name="BoostingBoostsChannelByUserServiceMsg" xml:space="preserve">
     <value>{0} boosted the channel</value>
   </data>
+  <data name="BoostingBoostsChannelByUserServiceMsgCount_other" xml:space="preserve">
+    <value>{1} boosted the channel {0} times</value>
+  </data>
   <data name="BoostingBoostsChannelByYouServiceMsg" xml:space="preserve">
     <value>You boosted the channel</value>
+  </data>
+  <data name="BoostingBoostsChannelByYouServiceMsgCount_other" xml:space="preserve">
+    <value>You boosted the channel {0} times</value>
   </data>
   <data name="BoostingBoostsGroupByUserServiceMsg" xml:space="preserve">
     <value>{0} boosted the group</value>
@@ -9291,7 +9297,7 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
     <value>Add Comment</value>
   </data>
   <data name="Report2CommentInfo" xml:space="preserve">
-    <value>Please help us by telling what is wrong with the message you have selected.</value>
+    <value>Please help us by telling what is wrong with the message you are reporting.</value>
   </data>
   <data name="Report2CommentInfoChannel" xml:space="preserve">
     <value>Please help us by telling what is wrong with the channel you have selected.</value>
