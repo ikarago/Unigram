@@ -138,7 +138,13 @@ namespace Telegram.ViewModels
             var user = await ChooseChatsPopup.PickUserAsync(ClientService, NavigationService, Strings.SelectContact, false);
             if (user != null)
             {
-                await ShowPopupAsync(new GiftPopup(ClientService, NavigationService, user));
+                ClientService.TryGetUserFull(user.Id, out UserFullInfo fullInfo);
+                fullInfo ??= await ClientService.SendAsync(new GetUserFullInfo(user.Id)) as UserFullInfo;
+
+                if (fullInfo != null)
+                {
+                    await ShowPopupAsync(new GiftPopup(ClientService, NavigationService, user, fullInfo));
+                }
             }
         }
 
