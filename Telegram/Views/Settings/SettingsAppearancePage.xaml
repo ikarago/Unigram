@@ -48,7 +48,7 @@
                               SelectionChanged="OnSelectionChanged"
                               ChoosingItemContainer="OnChoosingItemContainer"
                               ContainerContentChanging="OnContainerContentChanging"
-                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                               ScrollViewer.HorizontalScrollMode="Auto"
                               ScrollViewer.VerticalScrollBarVisibility="Disabled"
                               ScrollViewer.VerticalScrollMode="Disabled"
