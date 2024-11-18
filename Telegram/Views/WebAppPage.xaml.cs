@@ -28,6 +28,7 @@ using Windows.Data.Json;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Composition;
+using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.StartScreen;
 using Windows.UI.ViewManagement;
@@ -100,6 +101,7 @@ namespace Telegram.Views
             ElementCompositionPreview.SetIsTranslationEnabled(TitleText, true);
 
             Window.Current.SetTitleBar(TitleBar);
+            Window.Current.Activated += OnActivated;
 
             SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += OnCloseRequested;
             ApplicationView.GetForCurrentView().VisibleBoundsChanged += OnVisibleBoundsChanged;
@@ -297,6 +299,11 @@ namespace Telegram.Views
             }
 
             View.Close();
+        }
+
+        private void OnActivated(object sender, WindowActivatedEventArgs e)
+        {
+            PostEvent("visibility_changed", "{ is_visible: " + (e.WindowActivationState != CoreWindowActivationState.Deactivated ? "true" : "false") + " }");
         }
 
         private async void OnCloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
@@ -539,6 +546,10 @@ namespace Telegram.Views
             {
                 ProcessSetEmojiStatus(eventData);
             }
+            else if (eventName == "web_app_send_prepared_message")
+            {
+                ProcessSendPreparedMessage(eventData);
+            }
             else if (eventName == "web_app_request_file_download")
             {
                 ProcessRequestFileDownload(eventData);
@@ -563,6 +574,43 @@ namespace Telegram.Views
             else if (eventName == "share_score")
             {
                 ProcessShareGame(true);
+            }
+        }
+
+        private async void ProcessSendPreparedMessage(JsonObject eventData)
+        {
+            var preparedMessageId = eventData.GetNamedString("id", string.Empty);
+
+            var response = await _clientService.SendAsync(new GetPreparedInlineMessage(_botUser.Id, preparedMessageId));
+            if (response is PreparedInlineMessage prepared)
+            {
+                var response2 = await _clientService.SendAsync(new SendInlineQueryResultMessage(_clientService.Options.MyId, 0, null, Constants.PreviewOnly, prepared.InlineQueryId, prepared.Result.GetId(), false));
+                if (response2 is not Message message)
+                {
+                    PostEvent("prepared_message_failed", "{ error: \"UNKNOWN_ERROR\" }");
+                    return;
+                }
+
+                var confirm2 = await _navigationService.ShowPopupAsync(new SendPreparedMessagePopup(_clientService, _navigationService, message, _botUser));
+                if (confirm2 != ContentDialogResult.Primary)
+                {
+                    PostEvent("prepared_message_failed", "{ error: \"USER_DECLINED\" }");
+                    return;
+                }
+
+                var confirm = await _navigationService.ShowPopupAsync(new ChooseChatsPopup(), new ChooseChatsConfigurationSwitchInline(prepared, _botUser));
+                if (confirm == ContentDialogResult.Primary)
+                {
+                    PostEvent("prepared_message_sent");
+                }
+                else
+                {
+                    PostEvent("prepared_message_failed", "{ error: \"USER_DECLINED\" }");
+                }
+            }
+            else
+            {
+                PostEvent("prepared_message_failed", "{ error: \"USER_DECLINED\" }");
             }
         }
 

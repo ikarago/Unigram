@@ -642,7 +642,20 @@ namespace Telegram.ViewModels
             }
             else if (_configuration is ChooseChatsConfigurationSwitchInline switchInline)
             {
-                NavigationService.NavigateToChat(chats[0], state: NavigationState.GetSwitchQuery(switchInline.Query, switchInline.Bot.Id));
+                if (switchInline.Result != null)
+                {
+                    ShowForwardMessagesToast(chats, 1);
+
+                    foreach (var chat in chats)
+                    {
+                        SelectedTopics.TryGetValue(chat.Id, out long messageThreadId);
+                        ClientService.Send(new SendInlineQueryResultMessage(chat.Id, messageThreadId, null, null, switchInline.InlineQueryId, switchInline.Result.GetId(), false));
+                    }
+                }
+                else
+                {
+                    NavigationService.NavigateToChat(chats[0], state: NavigationState.GetSwitchQuery(switchInline.Query, switchInline.Bot.Id));
+                }
             }
             else if (_configuration is ChooseChatsConfigurationDataPackage configurationDataPackage)
             {

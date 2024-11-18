@@ -2335,6 +2335,18 @@ It will be able to access your **IP address** and basic device info.</value>
   <data name="BotShare" xml:space="preserve">
     <value>Share</value>
   </data>
+  <data name="BotShareMessage" xml:space="preserve">
+    <value>Share Message</value>
+  </data>
+  <data name="BotShareMessageInfo" xml:space="preserve">
+    <value>{0} mini app suggests you to send this message to a chat you select.</value>
+  </data>
+  <data name="BotShareMessagePreview" xml:space="preserve">
+    <value>Message preview</value>
+  </data>
+  <data name="BotShareMessageShare" xml:space="preserve">
+    <value>Share with...</value>
+  </data>
   <data name="BotsMenuTitle" xml:space="preserve">
     <value>Menu</value>
   </data>

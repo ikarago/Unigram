@@ -479,7 +479,19 @@ namespace Telegram.Views.Popups
             Bot = bot;
         }
 
+        public ChooseChatsConfigurationSwitchInline(PreparedInlineMessage preparedInlineMessage, User bot)
+        {
+            Result = preparedInlineMessage.Result;
+            InlineQueryId = preparedInlineMessage.InlineQueryId;
+            TargetChat = new TargetChatChosen(preparedInlineMessage.ChatTypes);
+            Bot = bot;
+        }
+
         public string Query { get; }
+
+        public InlineQueryResult Result { get; }
+
+        public long InlineQueryId { get; }
 
         public TargetChat TargetChat { get; }
 

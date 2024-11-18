@@ -1225,6 +1225,9 @@
     <Compile Include="Views\Popups\EmojiStatusPopup.xaml.cs">
       <DependentUpon>EmojiStatusPopup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Popups\SendPreparedMessagePopup.xaml.cs">
+      <DependentUpon>SendPreparedMessagePopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Premium\Popups\ChangePrivacyPopup.xaml.cs">
       <DependentUpon>ChangePrivacyPopup.xaml</DependentUpon>
     </Compile>
@@ -3100,6 +3103,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Popups\EmojiStatusPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Popups\SendPreparedMessagePopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
