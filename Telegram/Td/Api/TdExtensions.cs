@@ -34,6 +34,9 @@ namespace Telegram.Td.Api
                 MessageAnimation animation => animation.ShowCaptionAboveMedia,
                 MessagePhoto photo => photo.ShowCaptionAboveMedia,
                 MessageVideo video => video.ShowCaptionAboveMedia,
+                MessageAlbum album => album.ShowCaptionAboveMedia,
+                MessagePaidAlbum paidAlbum => paidAlbum.ShowCaptionAboveMedia,
+                MessagePaidMedia paidMedia => paidMedia.ShowCaptionAboveMedia,
                 _ => false
             };
         }

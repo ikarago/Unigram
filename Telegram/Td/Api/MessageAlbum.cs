@@ -17,6 +17,8 @@ namespace Telegram.Td.Api
     {
         public bool IsMedia { get; }
 
+        public bool ShowCaptionAboveMedia { get; set; }
+
         public FormattedText Caption { get; set; }
 
         public UniqueList<long, MessageViewModel> Messages { get; } = new UniqueList<long, MessageViewModel>(x => x.Id);
