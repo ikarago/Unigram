@@ -2398,7 +2398,7 @@ namespace Telegram.Td.Api
                 return false;
             }
 
-            return supergroup.Status is ChatMemberStatusCreator || supergroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanPinMessages;
+            return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanPinMessages: true };
         }
 
         public static bool CanDeleteMessages(this Supergroup supergroup)
@@ -2408,7 +2408,7 @@ namespace Telegram.Td.Api
                 return false;
             }
 
-            return supergroup.Status is ChatMemberStatusCreator || supergroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanDeleteMessages;
+            return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanDeleteMessages: true };
         }
 
         public static bool CanPinMessages(this BasicGroup basicGroup)
@@ -2418,7 +2418,7 @@ namespace Telegram.Td.Api
                 return false;
             }
 
-            return basicGroup.Status is ChatMemberStatusCreator || basicGroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanPinMessages;
+            return basicGroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanPinMessages: true };
         }
 
         public static bool CanDeleteMessages(this BasicGroup basicGroup)
@@ -2428,7 +2428,7 @@ namespace Telegram.Td.Api
                 return false;
             }
 
-            return basicGroup.Status is ChatMemberStatusCreator || basicGroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanDeleteMessages;
+            return basicGroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanDeleteMessages: true };
         }
 
         public static bool CanChangeInfo(this BasicGroup basicGroup, Chat chat)
@@ -2443,7 +2443,7 @@ namespace Telegram.Td.Api
                 return chat.Permissions.CanChangeInfo;
             }
 
-            return basicGroup.Status is ChatMemberStatusCreator || basicGroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanChangeInfo;
+            return basicGroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanChangeInfo: true };
         }
 
         public static bool CanChangeInfo(this Supergroup supergroup, Chat chat)
@@ -2458,7 +2458,7 @@ namespace Telegram.Td.Api
                 return chat.Permissions.CanChangeInfo;
             }
 
-            return supergroup.Status is ChatMemberStatusCreator || supergroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanChangeInfo;
+            return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanChangeInfo: true };
         }
 
         public static bool CanManageVideoChats(this Supergroup supergroup)
@@ -2468,7 +2468,7 @@ namespace Telegram.Td.Api
                 return false;
             }
 
-            return supergroup.Status is ChatMemberStatusCreator || supergroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanManageVideoChats;
+            return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanManageVideoChats: true };
         }
 
         public static bool CanManageVideoChats(this BasicGroup basicGroup)
@@ -2478,7 +2478,7 @@ namespace Telegram.Td.Api
                 return false;
             }
 
-            return basicGroup.Status is ChatMemberStatusCreator || basicGroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanManageVideoChats;
+            return basicGroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanManageVideoChats: true };
         }
 
         public static bool CanPostMessages(this Supergroup supergroup)
@@ -2490,13 +2490,11 @@ namespace Telegram.Td.Api
 
             if (supergroup.IsChannel)
             {
-                return supergroup.Status is ChatMemberStatusCreator
-                    || supergroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanPostMessages;
+                return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanPostMessages: true };
             }
             else
             {
-                return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator or ChatMemberStatusMember
-                    || supergroup.Status is ChatMemberStatusRestricted restricted && restricted.Permissions.CanSendBasicMessages;
+                return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator or ChatMemberStatusMember or ChatMemberStatusRestricted { Permissions.CanSendBasicMessages: true };
             }
         }
 
@@ -2510,8 +2508,7 @@ namespace Telegram.Td.Api
 
             if (supergroup.IsChannel)
             {
-                return supergroup.Status is ChatMemberStatusCreator
-                    || supergroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanPostStories;
+                return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanPostStories: true };
             }
 
             return false;
@@ -2526,8 +2523,7 @@ namespace Telegram.Td.Api
 
             if (supergroup.IsChannel)
             {
-                return supergroup.Status is ChatMemberStatusCreator
-                    || supergroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanEditStories;
+                return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanEditStories: true };
             }
 
             return false;
@@ -2542,8 +2538,7 @@ namespace Telegram.Td.Api
 
             if (supergroup.IsChannel)
             {
-                return supergroup.Status is ChatMemberStatusCreator
-                    || supergroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanDeleteStories;
+                return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanDeleteStories: true };
             }
 
             return false;
@@ -2556,7 +2551,7 @@ namespace Telegram.Td.Api
                 return false;
             }
 
-            return supergroup.Status is ChatMemberStatusCreator || supergroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanRestrictMembers;
+            return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanRestrictMembers: true };
         }
 
         public static bool CanPromoteMembers(this Supergroup supergroup)
@@ -2566,7 +2561,7 @@ namespace Telegram.Td.Api
                 return false;
             }
 
-            return supergroup.Status is ChatMemberStatusCreator || supergroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanPromoteMembers;
+            return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanPromoteMembers: true };
         }
 
         public static bool CanPromoteMembers(this BasicGroup basicGroup)
@@ -2596,7 +2591,7 @@ namespace Telegram.Td.Api
             //    return true;
             //}
 
-            return supergroup.Status is ChatMemberStatusCreator || supergroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanInviteUsers;
+            return supergroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanInviteUsers: true };
         }
 
         public static bool CanInviteUsers(this BasicGroup basicGroup)
@@ -2611,7 +2606,7 @@ namespace Telegram.Td.Api
             //    return true;
             //}
 
-            return basicGroup.Status is ChatMemberStatusCreator || basicGroup.Status is ChatMemberStatusAdministrator administrator && administrator.Rights.CanInviteUsers;
+            return basicGroup.Status is ChatMemberStatusCreator or ChatMemberStatusAdministrator { Rights.CanInviteUsers: true };
         }
 
         public static bool CanPostMessages(this BasicGroup basicGroup)

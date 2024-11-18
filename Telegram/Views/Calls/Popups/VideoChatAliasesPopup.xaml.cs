@@ -59,13 +59,13 @@ namespace Telegram.Views.Calls.Popups
 
             if (clientService.TryGetSupergroup(chat, out Supergroup supergroup))
             {
-                StartWith.Visibility = canSchedule && supergroup.Status is ChatMemberStatusCreator
+                StartWith.Visibility = canSchedule && supergroup.CanManageVideoChats()
                     ? Visibility.Visible
                     : Visibility.Collapsed;
             }
             else if (clientService.TryGetBasicGroup(chat, out BasicGroup basicGroup))
             {
-                StartWith.Visibility = canSchedule && basicGroup.Status is ChatMemberStatusCreator
+                StartWith.Visibility = canSchedule && basicGroup.CanManageVideoChats()
                     ? Visibility.Visible
                     : Visibility.Collapsed;
             }
