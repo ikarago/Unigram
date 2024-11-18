@@ -3483,6 +3483,19 @@ namespace Telegram.ViewModels
             }
         }
 
+        public void ViewSponsoredMessage()
+        {
+            var chat = _chat;
+            var message = _sponsoredMessage;
+
+            if (chat == null || message == null)
+            {
+                return;
+            }
+
+            ClientService.Send(new ViewMessages(chat.Id, new[] { message.MessageId }, new MessageSourceChatHistory(), true));
+        }
+
         #region Unblock
 
         public async void Unblock()
