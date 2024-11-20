@@ -256,6 +256,9 @@
   <data name="AccDescrProfilePicture" xml:space="preserve">
     <value>Profile photo</value>
   </data>
+  <data name="AccDescrReactedWith" xml:space="preserve">
+    <value>{0} reacted with {1}</value>
+  </data>
   <data name="AccDescrReceivedDate" xml:space="preserve">
     <value>Received {0}</value>
   </data>
@@ -315,6 +318,9 @@
   </data>
   <data name="AccDescrVolume" xml:space="preserve">
     <value>Volume</value>
+  </data>
+  <data name="AccDescrYouReactedWith" xml:space="preserve">
+    <value>You reacted with {0}</value>
   </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
