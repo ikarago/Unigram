@@ -336,7 +336,6 @@ namespace Telegram.Controls.Messages
 
         protected void Animate(File around, bool cache)
         {
-            _aroundCompleted = false;
             Icon?.Play();
 
             var popup = Overlay;
@@ -366,13 +365,9 @@ namespace Telegram.Controls.Messages
             popup.IsOpen = true;
         }
 
-        private bool _aroundCompleted;
-
         private void Continue()
         {
             Logger.Info();
-
-            _aroundCompleted = true;
 
             var popup = Overlay;
             if (popup == null)

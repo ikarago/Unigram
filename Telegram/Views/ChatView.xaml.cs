@@ -2989,6 +2989,7 @@ namespace Telegram.Views
             else
             {
                 placeholder.Text = Strings.NobodyViewed;
+                placeholder.IsEnabled = false;
             }
         }
 

@@ -1,20 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Telegram.Common;
-using Telegram.Controls;
-using Telegram.Controls.Media;
-using Telegram.Converters;
+﻿using Telegram.Controls;
 using Telegram.Navigation.Services;
 using Telegram.Services;
-using Telegram.Streams;
 using Telegram.Td.Api;
 using Telegram.ViewModels;
-using Telegram.ViewModels.Drawers;
-using Telegram.ViewModels.Stars;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Hosting;
 
 namespace Telegram.Views.Popups
 {
