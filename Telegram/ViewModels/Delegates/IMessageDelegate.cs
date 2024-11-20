@@ -31,7 +31,7 @@ namespace Telegram.ViewModels.Delegates
         ReactionType SavedMessagesTag { get; set; }
 
         void Select(MessageViewModel message);
-        void Unselect(MessageViewModel message);
+        void Unselect(MessageViewModel message, bool updateSelection = false);
 
         bool CanBeDownloaded(object content, File file);
         void DownloadFile(MessageViewModel message, File file);

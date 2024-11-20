@@ -387,7 +387,7 @@ namespace Telegram.ViewModels
         /// <summary>
         /// Only available when created through DialogViewModel
         /// </summary>
-        public virtual void Unselect(MessageViewModel message) { }
+        public virtual void Unselect(MessageViewModel message, bool updateSelection) { }
 
         #endregion
     }
@@ -500,7 +500,7 @@ namespace Telegram.ViewModels
 
         public override void Select(MessageViewModel message) => _viewModel.Select(message);
 
-        public override void Unselect(MessageViewModel message) => _viewModel.Unselect(message);
+        public override void Unselect(MessageViewModel message, bool updateSelection) => _viewModel.Unselect(message, updateSelection);
 
         #endregion
     }

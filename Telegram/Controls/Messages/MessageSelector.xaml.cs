@@ -207,7 +207,7 @@ namespace Telegram.Controls.Messages
                 }
                 else
                 {
-                    message.Delegate.Unselect(message);
+                    message.Delegate.Unselect(message, true);
                 }
             }
         }

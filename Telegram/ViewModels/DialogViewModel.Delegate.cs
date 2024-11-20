@@ -646,7 +646,7 @@ namespace Telegram.ViewModels
             }
         }
 
-        public async void Unselect(MessageViewModel message)
+        public async void Unselect(MessageViewModel message, bool updateSelection = false)
         {
             if (message.MediaAlbumId != 0)
             {
@@ -671,6 +671,11 @@ namespace Telegram.ViewModels
             {
                 _selectedItems.TryRemove(message.Id, out _);
                 message.SelectionChanged();
+            }
+
+            if (updateSelection && SelectedItems.Count < 1 && IsReportingMessages == null)
+            {
+                IsSelectionEnabled = false;
             }
 
             RaisePropertyChanged(nameof(CanCopySelectedMessage));
