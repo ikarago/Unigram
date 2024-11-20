@@ -275,6 +275,13 @@ namespace Telegram.Controls.Messages
 
                 _selectionEnabled = value;
 
+                if (_interactionSource != null)
+                {
+                    _interactionSource.PositionXSourceMode = value
+                        ? InteractionSourceMode.Disabled
+                        : InteractionSourceMode.EnabledWithInertia;
+                }
+
                 IsChecked = _selected = selected;
                 Presenter.IsHitTestVisible = !value || IsAlbum;
 
@@ -496,7 +503,9 @@ namespace Telegram.Controls.Messages
 
             //Configure for x-direction panning
             _interactionSource.ManipulationRedirectionMode = VisualInteractionSourceRedirectionMode.CapableTouchpadOnly;
-            _interactionSource.PositionXSourceMode = InteractionSourceMode.EnabledWithInertia;
+            _interactionSource.PositionXSourceMode = _selectionEnabled 
+                ? InteractionSourceMode.Disabled
+                : InteractionSourceMode.EnabledWithInertia;
             _interactionSource.PositionXChainingMode = InteractionChainingMode.Never;
             _interactionSource.IsPositionXRailsEnabled = true;
 
