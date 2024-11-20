@@ -200,8 +200,14 @@ namespace Telegram.Controls
             // This won't look great because the smoke will disappear instantly, but at least it won't flash
             if (Smoke != null && Parent is Popup popup)
             {
+                popup.Opened += OnOpened;
                 popup.Closed += OnClosed;
             }
+        }
+
+        private void OnOpened(object sender, object e)
+        {
+            Smoke.Visibility = Visibility.Visible;
         }
 
         private void OnClosed(object sender, object e)
