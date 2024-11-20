@@ -91,7 +91,7 @@ namespace Telegram.ViewModels.Create
             get => _phoneNumber;
             set
             {
-                if (Set(ref _firstName, value))
+                if (Set(ref _phoneNumber, value))
                 {
                     RaisePropertyChanged(nameof(CanCreate));
                 }
