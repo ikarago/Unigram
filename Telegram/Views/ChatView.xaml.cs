@@ -1008,28 +1008,7 @@ namespace Telegram.Views
                     args.Handled = true;
                 }
             }
-        }
-
-        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
-        {
-            if (args.Key == VirtualKey.Delete)
-            {
-                if (ViewModel.IsSelectionEnabled && ViewModel.SelectedItems.Count > 0 && ViewModel.CanDeleteSelectedMessages)
-                {
-                    ViewModel.DeleteSelectedMessages();
-                    args.Handled = true;
-                }
-                else
-                {
-                    var focused = FocusManager.GetFocusedElement();
-                    if (focused is MessageSelector selector)
-                    {
-                        ViewModel.TryDeleteMessage(selector.Message);
-                        args.Handled = true;
-                    }
-                }
-            }
-            else if (args.Key == VirtualKey.C && args.Modifiers == VirtualKeyModifiers.Control)
+            else if (args.Key == VirtualKey.C && WindowContext.IsKeyDownAsync(VirtualKey.Control))
             {
                 if (ViewModel.IsSelectionEnabled && ViewModel.SelectedItems.Count > 0 && ViewModel.CanCopySelectedMessage)
                 {
@@ -1073,6 +1052,27 @@ namespace Telegram.Views
 
                             args.Handled = true;
                         }
+                    }
+                }
+            }
+        }
+
+        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
+        {
+            if (args.Key == VirtualKey.Delete)
+            {
+                if (ViewModel.IsSelectionEnabled && ViewModel.SelectedItems.Count > 0 && ViewModel.CanDeleteSelectedMessages)
+                {
+                    ViewModel.DeleteSelectedMessages();
+                    args.Handled = true;
+                }
+                else
+                {
+                    var focused = FocusManager.GetFocusedElement();
+                    if (focused is MessageSelector selector)
+                    {
+                        ViewModel.TryDeleteMessage(selector.Message);
+                        args.Handled = true;
                     }
                 }
             }
