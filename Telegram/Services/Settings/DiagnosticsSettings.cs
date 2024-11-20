@@ -147,6 +147,13 @@ namespace Telegram.Services.Settings
             set => AddOrUpdateValue(ref _sendLargePhotos, "SendLargePhotos", value);
         }
 
+        private bool? _useSpeexResampler;
+        public bool UseSpeexResampler
+        {
+            get => _useSpeexResampler ??= GetValueOrDefault("UseSpeexResampler", false);
+            set => AddOrUpdateValue(ref _useSpeexResampler, "UseSpeexResampler", value);
+        }
+
         public bool IsLastErrorDiskFull { get; set; }
     }
 }

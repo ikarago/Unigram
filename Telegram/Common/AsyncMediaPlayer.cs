@@ -11,6 +11,9 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Telegram.Navigation;
+using Telegram.Services;
+using Telegram.Td;
+using Telegram.Td.Api;
 using Windows.Foundation;
 using Windows.Storage;
 
@@ -22,6 +25,8 @@ namespace Telegram.Common
 
         private readonly LibVLC _library;
         private readonly MediaPlayer _player;
+
+        private readonly bool _enableDebugLogs;
 
         private Media _media;
         private MediaInput _input;
@@ -36,9 +41,15 @@ namespace Telegram.Common
             // This should be not needed
             _dispatcherQueue ??= WindowContext.Main.Dispatcher;
 
+            _enableDebugLogs = SettingsService.Current.VerbosityLevel >= 4;
+
             // Generating plugins cache requires a breakpoint in bank.c#504
-            _library = new LibVLC(options); //"--quiet", "--reset-plugins-cache");
-            //_library.Log += _library_Log;
+            _library = new LibVLC(_enableDebugLogs, options); //"--quiet", "--reset-plugins-cache");
+
+            if (_enableDebugLogs)
+            {
+                _library.Log += OnLog;
+            }
 
             _player = new MediaPlayer(_library);
 
@@ -187,6 +198,11 @@ namespace Telegram.Common
                 _input = null;
             }
 
+            if (_enableDebugLogs)
+            {
+                _library.Log -= OnLog;
+            }
+
             lock (_closeLock)
             {
                 _closed = true;
@@ -272,8 +288,11 @@ namespace Telegram.Common
         private static readonly Regex _videoLooking = new("using (.*?) module \"(.*?)\" from (.*?)$", RegexOptions.Compiled);
         private static readonly object _syncObject = new();
 
-        private void _library_Log(object sender, LogEventArgs e)
+        private void OnLog(object sender, LogEventArgs e)
         {
+            Client.Execute(new AddLogMessage(2, e.FormattedLog));
+            return;
+
             Debug.WriteLine(e.FormattedLog);
 
             lock (_syncObject)

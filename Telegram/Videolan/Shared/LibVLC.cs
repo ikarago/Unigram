@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
-using Windows.System;
 
 namespace LibVLCSharp.Shared
 {

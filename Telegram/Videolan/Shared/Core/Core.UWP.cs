@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Windows.ApplicationModel;
-using Windows.System;
+using Telegram.Services;
 
 namespace LibVLCSharp.Shared
 {
@@ -48,6 +47,6 @@ namespace LibVLCSharp.Shared
             }
         }
 
-        public static bool UseSpeex => Package.Current.Id.Architecture == ProcessorArchitecture.Arm64;
+        public static bool UseSpeex => SettingsService.Current.Diagnostics.UseSpeexResampler;
     }
 }
