@@ -1260,7 +1260,7 @@ namespace Telegram.Views
             }
             else if (command is ShortcutCommand.CallAccept && ViewModel.VoipService.ActiveCall is VoipCall acceptCall)
             {
-                acceptCall.Accept(XamlRoot);
+                acceptCall.Accept(false);
                 args.Handled = true;
             }
             else if (command is ShortcutCommand.CallReject && ViewModel.VoipService.ActiveCall is VoipCall rejectCall)
