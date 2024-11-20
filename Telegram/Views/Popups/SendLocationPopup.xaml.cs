@@ -90,7 +90,14 @@ namespace Telegram.Views.Popups
                     _geolocator = new Geolocator { DesiredAccuracy = PositionAccuracy.Default };
                     _geolocator.PositionChanged += OnPositionChanged;
 
-                    await _geolocator.GetGeopositionAsync();
+                    try
+                    {
+                        await _geolocator.GetGeopositionAsync();
+                    }
+                    catch
+                    {
+                        // All the remote procedure calls must be wrapped in a try-catch block
+                    }
                 }
                 else
                 {
@@ -100,7 +107,14 @@ namespace Telegram.Views.Popups
                         ElementCompositionPreview.SetElementChildVisual(MapShimmer, visual);
                     }
 
-                    UpdateLocation(await _geolocator.GetGeopositionAsync());
+                    try
+                    {
+                        UpdateLocation(await _geolocator.GetGeopositionAsync());
+                    }
+                    catch
+                    {
+                        // All the remote procedure calls must be wrapped in a try-catch block
+                    }
                 }
             }
         }
