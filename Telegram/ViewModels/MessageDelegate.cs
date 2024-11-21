@@ -47,13 +47,13 @@ namespace Telegram.ViewModels
 
         public override INavigationService NavigationService
         {
-            get => _viewModel.NavigationService;
+            get => _viewModel?.NavigationService;
             set => _viewModel.NavigationService = value;
         }
 
         public override IDispatcherContext Dispatcher
         {
-            get => _viewModel.Dispatcher;
+            get => _viewModel?.Dispatcher;
             set => _viewModel.Dispatcher = value;
         }
 
