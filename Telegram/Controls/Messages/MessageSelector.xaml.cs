@@ -503,7 +503,7 @@ namespace Telegram.Controls.Messages
 
             //Configure for x-direction panning
             _interactionSource.ManipulationRedirectionMode = VisualInteractionSourceRedirectionMode.CapableTouchpadOnly;
-            _interactionSource.PositionXSourceMode = _selectionEnabled 
+            _interactionSource.PositionXSourceMode = _selectionEnabled
                 ? InteractionSourceMode.Disabled
                 : InteractionSourceMode.EnabledWithInertia;
             _interactionSource.PositionXChainingMode = InteractionChainingMode.Never;

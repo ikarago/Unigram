@@ -679,8 +679,6 @@ namespace Telegram.Views
                     return;
                 }
 
-                _updateThemeTask?.TrySetResult(true);
-
                 if (content is MessageService service)
                 {
                     service.UpdateMessage(args.Item as MessageViewModel);
