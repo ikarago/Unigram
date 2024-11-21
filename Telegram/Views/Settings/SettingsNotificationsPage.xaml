@@ -620,6 +620,10 @@
                               Content="{CustomResource BadgeNumberMutedChats}"
                               Style="{StaticResource SettingsCheckBoxStyle}" />
 
+                    <CheckBox IsChecked="{x:Bind ViewModel.IncludeMutedChatsInFolderCounters, Mode=TwoWay}"
+                              Content="{CustomResource BadgeNumberMutedChatsFolders}"
+                              Style="{StaticResource SettingsCheckBoxStyle}" />
+
                     <CheckBox IsChecked="{x:Bind ViewModel.CountUnreadMessages, Mode=TwoWay}"
                               Content="{CustomResource BadgeNumberUnread}"
                               Style="{StaticResource SettingsCheckBoxStyle}" />

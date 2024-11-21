@@ -222,6 +222,7 @@ namespace Telegram.Services
         bool IsStickerFavorite(int id);
         bool IsStickerSetInstalled(long id);
 
+        ICollection<ChatListUnreadCount> UnreadCounts { get; }
         ChatListUnreadCount GetUnreadCount(ChatList chatList);
 
         UpdateStoryStealthMode StealthMode { get; }
@@ -1049,6 +1050,8 @@ namespace Telegram.Services
         #region Cache
 
         public UpdateStoryStealthMode StealthMode => _storyStealthMode;
+
+        public ICollection<ChatListUnreadCount> UnreadCounts => _unreadCounts.Values;
 
         public ChatListUnreadCount GetUnreadCount(ChatList chatList)
         {

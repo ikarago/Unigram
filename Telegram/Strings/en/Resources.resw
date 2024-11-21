@@ -1570,6 +1570,9 @@ Please enable Unigram in the Startup Apps Settings.</value>
   <data name="BadgeNumberMutedChats" xml:space="preserve">
     <value>Include Muted Chats</value>
   </data>
+  <data name="BadgeNumberMutedChatsFolders" xml:space="preserve">
+    <value>Include Muted Chats in Folder Counters</value>
+  </data>
   <data name="BadgeNumberShow" xml:space="preserve">
     <value>Show Badge Icon</value>
   </data>
@@ -5310,6 +5313,9 @@ Duration: {1}</value>
   </data>
   <data name="FilterAllChats" xml:space="preserve">
     <value>All Chats</value>
+  </data>
+  <data name="FilterAllChatsShort" xml:space="preserve">
+    <value>All</value>
   </data>
   <data name="FilterAlwaysShow" xml:space="preserve">
     <value>Include Chats</value>

@@ -286,7 +286,7 @@ namespace Telegram.ViewModels
                         continue;
                     }
 
-                    folder.UpdateCount(unreadCount.UnreadChatCount);
+                    folder.UpdateCount(unreadCount.UnreadChatCount, Settings.Notifications.IncludeMutedChatsInFolderCounters);
                 }
 
                 // Important not to raise SelectedFolder setter
