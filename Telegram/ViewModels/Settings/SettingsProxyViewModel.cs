@@ -418,6 +418,17 @@ namespace Telegram.ViewModels.Settings
             }
         }
 
+        public async void Copy(ProxyViewModel proxy)
+        {
+            SelectedItems.Clear();
+
+            var response = await ClientService.SendAsync(new GetProxyLink(proxy.Id));
+            if (response is HttpUrl httpUrl)
+            {
+                MessageHelper.CopyLink(XamlRoot, httpUrl.Url);
+            }
+        }
+
         public async Task<ContentDialogResult> ShowPopupAsync2(string message, string title = null, string primary = null, string secondary = null, bool destructive = false)
         {
             if (Popup == null)

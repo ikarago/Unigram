@@ -61,6 +61,7 @@ namespace Telegram.Views.Settings
                 if (proxy.Type is ProxyTypeMtproto or ProxyTypeSocks5)
                 {
                     flyout.CreateFlyoutItem(ViewModel.Share, proxy, Strings.ShareFile, Icons.Share);
+                    flyout.CreateFlyoutItem(ViewModel.Copy, proxy, Strings.CopyLink, Icons.DocumentCopy);
                 }
 
                 flyout.CreateFlyoutItem(ViewModel.Edit, proxy, Strings.Edit, Icons.Edit);
