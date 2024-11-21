@@ -173,16 +173,6 @@
 
                 <controls:HeaderedControl Header="{CustomResource Contacts}"
                                           Footer="{CustomResource SuggestContactsInfo}">
-                    <controls:BadgeButton Click="{x:Bind ViewModel.ClearContacts}"
-                                          Content="{CustomResource SyncContactsDelete}"
-                                          Style="{StaticResource GlyphBadgeButtonStyle}"
-                                          Foreground="{ThemeResource DangerButtonBackground}"
-                                          Glyph="&#xE74D;" />
-
-                    <CheckBox IsChecked="{x:Bind ViewModel.IsContactsSyncEnabled, Mode=TwoWay}"
-                              Content="{CustomResource SyncContacts}"
-                              Style="{StaticResource SettingsCheckBoxStyle}" />
-
                     <CheckBox IsChecked="{x:Bind ViewModel.IsContactsSuggestEnabled, Mode=TwoWay}"
                               Content="{CustomResource SuggestContacts}"
                               Style="{StaticResource SettingsCheckBoxStyle}" />

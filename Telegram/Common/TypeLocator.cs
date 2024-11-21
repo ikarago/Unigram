@@ -71,7 +71,6 @@ namespace Telegram.Views
                 _clientService,
                 _settingsService,
                 _eventAggregator,
-                _contactsService,
                 _lifetimeService);
             _notificationsService = new Telegram.Services.NotificationsService(
                 _clientService,
@@ -492,8 +491,6 @@ namespace Telegram.Views
                         _clientService,
                         _settingsService,
                         _eventAggregator,
-                        _notificationsService,
-                        _contactsService,
                         _passcodeService);
                 case "Telegram.ViewModels.DiagnosticsViewModel":
                     return (T)(object)new Telegram.ViewModels.DiagnosticsViewModel(
@@ -583,7 +580,6 @@ namespace Telegram.Views
                         _clientService,
                         _settingsService,
                         _eventAggregator,
-                        _contactsService,
                         _passcodeService);
                 case "Telegram.ViewModels.Settings.Privacy.SettingsPrivacyAllowCallsViewModel":
                     return (T)(object)new Telegram.ViewModels.Settings.Privacy.SettingsPrivacyAllowCallsViewModel(

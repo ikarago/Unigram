@@ -391,7 +391,7 @@ namespace Telegram.ViewModels
 
             if (mode == NavigationMode.New)
             {
-                _ = Task.Run(() => _contactsService.JumpListAsync());
+                _ = Task.Run(_contactsService.JumpListAsync);
             }
 
             return Task.CompletedTask;

@@ -6,7 +6,6 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Telegram.Common;
 using Telegram.Controls;
@@ -30,7 +29,6 @@ namespace Telegram.ViewModels.Settings
 {
     public partial class SettingsPrivacyAndSecurityViewModel : MultiViewModelBase, IHandle
     {
-        private readonly IContactsService _contactsService;
         private readonly IPasscodeService _passcodeService;
 
         private readonly SettingsPrivacyShowForwardedViewModel _showForwardedRules;
@@ -44,10 +42,9 @@ namespace Telegram.ViewModels.Settings
         private readonly SettingsPrivacyAllowChatInvitesViewModel _allowChatInvitesRules;
         private readonly SettingsPrivacyAllowPrivateVoiceAndVideoNoteMessagesViewModel _allowPrivateVoiceAndVideoNoteMessages;
 
-        public SettingsPrivacyAndSecurityViewModel(IClientService clientService, ISettingsService settingsService, IEventAggregator aggregator, IContactsService contactsService, IPasscodeService passcodeService)
+        public SettingsPrivacyAndSecurityViewModel(IClientService clientService, ISettingsService settingsService, IEventAggregator aggregator, IPasscodeService passcodeService)
             : base(clientService, settingsService, aggregator)
         {
-            _contactsService = contactsService;
             _passcodeService = passcodeService;
 
             _showForwardedRules = TypeResolver.Current.Resolve<SettingsPrivacyShowForwardedViewModel>(SessionId);
@@ -249,16 +246,6 @@ namespace Telegram.ViewModels.Settings
             set => Set(ref _defaultTtl, value);
         }
 
-        public bool IsContactsSyncEnabled
-        {
-            get => Settings.IsContactsSyncEnabled;
-            set
-            {
-                Settings.IsContactsSyncEnabled = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public bool IsContactsSuggestEnabled
         {
             get => !ClientService.Options.DisableTopChats;
@@ -408,33 +395,6 @@ namespace Telegram.ViewModels.Settings
             ShowPopupAsync(new SettingsArchivePopup(ClientService));
         }
 
-        public async void ClearContacts()
-        {
-            var confirm = await ShowPopupAsync(Strings.SyncContactsDeleteInfo, Strings.Contacts, Strings.OK, Strings.Cancel);
-            if (confirm != ContentDialogResult.Primary)
-            {
-                return;
-            }
-
-            IsContactsSyncEnabled = false;
-
-            var clear = await ClientService.SendAsync(new ClearImportedContacts());
-            if (clear is Error)
-            {
-                // TODO
-            }
-
-            var contacts = await ClientService.SendAsync(new GetContacts());
-            if (contacts is Telegram.Td.Api.Users users)
-            {
-                var delete = await ClientService.SendAsync(new RemoveContacts(users.UserIds));
-                if (delete is Error)
-                {
-                    // TODO
-                }
-            }
-        }
-
         public async void ClearPayments()
         {
             var dialog = new ContentPopup();
@@ -542,29 +502,6 @@ namespace Telegram.ViewModels.Settings
         public void OpenMessages()
         {
             NavigationService.Navigate(typeof(SettingsPrivacyNewChatPage));
-        }
-
-        public override async void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            base.RaisePropertyChanged(propertyName);
-
-            if (propertyName.Equals(nameof(IsContactsSyncEnabled)))
-            {
-                if (IsContactsSyncEnabled)
-                {
-                    ClientService.Send(new GetContacts(), async result =>
-                    {
-                        if (result is Telegram.Td.Api.Users users)
-                        {
-                            await _contactsService.SyncAsync(users);
-                        }
-                    });
-                }
-                else
-                {
-                    await _contactsService.RemoveAsync();
-                }
-            }
         }
     }
 }

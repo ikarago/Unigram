@@ -15,15 +15,11 @@ namespace Telegram.ViewModels
 {
     public partial class LogOutViewModel : ViewModelBase
     {
-        private readonly INotificationsService _pushService;
-        private readonly IContactsService _contactsService;
         private readonly IPasscodeService _passcodeService;
 
-        public LogOutViewModel(IClientService clientService, ISettingsService settingsService, IEventAggregator aggregator, INotificationsService notificationsService, IContactsService contactsService, IPasscodeService passcodeService)
+        public LogOutViewModel(IClientService clientService, ISettingsService settingsService, IEventAggregator aggregator, IPasscodeService passcodeService)
             : base(clientService, settingsService, aggregator)
         {
-            _pushService = notificationsService;
-            _contactsService = contactsService;
             _passcodeService = passcodeService;
         }
 
