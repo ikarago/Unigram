@@ -738,7 +738,7 @@ namespace Telegram.Controls.Cells
             if (UnreadMentionsBadge.Visibility == Visibility.Collapsed
                 && UnreadBadge.Visibility == Visibility.Collapsed
                 && _clientService.TryGetUser(chat, out User user)
-                && user.Type is UserTypeBot)
+                && user.Type is UserTypeBot { HasMainWebApp: true })
             {
                 BotOpen.Visibility = Visibility.Visible;
             }
