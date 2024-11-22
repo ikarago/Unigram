@@ -335,6 +335,51 @@ namespace Telegram.Views
             }
         }
 
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (!_mainButtonCollapsed && !_secondaryButtonCollapsed)
+            {
+                var main = ElementComposition.GetElementVisual(MainButtonPanel);
+                var seco = ElementComposition.GetElementVisual(SecondaryButtonPanel);
+
+                var compositor = main.Compositor;
+
+                var half = BottomBarPanel.ActualSize.X / 2;
+                var quart = half / 2;
+
+                if (_secondaryButtonPosition == SecondaryButtonPosition.Left)
+                {
+                    main.Offset = new Vector3(half - quart, 48, 0);
+                    main.Clip = compositor.CreateInsetClip(quart, 0, quart, 0);
+
+                    seco.Offset = new Vector3(-quart, 48, 0);
+                    seco.Clip = compositor.CreateInsetClip(quart, 0, quart, 0);
+                }
+                else if (_secondaryButtonPosition == SecondaryButtonPosition.Top)
+                {
+                    main.Offset = new Vector3(0, 48, 0);
+                    seco.Offset = new Vector3(0, 0, 0);
+
+                    seco.Clip = compositor.CreateInsetClip(0, 0, 0, 0);
+                }
+                else if (_secondaryButtonPosition == SecondaryButtonPosition.Right)
+                {
+                    main.Offset = new Vector3(-quart, 48, 0);
+                    main.Clip = compositor.CreateInsetClip(quart, 0, quart, 0);
+
+                    seco.Offset = new Vector3(half - quart, 48, 0);
+                    seco.Clip = compositor.CreateInsetClip(quart, 0, quart, 0);
+                }
+                else if (_secondaryButtonPosition == SecondaryButtonPosition.Bottom)
+                {
+                    seco.Offset = new Vector3(0, 48, 0);
+                    main.Offset = new Vector3(0, 0, 0);
+
+                    seco.Clip = compositor.CreateInsetClip(0, 0, 0, 0);
+                }
+            }
+        }
+
         private void View_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             PostViewportChanged();
