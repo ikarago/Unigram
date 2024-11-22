@@ -226,7 +226,7 @@ namespace Telegram.Common
         public static async void DragStarting(MessageViewModel message, DragStartingEventArgs args)
         {
             var file = message?.GetFile();
-            if (file != null && file.Local.IsDownloadingCompleted)
+            if (file != null && file.Local.IsDownloadingCompleted && message.CanBeSaved)
             {
                 var deferral = args.GetDeferral();
 
@@ -262,6 +262,10 @@ namespace Telegram.Common
                 {
                     deferral.Complete();
                 }
+            }
+            else
+            {
+                args.Cancel = true;
             }
         }
 
