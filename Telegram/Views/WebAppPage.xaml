@@ -169,6 +169,13 @@
                 Grid.RowSpan="2"
                 Grid.Row="1" />
 
+        <Border x:Name="PlaceholderPanel"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Width="120"
+                Height="120"
+                Grid.RowSpan="3" />
+
         <controls:WebViewer x:Name="View"
                             Navigating="View_Navigating"
                             Navigated="View_Navigated"

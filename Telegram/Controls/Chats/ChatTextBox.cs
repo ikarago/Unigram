@@ -281,7 +281,8 @@ namespace Telegram.Controls.Chats
                 }
                 else if (e.Key == VirtualKey.Tab)
                 {
-                    if (modifiers == VirtualKeyModifiers.Control)
+                    // Ignored to allow Ctrl+Tab and Ctrl+Shift+Tab to switch chats
+                    if (modifiers != VirtualKeyModifiers.None)
                     {
                         return;
                     }
@@ -475,7 +476,7 @@ namespace Telegram.Controls.Chats
                         return true;
                     }
 
-                    autocomplete = new UsernameCollection(ViewModel.ClientService, ViewModel.Chat.Id, ViewModel.ThreadId, result, index == 0, members);
+                    autocomplete = new UsernameCollection(ViewModel.ClientService, ViewModel.Chat.Id, ViewModel.ThreadId, result, index == 0, members && result.Length > 0, false);
                     return true;
                 }
                 else if (entity == AutocompleteEntity.Hashtag)
@@ -663,10 +664,11 @@ namespace Telegram.Controls.Chats
 
             private readonly bool _bots;
             private readonly bool _members;
+            private readonly bool _self;
 
             private bool _hasMore = true;
 
-            public UsernameCollection(IClientService clientService, long chatId, long threadId, string query, bool bots, bool members)
+            public UsernameCollection(IClientService clientService, long chatId, long threadId, string query, bool bots, bool members, bool self)
             {
                 _clientService = clientService;
                 _chatId = chatId;
@@ -675,6 +677,7 @@ namespace Telegram.Controls.Chats
 
                 _bots = bots;
                 _members = members;
+                _self = self;
             }
 
             public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
@@ -703,13 +706,24 @@ namespace Telegram.Controls.Chats
 
                     if (_members)
                     {
+                        if (_self && _clientService.TryGetUser(_clientService.Options.MyId, out Td.Api.User self))
+                        {
+                            Add(self);
+                            count++;
+                        }
+
                         var response = await _clientService.SendAsync(new SearchChatMembers(_chatId, _query, 20, new ChatMembersFilterMention(_threadId)));
                         if (response is ChatMembers members)
                         {
                             foreach (var member in members.Members)
                             {
-                                if (_clientService.TryGetUser(member.MemberId, out Telegram.Td.Api.User user))
+                                if (_clientService.TryGetUser(member.MemberId, out Td.Api.User user))
                                 {
+                                    if (user.Id == _clientService.Options.MyId)
+                                    {
+                                        continue;
+                                    }
+
                                     Add(user);
                                     count++;
                                 }

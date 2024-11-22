@@ -71,7 +71,6 @@ namespace Telegram.Views
                 _clientService,
                 _settingsService,
                 _eventAggregator,
-                _contactsService,
                 _lifetimeService);
             _notificationsService = new Telegram.Services.NotificationsService(
                 _clientService,
@@ -492,8 +491,6 @@ namespace Telegram.Views
                         _clientService,
                         _settingsService,
                         _eventAggregator,
-                        _notificationsService,
-                        _contactsService,
                         _passcodeService);
                 case "Telegram.ViewModels.DiagnosticsViewModel":
                     return (T)(object)new Telegram.ViewModels.DiagnosticsViewModel(
@@ -583,7 +580,6 @@ namespace Telegram.Views
                         _clientService,
                         _settingsService,
                         _eventAggregator,
-                        _contactsService,
                         _passcodeService);
                 case "Telegram.ViewModels.Settings.Privacy.SettingsPrivacyAllowCallsViewModel":
                     return (T)(object)new Telegram.ViewModels.Settings.Privacy.SettingsPrivacyAllowCallsViewModel(
@@ -615,6 +611,11 @@ namespace Telegram.Views
                         Resolve<Telegram.ViewModels.Settings.Privacy.SettingsPrivacyAllowFindingByPhoneNumberViewModel>());
                 case "Telegram.ViewModels.Settings.Privacy.SettingsPrivacyShowPhoneViewModel":
                     return (T)(object)new Telegram.ViewModels.Settings.Privacy.SettingsPrivacyShowPhoneViewModel(
+                        _clientService,
+                        _settingsService,
+                        _eventAggregator);
+                case "Telegram.ViewModels.Settings.Privacy.SettingsPrivacyAutosaveGiftsViewModel":
+                    return (T)(object)new Telegram.ViewModels.Settings.Privacy.SettingsPrivacyAutosaveGiftsViewModel(
                         _clientService,
                         _settingsService,
                         _eventAggregator);

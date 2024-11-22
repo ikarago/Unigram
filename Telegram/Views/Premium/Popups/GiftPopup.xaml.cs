@@ -47,7 +47,7 @@ namespace Telegram.Views.Premium.Popups
 
         private readonly DiffObservableCollection<Gift> _gifts = new(Constants.DiffOptions);
 
-        public GiftPopup(IClientService clientService, INavigationService navigationService, User user)
+        public GiftPopup(IClientService clientService, INavigationService navigationService, User user, UserFullInfo fullInfo)
         {
             InitializeComponent();
 
@@ -67,7 +67,7 @@ namespace Telegram.Views.Premium.Popups
             ScrollingHost.ItemsSource = _gifts;
 
             InitializeOptions(clientService);
-            InitializeGifts(clientService);
+            InitializeGifts(clientService, fullInfo);
         }
 
         private void AddLink(TextBlock block, string text, TypedEventHandler<Hyperlink, HyperlinkClickEventArgs> handler)
@@ -118,35 +118,48 @@ namespace Telegram.Views.Premium.Popups
             }
         }
 
-        private async void InitializeGifts(IClientService clientService)
+        private async void InitializeGifts(IClientService clientService, UserFullInfo fullInfo)
         {
             var response = await clientService.SendAsync(new GetAvailableGifts());
             if (response is Gifts gifts)
             {
-                //ScrollingHost.ItemsSource = gifts.GiftsValue;
+                var all = new List<Gift>();
+                var remaining = new List<Gift>();
 
-                var ciccio = new List<GiftGroup>();
-                ciccio.Add(new GiftGroup(GiftGroupType.All, gifts.GiftsValue));
+                var today = fullInfo.Birthdate?.Day == DateTime.Today.Day && fullInfo.Birthdate?.Month == DateTime.Today.Month;
 
-                //Navigation.Items.Add(new TopNavViewItem { Content = Strings.Gift2TabAll });
-
-                if (gifts.GiftsValue.Any(x => x.TotalCount > 0))
+                foreach (var gift in gifts.GiftsValue)
                 {
-                    ciccio.Add(new GiftGroup(GiftGroupType.Limited, gifts.GiftsValue.Where(x => x.TotalCount > 0)));
-
-                    //Navigation.Items.Add(new TopNavViewItem { Content = Strings.Gift2TabLimited });
+                    if (gift.IsForBirthday && today)
+                    {
+                        all.Add(gift);
+                    }
+                    else
+                    {
+                        remaining.Add(gift);
+                    }
                 }
 
-                var groups = gifts.GiftsValue
+                all.AddRange(remaining);
+
+                var navigation = new List<GiftGroup>();
+                navigation.Add(new GiftGroup(GiftGroupType.All, all));
+
+                if (all.Any(x => x.TotalCount > 0))
+                {
+                    navigation.Add(new GiftGroup(GiftGroupType.Limited, all.Where(x => x.TotalCount > 0)));
+                }
+
+                var groups = all
                     .GroupBy(x => x.StarCount)
                     .OrderBy(x => x.Key);
 
                 foreach (var group in groups)
                 {
-                    ciccio.Add(new GiftGroup(GiftGroupType.StarCount, group));
+                    navigation.Add(new GiftGroup(GiftGroupType.StarCount, group));
                 }
 
-                Navigation.ItemsSource = ciccio;
+                Navigation.ItemsSource = navigation;
                 Navigation.SelectedIndex = 0;
             }
         }
@@ -185,16 +198,9 @@ namespace Telegram.Views.Premium.Popups
             {
                 userGiftCell.UpdateGift(_clientService, gift);
             }
-            else if (args.ItemContainer.ContentTemplateRoot is PremiumGiftCell premiumGiftCell)
+            else if (args.ItemContainer.ContentTemplateRoot is PremiumGiftCell premiumGiftCell && args.Item is PremiumGiftCodePaymentOption option)
             {
-                if (args.Item is PremiumPaymentOption option)
-                {
-                    premiumGiftCell.UpdatePremiumGift(_clientService, option);
-                }
-                else if (args.Item is PremiumGiftCodePaymentOption option2)
-                {
-                    premiumGiftCell.UpdatePremiumGift(_clientService, option2);
-                }
+                premiumGiftCell.UpdatePremiumGift(_clientService, option);
             }
 
             args.Handled = true;

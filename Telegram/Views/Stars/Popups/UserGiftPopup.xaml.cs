@@ -61,6 +61,7 @@ namespace Telegram.Views.Stars.Popups
             if (userId != clientService.Options.MyId)
             {
                 Subtitle.Visibility = Visibility.Collapsed;
+                Convert.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -82,7 +83,7 @@ namespace Telegram.Views.Stars.Popups
                 }
                 else
                 {
-                    if (gift.Date + clientService.Options.GiftSellPeriod > DateTime.Now.ToTimestamp())
+                    if (gift.SellStarCount > 0 && gift.Date + clientService.Options.GiftSellPeriod > DateTime.Now.ToTimestamp())
                     {
                         TextBlockHelper.SetMarkdown(Subtitle, Locale.Declension(Strings.R.Gift2Info, gift.SellStarCount));
                         Convert.Glyph = Locale.Declension(Strings.R.Gift2ButtonSell, gift.SellStarCount);

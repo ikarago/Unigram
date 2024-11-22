@@ -10,8 +10,8 @@
       Padding="12,6">
 
     <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
+        <RowDefinition Height="18" />
+        <RowDefinition Height="18" />
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto" />

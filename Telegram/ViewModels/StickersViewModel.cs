@@ -202,18 +202,18 @@ namespace Telegram.ViewModels
 
         public void Execute()
         {
-            Sticker thumbnail = null;
+            DelayedFileSource source = null;
 
             foreach (var set in Items)
             {
                 if (IsInstalled && set.IsInstalled)
                 {
-                    thumbnail ??= set.GetThumbnail();
+                    source ??= DelayedFileSource.FromStickerSetInfo(ClientService, set);
                     ClientService.Send(new ChangeStickerSet(set.Id, set.IsOfficial, set.IsOfficial));
                 }
                 else if (!IsInstalled && !set.IsInstalled)
                 {
-                    thumbnail ??= set.GetThumbnail();
+                    source ??= DelayedFileSource.FromStickerSetInfo(ClientService, set);
                     ClientService.Send(new ChangeStickerSet(set.Id, true, false));
                 }
             }
@@ -238,7 +238,7 @@ namespace Telegram.ViewModels
                 : string.Format(Strings.AddEmojiInstalledInfo, Title)
                 : string.Format(Strings.AddStickersInstalledInfo, Title);
 
-            ToastPopup.Show(XamlRoot, string.Format("**{0}**\n{1}", title, message), DelayedFileSource.FromSticker(ClientService, thumbnail));
+            ToastPopup.Show(XamlRoot, string.Format("**{0}**\n{1}", title, message), source);
         }
     }
 }

@@ -3004,9 +3004,10 @@ namespace Telegram.ViewModels
                 return;
             }
 
-            if (ClientService.TryGetUser(chat, out User user))
+            if (ClientService.TryGetUser(chat, out User user) &&
+                ClientService.TryGetUserFull(chat, out UserFullInfo fullInfo))
             {
-                await ShowPopupAsync(new GiftPopup(ClientService, NavigationService, user));
+                await ShowPopupAsync(new GiftPopup(ClientService, NavigationService, user, fullInfo));
             }
         }
 
@@ -3483,6 +3484,19 @@ namespace Telegram.ViewModels
             }
         }
 
+        public void ViewSponsoredMessage()
+        {
+            var chat = _chat;
+            var message = _sponsoredMessage;
+
+            if (chat == null || message == null)
+            {
+                return;
+            }
+
+            ClientService.Send(new ViewMessages(chat.Id, new[] { message.MessageId }, new MessageSourceChatHistory(), true));
+        }
+
         #region Unblock
 
         public async void Unblock()
@@ -3541,7 +3555,7 @@ namespace Telegram.ViewModels
             }
             else if (InlineBotResults.Button.Type is InlineQueryResultsButtonTypeWebApp webApp && _currentInlineBot is User botUser)
             {
-                var response = await ClientService.SendAsync(new GetWebAppUrl(botUser.Id, webApp.Url, Theme.Current.Parameters, "unigram"));
+                var response = await ClientService.SendAsync(new GetWebAppUrl(botUser.Id, webApp.Url, new WebAppOpenParameters(Theme.Current.Parameters, "unigram", new WebAppOpenModeFullSize())));
                 if (response is HttpUrl httpUrl)
                 {
                     NavigationService.NavigateToWebApp(botUser, httpUrl.Url, sourceChat: Chat);

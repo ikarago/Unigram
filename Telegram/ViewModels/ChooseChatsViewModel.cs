@@ -100,10 +100,10 @@ namespace Telegram.ViewModels
 
                 if (configurationSwitchInline.TargetChat is TargetChatChosen chosen)
                 {
-                    Options.AllowBotChats = chosen.AllowBotChats;
-                    Options.AllowUserChats = chosen.AllowUserChats;
-                    Options.AllowGroupChats = chosen.AllowGroupChats;
-                    Options.AllowChannelChats = chosen.AllowChannelChats;
+                    Options.AllowBotChats = chosen.Types.AllowBotChats;
+                    Options.AllowUserChats = chosen.Types.AllowUserChats;
+                    Options.AllowGroupChats = chosen.Types.AllowGroupChats;
+                    Options.AllowChannelChats = chosen.Types.AllowChannelChats;
                 }
             }
             else if (parameter is ChooseChatsConfigurationPostText configurationPostText)
@@ -286,7 +286,7 @@ namespace Telegram.ViewModels
                         continue;
                     }
 
-                    folder.UpdateCount(unreadCount.UnreadChatCount);
+                    folder.UpdateCount(unreadCount.UnreadChatCount, Settings.Notifications.IncludeMutedChatsInFolderCounters);
                 }
 
                 // Important not to raise SelectedFolder setter
@@ -642,7 +642,20 @@ namespace Telegram.ViewModels
             }
             else if (_configuration is ChooseChatsConfigurationSwitchInline switchInline)
             {
-                NavigationService.NavigateToChat(chats[0], state: NavigationState.GetSwitchQuery(switchInline.Query, switchInline.Bot.Id));
+                if (switchInline.Result != null)
+                {
+                    ShowForwardMessagesToast(chats, 1);
+
+                    foreach (var chat in chats)
+                    {
+                        SelectedTopics.TryGetValue(chat.Id, out long messageThreadId);
+                        ClientService.Send(new SendInlineQueryResultMessage(chat.Id, messageThreadId, null, null, switchInline.InlineQueryId, switchInline.Result.GetId(), false));
+                    }
+                }
+                else
+                {
+                    NavigationService.NavigateToChat(chats[0], state: NavigationState.GetSwitchQuery(switchInline.Query, switchInline.Bot.Id));
+                }
             }
             else if (_configuration is ChooseChatsConfigurationDataPackage configurationDataPackage)
             {

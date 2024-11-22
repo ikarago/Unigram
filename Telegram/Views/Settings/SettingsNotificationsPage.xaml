@@ -503,7 +503,7 @@
                                                        Style="{StaticResource BodyTextBlockStyle}"
                                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                        FontFamily="Segoe UI Variable" />
-                                            <TextBlock Text="via Unigram"
+                                            <TextBlock Text="{CustomResource NotificationPreviewAttribution}"
                                                        Style="{StaticResource CaptionTextBlockStyle}"
                                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                        FontFamily="Segoe UI Variable"
@@ -618,6 +618,10 @@
                 <controls:HeaderedControl Header="{CustomResource BadgeNumber}">
                     <CheckBox IsChecked="{x:Bind ViewModel.IncludeMutedChats, Mode=TwoWay}"
                               Content="{CustomResource BadgeNumberMutedChats}"
+                              Style="{StaticResource SettingsCheckBoxStyle}" />
+
+                    <CheckBox IsChecked="{x:Bind ViewModel.IncludeMutedChatsInFolderCounters, Mode=TwoWay}"
+                              Content="{CustomResource BadgeNumberMutedChatsFolders}"
                               Style="{StaticResource SettingsCheckBoxStyle}" />
 
                     <CheckBox IsChecked="{x:Bind ViewModel.CountUnreadMessages, Mode=TwoWay}"

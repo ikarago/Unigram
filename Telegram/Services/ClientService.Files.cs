@@ -441,6 +441,12 @@ namespace Telegram.Services
                         ProcessFiles(item);
                     }
                     break;
+                case BotTransactionPurposeSubscription botTransactionPurposeSubscription:
+                    if (botTransactionPurposeSubscription.ProductInfo != null)
+                    {
+                        ProcessFiles(botTransactionPurposeSubscription.ProductInfo);
+                    }
+                    break;
                 case BotWriteAccessAllowReasonLaunchedWebApp botWriteAccessAllowReasonLaunchedWebApp:
                     if (botWriteAccessAllowReasonLaunchedWebApp.WebApp != null)
                     {
@@ -1731,6 +1737,12 @@ namespace Telegram.Services
                         ProcessFiles(item);
                     }
                     break;
+                case PreparedInlineMessage preparedInlineMessage:
+                    if (preparedInlineMessage.Result != null)
+                    {
+                        ProcessFiles(preparedInlineMessage.Result);
+                    }
+                    break;
                 case ProductInfo productInfo:
                     if (productInfo.Photo != null)
                     {
@@ -1953,6 +1965,24 @@ namespace Telegram.Services
                     foreach (var item in sponsoredMessages.Messages)
                     {
                         ProcessFiles(item);
+                    }
+                    break;
+                case StarSubscription starSubscription:
+                    if (starSubscription.Type != null)
+                    {
+                        ProcessFiles(starSubscription.Type);
+                    }
+                    break;
+                case StarSubscriptions starSubscriptions:
+                    foreach (var item in starSubscriptions.Subscriptions)
+                    {
+                        ProcessFiles(item);
+                    }
+                    break;
+                case StarSubscriptionTypeBot starSubscriptionTypeBot:
+                    if (starSubscriptionTypeBot.Photo != null)
+                    {
+                        ProcessFiles(starSubscriptionTypeBot.Photo);
                     }
                     break;
                 case StarTransaction starTransaction:

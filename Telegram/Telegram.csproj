@@ -341,7 +341,6 @@
     <Compile Include="Services\Calls\VoipVideoType.cs" />
     <Compile Include="Services\Calls\VoipGroupCall.cs" />
     <Compile Include="Services\Calls\VoipGroupCallNetworkStateChangedEventArgs.cs" />
-    <Compile Include="Streams\PremiumInfoFileSource.cs" />
     <Compile Include="Td\Api\ReactionTypeEqualityComparer.cs" />
     <Compile Include="Controls\PremiumStarCount.cs" />
     <Compile Include="Controls\Stories\Widgets\StoryWeatherWidget.xaml.cs">
@@ -976,6 +975,7 @@
     <Compile Include="ViewModels\Settings\Privacy\SettingsPrivacyShowBirthdateViewModel.cs" />
     <Compile Include="ViewModels\Settings\Privacy\SettingsPrivacyShowBioViewModel.cs" />
     <Compile Include="ViewModels\Settings\Privacy\SettingsPrivacyNewChatViewModel.cs" />
+    <Compile Include="ViewModels\Settings\Privacy\SettingsPrivacyAutosaveGiftsViewModel.cs" />
     <Compile Include="ViewModels\Settings\SettingsPowerSavingViewModel.cs" />
     <Compile Include="ViewModels\Stars\PayViewModel.cs" />
     <Compile Include="ViewModels\Stars\StarsViewModel.cs" />
@@ -1225,6 +1225,9 @@
     <Compile Include="Views\Popups\EmojiStatusPopup.xaml.cs">
       <DependentUpon>EmojiStatusPopup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Popups\SendPreparedMessagePopup.xaml.cs">
+      <DependentUpon>SendPreparedMessagePopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Premium\Popups\ChangePrivacyPopup.xaml.cs">
       <DependentUpon>ChangePrivacyPopup.xaml</DependentUpon>
     </Compile>
@@ -1266,6 +1269,9 @@
     </Compile>
     <Compile Include="Views\Settings\Popups\SettingsBirthdatePopup.xaml.cs">
       <DependentUpon>SettingsBirthdatePopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\Privacy\SettingsPrivacyAutosaveGiftsPage.xaml.cs">
+      <DependentUpon>SettingsPrivacyAutosaveGiftsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\Privacy\SettingsPrivacyNewChatPage.xaml.cs">
       <DependentUpon>SettingsPrivacyNewChatPage.xaml</DependentUpon>
@@ -3100,6 +3106,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Popups\SendPreparedMessagePopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Premium\Popups\ChangePrivacyPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -3155,6 +3165,10 @@
     <Page Include="Views\Settings\Popups\SettingsBirthdatePopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Settings\Privacy\SettingsPrivacyAutosaveGiftsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Settings\Privacy\SettingsPrivacyNewChatPage.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -3779,7 +3793,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.HashCode">
-      <Version>1.1.1</Version>
+      <Version>6.0.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
@@ -3805,13 +3819,13 @@
       <Version>4.2.0</Version>
     </PackageReference>
     <PackageReference Include="System.Memory">
-      <Version>4.5.5</Version>
+      <Version>4.6.0</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>
     </PackageReference>
     <PackageReference Include="Telegram.Td.UWP">
-      <Version>1.8.39</Version>
+      <Version>1.8.40</Version>
     </PackageReference>
     <PackageReference Include="VideoLAN.LibVLC.UWP">
       <Version>3.0.21</Version>
@@ -3824,7 +3838,7 @@
       <Version>2.1.10</Version>
     </PackageReference>
     <PackageReference Include="System.Reflection.Metadata">
-      <Version>8.0.1</Version>
+      <Version>9.0.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

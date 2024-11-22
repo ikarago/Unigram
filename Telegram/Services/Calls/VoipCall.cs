@@ -309,7 +309,25 @@ namespace Telegram.Services.Calls
             }
         }
 
-        public async void Accept(XamlRoot xamlRoot)
+        public void Accept(bool video)
+        {
+            var media = VoipPhoneCallMedia.Audio;
+            if (video)
+            {
+                media |= VoipPhoneCallMedia.Video;
+            }
+
+            if (_systemCall != null)
+            {
+                _systemCall.NotifyCallAccepted(media);
+            }
+            else
+            {
+                Accept();
+            }
+        }
+
+        public void Accept()
         {
             try
             {
@@ -324,24 +342,9 @@ namespace Telegram.Services.Calls
                 // All the remote procedure calls must be wrapped in a try-catch block
             }
 
-            if (xamlRoot == null)
-            {
-                ClientService.Send(new AcceptCall(Id, VoipManager.Protocol));
+            ClientService.Send(new AcceptCall(Id, VoipManager.Protocol));
 
-                // TODO: consider delivering a fake update to speed up initialization
-            }
-            else
-            {
-                var permissions = await MediaDevicePermissions.CheckAccessAsync(xamlRoot, IsVideo ? MediaDeviceAccess.AudioAndVideo : MediaDeviceAccess.Audio, ElementTheme.Light);
-                if (permissions == false)
-                {
-                    ClientService.Send(new DiscardCall(Id, false, 0, false, 0));
-                }
-                else
-                {
-                    ClientService.Send(new AcceptCall(Id, VoipManager.Protocol));
-                }
-            }
+            // TODO: consider delivering a fake update to speed up initialization
         }
 
         public override void Discard()
@@ -884,7 +887,7 @@ namespace Telegram.Services.Calls
         private void OnAnswerRequested(VoipPhoneCall sender, CallAnswerEventArgs args)
         {
             IsVideo = args.AcceptedMedia.HasFlag(VoipPhoneCallMedia.Video);
-            Accept(null);
+            Accept();
         }
 
         private void OnRejectRequested(VoipPhoneCall sender, CallRejectEventArgs args)

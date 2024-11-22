@@ -1268,46 +1268,6 @@ namespace Telegram.Controls.Chats
                     return result;
                 }
 
-                public async Task CaptureFrameAsync()
-                {
-                    try
-                    {
-                        var frameSource = m_mediaCapture.FrameSources.FirstOrDefault(x => x.Value.Info.MediaStreamType == MediaStreamType.VideoRecord);
-                        if (frameSource.Value == null)
-                        {
-                            Logger.Info("No audio frame source was found.");
-                            return;
-                        }
-
-                        var format = frameSource.Value.CurrentFormat;
-                        if (format.Subtype != MediaEncodingSubtypes.Float)
-                        {
-                            Logger.Info("No audio frame source was found.");
-                            return;
-                        }
-
-                        var mediaFrameReader = await m_mediaCapture.CreateFrameReaderAsync(frameSource.Value);
-
-                        // Optionally set acquisition mode. Buffered is the default mode for audio.
-                        mediaFrameReader.AcquisitionMode = MediaFrameReaderAcquisitionMode.Realtime;
-                        //mediaFrameReader.FrameArrived += OnAudioFrameArrived;
-
-                        var status = await mediaFrameReader.StartAsync();
-                        if (status != MediaFrameReaderStartStatus.Success)
-                        {
-                            Logger.Info("The MediaFrameReader couldn't start.");
-                        }
-
-                        var frame = mediaFrameReader.TryAcquireLatestFrame();
-
-                        await mediaFrameReader.StopAsync();
-                    }
-                    catch
-                    {
-                        // A task was canceled.
-                    }
-                }
-
                 public void Dispose()
                 {
                     try

@@ -317,7 +317,7 @@ namespace Telegram.Controls.Cells
 
         private void OnStrokeChanged(SolidColorBrush newValue, SolidColorBrush oldValue)
         {
-            _strokeBrush?.PropertyChanged(newValue, oldValue, IsConnected);
+            _strokeBrush?.PropertyChanged(newValue, IsConnected);
         }
 
         #endregion
@@ -342,7 +342,7 @@ namespace Telegram.Controls.Cells
 
         private void OnSelectionStrokeChanged(SolidColorBrush newValue, SolidColorBrush oldValue)
         {
-            _selectionStrokeBrush?.PropertyChanged(newValue, oldValue, IsConnected);
+            _selectionStrokeBrush?.PropertyChanged(newValue, IsConnected);
         }
 
         #endregion

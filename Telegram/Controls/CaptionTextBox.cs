@@ -129,7 +129,7 @@ namespace Telegram.Controls
 
                     if (members)
                     {
-                        View.Autocomplete = new ChatTextBox.UsernameCollection(viewModel.ClientService, viewModel.Chat.Id, viewModel.ThreadId, result, false, members);
+                        View.Autocomplete = new ChatTextBox.UsernameCollection(viewModel.ClientService, viewModel.Chat.Id, viewModel.ThreadId, result, false, members && result.Length > 0, false);
                         return;
                     }
                 }

@@ -426,6 +426,7 @@ namespace Telegram
                 SettingsPrivacyShowBioPage => TypeResolver.Current.Resolve<SettingsPrivacyShowBioViewModel>(sessionId),
                 SettingsPrivacyShowBirthdatePage => TypeResolver.Current.Resolve<SettingsPrivacyShowBirthdateViewModel>(sessionId),
                 SettingsPrivacyNewChatPage => TypeResolver.Current.Resolve<SettingsPrivacyNewChatViewModel>(sessionId),
+                SettingsPrivacyAutosaveGiftsPage => TypeResolver.Current.Resolve<SettingsPrivacyAutosaveGiftsViewModel>(sessionId),
 
                 BusinessPage => TypeResolver.Current.Resolve<BusinessViewModel>(sessionId),
                 BusinessLocationPage => TypeResolver.Current.Resolve<BusinessLocationViewModel>(sessionId),

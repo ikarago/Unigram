@@ -330,6 +330,8 @@ namespace Telegram.Views
                 viewModel.MessageSliceLoaded -= OnMessageSliceLoaded;
             }
 
+            _updateThemeTask?.TrySetResult(true);
+
             Bindings.Update();
         }
 
@@ -1008,28 +1010,7 @@ namespace Telegram.Views
                     args.Handled = true;
                 }
             }
-        }
-
-        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
-        {
-            if (args.Key == VirtualKey.Delete)
-            {
-                if (ViewModel.IsSelectionEnabled && ViewModel.SelectedItems.Count > 0 && ViewModel.CanDeleteSelectedMessages)
-                {
-                    ViewModel.DeleteSelectedMessages();
-                    args.Handled = true;
-                }
-                else
-                {
-                    var focused = FocusManager.GetFocusedElement();
-                    if (focused is MessageSelector selector)
-                    {
-                        ViewModel.TryDeleteMessage(selector.Message);
-                        args.Handled = true;
-                    }
-                }
-            }
-            else if (args.Key == VirtualKey.C && args.Modifiers == VirtualKeyModifiers.Control)
+            else if (args.Key == VirtualKey.C && WindowContext.IsKeyDownAsync(VirtualKey.Control))
             {
                 if (ViewModel.IsSelectionEnabled && ViewModel.SelectedItems.Count > 0 && ViewModel.CanCopySelectedMessage)
                 {
@@ -1073,6 +1054,27 @@ namespace Telegram.Views
 
                             args.Handled = true;
                         }
+                    }
+                }
+            }
+        }
+
+        private void OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
+        {
+            if (args.Key == VirtualKey.Delete)
+            {
+                if (ViewModel.IsSelectionEnabled && ViewModel.SelectedItems.Count > 0 && ViewModel.CanDeleteSelectedMessages)
+                {
+                    ViewModel.DeleteSelectedMessages();
+                    args.Handled = true;
+                }
+                else
+                {
+                    var focused = FocusManager.GetFocusedElement();
+                    if (focused is MessageSelector selector)
+                    {
+                        ViewModel.TryDeleteMessage(selector.Message);
+                        args.Handled = true;
                     }
                 }
             }
@@ -2606,7 +2608,7 @@ namespace Telegram.Views
                     bot = senderUser.Type is UserTypeBot;
                 }
 
-                if (message.EditDate != 0 && message.ViaBotUserId == 0 && !bot && message.ReplyMarkup is not ReplyMarkupInlineKeyboard && !message.IsOutgoing)
+                if (message.EditDate != 0 && message.ViaBotUserId == 0 && !bot && message.ReplyMarkup is not ReplyMarkupInlineKeyboard)
                 {
                     var placeholder = new MenuFlyoutItem();
                     placeholder.Text = Formatter.EditDate(message.EditDate);
@@ -2616,7 +2618,7 @@ namespace Telegram.Views
                     flyout.Items.Add(placeholder);
                     flyout.CreateFlyoutSeparator();
                 }
-                else if (message.ForwardInfo != null && !message.IsSaved && !message.IsVerificationCode && !message.IsOutgoing)
+                else if (message.ForwardInfo != null && !message.IsSaved && !message.IsVerificationCode)
                 {
                     var placeholder = new MenuFlyoutItem();
                     placeholder.Text = Formatter.ForwardDate(message.ForwardInfo.Date);
@@ -2904,9 +2906,8 @@ namespace Telegram.Views
                 {
                     Width = 264,
                     Height = 48 * Math.Max(viewers.Count, reacted),
-                    MinHeight = 50,
-                    MaxHeight = 360,
-                    Margin = new Thickness(0, 0, 0, -2)
+                    MinHeight = 48,
+                    MaxHeight = 360
                 };
 
                 void handler(InteractionsView sender, ItemClickEventArgs e)
@@ -2937,7 +2938,7 @@ namespace Telegram.Views
                 {
                     if (reacted < viewers.Count)
                     {
-                        text = string.Format(Locale.Declension(Strings.R.Reacted, reacted, false), string.Format("{0}/{1}", message.InteractionInfo.Reactions.Reactions.Count, viewers.Count));
+                        text = string.Format(Locale.Declension(Strings.R.Reacted, reacted, false), string.Format("{0}/{1}", reacted, viewers.Count));
                     }
                     else
                     {
@@ -2990,6 +2991,7 @@ namespace Telegram.Views
             else
             {
                 placeholder.Text = Strings.NobodyViewed;
+                placeholder.IsEnabled = false;
             }
         }
 

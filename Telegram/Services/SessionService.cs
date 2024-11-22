@@ -37,14 +37,12 @@ namespace Telegram.Services
 
     public partial class SessionService : ViewModelBase, ISessionService
     {
-        private readonly IContactsService _contactsService;
         private readonly ILifetimeService _lifetimeService;
         private readonly int _id;
 
-        public SessionService(int session, bool selected, IClientService clientService, ISettingsService settingsService, IEventAggregator aggregator, IContactsService contactsService, ILifetimeService lifecycleService)
+        public SessionService(int session, bool selected, IClientService clientService, ISettingsService settingsService, IEventAggregator aggregator, ILifetimeService lifecycleService)
             : base(clientService, settingsService, aggregator)
         {
-            _contactsService = contactsService;
             _lifetimeService = lifecycleService;
             _id = session;
 
@@ -223,8 +221,6 @@ namespace Telegram.Services
 
                     Settings.Clear();
                     Settings.PasscodeLock.Clear();
-
-                    _ = _contactsService.RemoveAsync();
                 }
                 else if (_continueOnLogOut)
                 {

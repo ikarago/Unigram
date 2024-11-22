@@ -312,6 +312,7 @@ namespace Telegram.ViewModels
             {
                 FormattedText caption = null;
                 StyledText text = null;
+                bool showCaptionAboveMedia = false;
                 int editDate = 0;
 
                 if (album.IsMedia)
@@ -324,6 +325,7 @@ namespace Telegram.ViewModels
                             if (caption == null || string.IsNullOrEmpty(caption.Text))
                             {
                                 caption = childCaption;
+                                showCaptionAboveMedia = child.ShowCaptionAboveMedia();
                                 text = child.Text;
                                 editDate = child.EditDate;
                             }
@@ -339,11 +341,13 @@ namespace Telegram.ViewModels
                 else if (album.Messages.Count > 0)
                 {
                     caption = album.Messages[^1].GetCaption();
+                    showCaptionAboveMedia = album.Messages[^1].ShowCaptionAboveMedia();
                     text = album.Messages[^1].Text;
                     editDate = album.Messages[^1].EditDate;
                 }
 
                 album.Caption = caption ?? new FormattedText();
+                album.ShowCaptionAboveMedia = showCaptionAboveMedia;
                 Text = text;
                 EditDate = editDate;
             }

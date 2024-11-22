@@ -15,10 +15,10 @@ namespace Telegram.Composition
 {
     public partial class CompositionColorSource
     {
-        private SolidColorBrush _newValue;
+        private readonly CompositionColorBrush _brush;
 
+        private SolidColorBrush _newValue;
         private long _token;
-        private CompositionColorBrush _brush;
 
         public static implicit operator CompositionColorBrush(CompositionColorSource d) => d._brush;
 
@@ -40,11 +40,11 @@ namespace Telegram.Composition
             }
         }
 
-        public void PropertyChanged(SolidColorBrush newValue, SolidColorBrush oldValue, bool connected)
+        public void PropertyChanged(SolidColorBrush newValue, bool connected)
         {
-            if (oldValue != null && _token != 0)
+            if (_newValue != null && _token != 0)
             {
-                oldValue.UnregisterPropertyChangedCallback(SolidColorBrush.ColorProperty, _token);
+                _newValue.UnregisterPropertyChangedCallback(SolidColorBrush.ColorProperty, _token);
                 _token = 0;
             }
 

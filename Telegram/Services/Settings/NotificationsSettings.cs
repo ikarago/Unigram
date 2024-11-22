@@ -156,6 +156,13 @@ namespace Telegram.Services.Settings
             set => AddOrUpdateValue(ref _includeMutedChats, "IncludeMutedChats", value);
         }
 
+        private bool? _includeMutedChatsInFolderCounters;
+        public bool IncludeMutedChatsInFolderCounters
+        {
+            get => _includeMutedChatsInFolderCounters ??= GetValueOrDefault("IncludeMutedChatsInFolderCounters", true);
+            set => AddOrUpdateValue(ref _includeMutedChatsInFolderCounters, "IncludeMutedChatsInFolderCounters", value);
+        }
+
         private bool? _countUnreadMessages;
         public bool CountUnreadMessages
         {

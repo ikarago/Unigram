@@ -1022,7 +1022,7 @@ namespace Telegram.Views.Calls
 
         private void TempAccept_Click(object sender, RoutedEventArgs e)
         {
-            _call.Accept(XamlRoot);
+            _call.Accept(false);
         }
 
         private void Discard_Click(object sender, RoutedEventArgs e)

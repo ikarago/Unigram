@@ -692,9 +692,10 @@ namespace Telegram.ViewModels
                 return;
             }
 
-            if (ClientService.TryGetUser(chat, out User user))
+            if (ClientService.TryGetUser(chat, out User user) &&
+                ClientService.TryGetUserFull(chat, out UserFullInfo fullInfo))
             {
-                await ShowPopupAsync(new GiftPopup(ClientService, NavigationService, user));
+                await ShowPopupAsync(new GiftPopup(ClientService, NavigationService, user, fullInfo));
             }
         }
 
@@ -1220,7 +1221,7 @@ namespace Telegram.ViewModels
                 return;
             }
 
-            MessageHelper.NavigateToMainWebApp(ClientService, NavigationService, user, string.Empty);
+            MessageHelper.NavigateToMainWebApp(ClientService, NavigationService, user, string.Empty, new WebAppOpenModeFullSize());
         }
 
         #region Supergroup

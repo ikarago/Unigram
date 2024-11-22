@@ -176,8 +176,8 @@ namespace Telegram.Controls.Messages.Content
                 {
                     element.MinWidth = 0;
                     element.MinHeight = 0;
-                    element.MaxWidth = MessageAlbum.MAX_WIDTH;
-                    element.MaxHeight = MessageAlbum.MAX_HEIGHT;
+                    element.MaxWidth = double.PositiveInfinity;
+                    element.MaxHeight = double.PositiveInfinity;
                     element.Margin = new Thickness(0, 0, MessageAlbum.ITEM_MARGIN, MessageAlbum.ITEM_MARGIN);
                     element.Tag = true;
 

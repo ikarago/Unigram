@@ -138,6 +138,10 @@ namespace Telegram.Controls.Chats
                 {
                     Visibility = Visibility.Collapsed;
                 }
+                else
+                {
+                    ViewModel.ViewSponsoredMessage();
+                }
             };
 
             var clip = visual.Compositor.CreateScalarKeyFrameAnimation();

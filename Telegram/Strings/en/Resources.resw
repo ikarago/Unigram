@@ -256,6 +256,9 @@
   <data name="AccDescrProfilePicture" xml:space="preserve">
     <value>Profile photo</value>
   </data>
+  <data name="AccDescrReactedWith" xml:space="preserve">
+    <value>{0} reacted with {1}</value>
+  </data>
   <data name="AccDescrReceivedDate" xml:space="preserve">
     <value>Received {0}</value>
   </data>
@@ -315,6 +318,9 @@
   </data>
   <data name="AccDescrVolume" xml:space="preserve">
     <value>Volume</value>
+  </data>
+  <data name="AccDescrYouReactedWith" xml:space="preserve">
+    <value>You reacted with {0}</value>
   </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
@@ -1564,6 +1570,9 @@ Please enable Unigram in the Startup Apps Settings.</value>
   <data name="BadgeNumberMutedChats" xml:space="preserve">
     <value>Include Muted Chats</value>
   </data>
+  <data name="BadgeNumberMutedChatsFolders" xml:space="preserve">
+    <value>Include Muted Chats in Folder Counters</value>
+  </data>
   <data name="BadgeNumberShow" xml:space="preserve">
     <value>Show Badge Icon</value>
   </data>
@@ -1751,8 +1760,14 @@ from this chat</value>
   <data name="BoostingBoostsChannelByUserServiceMsg" xml:space="preserve">
     <value>{0} boosted the channel</value>
   </data>
+  <data name="BoostingBoostsChannelByUserServiceMsgCount_other" xml:space="preserve">
+    <value>{1} boosted the channel {0} times</value>
+  </data>
   <data name="BoostingBoostsChannelByYouServiceMsg" xml:space="preserve">
     <value>You boosted the channel</value>
+  </data>
+  <data name="BoostingBoostsChannelByYouServiceMsgCount_other" xml:space="preserve">
+    <value>You boosted the channel {0} times</value>
   </data>
   <data name="BoostingBoostsGroupByUserServiceMsg" xml:space="preserve">
     <value>{0} boosted the group</value>
@@ -2328,6 +2343,18 @@ It will be able to access your **IP address** and basic device info.</value>
   </data>
   <data name="BotShare" xml:space="preserve">
     <value>Share</value>
+  </data>
+  <data name="BotShareMessage" xml:space="preserve">
+    <value>Share Message</value>
+  </data>
+  <data name="BotShareMessageInfo" xml:space="preserve">
+    <value>{0} mini app suggests you to send this message to a chat you select.</value>
+  </data>
+  <data name="BotShareMessagePreview" xml:space="preserve">
+    <value>Message preview</value>
+  </data>
+  <data name="BotShareMessageShare" xml:space="preserve">
+    <value>Share with...</value>
   </data>
   <data name="BotsMenuTitle" xml:space="preserve">
     <value>Menu</value>
@@ -3988,6 +4015,9 @@ You can always switch back to the default Telegram theme here.</value>
   <data name="CustomP2PInfo" xml:space="preserve">
     <value>Peer-to-peer in calls will or will not be used with these users regardless of the settings above.</value>
   </data>
+  <data name="CustomShareGiftsInfo" xml:space="preserve">
+    <value>You can add users or entire groups as exceptions that will override the settings above.</value>
+  </data>
   <data name="CustomShareInfo" xml:space="preserve">
     <value>These users will or will not be able to add you to groups and channels regardless of the settings above.</value>
   </data>
@@ -5283,6 +5313,9 @@ Duration: {1}</value>
   </data>
   <data name="FilterAllChats" xml:space="preserve">
     <value>All Chats</value>
+  </data>
+  <data name="FilterAllChatsShort" xml:space="preserve">
+    <value>All</value>
   </data>
   <data name="FilterAlwaysShow" xml:space="preserve">
     <value>Include Chats</value>
@@ -7639,6 +7672,9 @@ Please make sure you entered the right Server URL and Stream Key in your app.</v
   <data name="NotificationMessageGame" xml:space="preserve">
     <value>{0} invited you to play {1}</value>
   </data>
+  <data name="NotificationPreviewAttribution" xml:space="preserve">
+    <value>via Unigram</value>
+  </data>
   <data name="NotificationPreviewLine1" xml:space="preserve">
     <value>Dino Rex</value>
   </data>
@@ -8731,6 +8767,9 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   <data name="PrivacyBotsInfo" xml:space="preserve">
     <value>Websites where you&apos;ve used Telegram to log in.</value>
   </data>
+  <data name="PrivacyBotUsersAnd" xml:space="preserve">
+    <value>Mini Apps &amp; {0}</value>
+  </data>
   <data name="PrivacyCallsP2PHelp" xml:space="preserve">
     <value>Disabling peer-to-peer will relay all calls through Telegram servers to avoid revealing your IP address, but may decrease audio and video quality.</value>
   </data>
@@ -8740,8 +8779,14 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   <data name="PrivacyClearShipping" xml:space="preserve">
     <value>Shipping info</value>
   </data>
+  <data name="PrivacyContactsAndBotUsers" xml:space="preserve">
+    <value>Contacts &amp; Mini Apps</value>
+  </data>
   <data name="PrivacyDeleteCloudDrafts" xml:space="preserve">
     <value>Delete All Cloud Drafts</value>
+  </data>
+  <data name="PrivacyExcludeBotUsers" xml:space="preserve">
+    <value>Mini Apps</value>
   </data>
   <data name="PrivacyForwards" xml:space="preserve">
     <value>Forwarded Messages</value>
@@ -8766,6 +8811,15 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   </data>
   <data name="PrivacyForwardsTitle" xml:space="preserve">
     <value>Who can add a link to my account when forwarding my messages?</value>
+  </data>
+  <data name="PrivacyGifts" xml:space="preserve">
+    <value>Gifts</value>
+  </data>
+  <data name="PrivacyGiftsInfo" xml:space="preserve">
+    <value>Choose whether gifts from specific senders need your approval before they’re visible to others on your profile.</value>
+  </data>
+  <data name="PrivacyGiftsTitle" xml:space="preserve">
+    <value>Who can display gifts on my profile</value>
   </data>
   <data name="PrivacyInvites" xml:space="preserve">
     <value>Invites</value>
@@ -8798,6 +8852,12 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   </data>
   <data name="PrivacyMessagesTitle" xml:space="preserve">
     <value>Who can send me messages?</value>
+  </data>
+  <data name="PrivacyMiniapps" xml:space="preserve">
+    <value>Mini Apps &amp; Bots</value>
+  </data>
+  <data name="PrivacyMiniappsText" xml:space="preserve">
+    <value>all bots</value>
   </data>
   <data name="PrivacyP2P" xml:space="preserve">
     <value>Peer-to-Peer Calls</value>
@@ -8870,6 +8930,18 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
   </data>
   <data name="PrivacyTitle" xml:space="preserve">
     <value>Privacy</value>
+  </data>
+  <data name="PrivacyValueBots" xml:space="preserve">
+    <value>Mini Apps</value>
+  </data>
+  <data name="PrivacyValueBotsAnd" xml:space="preserve">
+    <value>Mini Apps &amp; {0}</value>
+  </data>
+  <data name="PrivacyValueEveryoneExceptBots" xml:space="preserve">
+    <value>Except Mini Apps</value>
+  </data>
+  <data name="PrivacyValueOnlyBots" xml:space="preserve">
+    <value>Mini Apps</value>
   </data>
   <data name="PrivacyVoiceMessages" xml:space="preserve">
     <value>Voice Messages</value>
@@ -9249,7 +9321,7 @@ Payments will go directly to the developer of {0}. Telegram cannot provide any g
     <value>Add Comment</value>
   </data>
   <data name="Report2CommentInfo" xml:space="preserve">
-    <value>Please help us by telling what is wrong with the message you have selected.</value>
+    <value>Please help us by telling what is wrong with the message you are reporting.</value>
   </data>
   <data name="Report2CommentInfoChannel" xml:space="preserve">
     <value>Please help us by telling what is wrong with the channel you have selected.</value>

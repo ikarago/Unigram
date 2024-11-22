@@ -46,13 +46,36 @@ namespace Telegram.Controls.Messages
         {
             if (_reaction is MessageReaction interaction)
             {
+                string GetAutomationName(MessageSender sender, string emoji)
+                {
+                    if (_message.ClientService.TryGetUser(sender, out Td.Api.User user))
+                    {
+                        if (user.Id == _message.ClientService.Options.MyId)
+                        {
+                            return string.Format(Strings.AccDescrYouReactedWith, emoji);
+                        }
+
+                        return string.Format(Strings.AccDescrReactedWith, user.FullName(true), emoji);
+                    }
+                    else if (_message.ClientService.TryGetChat(sender, out Chat chat))
+                    {
+                        return string.Format(Strings.AccDescrReactedWith, chat.Title, emoji);
+                    }
+
+                    return Locale.Declension(Strings.R.AccDescrNumberOfPeopleReactions, interaction.TotalCount, emoji);
+                }
+
                 if (interaction.Type is ReactionTypeEmoji emoji)
                 {
-                    return Locale.Declension(Strings.R.AccDescrNumberOfPeopleReactions, interaction.TotalCount, emoji.Emoji);
+                    return interaction.TotalCount > 1 || interaction.RecentSenderIds.Count == 0
+                        ? Locale.Declension(Strings.R.AccDescrNumberOfPeopleReactions, interaction.TotalCount, emoji.Emoji)
+                        : GetAutomationName(interaction.RecentSenderIds[0], emoji.Emoji);
                 }
                 else
                 {
-                    return Locale.Declension(Strings.R.AccDescrNumberOfPeopleReactions, interaction.TotalCount, Strings.AccDescrCustomEmoji2);
+                    return interaction.TotalCount > 1 || interaction.RecentSenderIds.Count == 0
+                        ? Locale.Declension(Strings.R.AccDescrNumberOfPeopleReactions, interaction.TotalCount, Strings.AccDescrCustomEmoji2)
+                        : GetAutomationName(interaction.RecentSenderIds[0], Strings.AccDescrCustomEmoji2);
                 }
             }
 
@@ -232,9 +255,8 @@ namespace Telegram.Controls.Messages
             {
                 Width = 264,
                 Height = 48 * _reaction.TotalCount,
-                MinHeight = 50,
-                MaxHeight = 360,
-                Margin = new Thickness(0, 0, 0, -2)
+                MinHeight = 48,
+                MaxHeight = 360
             };
 
             void handler(InteractionsView sender, ItemClickEventArgs e)
@@ -337,7 +359,6 @@ namespace Telegram.Controls.Messages
 
         protected void Animate(File around, bool cache)
         {
-            _aroundCompleted = false;
             Icon?.Play();
 
             var popup = Overlay;
@@ -367,13 +388,9 @@ namespace Telegram.Controls.Messages
             popup.IsOpen = true;
         }
 
-        private bool _aroundCompleted;
-
         private void Continue()
         {
             Logger.Info();
-
-            _aroundCompleted = true;
 
             var popup = Overlay;
             if (popup == null)

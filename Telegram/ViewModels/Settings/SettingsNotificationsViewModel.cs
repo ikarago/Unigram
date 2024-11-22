@@ -191,9 +191,27 @@ namespace Telegram.ViewModels.Settings
                 Settings.Notifications.IncludeMutedChats = value;
                 RaisePropertyChanged();
 
-                var unreadCount = ClientService.GetUnreadCount(new ChatListMain());
-                Aggregator.Publish(unreadCount.UnreadChatCount);
-                Aggregator.Publish(unreadCount.UnreadMessageCount);
+                foreach (var unreadCount in ClientService.UnreadCounts)
+                {
+                    Aggregator.Publish(unreadCount.UnreadChatCount);
+                    Aggregator.Publish(unreadCount.UnreadMessageCount);
+                }
+            }
+        }
+
+        public bool IncludeMutedChatsInFolderCounters
+        {
+            get => Settings.Notifications.IncludeMutedChatsInFolderCounters;
+            set
+            {
+                Settings.Notifications.IncludeMutedChatsInFolderCounters = value;
+                RaisePropertyChanged();
+
+                foreach (var unreadCount in ClientService.UnreadCounts)
+                {
+                    Aggregator.Publish(unreadCount.UnreadChatCount);
+                    Aggregator.Publish(unreadCount.UnreadMessageCount);
+                }
             }
         }
 
@@ -205,9 +223,11 @@ namespace Telegram.ViewModels.Settings
                 Settings.Notifications.CountUnreadMessages = value;
                 RaisePropertyChanged();
 
-                var unreadCount = ClientService.GetUnreadCount(new ChatListMain());
-                Aggregator.Publish(unreadCount.UnreadChatCount);
-                Aggregator.Publish(unreadCount.UnreadMessageCount);
+                foreach (var unreadCount in ClientService.UnreadCounts)
+                {
+                    Aggregator.Publish(unreadCount.UnreadChatCount);
+                    Aggregator.Publish(unreadCount.UnreadMessageCount);
+                }
             }
         }
 

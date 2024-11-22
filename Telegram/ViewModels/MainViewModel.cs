@@ -196,7 +196,8 @@ namespace Telegram.ViewModels
                 {
                     if (folder.ChatList is ChatListFolder && folder.ChatList.AreTheSame(update.ChatList))
                     {
-                        folder.UpdateCount(update);
+                        folder.UpdateCount(update, base.Settings.Notifications.IncludeMutedChatsInFolderCounters);
+                        return;
                     }
                 }
             });
@@ -266,7 +267,7 @@ namespace Telegram.ViewModels
                         continue;
                     }
 
-                    folder.UpdateCount(unreadCount.UnreadChatCount);
+                    folder.UpdateCount(unreadCount.UnreadChatCount, base.Settings.Notifications.IncludeMutedChatsInFolderCounters);
                 }
             }
             else
@@ -390,7 +391,7 @@ namespace Telegram.ViewModels
 
             if (mode == NavigationMode.New)
             {
-                _ = Task.Run(() => _contactsService.JumpListAsync());
+                _ = Task.Run(_contactsService.JumpListAsync);
             }
 
             return Task.CompletedTask;
@@ -723,20 +724,20 @@ namespace Telegram.ViewModels
 
         public bool ShowCount => UnreadCount > 0;
 
-        public void UpdateCount(UpdateUnreadChatCount update)
+        public void UpdateCount(UpdateUnreadChatCount update, bool includeMutedChats)
         {
             var unreadCount = update.UnreadCount;
             var unreadUnmutedCount = update.UnreadUnmutedCount;
             var unreadMutedCount = update.UnreadCount - update.UnreadUnmutedCount;
 
-            if (unreadMutedCount > 0 && unreadUnmutedCount == 0)
+            if (unreadMutedCount > 0 && unreadUnmutedCount == 0 && includeMutedChats)
             {
                 UnreadCount = unreadMutedCount;
                 IsUnmuted = false;
             }
             else
             {
-                UnreadCount = unreadCount;
+                UnreadCount = includeMutedChats ? unreadCount : unreadUnmutedCount;
                 IsUnmuted = true;
             }
 

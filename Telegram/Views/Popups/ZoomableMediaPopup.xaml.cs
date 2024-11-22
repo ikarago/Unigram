@@ -144,7 +144,7 @@ namespace Telegram.Views.Popups
                     FrameSize = new Size(180, 180),
                     DecodeFrameType = DecodePixelType.Logical,
                     IsCachingEnabled = true,
-                    Source = new LocalFileSource(sticker)
+                    Source = new LocalFileSource(sticker.StickerValue)
                 };
             }
             else

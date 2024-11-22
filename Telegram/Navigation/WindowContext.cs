@@ -527,9 +527,6 @@ namespace Telegram.Navigation
         {
             WatchDog.TrackEvent("ShareTarget");
 
-            var query = "tg://";
-            var chatId = 0L;
-
             if (state is AuthorizationStateReady)
             {
                 var package = new DataPackage();
@@ -572,25 +569,7 @@ namespace Telegram.Navigation
                 }
                 catch { }
 
-                try
-                {
-                    var contactId = await ContactsService.GetContactIdAsync(args.ShareOperation.Contacts.FirstOrDefault());
-                    if (contactId is long userId)
-                    {
-                        var response = await TypeResolver.Current.Lifetime.ActiveItem.ClientService.SendAsync(new CreatePrivateChat(userId, false));
-                        if (response is Chat chat)
-                        {
-                            query = $"ms-contact-profile://meh?ContactRemoteIds=u" + userId;
-                            chatId = chat.Id;
-                        }
-                    }
-                }
-                catch
-                {
-                    // ShareOperation.Contacts can throw an InvalidCastException
-                }
-
-                App.DataPackages[chatId] = package.GetView();
+                App.DataPackages[0] = package.GetView();
                 App.ShareOperation = args.ShareOperation;
             }
 
@@ -599,7 +578,7 @@ namespace Telegram.Navigation
 
             try
             {
-                await Windows.System.Launcher.LaunchUriAsync(new Uri(query), options);
+                await Windows.System.Launcher.LaunchUriAsync(new Uri("tg://"), options);
             }
             catch
             {

@@ -70,8 +70,10 @@ namespace Telegram.ViewModels.Settings
             var badge = string.Empty;
 
             var restricted = 0;
+            var restrictedBots = false;
             var allowed = 0;
             var allowedPremium = false;
+            var allowedBots = false;
             UserPrivacySettingRuleAllowUsers allowedUsers = null;
             UserPrivacySettingRuleAllowChatMembers allowedChatMembers = null;
             UserPrivacySettingRuleRestrictUsers restrictedUsers = null;
@@ -106,6 +108,14 @@ namespace Telegram.ViewModels.Settings
                 else if (current is UserPrivacySettingRuleAllowPremiumUsers)
                 {
                     allowedPremium = true;
+                }
+                else if (current is UserPrivacySettingRuleAllowBots)
+                {
+                    allowedBots = true;
+                }
+                else if (current is UserPrivacySettingRuleRestrictBots)
+                {
+                    restrictedBots = true;
                 }
                 else if (current is UserPrivacySettingRuleRestrictChatMembers restrictChatMembers)
                 {
@@ -158,15 +168,29 @@ namespace Telegram.ViewModels.Settings
                 primary = PrivacyValue.DisallowAll;
                 badge = allowedPremium
                     ? Strings.LastSeenNobodyPremium
+                    : allowedBots
+                    ? Strings.PrivacyValueBots
                     : Strings.LastSeenNobody;
             }
             else if (primary == PrivacyValue.AllowContacts && allowedPremium)
             {
                 badge = Strings.LastSeenContactsPremium;
             }
+            else if (primary == PrivacyValue.AllowContacts && allowedBots)
+            {
+                badge = Strings.PrivacyContactsAndBotUsers;
+            }
             else if (primary == PrivacyValue.DisallowAll && allowedPremium)
             {
                 badge = Strings.LastSeenNobodyPremium;
+            }
+            else if (primary == PrivacyValue.DisallowAll && allowedBots)
+            {
+                badge = Strings.PrivacyValueBots;
+            }
+            else if (primary == PrivacyValue.AllowAll && restrictedBots)
+            {
+                badge = Strings.PrivacyValueEveryoneExceptBots;
             }
 
             var list = new List<string>();
@@ -187,21 +211,36 @@ namespace Telegram.ViewModels.Settings
             _restrictedUsers = restrictedUsers ?? new UserPrivacySettingRuleRestrictUsers(Array.Empty<long>());
             _restrictedChatMembers = restrictedChatMembers ?? new UserPrivacySettingRuleRestrictChatMembers(Array.Empty<long>());
 
+            _restrictedBots = restrictedBots;
+
             _allowedUsers = allowedUsers ?? new UserPrivacySettingRuleAllowUsers(Array.Empty<long>());
             _allowedChatMembers = allowedChatMembers ?? new UserPrivacySettingRuleAllowChatMembers(Array.Empty<long>());
 
             _allowedPremium = allowedPremium;
+            _allowedBots = allowedBots;
 
             BeginOnUIThread(() =>
             {
                 SelectedItem = primary ?? PrivacyValue.DisallowAll;
 
                 Badge = badge;
-                RestrictedBadge = restricted > 0 ? Locale.Declension(Strings.R.Users, restricted) : Strings.EmpryUsersPlaceholder;
+
+                if (restrictedBots)
+                {
+                    RestrictedBadge = restricted > 0 ? string.Format(Strings.PrivacyValueBotsAnd, Locale.Declension(Strings.R.Users, restricted)) : Strings.PrivacyValueBots;
+                }
+                else
+                {
+                    RestrictedBadge = restricted > 0 ? Locale.Declension(Strings.R.Users, restricted) : Strings.EmpryUsersPlaceholder;
+                }
 
                 if (allowedPremium)
                 {
                     AllowedBadge = allowed > 0 ? string.Format(Strings.PrivacyPremiumAnd, Locale.Declension(Strings.R.Users, allowed)) : Strings.PrivacyPremium;
+                }
+                else if (allowedBots)
+                {
+                    AllowedBadge = allowed > 0 ? string.Format(Strings.PrivacyValueBotsAnd, Locale.Declension(Strings.R.Users, allowed)) : Strings.PrivacyValueBots;
                 }
                 else
                 {
@@ -233,6 +272,7 @@ namespace Telegram.ViewModels.Settings
         }
 
         private bool _allowedPremium;
+        private bool _allowedBots;
 
         private UserPrivacySettingRuleAllowUsers _allowedUsers;
         private UserPrivacySettingRuleAllowChatMembers _allowedChatMembers;
@@ -245,6 +285,8 @@ namespace Telegram.ViewModels.Settings
             get => _restrictedBadge;
             set => Set(ref _restrictedBadge, value);
         }
+
+        private bool _restrictedBots;
 
         private UserPrivacySettingRuleRestrictUsers _restrictedUsers;
         private UserPrivacySettingRuleRestrictChatMembers _restrictedChatMembers;
@@ -281,6 +323,7 @@ namespace Telegram.ViewModels.Settings
             popup.ViewModel.AllowEmptySelection = true;
 
             var allowedPremium = false;
+            var allowedBots = false;
 
             if (_inputKey is UserPrivacySettingAllowChatInvites && SelectedItem != PrivacyValue.AllowAll)
             {
@@ -299,7 +342,7 @@ namespace Telegram.ViewModels.Settings
 
                 var button = new Button
                 {
-                    Style = BootStrapper.Current.Resources["EmptyButtonStyle"] as Style,
+                    Style = BootStrapper.Current.Resources["ListEmptyButtonStyle"] as Style,
                     HorizontalContentAlignment = HorizontalAlignment.Stretch,
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     Padding = new Thickness(0),
@@ -312,6 +355,40 @@ namespace Telegram.ViewModels.Settings
                 {
                     allowedPremium = !allowedPremium;
                     cell.UpdateState(allowedPremium, true, false);
+                };
+
+                popup.Header = button;
+            }
+            else if (_inputKey is UserPrivacySettingAutosaveGifts && SelectedItem == PrivacyValue.DisallowAll)
+            {
+                var cell = new ChatShareCell
+                {
+                    PhotoSource = PlaceholderImage.GetGlyph(Icons.BotFilled),
+                    PhotoShape = ProfilePictureShape.Superellipse,
+                    Title = Strings.PrivacyMiniapps,
+                    SelectionStroke = BootStrapper.Current.Resources["ContentDialogBackground"] as SolidColorBrush,
+                    Stroke = BootStrapper.Current.Resources["ChatLastMessageStateBrush"] as SolidColorBrush,
+                    Padding = new Thickness(12, 6, 12, 6)
+                };
+
+                allowedBots = _allowedBots;
+                cell.UpdateState(allowedBots, false, false);
+
+                var button = new Button
+                {
+                    Style = BootStrapper.Current.Resources["ListEmptyButtonStyle"] as Style,
+                    HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    Padding = new Thickness(0),
+                    Margin = new Thickness(12, 0, 12, 0),
+                    Background = new SolidColorBrush(Colors.Transparent),
+                    Content = cell
+                };
+
+                button.Click += (s, args) =>
+                {
+                    allowedBots = !allowedBots;
+                    cell.UpdateState(allowedBots, true, false);
                 };
 
                 popup.Header = button;
@@ -354,10 +431,11 @@ namespace Telegram.ViewModels.Settings
             }
 
             _allowedPremium = allowedPremium;
+            _allowedBots = allowedBots;
             _allowedUsers = new UserPrivacySettingRuleAllowUsers(users);
             _allowedChatMembers = new UserPrivacySettingRuleAllowChatMembers(chats);
 
-            AllowedBadge = GetBadge(_allowedUsers.UserIds, _allowedChatMembers.ChatIds, _allowedPremium);
+            AllowedBadge = GetBadge(_allowedUsers.UserIds, _allowedChatMembers.ChatIds, _allowedPremium, _allowedBots);
         }
 
         public async void Never()
@@ -390,6 +468,43 @@ namespace Telegram.ViewModels.Settings
             popup.PrimaryButtonText = Strings.OK;
             popup.ViewModel.NavigationService = NavigationService;
             popup.ViewModel.AllowEmptySelection = true;
+
+            var restrictedBots = false;
+
+            if (_inputKey is UserPrivacySettingAutosaveGifts && SelectedItem == PrivacyValue.AllowAll)
+            {
+                var cell = new ChatShareCell
+                {
+                    PhotoSource = PlaceholderImage.GetGlyph(Icons.BotFilled),
+                    PhotoShape = ProfilePictureShape.Superellipse,
+                    Title = Strings.PrivacyMiniapps,
+                    SelectionStroke = BootStrapper.Current.Resources["ContentDialogBackground"] as SolidColorBrush,
+                    Stroke = BootStrapper.Current.Resources["ChatLastMessageStateBrush"] as SolidColorBrush,
+                    Padding = new Thickness(12, 6, 12, 6)
+                };
+
+                restrictedBots = _restrictedBots;
+                cell.UpdateState(restrictedBots, false, false);
+
+                var button = new Button
+                {
+                    Style = BootStrapper.Current.Resources["ListEmptyButtonStyle"] as Style,
+                    HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    Padding = new Thickness(0),
+                    Margin = new Thickness(12, 0, 12, 0),
+                    Background = new SolidColorBrush(Colors.Transparent),
+                    Content = cell
+                };
+
+                button.Click += (s, args) =>
+                {
+                    restrictedBots = !restrictedBots;
+                    cell.UpdateState(restrictedBots, true, false);
+                };
+
+                popup.Header = button;
+            }
 
             switch (_inputKey)
             {
@@ -427,9 +542,11 @@ namespace Telegram.ViewModels.Settings
                 }
             }
 
+            _restrictedBots = restrictedBots;
             _restrictedUsers = new UserPrivacySettingRuleRestrictUsers(users);
             _restrictedChatMembers = new UserPrivacySettingRuleRestrictChatMembers(chats);
-            RestrictedBadge = GetBadge(_restrictedUsers.UserIds, _restrictedChatMembers.ChatIds, false);
+
+            RestrictedBadge = GetBadge(_restrictedUsers.UserIds, _restrictedChatMembers.ChatIds, false, _restrictedBots);
         }
 
         public virtual async void Save()
@@ -449,9 +566,17 @@ namespace Telegram.ViewModels.Settings
         {
             var rules = new List<UserPrivacySettingRule>();
 
-            if (_allowedPremium && _inputKey is UserPrivacySettingAllowChatInvites)
+            if (_allowedPremium && _inputKey is UserPrivacySettingAllowChatInvites && _selectedItem != PrivacyValue.AllowAll)
             {
                 rules.Add(new UserPrivacySettingRuleAllowPremiumUsers());
+            }
+            else if (_allowedBots && _inputKey is UserPrivacySettingAutosaveGifts && _selectedItem == PrivacyValue.DisallowAll)
+            {
+                rules.Add(new UserPrivacySettingRuleAllowBots());
+            }
+            else if (_restrictedBots && _inputKey is UserPrivacySettingAutosaveGifts && _selectedItem == PrivacyValue.AllowAll)
+            {
+                rules.Add(new UserPrivacySettingRuleRestrictBots());
             }
 
             if (_allowedUsers != null && _allowedUsers.UserIds.Count > 0 && _selectedItem != PrivacyValue.AllowAll)
@@ -488,7 +613,7 @@ namespace Telegram.ViewModels.Settings
             return ClientService.SendAsync(new SetUserPrivacySettingRules(_inputKey, new UserPrivacySettingRules(rules)));
         }
 
-        private string GetBadge(IList<long> userIds, IList<long> chatIds, bool allowedPremium)
+        private string GetBadge(IList<long> userIds, IList<long> chatIds, bool allowedPremium, bool allowedBots)
         {
             var count = userIds.Count;
 
@@ -513,6 +638,10 @@ namespace Telegram.ViewModels.Settings
             if (allowedPremium)
             {
                 return count > 0 ? string.Format(Strings.PrivacyPremiumAnd, Locale.Declension(Strings.R.Users, count)) : Strings.PrivacyPremium;
+            }
+            else if (allowedBots)
+            {
+                return count > 0 ? string.Format(Strings.PrivacyValueBotsAnd, Locale.Declension(Strings.R.Users, count)) : Strings.PrivacyValueBots;
             }
 
             return count > 0 ? Locale.Declension(Strings.R.Users, count) : Strings.EmpryUsersPlaceholder;

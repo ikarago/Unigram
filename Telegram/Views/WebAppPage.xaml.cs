@@ -28,6 +28,7 @@ using Windows.Data.Json;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Composition;
+using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.StartScreen;
 using Windows.UI.ViewManagement;
@@ -66,6 +67,9 @@ namespace Telegram.Views
 
         private bool _settingsVisible;
 
+        private CompositionAnimation _placeholderShimmer;
+        private ShapeVisual _placeholderVisual;
+
         // TODO: constructor should take a function and URL should be loaded asynchronously
         public WebAppPage(IClientService clientService, User botUser, string url, long launchId = 0, AttachmentMenuBot menuBot = null, Chat sourceChat = null, InternalLinkType sourceLink = null)
         {
@@ -84,12 +88,12 @@ namespace Telegram.Views
             _launchId = launchId;
             _menuBot = menuBot;
             _sourceChat = sourceChat;
-            _sourceLink = sourceLink != null ? new InternalLinkTypeMainWebApp(botUser.ActiveUsername(), string.Empty, false) : null;
+            _sourceLink = sourceLink != null ? new InternalLinkTypeMainWebApp(botUser.ActiveUsername(), string.Empty, new WebAppOpenModeFullSize()) : null;
 
             TitleText.Text = botUser.FullName();
             Photo.SetUser(clientService, botUser, 24);
 
-            View.Navigate(url.Replace("7.10", "7.12"));
+            View.Navigate(url);
 
             var panel = ElementComposition.GetElementVisual(BottomBarPanel);
             panel.Clip = panel.Compositor.CreateInsetClip(0, 96, 0, 0);
@@ -97,6 +101,7 @@ namespace Telegram.Views
             ElementCompositionPreview.SetIsTranslationEnabled(TitleText, true);
 
             Window.Current.SetTitleBar(TitleBar);
+            Window.Current.Activated += OnActivated;
 
             SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += OnCloseRequested;
             ApplicationView.GetForCurrentView().VisibleBoundsChanged += OnVisibleBoundsChanged;
@@ -105,6 +110,43 @@ namespace Telegram.Views
             var navigationClient = (IApplicationWindowTitleBarNavigationClient)coreWindow.NavigationClient;
 
             navigationClient.TitleBarPreferredVisibilityMode = AppWindowTitleBarVisibility.AlwaysHidden;
+
+            LoadPlaceholder();
+        }
+
+        private async void LoadPlaceholder()
+        {
+            _clientService.TryGetUserFull(_botUser.Id, out UserFullInfo fullInfo);
+            fullInfo ??= await _clientService.SendAsync(new GetUserFullInfo(_botUser.Id)) as UserFullInfo;
+
+            if (fullInfo?.BotInfo == null)
+            {
+                return;
+            }
+
+            var header = RequestedTheme == ElementTheme.Light
+                ? fullInfo.BotInfo.WebAppHeaderLightColor
+                : fullInfo.BotInfo.WebAppHeaderDarkColor;
+            var background = RequestedTheme == ElementTheme.Light
+                ? fullInfo.BotInfo.WebAppBackgroundLightColor
+                : fullInfo.BotInfo.WebAppBackgroundDarkColor;
+
+            if (header != -1)
+            {
+                ProcessHeaderColor(header.ToColor());
+            }
+
+            if (background != -1)
+            {
+                ProcessBackgroundColor(background.ToColor());
+            }
+
+            var response = await _clientService.SendAsync(new GetWebAppPlaceholder(_botUser.Id));
+            if (response is Outline outline && outline.Paths.Count > 0)
+            {
+                _placeholderShimmer = CompositionPathParser.ParseThumbnail(512, 512, outline.Paths, out _placeholderVisual);
+                ElementCompositionPreview.SetElementChildVisual(PlaceholderPanel, _placeholderVisual);
+            }
         }
 
         public bool AreTheSame(InternalLinkType internalLink)
@@ -259,6 +301,11 @@ namespace Telegram.Views
             View.Close();
         }
 
+        private void OnActivated(object sender, WindowActivatedEventArgs e)
+        {
+            PostEvent("visibility_changed", "{ is_visible: " + (e.WindowActivationState != CoreWindowActivationState.Deactivated ? "true" : "false") + " }");
+        }
+
         private async void OnCloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
         {
             if (_closeNeedConfirmation)
@@ -290,7 +337,7 @@ namespace Telegram.Views
 
         private void View_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            SendViewport();
+            PostViewportChanged();
         }
 
         private void MainButton_Click(object sender, RoutedEventArgs e)
@@ -372,7 +419,13 @@ namespace Telegram.Views
 
         private void View_Navigated(object sender, WebViewerNavigatedEventArgs e)
         {
-            SendViewport();
+            PostViewportChanged();
+            PostThemeChanged();
+
+            _placeholderShimmer = null;
+            _placeholderVisual = null;
+
+            PlaceholderPanel.Visibility = Visibility.Collapsed;
         }
 
         private void View_EventReceived(object sender, WebViewerEventReceivedEventArgs e)
@@ -419,7 +472,7 @@ namespace Telegram.Views
             }
             else if (eventName == "web_app_request_viewport")
             {
-                SendViewport();
+                PostViewportChanged();
             }
             else if (eventName == "web_app_open_tg_link")
             {
@@ -493,6 +546,14 @@ namespace Telegram.Views
             {
                 ProcessSetEmojiStatus(eventData);
             }
+            else if (eventName == "web_app_send_prepared_message")
+            {
+                ProcessSendPreparedMessage(eventData);
+            }
+            else if (eventName == "web_app_request_file_download")
+            {
+                ProcessRequestFileDownload(eventData);
+            }
             else if (eventName == "web_app_start_accelerometer")
             {
                 PostEvent("accelerometer_failed", "{ error: \"UNSUPPORTED\" }");
@@ -513,6 +574,54 @@ namespace Telegram.Views
             else if (eventName == "share_score")
             {
                 ProcessShareGame(true);
+            }
+        }
+
+        private async void ProcessSendPreparedMessage(JsonObject eventData)
+        {
+            var preparedMessageId = eventData.GetNamedString("id", string.Empty);
+
+            var response = await _clientService.SendAsync(new GetPreparedInlineMessage(_botUser.Id, preparedMessageId));
+            if (response is PreparedInlineMessage prepared)
+            {
+                var response2 = await _clientService.SendAsync(new SendInlineQueryResultMessage(_clientService.Options.MyId, 0, null, Constants.PreviewOnly, prepared.InlineQueryId, prepared.Result.GetId(), false));
+                if (response2 is not Message message)
+                {
+                    PostEvent("prepared_message_failed", "{ error: \"UNKNOWN_ERROR\" }");
+                    return;
+                }
+
+                var confirm2 = await _navigationService.ShowPopupAsync(new SendPreparedMessagePopup(_clientService, _navigationService, message, _botUser));
+                if (confirm2 != ContentDialogResult.Primary)
+                {
+                    PostEvent("prepared_message_failed", "{ error: \"USER_DECLINED\" }");
+                    return;
+                }
+
+                var confirm = await _navigationService.ShowPopupAsync(new ChooseChatsPopup(), new ChooseChatsConfigurationSwitchInline(prepared, _botUser));
+                if (confirm == ContentDialogResult.Primary)
+                {
+                    PostEvent("prepared_message_sent");
+                }
+                else
+                {
+                    PostEvent("prepared_message_failed", "{ error: \"USER_DECLINED\" }");
+                }
+            }
+            else
+            {
+                PostEvent("prepared_message_failed", "{ error: \"USER_DECLINED\" }");
+            }
+        }
+
+        private void ProcessRequestFileDownload(JsonObject eventData)
+        {
+            var url = eventData.GetNamedString("url", string.Empty);
+            var fileName = eventData.GetNamedString("file_name", string.Empty);
+
+            if (string.IsNullOrEmpty(fileName) || !Uri.TryCreate(url, UriKind.Absolute, out Uri result))
+            {
+
             }
         }
 
@@ -967,7 +1076,7 @@ namespace Telegram.Views
             MessageHelper.OpenUrl(_clientService, _navigationService, "https://t.me" + value);
         }
 
-        private void SendViewport()
+        private void PostViewportChanged()
         {
             PostEvent("viewport_changed", "{ height: " + View.ActualHeight + ", is_state_stable: true, is_expanded: true }");
         }
@@ -1479,13 +1588,16 @@ namespace Telegram.Views
 
             var target = new TargetChatChosen
             {
-                AllowBotChats = values.Contains("bots"),
-                AllowUserChats = values.Contains("users"),
-                AllowGroupChats = values.Contains("groups"),
-                AllowChannelChats = values.Contains("channels")
+                Types = new TargetChatTypes
+                {
+                    AllowBotChats = values.Contains("bots"),
+                    AllowUserChats = values.Contains("users"),
+                    AllowGroupChats = values.Contains("groups"),
+                    AllowChannelChats = values.Contains("channels")
+                }
             };
 
-            if (target.AllowBotChats || target.AllowUserChats || target.AllowGroupChats || target.AllowChannelChats)
+            if (target.Types.AllowBotChats || target.Types.AllowUserChats || target.Types.AllowGroupChats || target.Types.AllowChannelChats)
             {
                 var confirm = await _navigationService.ShowPopupAsync(new ChooseChatsPopup(), new ChooseChatsConfigurationSwitchInline(query, target, _botUser));
                 if (confirm != ContentDialogResult.Primary)
@@ -1632,7 +1744,7 @@ namespace Telegram.Views
                     return;
                 }
 
-                var response = await _clientService.SendAsync(new GetInternalLink(new InternalLinkTypeMainWebApp(_botUser.ActiveUsername(), string.Empty, false), false));
+                var response = await _clientService.SendAsync(new GetInternalLink(new InternalLinkTypeMainWebApp(_botUser.ActiveUsername(), string.Empty, new WebAppOpenModeFullSize()), false));
                 if (response is not HttpUrl url)
                 {
                     return;

@@ -927,14 +927,12 @@ namespace Telegram.Views
             if (user.EmojiStatus != null)
             {
                 LogoBasic.Visibility = Visibility.Collapsed;
-                LogoPremium.Visibility = Visibility.Collapsed;
                 LogoEmoji.Visibility = Visibility.Visible;
                 LogoEmoji.Source = new CustomEmojiFileSource(_clientService, user.EmojiStatus.CustomEmojiId);
             }
             else
             {
-                LogoBasic.Visibility = _clientService.IsPremium ? Visibility.Collapsed : Visibility.Visible;
-                LogoPremium.Visibility = _clientService.IsPremium ? Visibility.Visible : Visibility.Collapsed;
+                LogoBasic.Visibility = Visibility.Visible;
                 LogoEmoji.Visibility = Visibility.Collapsed;
                 LogoEmoji.Source = null;
             }
@@ -1260,7 +1258,7 @@ namespace Telegram.Views
             }
             else if (command is ShortcutCommand.CallAccept && ViewModel.VoipService.ActiveCall is VoipCall acceptCall)
             {
-                acceptCall.Accept(XamlRoot);
+                acceptCall.Accept(false);
                 args.Handled = true;
             }
             else if (command is ShortcutCommand.CallReject && ViewModel.VoipService.ActiveCall is VoipCall rejectCall)
@@ -3699,7 +3697,6 @@ namespace Telegram.Views
             StateLabel = null;
             MemoryLabel = null;
             LogoBasic = null;
-            LogoPremium = null;
             LogoEmoji = null;
         }
     }

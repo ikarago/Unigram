@@ -95,12 +95,8 @@ namespace Telegram.Views.Supergroups
                 var response = await ViewModel.ClientService.SendAsync(new GetStickerSet(stickerSetId));
                 if (response is StickerSet set)
                 {
-                    var thumbnail = set.GetThumbnail();
-                    if (thumbnail != null)
-                    {
-                        target.Source = new DelayedFileSource(ViewModel.ClientService, thumbnail);
-                        return;
-                    }
+                    target.Source = DelayedFileSource.FromStickerSet(ViewModel.ClientService, set);
+                    return;
                 }
             }
 
@@ -153,16 +149,7 @@ namespace Telegram.Views.Supergroups
             if (confirm == ContentDialogResult.Primary)
             {
                 ViewModel.SelectedCustomEmojiStickerSet = set?.Id ?? 0;
-
-                var thumbnail = set?.GetThumbnail();
-                if (thumbnail != null)
-                {
-                    EmojiPackAnimated.Source = new DelayedFileSource(ViewModel.ClientService, thumbnail);
-                }
-                else
-                {
-                    EmojiPackAnimated.Source = null;
-                }
+                EmojiPackAnimated.Source = DelayedFileSource.FromStickerSetInfo(ViewModel.ClientService, set);
             }
         }
 
@@ -177,16 +164,7 @@ namespace Telegram.Views.Supergroups
             if (confirm == ContentDialogResult.Primary)
             {
                 ViewModel.SelectedStickerSet = set?.Id ?? 0;
-
-                var thumbnail = set?.GetThumbnail();
-                if (thumbnail != null)
-                {
-                    StickerPackAnimated.Source = new DelayedFileSource(ViewModel.ClientService, thumbnail);
-                }
-                else
-                {
-                    StickerPackAnimated.Source = null;
-                }
+                StickerPackAnimated.Source = DelayedFileSource.FromStickerSetInfo(ViewModel.ClientService, set);
             }
         }
 

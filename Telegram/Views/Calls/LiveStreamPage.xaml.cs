@@ -445,7 +445,7 @@ namespace Telegram.Views.Calls
 
             if (_call.ClientService.TryGetSupergroup(_call.Chat, out Supergroup supergroup))
             {
-                if (supergroup.Status is ChatMemberStatusCreator)
+                if (supergroup.CanManageVideoChats())
                 {
                     flyout.CreateFlyoutSeparator();
                     flyout.CreateFlyoutItem(StreamWith, Strings.VoipStreamWith, Icons.Live);
@@ -453,7 +453,7 @@ namespace Telegram.Views.Calls
             }
             else if (_call.ClientService.TryGetBasicGroup(_call.Chat, out BasicGroup basicGroup))
             {
-                if (basicGroup.Status is ChatMemberStatusCreator)
+                if (basicGroup.CanManageVideoChats())
                 {
                     flyout.CreateFlyoutSeparator();
                     flyout.CreateFlyoutItem(StreamWith, Strings.VoipStreamWith, Icons.Live);
