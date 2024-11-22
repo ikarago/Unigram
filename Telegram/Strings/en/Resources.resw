@@ -2300,6 +2300,9 @@ from **{0}**.</value>
   <data name="BotName" xml:space="preserve">
     <value>Bot Name</value>
   </data>
+  <data name="BotOpen" xml:space="preserve">
+    <value>Open</value>
+  </data>
   <data name="BotOpenPageMessage" xml:space="preserve">
     <value>**{0}** would like to open its web app to proceed.
 
@@ -5313,9 +5316,6 @@ Duration: {1}</value>
   </data>
   <data name="FilterAllChats" xml:space="preserve">
     <value>All Chats</value>
-  </data>
-  <data name="FilterAllChatsShort" xml:space="preserve">
-    <value>All</value>
   </data>
   <data name="FilterAlwaysShow" xml:space="preserve">
     <value>Include Chats</value>

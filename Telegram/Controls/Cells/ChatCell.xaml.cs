@@ -122,6 +122,7 @@ namespace Telegram.Controls.Cells
         private TextBlock PinnedIcon;
         private Border UnreadMentionsBadge;
         private BadgeControl UnreadBadge;
+        private BadgeButton BotOpen;
         private Rectangle DropVisual;
         private TextBlock UnreadMentionsLabel;
         private Run FromLabel;
@@ -155,6 +156,7 @@ namespace Telegram.Controls.Cells
             PinnedIcon = GetTemplateChild(nameof(PinnedIcon)) as TextBlock;
             UnreadMentionsBadge = GetTemplateChild(nameof(UnreadMentionsBadge)) as Border;
             UnreadBadge = GetTemplateChild(nameof(UnreadBadge)) as BadgeControl;
+            BotOpen = GetTemplateChild(nameof(BotOpen)) as BadgeButton;
             DropVisual = GetTemplateChild(nameof(DropVisual)) as Rectangle;
             UnreadMentionsLabel = GetTemplateChild(nameof(UnreadMentionsLabel)) as TextBlock;
             FromLabel = GetTemplateChild(nameof(FromLabel)) as Run;
@@ -168,6 +170,7 @@ namespace Telegram.Controls.Cells
             Folders = GetTemplateChild(nameof(Folders)) as StackPanel;
 
             Segments.Click += Segments_Click;
+            BotOpen.Click += BotOpen_Click;
 
             _selectionPhoto = ElementComposition.GetElementVisual(Segments);
             _selectionOutline = ElementComposition.GetElementVisual(SelectionOutline);
@@ -199,6 +202,20 @@ namespace Telegram.Controls.Cells
         private void Segments_Click(object sender, RoutedEventArgs e)
         {
             StoryClick?.Invoke(sender, _chat);
+        }
+
+        private void BotOpen_Click(object sender, RoutedEventArgs e)
+        {
+            if (_chat == null || !_clientService.TryGetUser(_chat, out User user))
+            {
+                return;
+            }
+
+            var navigationService = WindowContext.GetNavigationService(XamlRoot);
+            if (navigationService != null)
+            {
+                MessageHelper.NavigateToMainWebApp(_clientService, navigationService, user, string.Empty, new WebAppOpenModeFullSize());
+            }
         }
 
         #endregion
@@ -259,6 +276,7 @@ namespace Telegram.Controls.Cells
             MutedIcon.Visibility = Visibility.Collapsed;
             UnreadBadge.Visibility = Visibility.Collapsed;
             UnreadMentionsBadge.Visibility = Visibility.Collapsed;
+            BotOpen.Visibility = Visibility.Collapsed;
             PinnedIcon.Visibility = savedMessagesTopic.IsPinned
                 ? Visibility.Visible
                 : Visibility.Collapsed;
@@ -299,6 +317,7 @@ namespace Telegram.Controls.Cells
             PinnedIcon.Visibility = Visibility.Collapsed;
             UnreadBadge.Visibility = Visibility.Collapsed;
             UnreadMentionsBadge.Visibility = Visibility.Collapsed;
+            BotOpen.Visibility = Visibility.Collapsed;
 
             FromLabel.Text = UpdateFromLabel(clientService, chat, message);
             _dateLabel = Formatter.DateExtended(message.Date);
@@ -665,6 +684,11 @@ namespace Telegram.Controls.Cells
             }
 
             //UpdateAutomation(_clientService, chat, chat.LastMessage);
+
+            if (position == null)
+            {
+                UpdateBotOpen(chat);
+            }
         }
 
         public void UpdateChatReadOutbox(Chat chat)
@@ -701,6 +725,26 @@ namespace Telegram.Controls.Cells
             else
             {
                 UnreadMentionsBadge.Visibility = Visibility.Collapsed;
+            }
+
+            if (position == null)
+            {
+                UpdateBotOpen(chat);
+            }
+        }
+
+        private void UpdateBotOpen(Chat chat)
+        {
+            if (UnreadMentionsBadge.Visibility == Visibility.Collapsed
+                && UnreadBadge.Visibility == Visibility.Collapsed
+                && _clientService.TryGetUser(chat, out User user)
+                && user.Type is UserTypeBot)
+            {
+                BotOpen.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                BotOpen.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -1047,6 +1091,8 @@ namespace Telegram.Controls.Cells
             {
                 OnlineBadge.Visibility = Visibility.Collapsed;
             }
+
+            UpdateBotOpen(chat);
         }
 
         public void UpdateChatChatLists(Chat chat)
