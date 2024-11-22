@@ -80,6 +80,7 @@
 
                 <controls:ActiveStoriesSegments x:Name="Segments"
                                                 Click="Segments_Click"
+                                                ContextRequested="Segments_ContextRequested"
                                                 Width="140"
                                                 Height="140"
                                                 AutomationProperties.Name="{CustomResource AccDescrProfilePicture}"

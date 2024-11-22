@@ -7844,6 +7844,9 @@ Stories</value>
   <data name="OpenMessage" xml:space="preserve">
     <value>VIEW MESSAGE</value>
   </data>
+  <data name="OpenPhoto" xml:space="preserve">
+    <value>Open Photo</value>
+  </data>
   <data name="OpenProfile" xml:space="preserve">
     <value>Open Profile</value>
   </data>

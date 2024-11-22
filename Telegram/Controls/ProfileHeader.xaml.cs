@@ -247,17 +247,6 @@ namespace Telegram.Controls
             UpdateChatAccentColors(ViewModel.Chat);
         }
 
-        private async void Photo_Click(object sender, RoutedEventArgs e)
-        {
-            var chat = ViewModel.Chat;
-            if (chat == null)
-            {
-                return;
-            }
-
-            await GalleryWindow.ShowAsync(ViewModel, ViewModel.StorageService, chat, Photo);
-        }
-
         private void Segments_Click(object sender, RoutedEventArgs e)
         {
             var chat = ViewModel.Chat;
@@ -278,8 +267,20 @@ namespace Telegram.Controls
             }
             else
             {
-                GalleryWindow.ShowAsync(ViewModel, ViewModel.StorageService, chat, Photo);
+                OpenPhoto();
             }
+        }
+
+        private void Segments_ContextRequested(UIElement sender, ContextRequestedEventArgs args)
+        {
+            var flyout = new MenuFlyout();
+            flyout.CreateFlyoutItem(OpenPhoto, Strings.OpenPhoto, Icons.Image);
+            flyout.ShowAt(sender, args);
+        }
+
+        private void OpenPhoto()
+        {
+            GalleryWindow.ShowAsync(ViewModel, ViewModel.StorageService, ViewModel.Chat, Photo);
         }
 
         public void ViewChanged(double verticalOffset)
