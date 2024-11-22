@@ -3254,6 +3254,7 @@ namespace Telegram.Controls.Messages
         {
             var availableWidth = Math.Min(availableSize.Width, Math.Min(double.IsNaN(Width) ? double.PositiveInfinity : Width, 420));
             var availableHeight = Math.Min(availableSize.Height, Math.Min(double.IsNaN(Height) ? double.PositiveInfinity : Height, 420));
+            var minWidth = 96;
 
             var ttl = false;
             var caption = false;
@@ -3401,8 +3402,15 @@ namespace Telegram.Controls.Messages
                 height = paidMediaPreview.Height;
             }
 
+            minWidth = caption ? 240 : 96;
+
             if (constraint is Animation animation)
             {
+                availableWidth = Math.Min(availableSize.Width, Math.Min(double.IsNaN(Width) ? double.PositiveInfinity : Width, 320));
+                availableHeight = Math.Min(availableSize.Height, Math.Min(double.IsNaN(Height) ? double.PositiveInfinity : Height, 320));
+
+                minWidth = 180;
+
                 width = animation.Width;
                 height = animation.Height;
 
@@ -3488,7 +3496,6 @@ namespace Telegram.Controls.Messages
             }
 
             var additional = 0d;
-            var minWidth = caption ? 240 : 96;
 
             if (PhotoColumn.Width.IsAbsolute)
             {

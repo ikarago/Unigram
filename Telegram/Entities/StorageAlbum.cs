@@ -17,7 +17,7 @@ namespace Telegram.Entities
         }
 
         public const double ITEM_MARGIN = 2;
-        public const double MAX_WIDTH = 320 + ITEM_MARGIN;
+        public const double MAX_WIDTH = 420 + ITEM_MARGIN;
         public const double MAX_HEIGHT = 420 + ITEM_MARGIN;
 
         private ((Rect, MosaicItemPosition)[], Size)? _positions;
