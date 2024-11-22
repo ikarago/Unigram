@@ -655,7 +655,7 @@ namespace Telegram.Controls.Cells
             UpdateChatChatLists(chat);
         }
 
-        public void UpdateChatReadInbox(Chat chat, ChatPosition position = null)
+        public void UpdateChatReadInbox(Chat chat, ChatPosition position = null, bool updateBotOpen = true)
         {
             if (_clientService == null || !_templateApplied)
             {
@@ -685,7 +685,7 @@ namespace Telegram.Controls.Cells
 
             //UpdateAutomation(_clientService, chat, chat.LastMessage);
 
-            if (position == null)
+            if (updateBotOpen)
             {
                 UpdateBotOpen(chat);
             }
@@ -707,14 +707,14 @@ namespace Telegram.Controls.Cells
 
         }
 
-        public void UpdateChatUnreadMentionCount(Chat chat, ChatPosition position = null)
+        public void UpdateChatUnreadMentionCount(Chat chat, ChatPosition position = null, bool updateBotOpen = true)
         {
             if (_clientService == null || !_templateApplied)
             {
                 return;
             }
 
-            UpdateChatReadInbox(chat, position);
+            UpdateChatReadInbox(chat, position, false);
 
             var unread = chat.UnreadMentionCount > 0 || chat.UnreadReactionCount > 0 ? Visibility.Visible : Visibility.Collapsed;
             if (unread == Visibility.Visible)
@@ -727,7 +727,7 @@ namespace Telegram.Controls.Cells
                 UnreadMentionsBadge.Visibility = Visibility.Collapsed;
             }
 
-            if (position == null)
+            if (updateBotOpen)
             {
                 UpdateBotOpen(chat);
             }
@@ -1075,7 +1075,7 @@ namespace Telegram.Controls.Cells
 
             UpdateChatLastMessage(chat, position);
             //UpdateChatReadInbox(chat);
-            UpdateChatUnreadMentionCount(chat, position);
+            UpdateChatUnreadMentionCount(chat, position, false);
             UpdateNotificationSettings(chat);
             UpdateChatActions(chat, _clientService.GetChatActions(chat.Id));
 
