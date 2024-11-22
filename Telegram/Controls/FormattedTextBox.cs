@@ -619,7 +619,7 @@ namespace Telegram.Controls
             popup.IsLightDismissEnabled = true;
 
             var confirm = await popup.ShowQueuedAsync(XamlRoot);
-            if (confirm != true)
+            if (confirm != true || !IsSafe(popup.Text))
             {
                 return;
             }
@@ -630,15 +630,7 @@ namespace Telegram.Controls
 
             range.SetText(end > start ? TextSetOptions.Unlink : TextSetOptions.None, popup.Text);
             range.SetRange(start, start + popup.Text.Length);
-
-            if (IsSafe(popup.Text))
-            {
-                range.Link = $"\"{popup.Link}\"";
-            }
-            else
-            {
-                range.Link = string.Empty;
-            }
+            range.Link = $"\"{popup.Link}\"";
 
             Document.Selection.SetRange(range.EndPosition, range.EndPosition);
             Document.ApplyDisplayUpdates();
