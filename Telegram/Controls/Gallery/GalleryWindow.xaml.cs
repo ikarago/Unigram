@@ -339,7 +339,7 @@ namespace Telegram.Controls.Gallery
 
         private Task<ContentDialogResult> ShowAsyncInternal(XamlRoot xamlRoot, GalleryViewModelBase parameter, FrameworkElement closing = null, VideoPlayerBase player = null)
         {
-            if (closing != null && IsConstrainedToRootBounds)
+            if (closing != null && !SettingsService.Current.FullScreenGallery)
             {
                 _closing = new WeakReference<FrameworkElement>(closing);
                 ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("FullScreenPicture", closing);
@@ -364,7 +364,7 @@ namespace Telegram.Controls.Gallery
 
                 _wasFullScreen = applicationView.IsFullScreenMode || ApiInfo.IsXbox;
 
-                if (CanUnconstrainFromRootBounds && !_wasFullScreen)
+                if (SettingsService.Current.FullScreenGallery && !_wasFullScreen)
                 {
                     applicationView.TryEnterFullScreenMode();
                 }
@@ -396,18 +396,9 @@ namespace Telegram.Controls.Gallery
 
         private void InitializeBackButton()
         {
-            if (IsConstrainedToRootBounds)
-            {
-                BackButton.Glyph = "\uE72B";
-                BackButton.Margin = new Thickness(0, -40, 0, 0);
-                BackButton.HorizontalAlignment = HorizontalAlignment.Left;
-            }
-            else
-            {
-                BackButton.Glyph = "\uE711";
-                BackButton.Margin = new Thickness();
-                BackButton.HorizontalAlignment = HorizontalAlignment.Right;
-            }
+            BackButton.Glyph = "\uE72B";
+            BackButton.Margin = new Thickness(0, -40, 0, 0);
+            BackButton.HorizontalAlignment = HorizontalAlignment.Left;
         }
 
         private void OnVisibleBoundsChanged(ApplicationView sender, object args)
@@ -454,7 +445,7 @@ namespace Telegram.Controls.Gallery
             {
                 applicationView.ExitFullScreenMode();
 
-                if (e.Key == VirtualKey.Escape)
+                if (e.Key == VirtualKey.Escape && !SettingsService.Current.FullScreenGallery)
                 {
                     Cancel();
                     return;
@@ -477,7 +468,7 @@ namespace Telegram.Controls.Gallery
                 if (ViewModel.SelectedItem == ViewModel.FirstItem && _closing != null)
                 {
                     var root = LayoutRoot.CurrentElement;
-                    if (root != null && root.IsLoaded && IsConstrainedToRootBounds && !_lastFullScreen)
+                    if (root != null && root.IsLoaded && !SettingsService.Current.FullScreenGallery && !_lastFullScreen)
                     {
                         if (_closing.TryGetTarget(out FrameworkElement element) && element.IsConnected())
                         {

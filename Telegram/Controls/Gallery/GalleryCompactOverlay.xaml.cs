@@ -231,10 +231,10 @@ namespace Telegram.Controls.Gallery
                     var switched = appWindow.Presenter.RequestPresentation(AppWindowPresentationKind.CompactOverlay);
                     if (switched)
                     {
+                        await appWindow.TryShowAsync();
+
                         // Double call because at times it fails
                         appWindow.Presenter.RequestPresentation(AppWindowPresentationKind.CompactOverlay);
-
-                        await appWindow.TryShowAsync();
                     }
                 }
             }

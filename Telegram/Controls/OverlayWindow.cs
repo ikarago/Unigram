@@ -59,13 +59,7 @@ namespace Telegram.Controls
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
         {
             var pointer = e.GetCurrentPoint(this);
-            if (!IsConstrainedToRootBounds && InputListener.IsPointerGoBackGesture(pointer))
-            {
-                var args = new BackRequestedRoutedEventArgs();
-                OnBackRequested(args);
-                e.Handled = args.Handled;
-            }
-            else if (pointer.Properties.IsLeftButtonPressed && IsLightDismissEnabled && e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            if (pointer.Properties.IsLeftButtonPressed && IsLightDismissEnabled && e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
             {
                 OnBackRequested(new BackRequestedRoutedEventArgs());
             }
@@ -116,10 +110,6 @@ namespace Telegram.Controls
             WindowContext.Current.UpdateTitleBar();
         }
 
-        public bool IsConstrainedToRootBounds => _popupHost?.IsConstrainedToRootBounds ?? !CanUnconstrainFromRootBounds;
-
-        public bool CanUnconstrainFromRootBounds => SettingsService.Current.FullScreenGallery;
-
         public async Task<ContentDialogResult> ShowAsync(XamlRoot xamlRoot)
         {
             Current = this;
@@ -144,11 +134,6 @@ namespace Telegram.Controls
                 _popupHost.Loaded += PopupHost_Loaded;
                 _popupHost.Opened += PopupHost_Opened;
                 _popupHost.Closed += PopupHost_Closed;
-
-                if (CanUnconstrainFromRootBounds)
-                {
-                    _popupHost.ShouldConstrainToRootBounds = false;
-                }
 
                 Unloaded += PopupHost_Unloaded;
             }
