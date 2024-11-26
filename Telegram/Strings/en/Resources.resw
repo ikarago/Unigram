@@ -791,8 +791,17 @@ Your prize is **{0} Stars**.</value>
   <data name="AddAnotherAccountInfo" xml:space="preserve">
     <value>Connect other Telegram accounts and easily switch between them.</value>
   </data>
+  <data name="AddAsAdmin" xml:space="preserve">
+    <value>Add as admin</value>
+  </data>
   <data name="AddBannedErrorAdmin" xml:space="preserve">
     <value>You can&apos;t ban this user because they are an admin in this group and you are not allowed to demote them.</value>
+  </data>
+  <data name="AddBotAdminAlert" xml:space="preserve">
+    <value>Add bot as admin?</value>
+  </data>
+  <data name="AddBotAsAdmin" xml:space="preserve">
+    <value>Bots can only be added to channels as admins.</value>
   </data>
   <data name="AddCaption" xml:space="preserve">
     <value>Add a caption...</value>
