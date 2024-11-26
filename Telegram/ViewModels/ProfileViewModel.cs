@@ -1019,6 +1019,17 @@ namespace Telegram.ViewModels
             }
         }
 
+        public void OpenChat()
+        {
+            var chat = _chat;
+            if (chat == null)
+            {
+                return;
+            }
+
+            NavigationService.NavigateToChat(chat.Id, createNewWindow: true);
+        }
+
         public async void DeleteChat()
         {
             var chat = _chat;

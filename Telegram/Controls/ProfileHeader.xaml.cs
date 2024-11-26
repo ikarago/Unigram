@@ -1360,6 +1360,12 @@ namespace Telegram.Controls
                 }
             }
 
+            if (ApiInfo.HasMultipleViews)
+            {
+                flyout.CreateFlyoutSeparator();
+                flyout.CreateFlyoutItem(ViewModel.OpenChat, Strings.OpenInNewWindow, Icons.WindowNew);
+            }
+
             //flyout.CreateFlyoutItem(null, Strings.AddShortcut, Icons.Pin);
 
             MenuTarget.RequestedTheme = ActualTheme;
