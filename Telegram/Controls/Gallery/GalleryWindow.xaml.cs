@@ -908,8 +908,11 @@ namespace Telegram.Controls.Gallery
 
             if (UIViewSettings.GetForCurrentView().UserInteractionMode == UserInteractionMode.Mouse)
             {
-                PrevButton.Visibility = index > 0 ? Visibility.Visible : Visibility.Collapsed;
-                NextButton.Visibility = index < viewModel.Items.Count - 1 ? Visibility.Visible : Visibility.Collapsed;
+                PrevButton.IsEnabled = index > 0;
+                NextButton.IsEnabled = index < viewModel.Items.Count - 1;
+
+                PrevButton.Visibility = Visibility.Visible;
+                NextButton.Visibility = Visibility.Visible;
             }
             else
             {
