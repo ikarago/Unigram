@@ -6667,6 +6667,15 @@ You can change your language back at any time in Settings.</value>
   <data name="LimitReachedCommunitiesPremium" xml:space="preserve">
     <value>You are a member of **{0}** groups and channels. Please leave some before joining a new one.</value>
   </data>
+  <data name="LimitReachedFileSize" xml:space="preserve">
+    <value>The document cant’t be sent, because it is larger than **{0}**. You can double this limit to **{1}** per document by subscribing to **Telegram Premium**.</value>
+  </data>
+  <data name="LimitReachedFileSizeLocked" xml:space="preserve">
+    <value>The document cant’t be sent, because it is larger than **{0}**. We are working to let you increase this limit in the future.</value>
+  </data>
+  <data name="LimitReachedFileSizePremium" xml:space="preserve">
+    <value>The document cant’t be sent, because it is larger than **{0}**.</value>
+  </data>
   <data name="LimitReachedFolderLinks" xml:space="preserve">
     <value>You can only create {0} invite links.
 Upgrade to **Telegram Premium** to create up to **{1}**.</value>

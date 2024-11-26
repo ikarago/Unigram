@@ -5,6 +5,7 @@
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
 using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Telegram.Common;
@@ -23,6 +24,8 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Telegram.Views.Premium.Popups
 {
+    public partial record PremiumLimitValue(long DefaultValue, long PremiumValue);
+
     public sealed partial class LimitReachedPopup : ContentPopup
     {
         private readonly INavigationService _navigationService;
@@ -41,13 +44,15 @@ namespace Telegram.Views.Premium.Popups
 
         private async void InitializeLimit(IClientService clientService, PremiumLimitType type)
         {
-            var limit = await GetPremiumLimitAsync(clientService, type) as PremiumLimit;
+            var limit = await GetPremiumLimitAsync(clientService, type);
             if (limit != null)
             {
                 var iconValue = string.Empty;
                 var freeValue = string.Empty;
                 var lockedValue = string.Empty;
                 var premiumValue = string.Empty;
+
+                var formatValue = new Func<long, string>(value => value.ToString());
 
                 var animatedValue = new LocalFileSource("ms-appx:///Assets/Animations/Double.json");
 
@@ -97,6 +102,14 @@ namespace Telegram.Views.Premium.Popups
                         lockedValue = Strings.LimitReachedCommunitiesLocked;
                         premiumValue = Strings.LimitReachedCommunitiesPremium;
                         break;
+                    case PremiumLimitTypeFileSize:
+                        iconValue = Icons.DocumentFilled;
+                        freeValue = Strings.LimitReachedFileSize;
+                        lockedValue = Strings.LimitReachedFileSizeLocked;
+                        premiumValue = Strings.LimitReachedFileSizePremium;
+
+                        formatValue = new Func<long, string>(value => FileSizeConverter.Convert(value, true));
+                        break;
                     case PremiumLimitTypeConnectedAccounts:
                         iconValue = Icons.PersonFilled;
                         freeValue = Strings.LimitReachedAccounts;
@@ -109,16 +122,16 @@ namespace Telegram.Views.Premium.Popups
 
                 if (clientService.IsPremium)
                 {
-                    TextBlockHelper.SetMarkdown(Subtitle, string.Format(premiumValue, limit.PremiumValue));
+                    TextBlockHelper.SetMarkdown(Subtitle, string.Format(premiumValue, formatValue(limit.PremiumValue)));
 
                     Icon.Text = iconValue;
-                    Limit.Text = limit.PremiumValue.ToString();
+                    Limit.Text = formatValue(limit.PremiumValue);
                     LimitBubble.CornerRadius = new CornerRadius(14, 14, 0, 14);
                     LimitHeader.HorizontalAlignment = HorizontalAlignment.Right;
 
                     PrevArrow.Visibility = Visibility.Collapsed;
 
-                    PrevLimit.Text = limit.DefaultValue.ToString();
+                    PrevLimit.Text = formatValue(limit.DefaultValue);
                     NextLimit.Text = string.Empty;
 
                     animatedValue.ColorReplacements = new Dictionary<int, int>
@@ -131,17 +144,17 @@ namespace Telegram.Views.Premium.Popups
                 }
                 else if (clientService.IsPremiumAvailable)
                 {
-                    TextBlockHelper.SetMarkdown(Subtitle, string.Format(freeValue, limit.DefaultValue, limit.PremiumValue));
+                    TextBlockHelper.SetMarkdown(Subtitle, string.Format(freeValue, formatValue(limit.DefaultValue), formatValue(limit.PremiumValue)));
 
                     Icon.Text = iconValue;
-                    Limit.Text = limit.DefaultValue.ToString();
+                    Limit.Text = formatValue(limit.DefaultValue);
                     LimitBubble.CornerRadius = new CornerRadius(14, 14, 14, 14);
                     LimitHeader.HorizontalAlignment = HorizontalAlignment.Center;
 
                     NextArrow.Visibility = Visibility.Collapsed;
 
                     PrevLimit.Text = string.Empty;
-                    NextLimit.Text = limit.PremiumValue.ToString();
+                    NextLimit.Text = formatValue(limit.PremiumValue);
 
                     animatedValue.ColorReplacements = new Dictionary<int, int>
                     {
@@ -153,7 +166,7 @@ namespace Telegram.Views.Premium.Popups
                 }
                 else
                 {
-                    TextBlockHelper.SetMarkdown(Subtitle, string.Format(lockedValue, limit.DefaultValue));
+                    TextBlockHelper.SetMarkdown(Subtitle, string.Format(lockedValue, formatValue(limit.DefaultValue)));
 
                     LimitHeader.Visibility = Visibility.Collapsed;
                     LimitPanel.Visibility = Visibility.Collapsed;
@@ -195,46 +208,54 @@ namespace Telegram.Views.Premium.Popups
             }
         }
 
-        private Task<BaseObject> GetPremiumLimitAsync(IClientService clientService, PremiumLimitType type)
+        private async Task<PremiumLimitValue> GetPremiumLimitAsync(IClientService clientService, PremiumLimitType type)
         {
             if (type is PremiumLimitTypeConnectedAccounts)
             {
-                return Task.FromResult<BaseObject>(new PremiumLimit(type, 3, 4));
+                return new PremiumLimitValue(3, 4);
+            }
+            else if (type is PremiumLimitTypeFileSize)
+            {
+                return new PremiumLimitValue(2048L << 20, 4096L << 20);
             }
 
             if (clientService.IsPremiumAvailable)
             {
-                return clientService.SendAsync(new GetPremiumLimit(type));
+                var response = await clientService.SendAsync(new GetPremiumLimit(type));
+                if (response is PremiumLimit limit)
+                {
+                    return new PremiumLimitValue(limit.DefaultValue, limit.PremiumValue);
+                }
             }
 
-            static Task<BaseObject> CreateLimit(PremiumLimitType type, long value)
+            static PremiumLimitValue CreateLimit(long value)
             {
-                return Task.FromResult<BaseObject>(new PremiumLimit(type, (int)value, (int)value));
+                return new PremiumLimitValue(value, value);
             }
 
             switch (type)
             {
                 case PremiumLimitTypeChatFolderChosenChatCount:
-                    return CreateLimit(type, clientService.Options.ChatFolderChosenChatCountMax);
+                    return CreateLimit(clientService.Options.ChatFolderChosenChatCountMax);
                 case PremiumLimitTypeChatFolderCount:
-                    return CreateLimit(type, clientService.Options.ChatFolderCountMax);
+                    return CreateLimit(clientService.Options.ChatFolderCountMax);
                 case PremiumLimitTypePinnedSavedMessagesTopicCount:
-                    return CreateLimit(type, clientService.Options.PinnedSavedMessagesTopicCountMax);
+                    return CreateLimit(clientService.Options.PinnedSavedMessagesTopicCountMax);
                 case PremiumLimitTypePinnedArchivedChatCount:
-                    return CreateLimit(type, clientService.Options.PinnedArchivedChatCountMax);
+                    return CreateLimit(clientService.Options.PinnedArchivedChatCountMax);
                 case PremiumLimitTypePinnedChatCount:
-                    return CreateLimit(type, clientService.Options.PinnedChatCountMax);
+                    return CreateLimit(clientService.Options.PinnedChatCountMax);
                 case PremiumLimitTypeShareableChatFolderCount:
-                    return CreateLimit(type, clientService.Options.AddedShareableChatFolderCountMax);
+                    return CreateLimit(clientService.Options.AddedShareableChatFolderCountMax);
                 case PremiumLimitTypeCreatedPublicChatCount:
-                    return CreateLimit(type, 10);
+                    return CreateLimit(10);
                 case PremiumLimitTypeSupergroupCount:
-                    return CreateLimit(type, 500);
+                    return CreateLimit(500);
                 case PremiumLimitTypeConnectedAccounts:
-                    return CreateLimit(type, 4);
+                    return CreateLimit(4);
             }
 
-            return Task.FromResult<BaseObject>(null);
+            return null;
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

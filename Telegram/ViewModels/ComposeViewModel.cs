@@ -363,6 +363,11 @@ namespace Telegram.ViewModels
                     await ShowPopupAsync(restricted ? Strings.ErrorSendRestrictedDocuments : Strings.ErrorSendRestrictedDocumentsAll, Strings.AppName, Strings.OK);
                     return;
                 }
+                else if (item.Size > (4000L << 20) || (item.Size > (2000L << 20) && !IsPremium))
+                {
+                    NavigationService.ShowLimitReached(new PremiumLimitTypeFileSize());
+                    return;
+                }
             }
 
             FormattedText formattedText = null;

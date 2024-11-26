@@ -341,6 +341,7 @@
     <Compile Include="Services\Calls\VoipVideoType.cs" />
     <Compile Include="Services\Calls\VoipGroupCall.cs" />
     <Compile Include="Services\Calls\VoipGroupCallNetworkStateChangedEventArgs.cs" />
+    <Compile Include="Td\Api\PremiumLimitTypeFileSize.cs" />
     <Compile Include="Td\Api\ReactionTypeEqualityComparer.cs" />
     <Compile Include="Controls\PremiumStarCount.cs" />
     <Compile Include="Controls\Stories\Widgets\StoryWeatherWidget.xaml.cs">
