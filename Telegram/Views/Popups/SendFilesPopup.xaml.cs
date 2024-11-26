@@ -719,6 +719,10 @@ namespace Telegram.Views.Popups
                 IsMediaSelected = false;
                 IsFilesSelected = true;
             }
+
+            MoreButton.Visibility = Items.Any(x => x is StoragePhoto or StorageVideo)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
 
         private void UpdateCollection()
