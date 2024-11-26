@@ -131,7 +131,7 @@ namespace Telegram.Controls
             }
             else
             {
-                var premium = user.IsPremium && clientService.IsPremiumAvailable && user.Id != clientService.Options.MyId;
+                var premium = user.IsPremium && clientService.IsPremiumAvailable && (!chatList || user.Id != clientService.Options.MyId);
 
                 if (premium || user.IsFake || user.IsScam || user.IsVerified)
                 {
