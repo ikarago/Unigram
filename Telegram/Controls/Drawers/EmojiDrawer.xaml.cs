@@ -407,9 +407,10 @@ namespace Telegram.Controls.Drawers
                 return;
             }
 
-            if (Toolbar.SelectedItem == null != _emojiCollapsed || collapse)
+            var collapsed = !(_expanded || Toolbar.SelectedItem != null);
+            if (collapsed != _emojiCollapsed || collapse)
             {
-                _emojiCollapsed = Toolbar.SelectedItem == null;
+                _emojiCollapsed = collapsed;
 
                 var show = !_emojiCollapsed;
 
@@ -533,6 +534,8 @@ namespace Telegram.Controls.Drawers
 
             _selected = selected;
             _expanded = expand;
+
+            UpdateToolbar();
         }
 
         #region Recycle
