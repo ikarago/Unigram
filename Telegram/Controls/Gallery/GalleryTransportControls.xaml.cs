@@ -419,7 +419,7 @@ namespace Telegram.Controls.Gallery
 
         private void UpdatePlaybackSpeed(double value)
         {
-            value = Math.Clamp(value, 0.5, 2);
+            value = Math.Clamp(value, 0.2, 2.5);
             SettingsService.Current.Playback.VideoSpeed = value;
 
             if (_player != null)
