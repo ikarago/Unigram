@@ -819,7 +819,6 @@ namespace Telegram.Views
             ButtonMore = null;
             TextFieldPanel = null;
             btnAttach = null;
-            ButtonsPanel = null;
             SecondaryButtonsPanel = null;
             ButtonStickers = null;
             ButtonRecord = null;
@@ -1580,7 +1579,7 @@ namespace Telegram.Views
             }
         }
 
-        private void TextField_TextChanged(object sender, RoutedEventArgs e)
+        private void TextField_TextChanging(RichEditBox sender, RichEditBoxTextChangingEventArgs args)
         {
             CheckMessageBoxEmpty();
         }
