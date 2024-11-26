@@ -2340,6 +2340,10 @@ namespace Telegram.ViewModels
             {
                 await HandlePackageAsync(package);
             }
+            else if (_type == DialogType.History && state.TryRemove("videoChat", out string videoChat))
+            {
+                _voipService.JoinGroupCall(NavigationService, chat.Id, videoChat);
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationState suspensionState, bool suspending)

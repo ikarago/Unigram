@@ -20,7 +20,7 @@ namespace Telegram.Services
         void StartPrivateCall(INavigationService navigation, Chat chat, bool video);
         void StartPrivateCall(INavigationService navigation, User user, bool video);
 
-        void JoinGroupCall(INavigationService navigation, long chatId);
+        void JoinGroupCall(INavigationService navigation, long chatId, string inviteHash = null);
         void CreateGroupCall(INavigationService navigation, long chatId);
     }
 
@@ -185,7 +185,7 @@ namespace Telegram.Services
 
         #region Group
 
-        public async void JoinGroupCall(INavigationService navigation, long chatId)
+        public async void JoinGroupCall(INavigationService navigation, long chatId, string inviteHash)
         {
             if (MediaDevicePermissions.IsUnsupported(navigation.XamlRoot))
             {
@@ -204,7 +204,7 @@ namespace Telegram.Services
                 return;
             }
 
-            await JoinAsyncInternal(navigation.XamlRoot, chat, chat.VideoChat.GroupCallId, null);
+            await JoinAsyncInternal(navigation.XamlRoot, chat, chat.VideoChat.GroupCallId, null, inviteHash);
         }
 
         public async void CreateGroupCall(INavigationService navigation, long chatId)
@@ -277,12 +277,12 @@ namespace Telegram.Services
                 var response = await ClientService.SendAsync(new CreateVideoChat(chat.Id, string.Empty, startDate, popup.IsStartWithSelected));
                 if (response is GroupCallId groupCallId)
                 {
-                    await JoinAsyncInternal(navigation.XamlRoot, chat, groupCallId.Id, alias);
+                    await JoinAsyncInternal(navigation.XamlRoot, chat, groupCallId.Id, alias, string.Empty);
                 }
             }
         }
 
-        private async Task JoinAsyncInternal(XamlRoot xamlRoot, Chat chat, int groupCallId, MessageSender alias)
+        private async Task JoinAsyncInternal(XamlRoot xamlRoot, Chat chat, int groupCallId, MessageSender alias, string inviteHash)
         {
             alias ??= chat.VideoChat.DefaultParticipantId;
 
@@ -321,7 +321,7 @@ namespace Telegram.Services
 
                     lock (_activeLock)
                     {
-                        _activeCall = new VoipGroupCall(ClientService, Settings, Aggregator, xamlRoot, chat, groupCall, alias);
+                        _activeCall = new VoipGroupCall(ClientService, Settings, Aggregator, xamlRoot, chat, groupCall, alias, inviteHash);
                         changed = groupCall.ScheduledStartDate > 0;
                     }
 

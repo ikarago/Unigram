@@ -30,7 +30,8 @@ namespace Telegram.Services.Calls
     {
         private readonly IViewService _viewService;
 
-        private Chat _chat;
+        private readonly Chat _chat;
+        private readonly string _inviteHash;
 
         private MessageSender _alias;
         private MessageSenders _availableAliases;
@@ -62,7 +63,7 @@ namespace Telegram.Services.Calls
 
         private int _availableStreamsCount = 0;
 
-        public VoipGroupCall(IClientService clientService, ISettingsService settingsService, IEventAggregator aggregator, XamlRoot xamlRoot, Chat chat, GroupCall groupCall, MessageSender alias)
+        public VoipGroupCall(IClientService clientService, ISettingsService settingsService, IEventAggregator aggregator, XamlRoot xamlRoot, Chat chat, GroupCall groupCall, MessageSender alias, string inviteHash)
             : base(clientService, settingsService, aggregator)
         {
             Duration = groupCall.Duration;
@@ -92,6 +93,7 @@ namespace Telegram.Services.Calls
             _timeDifference = DateTime.Now - Formatter.ToLocalTime(unix.Value);
 
             _chat = chat;
+            _inviteHash = inviteHash ?? string.Empty;
 
             _isScheduled = groupCall.ScheduledStartDate > 0;
 
@@ -253,7 +255,7 @@ namespace Telegram.Services.Calls
                     Participants ??= new GroupCallParticipantsCollection(this);
                 }
 
-                var response = await ClientService.SendAsync(new JoinGroupCall(Id, alias, ssrc, payload, _manager.IsMuted, _capturer != null, string.Empty));
+                var response = await ClientService.SendAsync(new JoinGroupCall(Id, alias, ssrc, payload, _manager.IsMuted, _capturer != null, _inviteHash));
                 if (response is Text json && _manager != null)
                 {
                     bool broadcast;
