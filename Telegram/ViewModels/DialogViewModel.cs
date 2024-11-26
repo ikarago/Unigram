@@ -2647,7 +2647,7 @@ namespace Telegram.ViewModels
 
         public void SaveDraft(bool clear = false)
         {
-            if (_type != DialogType.History && _type != DialogType.Thread)
+            if (_type is not DialogType.History and not DialogType.Thread)
             {
                 return;
             }

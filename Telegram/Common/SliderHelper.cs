@@ -10,11 +10,6 @@ namespace Telegram.Common
     {
         public static void InitializeTicks(Slider slider, Grid container, int count, Func<int, string> callback)
         {
-            for (int i = 0; i < container.Children.Count - 1; i++)
-            {
-                container.Children.RemoveAt(i);
-            }
-
             container.ColumnDefinitions.Clear();
             container.ColumnDefinitions.Add(12, GridUnitType.Pixel);
 
