@@ -126,53 +126,58 @@ namespace Telegram.Common
         {
             using (var source = await sourceFile.OpenReadAsync())
             {
-                var decoder = await BitmapDecoder.CreateAsync(source);
-                //if (decoder.FrameCount > 1)
-                //{
-                //    throw new InvalidCastException();
-                //}
+                return await ScaleAsync(encoderId, source, resizedImageFile, requestedMinSide, bestQuality);
+            }
+        }
 
-                var originalPixelWidth = decoder.PixelWidth;
-                var originalPixelHeight = decoder.PixelHeight;
+        public static async Task<StorageFile> ScaleAsync(Guid encoderId, IRandomAccessStream source, StorageFile resizedImageFile, int requestedMinSide = 1280, bool bestQuality = false)
+        {
+            var decoder = await BitmapDecoder.CreateAsync(source);
+            //if (decoder.FrameCount > 1)
+            //{
+            //    throw new InvalidCastException();
+            //}
 
-                using (var resizedStream = await resizedImageFile.OpenAsync(FileAccessMode.ReadWrite))
+            var originalPixelWidth = decoder.PixelWidth;
+            var originalPixelHeight = decoder.PixelHeight;
+
+            using (var resizedStream = await resizedImageFile.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                BitmapTransform transform;
+
+                if (requestedMinSide > 0 && (decoder.PixelWidth > requestedMinSide || decoder.PixelHeight > requestedMinSide))
                 {
-                    BitmapTransform transform;
+                    double ratioX = (double)requestedMinSide / originalPixelWidth;
+                    double ratioY = (double)requestedMinSide / originalPixelHeight;
+                    double ratio = Math.Min(ratioX, ratioY);
 
-                    if (requestedMinSide > 0 && (decoder.PixelWidth > requestedMinSide || decoder.PixelHeight > requestedMinSide))
+                    uint width = (uint)(originalPixelWidth * ratio);
+                    uint height = (uint)(originalPixelHeight * ratio);
+
+                    transform = new BitmapTransform
                     {
-                        double ratioX = (double)requestedMinSide / originalPixelWidth;
-                        double ratioY = (double)requestedMinSide / originalPixelHeight;
-                        double ratio = Math.Min(ratioX, ratioY);
-
-                        uint width = (uint)(originalPixelWidth * ratio);
-                        uint height = (uint)(originalPixelHeight * ratio);
-
-                        transform = new BitmapTransform
-                        {
-                            ScaledWidth = width,
-                            ScaledHeight = height,
-                            InterpolationMode = bestQuality
-                                ? BitmapInterpolationMode.Fant
-                                : BitmapInterpolationMode.Linear
-                        };
-                    }
-                    else
-                    {
-                        transform = new BitmapTransform();
-                    }
-
-                    var pixelData = await decoder.GetSoftwareBitmapAsync(decoder.BitmapPixelFormat, decoder.BitmapAlphaMode, transform, ExifOrientationMode.RespectExifOrientation, ColorManagementMode.DoNotColorManage);
-
-                    // Not using ATM, quality is too low
-                    //var propertySet = new BitmapPropertySet();
-                    //var qualityValue = new BitmapTypedValue(quality, Windows.Foundation.PropertyType.Single);
-                    //propertySet.Add("ImageQuality", qualityValue);
-
-                    var encoder = await BitmapEncoder.CreateAsync(encoderId, resizedStream/*, propertySet*/);
-                    encoder.SetSoftwareBitmap(pixelData);
-                    await encoder.FlushAsync();
+                        ScaledWidth = width,
+                        ScaledHeight = height,
+                        InterpolationMode = bestQuality
+                            ? BitmapInterpolationMode.Fant
+                            : BitmapInterpolationMode.Linear
+                    };
                 }
+                else
+                {
+                    transform = new BitmapTransform();
+                }
+
+                var pixelData = await decoder.GetSoftwareBitmapAsync(decoder.BitmapPixelFormat, decoder.BitmapAlphaMode, transform, ExifOrientationMode.RespectExifOrientation, ColorManagementMode.DoNotColorManage);
+
+                // Not using ATM, quality is too low
+                //var propertySet = new BitmapPropertySet();
+                //var qualityValue = new BitmapTypedValue(quality, Windows.Foundation.PropertyType.Single);
+                //propertySet.Add("ImageQuality", qualityValue);
+
+                var encoder = await BitmapEncoder.CreateAsync(encoderId, resizedStream/*, propertySet*/);
+                encoder.SetSoftwareBitmap(pixelData);
+                await encoder.FlushAsync();
             }
 
             return resizedImageFile;

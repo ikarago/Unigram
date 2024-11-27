@@ -177,8 +177,24 @@ namespace Telegram.Services.Factories
         public static async Task<InputMessageFactory> CreateDocumentAsync(StorageMedia media, bool asFile, bool asScreenshot)
         {
             var file = media.File;
-
             var generated = await file.ToGeneratedAsync(asScreenshot ? ConversionType.Screenshot : ConversionType.Copy);
+
+            if (!asFile && media is StorageAudio audio)
+            {
+                var duration = audio.TotalSeconds;
+
+                var title = audio.Title;
+                var performer = audio.Performer;
+
+                var albumCover = new InputThumbnail(await file.ToGeneratedAsync(ConversionType.AlbumCover), 0, 0);
+
+                return new InputMessageFactory
+                {
+                    InputFile = generated,
+                    Delegate = (inputFile, caption) => new InputMessageAudio(inputFile, albumCover, duration, title, performer, caption)
+                };
+            }
+
             var thumbnail = new InputThumbnail(await file.ToGeneratedAsync(ConversionType.DocumentThumbnail), 0, 0);
 
             if (!asFile && file.FileType.Equals(".webp", StringComparison.OrdinalIgnoreCase))
@@ -211,19 +227,6 @@ namespace Telegram.Services.Factories
             else if (!asFile && file.FileType.Equals(".tgs", StringComparison.OrdinalIgnoreCase))
             {
                 // TODO
-            }
-            else if (!asFile && media is StorageAudio audio)
-            {
-                var duration = audio.TotalSeconds;
-
-                var title = audio.Title;
-                var performer = audio.Performer;
-
-                return new InputMessageFactory
-                {
-                    InputFile = generated,
-                    Delegate = (inputFile, caption) => new InputMessageAudio(inputFile, thumbnail, duration, title, performer, caption)
-                };
             }
 
             return new InputMessageFactory

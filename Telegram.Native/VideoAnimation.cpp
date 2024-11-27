@@ -299,6 +299,21 @@ namespace winrt::Telegram::Native::implementation
             }
         }
 
+        for (int32_t i = 0, l = info->fmt_ctx->nb_streams; i < l; ++i)
+        {
+            const auto stream = info->fmt_ctx->streams[i];
+            if (stream->disposition & AV_DISPOSITION_ATTACHED_PIC)
+            {
+                const auto& packet = stream->attached_pic;
+                if (packet.size)
+                {
+                    info->album_stream_idx = i;
+                }
+
+                break;
+            }
+        }
+
         //int requestedMaxSide = 420;
 
         //double ratioX = (double)requestedMaxSide / info->video_dec_ctx->width;
@@ -414,6 +429,29 @@ namespace winrt::Telegram::Native::implementation
             //    tries--;
             //}
         }
+    }
+
+    IRandomAccessStream VideoAnimation::GetAlbumCover()
+    {
+        if (album_stream_idx)
+        {
+            const auto album = fmt_ctx->streams[album_stream_idx];
+            const auto& packet = album->attached_pic;
+
+            HRESULT result;
+            IRandomAccessStream randomAccessStream = InMemoryRandomAccessStream();
+
+            winrt::com_ptr<IStream> stream;
+            CleanupIfFailed(result, CreateStreamOverRandomAccessStream(winrt::get_unknown(randomAccessStream), IID_PPV_ARGS(&stream)));
+
+            CleanupIfFailed(result, stream->Write(packet.data, packet.size, nullptr));
+            CleanupIfFailed(result, stream->Seek({ 0 }, STREAM_SEEK_SET, nullptr));
+
+            return randomAccessStream;
+        }
+
+    Cleanup:
+        return nullptr;
     }
 
     int VideoAnimation::RenderSync(IBuffer bitmap, int32_t w, int32_t h, bool preview, int32_t& seconds)
