@@ -380,7 +380,10 @@ namespace Telegram.ViewModels
             var self = ClientService.IsSavedMessages(chat);
 
             var popup = new SendFilesPopup(this, items, media, permissions, chat.Type is ChatTypePrivate && !self, CanSchedule, self, false);
-            popup.Caption = caption;
+            popup.Loaded += (s, args) =>
+            {
+                popup.Caption = caption;
+            };
 
             if (ClientService.TryGetSupergroupFull(chat, out SupergroupFullInfo fullInfo))
             {

@@ -1581,7 +1581,10 @@ namespace Telegram.Views
 
         private void TextField_TextChanging(RichEditBox sender, RichEditBoxTextChangingEventArgs args)
         {
-            CheckMessageBoxEmpty();
+            if (args.IsContentChanging)
+            {
+                CheckMessageBoxEmpty();
+            }
         }
 
         private void btnSendMessage_Click(object sender, RoutedEventArgs e)
