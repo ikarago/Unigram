@@ -92,11 +92,14 @@ Unigram uses VLC to play videos and audio in the app. This is required because t
 You can freely use the pre-built NuGet packages `VideoLAN.LibVLC.UWP` and `LibVLCSharp` provided by VLC, however we ship the app with binaries built by us,
 as we disable all the features that we don't need to save a bit of disk space:
 1. Clone VLC [repository](https://code.videolan.org/videolan/vlc) in `C:\Source` and check out branch `3.0.x`.
-2. Apply the patch located in `Unigram repository\Libraries\vlc`
-3. Make sure to have docker installed on your machine
+2. Apply the patch located in `Unigram repository\Libraries\vlc` by running the following command :
+```
+git apply {Your Repository Folder}\Libraries\vlc\vlc.patch
+```
+3. Make sure to have docker installed on your machine 
 4. Open the terminal and run the following commands:
 ```
-docker run -it -v C:\Source\vlc:/vlc registry.videolan.org/vlc-debian-llvm-uwp:20200706065223`
+docker run -it -v C:\Source\vlc:/vlc registry.videolan.org/vlc-debian-llvm-uwp:20200706065223
 cd ../vlc
 extras/package/win32/build.sh -a x86_64 -z -r -u -w -D=C:/Source/vlc
 ```
