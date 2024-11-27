@@ -94,7 +94,7 @@ as we disable all the features that we don't need to save a bit of disk space:
 1. Clone VLC [repository](https://code.videolan.org/videolan/vlc) in `C:\Source` and check out branch `3.0.x`.
 2. Apply the patch located in `Unigram repository\Libraries\vlc` by running the following command :
 ```
-git apply {Your Repository Folder}\Libraries\vlc\vlc.patch
+git apply --3way --ignore-whitespace {Your Repository Folder}\Libraries\vlc\vlc.patch
 ```
 3. Make sure to have docker installed on your machine 
 4. Open the terminal and run the following commands:
