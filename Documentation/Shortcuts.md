@@ -16,7 +16,7 @@
     <tr>
       <td>Alt + Arrow Up</td>
     <tr>
-      <td>Ctrl + Page Down</td>
+      <td>Ctrl + Page Up</td>
     <tr>
       <td rowspan="3">Previous chat</td>
       <td>Ctrl + Shift + Tab</td>
@@ -24,7 +24,7 @@
     <tr>
       <td>Alt + Arrow Down</td>
     <tr>
-      <td>Ctrl + Page Up</td>
+      <td>Ctrl + Page Down</td>
     </tr>
     <tr>
       <td rowspan="2">Search</td>
@@ -162,7 +162,7 @@
       <td>Ctrl + Shift + Y</td>
     </tr>
     <tr>
-      <td rowspan="4">Record Notes</td>
+      <td rowspan="5">Record Notes</td>
       <td>Start Record</td>
       <td>Ctrl + R</td>
     </tr>
@@ -175,8 +175,11 @@
       <td>Ctrl + D</td>
     </tr>
     <tr>
-      <td>Pause Recording</td>
+      <td rowspan="2">Pause Recording</td>
       <td>Space (when Recording)</td>
+    </tr>
+    <tr>
+      <td>Ctrl + P</td>
     </tr>
     <tr>
       <td rowspan="4">Calls</td>
