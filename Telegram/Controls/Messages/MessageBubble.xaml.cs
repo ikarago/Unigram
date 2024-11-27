@@ -2470,7 +2470,7 @@ namespace Telegram.Controls.Messages
                     visual.Opacity = 0;
 
                     var transform = Message.TransformToVisual(ContentPanel);
-                    var point = transform.TransformPoint(new Windows.Foundation.Point());
+                    var position = transform.TransformPoint(new Windows.Foundation.Point());
 
                     for (int j = 0; j < message.Text.Paragraphs.Count; j++)
                     {
@@ -2502,7 +2502,7 @@ namespace Telegram.Controls.Messages
                         var rectangles = PlaceholderImageHelper.Current.RangeMetrics(partial, xoffset, xlength, entities, size, width - paragraph.Margin.Left - paragraph.Margin.Right, styled.Direction == TextDirectionality.RightToLeft);
                         var relative = paragraph.ContentStart.GetCharacterRect(paragraph.ContentStart.LogicalDirection);
 
-                        point = new Windows.Foundation.Point(paragraph.Margin.Left + point.X, relative.Y + point.Y + inset);
+                        var point = new Windows.Foundation.Point(paragraph.Margin.Left + position.X, relative.Y + position.Y + inset);
 
                         for (int i = 0; i < rectangles.Count; i++)
                         {
