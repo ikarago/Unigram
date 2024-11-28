@@ -10,13 +10,13 @@
 
     <Style TargetType="local:AnimationContent">
         <Setter Property="MinWidth"
-                Value="180" />
+                Value="{ThemeResource TelegramMediaMinWidth}" />
         <Setter Property="MinHeight"
-                Value="180" />
+                Value="{ThemeResource TelegramMediaMinHeight}" />
         <Setter Property="MaxWidth"
-                Value="320" />
+                Value="{ThemeResource TelegramMediaMaxWidth}" />
         <Setter Property="MaxHeight"
-                Value="320" />
+                Value="{ThemeResource TelegramMediaMaxHeight}" />
         <Setter Property="IsTabStop"
                 Value="False" />
         <Setter Property="Template">
