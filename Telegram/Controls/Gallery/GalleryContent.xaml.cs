@@ -391,6 +391,7 @@ namespace Telegram.Controls.Gallery
                 controls.Attach(Video);
 
                 Video.Play(item, position);
+                Button.Visibility = Visibility.Collapsed;
             }
             catch { }
         }
@@ -413,6 +414,7 @@ namespace Telegram.Controls.Gallery
                 _fileId = file.Id;
 
                 Video = player;
+                Button.Visibility = Visibility.Collapsed;
                 //Video.IsUnloadedExpected = false;
 
                 controls.Attach(item, file);
@@ -457,6 +459,7 @@ namespace Telegram.Controls.Gallery
             if (Video != null)
             {
                 Video.Stop();
+                Button.Visibility = Visibility.Visible;
             }
 
             UpdateManager.Unsubscribe(this, ref _fileToken);
@@ -483,6 +486,7 @@ namespace Telegram.Controls.Gallery
             {
                 _stopped = false;
                 Video.Clear();
+                Button.Visibility = Visibility.Visible;
             }
         }
 
@@ -495,6 +499,7 @@ namespace Telegram.Controls.Gallery
 
                 _stopped = true;
                 Video.Stop();
+                Button.Visibility = Visibility.Visible;
             }
             else
             {

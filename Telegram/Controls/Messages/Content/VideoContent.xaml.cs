@@ -189,6 +189,17 @@ namespace Telegram.Controls.Messages.Content
                     }
                 }
             }
+            else if (message.Content is MessageVideo messageVideo && messageVideo.IsHls())
+            {
+                UpdateSource(null, null);
+
+                Button.SetGlyph(file.Id, message.SendingState is MessageSendingStatePending && message.MediaAlbumId != 0 ? MessageContentState.Confirm : MessageContentState.Play);
+                Button.Progress = 0;
+                Overlay.Progress = 1;
+                Overlay.ProgressVisibility = Visibility.Collapsed;
+
+                Subtitle.Text = video.GetDuration();
+            }
             else
             {
                 var size = Math.Max(file.Size, file.ExpectedSize);
