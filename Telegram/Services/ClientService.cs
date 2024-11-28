@@ -960,7 +960,7 @@ namespace Telegram.Services
                 if (ownerId == null || ownerId.IsUser(Options.MyId))
                 {
                     _ownedStarCount = transactions.StarCount;
-                    _aggregator.Publish(new UpdateOwnedStarCount(transactions.StarCount));
+                    _aggregator.Publish(new UpdateOwnedStarCount(transactions.StarCount, transactions.NanostarCount));
                 }
             }
 

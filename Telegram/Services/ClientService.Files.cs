@@ -429,24 +429,6 @@ namespace Telegram.Services
                         ProcessFiles(item);
                     }
                     break;
-                case BotTransactionPurposeInvoicePayment botTransactionPurposeInvoicePayment:
-                    if (botTransactionPurposeInvoicePayment.ProductInfo != null)
-                    {
-                        ProcessFiles(botTransactionPurposeInvoicePayment.ProductInfo);
-                    }
-                    break;
-                case BotTransactionPurposePaidMedia botTransactionPurposePaidMedia:
-                    foreach (var item in botTransactionPurposePaidMedia.Media)
-                    {
-                        ProcessFiles(item);
-                    }
-                    break;
-                case BotTransactionPurposeSubscription botTransactionPurposeSubscription:
-                    if (botTransactionPurposeSubscription.ProductInfo != null)
-                    {
-                        ProcessFiles(botTransactionPurposeSubscription.ProductInfo);
-                    }
-                    break;
                 case BotWriteAccessAllowReasonLaunchedWebApp botWriteAccessAllowReasonLaunchedWebApp:
                     if (botWriteAccessAllowReasonLaunchedWebApp.WebApp != null)
                     {
@@ -617,12 +599,6 @@ namespace Telegram.Services
                     if (chatTheme.LightSettings != null)
                     {
                         ProcessFiles(chatTheme.LightSettings);
-                    }
-                    break;
-                case ChatTransactionPurposePaidMedia chatTransactionPurposePaidMedia:
-                    foreach (var item in chatTransactionPurposePaidMedia.Media)
-                    {
-                        ProcessFiles(item);
                     }
                     break;
                 case DatedFile datedFile:
@@ -1986,39 +1962,81 @@ namespace Telegram.Services
                     }
                     break;
                 case StarTransaction starTransaction:
-                    if (starTransaction.Partner != null)
+                    if (starTransaction.Type != null)
                     {
-                        ProcessFiles(starTransaction.Partner);
-                    }
-                    break;
-                case StarTransactionPartnerBot starTransactionPartnerBot:
-                    if (starTransactionPartnerBot.Purpose != null)
-                    {
-                        ProcessFiles(starTransactionPartnerBot.Purpose);
-                    }
-                    break;
-                case StarTransactionPartnerBusiness starTransactionPartnerBusiness:
-                    foreach (var item in starTransactionPartnerBusiness.Media)
-                    {
-                        ProcessFiles(item);
-                    }
-                    break;
-                case StarTransactionPartnerChat starTransactionPartnerChat:
-                    if (starTransactionPartnerChat.Purpose != null)
-                    {
-                        ProcessFiles(starTransactionPartnerChat.Purpose);
-                    }
-                    break;
-                case StarTransactionPartnerUser starTransactionPartnerUser:
-                    if (starTransactionPartnerUser.Purpose != null)
-                    {
-                        ProcessFiles(starTransactionPartnerUser.Purpose);
+                        ProcessFiles(starTransaction.Type);
                     }
                     break;
                 case StarTransactions starTransactions:
                     foreach (var item in starTransactions.Transactions)
                     {
                         ProcessFiles(item);
+                    }
+                    break;
+                case StarTransactionTypeBotInvoicePurchase starTransactionTypeBotInvoicePurchase:
+                    if (starTransactionTypeBotInvoicePurchase.ProductInfo != null)
+                    {
+                        ProcessFiles(starTransactionTypeBotInvoicePurchase.ProductInfo);
+                    }
+                    break;
+                case StarTransactionTypeBotInvoiceSale starTransactionTypeBotInvoiceSale:
+                    if (starTransactionTypeBotInvoiceSale.ProductInfo != null)
+                    {
+                        ProcessFiles(starTransactionTypeBotInvoiceSale.ProductInfo);
+                    }
+                    break;
+                case StarTransactionTypeBotPaidMediaPurchase starTransactionTypeBotPaidMediaPurchase:
+                    foreach (var item in starTransactionTypeBotPaidMediaPurchase.Media)
+                    {
+                        ProcessFiles(item);
+                    }
+                    break;
+                case StarTransactionTypeBotPaidMediaSale starTransactionTypeBotPaidMediaSale:
+                    foreach (var item in starTransactionTypeBotPaidMediaSale.Media)
+                    {
+                        ProcessFiles(item);
+                    }
+                    break;
+                case StarTransactionTypeBotSubscriptionPurchase starTransactionTypeBotSubscriptionPurchase:
+                    if (starTransactionTypeBotSubscriptionPurchase.ProductInfo != null)
+                    {
+                        ProcessFiles(starTransactionTypeBotSubscriptionPurchase.ProductInfo);
+                    }
+                    break;
+                case StarTransactionTypeBotSubscriptionSale starTransactionTypeBotSubscriptionSale:
+                    if (starTransactionTypeBotSubscriptionSale.ProductInfo != null)
+                    {
+                        ProcessFiles(starTransactionTypeBotSubscriptionSale.ProductInfo);
+                    }
+                    break;
+                case StarTransactionTypeChannelPaidMediaPurchase starTransactionTypeChannelPaidMediaPurchase:
+                    foreach (var item in starTransactionTypeChannelPaidMediaPurchase.Media)
+                    {
+                        ProcessFiles(item);
+                    }
+                    break;
+                case StarTransactionTypeChannelPaidMediaSale starTransactionTypeChannelPaidMediaSale:
+                    foreach (var item in starTransactionTypeChannelPaidMediaSale.Media)
+                    {
+                        ProcessFiles(item);
+                    }
+                    break;
+                case StarTransactionTypeGiftPurchase starTransactionTypeGiftPurchase:
+                    if (starTransactionTypeGiftPurchase.Gift != null)
+                    {
+                        ProcessFiles(starTransactionTypeGiftPurchase.Gift);
+                    }
+                    break;
+                case StarTransactionTypeGiftSale starTransactionTypeGiftSale:
+                    if (starTransactionTypeGiftSale.Gift != null)
+                    {
+                        ProcessFiles(starTransactionTypeGiftSale.Gift);
+                    }
+                    break;
+                case StarTransactionTypeUserDeposit starTransactionTypeUserDeposit:
+                    if (starTransactionTypeUserDeposit.Sticker != null)
+                    {
+                        ProcessFiles(starTransactionTypeUserDeposit.Sticker);
                     }
                     break;
                 case Sticker sticker:
@@ -2419,24 +2437,6 @@ namespace Telegram.Services
                     foreach (var item in userGifts.Gifts)
                     {
                         ProcessFiles(item);
-                    }
-                    break;
-                case UserTransactionPurposeGiftedStars userTransactionPurposeGiftedStars:
-                    if (userTransactionPurposeGiftedStars.Sticker != null)
-                    {
-                        ProcessFiles(userTransactionPurposeGiftedStars.Sticker);
-                    }
-                    break;
-                case UserTransactionPurposeGiftSell userTransactionPurposeGiftSell:
-                    if (userTransactionPurposeGiftSell.Gift != null)
-                    {
-                        ProcessFiles(userTransactionPurposeGiftSell.Gift);
-                    }
-                    break;
-                case UserTransactionPurposeGiftSend userTransactionPurposeGiftSend:
-                    if (userTransactionPurposeGiftSend.Gift != null)
-                    {
-                        ProcessFiles(userTransactionPurposeGiftSend.Gift);
                     }
                     break;
                 case Video video:
