@@ -371,6 +371,14 @@ namespace Telegram.ViewModels.Supergroups
             }
         }
 
+        public void AffiliatePrograms()
+        {
+            if (_chat is Chat chat)
+            {
+                NavigationService.Navigate(typeof(ChatAffiliatePage), chat.Id);
+            }
+        }
+
         public async void Delete()
         {
             if (_chat is Chat chat)

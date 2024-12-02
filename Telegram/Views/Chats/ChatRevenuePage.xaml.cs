@@ -190,6 +190,11 @@ namespace Telegram.Views.Chats
         }
 
         #endregion
+
+        private void Affiliate_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.NavigationService.Navigate(typeof(ChatAffiliatePage), ViewModel.Chat.Id);
+        }
     }
 
     public class ChatRevenueTemplateSelector : DataTemplateSelector

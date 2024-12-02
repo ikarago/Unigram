@@ -196,6 +196,15 @@
 
                     <cells:StarWithdrawCell x:Name="StarsRoot" />
 
+                    <controls:HeaderedControl>
+                        <controls:BadgeButton Click="Affiliate_Click"
+                                              Content="{CustomResource UserAffiliateProgramRowTitle}"
+                                              Badge="{CustomResource UserAffiliateProgramRowText}"
+                                              Style="{StaticResource GlyphSubbadgeBadgeButtonStyle}"
+                                              Glyph="&#xE9B5;"
+                                              IsChevronVisible="True" />
+                    </controls:HeaderedControl>
+
                     <Grid x:Name="TransactionsRoot"
                           Visibility="{x:Bind ViewModel.ItemsView.Count, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <TextBlock x:Name="TransactionsHeader"

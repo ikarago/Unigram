@@ -170,6 +170,82 @@ namespace Telegram.Controls.Cells
             args.Handled = true;
         }
 
+        public void UpdateFoundAffiliateProgram(IClientService clientService, ContainerContentChangingEventArgs args, TypedEventHandler<ListViewBase, ContainerContentChangingEventArgs> callback)
+        {
+            args.ItemContainer.Tag = args.Item;
+            Tag = args.Item;
+
+            var program = args.Item as FoundAffiliateProgram;
+
+            var user = clientService.GetUser(program.BotUserId);
+            if (user == null)
+            {
+                return;
+            }
+
+            if (args.Phase == 0)
+            {
+                TitleLabel.Text = user.FullName();
+            }
+            else if (args.Phase == 1)
+            {
+                var percent = program.Parameters.Parameters.CommissionPercent();
+                var duration = program.Parameters.Parameters.Duration();
+
+                SubtitleLabel.Text = string.Format("{0} - {1}", percent, duration);
+            }
+            else if (args.Phase == 2)
+            {
+                Photo.SetUser(clientService, user, 36);
+                Identity.SetStatus(clientService, user);
+            }
+
+            if (args.Phase < 2)
+            {
+                args.RegisterUpdateCallback(callback);
+            }
+
+            args.Handled = true;
+        }
+
+        public void UpdateAffiliateProgram(IClientService clientService, ContainerContentChangingEventArgs args, TypedEventHandler<ListViewBase, ContainerContentChangingEventArgs> callback)
+        {
+            args.ItemContainer.Tag = args.Item;
+            Tag = args.Item;
+
+            var program = args.Item as ChatAffiliateProgram;
+
+            var user = clientService.GetUser(program.BotUserId);
+            if (user == null)
+            {
+                return;
+            }
+
+            if (args.Phase == 0)
+            {
+                TitleLabel.Text = user.FullName();
+            }
+            else if (args.Phase == 1)
+            {
+                var percent = program.Parameters.CommissionPercent();
+                var duration = program.Parameters.Duration();
+
+                SubtitleLabel.Text = string.Format("{0} - {1}", percent, duration);
+            }
+            else if (args.Phase == 2)
+            {
+                Photo.SetUser(clientService, user, 36);
+                Identity.SetStatus(clientService, user);
+            }
+
+            if (args.Phase < 2)
+            {
+                args.RegisterUpdateCallback(callback);
+            }
+
+            args.Handled = true;
+        }
+
         public void UpdateSupergroupMember(IClientService clientService, ContainerContentChangingEventArgs args, TypedEventHandler<ListViewBase, ContainerContentChangingEventArgs> callback)
         {
             args.ItemContainer.Tag = args.Item;

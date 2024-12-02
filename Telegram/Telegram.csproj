@@ -546,6 +546,7 @@
     <Compile Include="ViewModels\Business\BusinessIntroViewModel.cs" />
     <Compile Include="ViewModels\Business\BusinessRepliesViewModel.cs" />
     <Compile Include="ViewModels\ChatNotificationsViewModel.cs" />
+    <Compile Include="ViewModels\Chats\ChatAffiliateViewModel.cs" />
     <Compile Include="ViewModels\Chats\ChatBoostsViewModel.cs" />
     <Compile Include="ViewModels\Chats\ChatStarsViewModel.cs" />
     <Compile Include="ViewModels\Chats\ChatRevenueViewModel.cs" />
@@ -1091,6 +1092,9 @@
     </Compile>
     <Compile Include="Views\ChatPinnedPage.xaml.cs">
       <DependentUpon>ChatPinnedPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Chats\ChatAffiliatePage.xaml.cs">
+      <DependentUpon>ChatAffiliatePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Chats\ChatBoostsPage.xaml.cs">
       <DependentUpon>ChatBoostsPage.xaml</DependentUpon>
@@ -2056,6 +2060,7 @@
     <Content Include="Assets\Animations\ReportText.tgs" />
     <Content Include="Assets\Animations\EmptyContacts.tgs" />
     <Content Include="Assets\Animations\ChatInviteLinks.tgs" />
+    <Content Include="Assets\Animations\Affiliate.tgs" />
     <None Include="Assets\i420.hlsl" />
     <Content Include="Assets\Images\Reply.scale-100.png" />
     <Content Include="Assets\Images\Reply.scale-125.png" />
@@ -2934,6 +2939,10 @@
     <Page Include="Views\ChatPinnedPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Chats\ChatAffiliatePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Chats\ChatBoostsPage.xaml">
       <SubType>Designer</SubType>
