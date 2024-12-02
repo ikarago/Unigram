@@ -2499,6 +2499,15 @@ namespace Telegram.Views
                     }
                 }
             }
+            else if (args.OriginalSource is Hyperlink originalHyperlink)
+            {
+                MessageHelper.Hyperlink_ContextRequested(ViewModel.TranslateService, originalHyperlink, args);
+
+                if (args.Handled)
+                {
+                    return;
+                }
+            }
 
             var properties = await message.ClientService.SendAsync(new GetMessageProperties(message.ChatId, message.Id)) as MessageProperties;
             if (properties == null)

@@ -38,6 +38,7 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Point = Windows.Foundation.Point;
 using User = Telegram.Td.Api.User;
@@ -1499,6 +1500,24 @@ namespace Telegram.Common
             }
         }
 
+        public static void Hyperlink_ContextRequested(ITranslateService service, Hyperlink sender, ContextRequestedEventArgs args)
+        {
+            var flyout = new MenuFlyout();
+
+            Hyperlink_ContextRequested(flyout, service, sender);
+
+            if (flyout.Items.Count > 0)
+            {
+                // We don't want to unfocus the text are when the context menu gets opened
+                flyout.ShowAt(sender.ElementStart.VisualParent as FrameworkElement);
+                args.Handled = true;
+            }
+            else
+            {
+                args.Handled = false;
+            }
+        }
+
         public static void Hyperlink_ContextRequested(ITranslateService service, UIElement sender, string text, ContextRequestedEventArgs args)
         {
             if (args.TryGetPosition(sender, out Point point))
@@ -1569,36 +1588,39 @@ namespace Telegram.Common
             else
             {
                 var hyperlink = text.GetHyperlinkFromPoint(point);
-                if (hyperlink == null)
+                if (hyperlink != null)
                 {
-                    return;
+                    Hyperlink_ContextRequested(flyout, service, hyperlink);
                 }
+            }
+        }
 
-                var link = GetEntityData(hyperlink);
-                if (link == null)
+        public static void Hyperlink_ContextRequested(MenuFlyout flyout, ITranslateService service, Hyperlink hyperlink)
+        {
+            var link = GetEntityData(hyperlink);
+            if (link == null)
+            {
+                return;
+            }
+
+            var type = GetEntityType(hyperlink);
+            if (type is null or TextEntityTypeUrl or TextEntityTypeTextUrl)
+            {
+                var action = GetEntityAction(hyperlink);
+                if (action != null)
                 {
-                    return;
-                }
-
-                var type = GetEntityType(hyperlink);
-                if (type is null or TextEntityTypeUrl or TextEntityTypeTextUrl)
-                {
-                    var action = GetEntityAction(hyperlink);
-                    if (action != null)
-                    {
-                        flyout.CreateFlyoutItem(action, Strings.Open, Icons.OpenIn);
-                    }
-                    else
-                    {
-                        flyout.CreateFlyoutItem(() => LinkOpen_Click(text.XamlRoot, link), Strings.Open, Icons.OpenIn);
-                    }
-
-                    flyout.CreateFlyoutItem(() => LinkCopy_Click(text.XamlRoot, link), Strings.Copy, Icons.DocumentCopy);
+                    flyout.CreateFlyoutItem(action, Strings.Open, Icons.OpenIn);
                 }
                 else
                 {
-                    flyout.CreateFlyoutItem(() => TextCopy_Click(text.XamlRoot, link), Strings.Copy, Icons.DocumentCopy);
+                    flyout.CreateFlyoutItem(() => LinkOpen_Click(hyperlink.XamlRoot, link), Strings.Open, Icons.OpenIn);
                 }
+
+                flyout.CreateFlyoutItem(() => LinkCopy_Click(hyperlink.XamlRoot, link), Strings.Copy, Icons.DocumentCopy);
+            }
+            else
+            {
+                flyout.CreateFlyoutItem(() => TextCopy_Click(hyperlink.XamlRoot, link), Strings.Copy, Icons.DocumentCopy);
             }
         }
 
