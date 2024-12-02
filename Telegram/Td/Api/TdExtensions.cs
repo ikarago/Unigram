@@ -63,6 +63,20 @@ namespace Telegram.Td.Api
             return last >= 24 * 60 * 7 - 1;
         }
 
+        public static string CommissionPercent(this AffiliateProgramParameters parameters)
+        {
+            return (parameters.CommissionPerMille / 10d).ToString("0.##") + "%";
+        }
+
+        public static string Duration(this AffiliateProgramParameters parameters)
+        {
+            return parameters.MonthCount > 0
+                ? parameters.MonthCount >= 12
+                ? Locale.Declension(Strings.R.Years, parameters.MonthCount / 12)
+                : Locale.Declension(Strings.R.Months, parameters.MonthCount)
+                : Strings.Lifetime;
+        }
+
         public static bool IsHls(this MessageVideo video)
         {
             if (video.Video.Duration == 0 || video.AlternativeVideos.Count == 0)

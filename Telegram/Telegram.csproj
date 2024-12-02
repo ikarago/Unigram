@@ -1014,6 +1014,7 @@
     <Compile Include="ViewModels\Settings\SettingsThemeViewModel.cs" />
     <Compile Include="ViewModels\StickersViewModel.cs" />
     <Compile Include="ViewModels\Supergroups\SupergroupReactionsViewModel.cs" />
+    <Compile Include="ViewModels\Users\UserAffiliateViewModel.cs" />
     <Compile Include="ViewModels\Users\UserEditViewModel.cs" />
     <Compile Include="Views\Authorization\AuthorizationCodePage.xaml.cs">
       <DependentUpon>AuthorizationCodePage.xaml</DependentUpon>
@@ -1376,6 +1377,12 @@
     </Compile>
     <Compile Include="Views\Tabbed\WebBrowserPage.xaml.cs">
       <DependentUpon>WebBrowserPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Users\Popups\UserAffiliatePopup.xaml.cs">
+      <DependentUpon>UserAffiliatePopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Users\UserAffiliatePage.xaml.cs">
+      <DependentUpon>UserAffiliatePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WebAppPage.xaml.cs">
       <DependentUpon>WebAppPage.xaml</DependentUpon>
@@ -3309,6 +3316,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Tabbed\WebBrowserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Users\Popups\UserAffiliatePopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Users\UserAffiliatePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

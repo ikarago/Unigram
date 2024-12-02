@@ -91,6 +91,15 @@ namespace Telegram.Views.Users
 
                 SharePhoneCheck.Content = string.Format(Strings.SharePhoneNumberWith, user.FirstName);
             }
+
+            if (fullInfo.BotInfo?.AffiliateProgram != null)
+            {
+                AffiliateProgram.Badge = fullInfo.BotInfo.AffiliateProgram.Parameters.CommissionPercent();
+            }
+            else
+            {
+                AffiliateProgram.Badge = Strings.AffiliateProgramBotOff;
+            }
         }
 
         public void UpdateUserStatus(Chat chat, User user) { }

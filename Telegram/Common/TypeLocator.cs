@@ -365,6 +365,11 @@ namespace Telegram.Views
                         _settingsService,
                         _eventAggregator,
                         _profilePhotoService ??= new Telegram.Services.ProfilePhotoService(_clientService));
+                case "Telegram.ViewModels.Users.UserAffiliateViewModel":
+                    return (T)(object)new Telegram.ViewModels.Users.UserAffiliateViewModel(
+                        _clientService,
+                        _settingsService,
+                        _eventAggregator);
                 case "Telegram.ViewModels.Supergroups.SupergroupEditViewModel":
                     return (T)(object)new Telegram.ViewModels.Supergroups.SupergroupEditViewModel(
                         _clientService,

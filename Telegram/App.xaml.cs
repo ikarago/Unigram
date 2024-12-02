@@ -358,6 +358,7 @@ namespace Telegram
                 NewChannelPopup => TypeResolver.Current.Resolve<NewChannelViewModel>(sessionId),
                 NewGroupPopup => TypeResolver.Current.Resolve<NewGroupViewModel>(sessionId),
                 UserEditPage userEdit => TypeResolver.Current.Resolve<UserEditViewModel, IUserDelegate>(userEdit, sessionId),
+                UserAffiliatePage => TypeResolver.Current.Resolve<UserAffiliateViewModel>(sessionId),
                 //
                 SupergroupChooseMemberPopup => TypeResolver.Current.Resolve<SupergroupChooseMemberViewModel>(sessionId),
                 SupergroupAdministratorsPage supergroupAdministrators => TypeResolver.Current.Resolve<SupergroupAdministratorsViewModel, ISupergroupDelegate>(supergroupAdministrators, sessionId),
@@ -373,6 +374,7 @@ namespace Telegram
                 SupergroupReactionsPopup => TypeResolver.Current.Resolve<SupergroupReactionsViewModel>(sessionId),
                 SupergroupProfileColorPage => TypeResolver.Current.Resolve<SupergroupProfileColorViewModel>(sessionId),
                 ChatBoostsPage => TypeResolver.Current.Resolve<ChatBoostsViewModel>(sessionId),
+                ChatAffiliatePage => TypeResolver.Current.Resolve<ChatAffiliateViewModel>(sessionId),
                 //
                 AuthorizationRecoveryPage => TypeResolver.Current.Resolve<AuthorizationRecoveryViewModel>(sessionId),
                 AuthorizationRegistrationPage => TypeResolver.Current.Resolve<AuthorizationRegistrationViewModel>(sessionId),

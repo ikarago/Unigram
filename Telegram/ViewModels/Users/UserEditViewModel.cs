@@ -13,6 +13,7 @@ using Telegram.Td.Api;
 using Telegram.ViewModels.Delegates;
 using Telegram.Views.Chats;
 using Telegram.Views.Settings.Popups;
+using Telegram.Views.Users;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -280,6 +281,11 @@ namespace Telegram.ViewModels.Users
         public async void ChangeUsername()
         {
             await ShowPopupAsync(new SettingsUsernamePopup(), _userId);
+        }
+
+        public void OpenAffiliate()
+        {
+            NavigationService.Navigate(typeof(UserAffiliatePage), _userId);
         }
 
         public void ShowBalance()
