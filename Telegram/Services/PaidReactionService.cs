@@ -64,7 +64,7 @@ namespace Telegram.Services
 
         private async Task<BaseObject> AddPendingImpl(XamlRoot xamlRoot, MessageViewModel message, int starCount, bool useDefaultIsAnonymous, bool isAnonymous)
         {
-            if (message.ClientService.OwnedStarCount < _pendingCount + starCount)
+            if (message.ClientService.OwnedStarCount.StarCount < _pendingCount + starCount)
             {
                 _ = message.Delegate.NavigationService.ShowPopupAsync(new BuyPopup(), BuyStarsArgs.ForChannel(starCount, message.ChatId));
                 return null;

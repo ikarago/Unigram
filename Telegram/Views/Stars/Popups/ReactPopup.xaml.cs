@@ -41,7 +41,7 @@ namespace Telegram.Views.Stars.Popups
             _message = message;
 
             // TODO: of course value won't update
-            OwnedStarCount.Text = clientService.OwnedStarCount.ToString("N0");
+            OwnedStarCount.Text = clientService.OwnedStarCount.ToValue();
 
             if (clientService.TryGetChat(message.ChatId, out Chat chat))
             {

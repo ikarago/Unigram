@@ -26,19 +26,13 @@ namespace Telegram.ViewModels.Stars
             _subscriptions = new SubscriptionCollection(clientService, settingsService, aggregator);
 
             Items = new IncrementalCollection<StarTransaction>(this);
-            OwnedStarCount = clientService.OwnedStarCount;
         }
 
         public IncrementalCollection<StarTransaction> Items { get; private set; }
 
         public IncrementalCollection<StarSubscription> Subscriptions => _subscriptions.Items;
 
-        private long _ownedStarCount;
-        public long OwnedStarCount
-        {
-            get => _ownedStarCount;
-            set => Set(ref _ownedStarCount, value);
-        }
+        public string OwnedStarCount => ClientService.OwnedStarCount.ToValue();
 
         public override void Subscribe()
         {
@@ -75,8 +69,6 @@ namespace Telegram.ViewModels.Stars
 
                 _nextOffset = transactions.NextOffset;
                 HasMoreItems = transactions.NextOffset.Length > 0;
-
-                OwnedStarCount = transactions.StarCount;
             }
             else
             {

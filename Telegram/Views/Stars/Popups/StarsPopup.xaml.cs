@@ -57,11 +57,6 @@ namespace Telegram.Views.Stars.Popups
             }
         }
 
-        public string ConvertCount(long count)
-        {
-            return count.ToString("N0");
-        }
-
         private void Buy_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             Hide();

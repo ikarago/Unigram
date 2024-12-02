@@ -57,22 +57,22 @@ namespace Telegram.ViewModels.Chats
             set => Set(ref _revenue, value);
         }
 
-        private CryptoAmount _availableAmount;
-        public CryptoAmount AvailableAmount
+        private StarAmount _availableAmount;
+        public StarAmount AvailableAmount
         {
             get => _availableAmount;
             set => Set(ref _availableAmount, value);
         }
 
-        private CryptoAmount _previousAmount;
-        public CryptoAmount PreviousAmount
+        private StarAmount _previousAmount;
+        public StarAmount PreviousAmount
         {
             get => _previousAmount;
             set => Set(ref _previousAmount, value);
         }
 
-        private CryptoAmount _totalAmount;
-        public CryptoAmount TotalAmount
+        private StarAmount _totalAmount;
+        public StarAmount TotalAmount
         {
             get => _totalAmount;
             set => Set(ref _totalAmount, value);
@@ -85,7 +85,12 @@ namespace Telegram.ViewModels.Chats
             set => Set(ref _isEmpty, value);
         }
 
-        public double UsdRate { get; private set; }
+        private double _usdRate;
+        public double UsdRate
+        {
+            get => _usdRate;
+            set => Set(ref _usdRate, value);
+        }
 
         private bool _withdrawalEnabled;
         public bool WithdrawalEnabled
@@ -166,26 +171,9 @@ namespace Telegram.ViewModels.Chats
 
         private void UpdateAmount(StarRevenueStatus status)
         {
-            AvailableAmount = new CryptoAmount
-            {
-                Cryptocurrency = "XTR",
-                CryptocurrencyAmount = status.AvailableCount,
-                UsdRate = UsdRate,
-            };
-
-            PreviousAmount = new CryptoAmount
-            {
-                Cryptocurrency = "XTR",
-                CryptocurrencyAmount = status.CurrentCount,
-                UsdRate = UsdRate,
-            };
-
-            TotalAmount = new CryptoAmount
-            {
-                Cryptocurrency = "XTR",
-                CryptocurrencyAmount = status.TotalCount,
-                UsdRate = UsdRate,
-            };
+            AvailableAmount = status.AvailableAmount;
+            PreviousAmount = status.CurrentAmount;
+            TotalAmount = status.TotalAmount;
 
             WithdrawalEnabled = status.WithdrawalEnabled;
 
@@ -208,8 +196,8 @@ namespace Telegram.ViewModels.Chats
             }
 
             var popup = new InputPopup(InputPopupType.Stars);
-            popup.Value = AvailableAmount?.CryptocurrencyAmount ?? 0;
-            popup.Maximum = AvailableAmount?.CryptocurrencyAmount ?? 0;
+            popup.Value = AvailableAmount?.StarCount ?? 0;
+            popup.Maximum = AvailableAmount?.StarCount ?? 0;
 
             popup.Title = Strings.BotStarsButtonWithdrawUntil;
             popup.Header = Strings.BotStarsWithdrawPlaceholder;

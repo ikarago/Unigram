@@ -96,5 +96,15 @@ namespace Telegram.Views.Users
         public void UpdateUserStatus(Chat chat, User user) { }
 
         #endregion
+
+        public string ConvertStarCount(StarAmount amount)
+        {
+            if (amount != null)
+            {
+                return amount.ToValue();
+            }
+
+            return null;
+        }
     }
 }

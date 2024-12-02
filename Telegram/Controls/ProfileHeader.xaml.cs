@@ -1521,6 +1521,26 @@ namespace Telegram.Controls
             return string.Format("{0:N3}", count / 1000000000.0d);
         }
 
+        public string ConvertStarCount(StarAmount amount)
+        {
+            if (amount != null)
+            {
+                return amount.ToValue();
+            }
+
+            return null;
+        }
+
+        public Visibility ConvertStarVisibility(StarAmount amount)
+        {
+            if (amount?.StarCount > 0 || amount?.NanostarCount > 0)
+            {
+                return Visibility.Visible;
+            }
+
+            return Visibility.Collapsed;
+        }
+
         #endregion
 
         private void Username_Click(string username)

@@ -81,6 +81,42 @@ namespace Telegram.Td.Api
             return true;
         }
 
+        public static bool IsNegative(this StarAmount amount)
+        {
+            return amount.StarCount < 0 || amount.NanostarCount < 0;
+        }
+
+        public static bool IsPositive(this StarAmount amount)
+        {
+            return amount.StarCount > 0 || amount.NanostarCount > 0;
+        }
+
+        public static string ToValue(this StarAmount amount, bool transaction = false)
+        {
+            var integerAmount = amount.StarCount;
+            var decimalAmount = amount.NanostarCount;
+
+            var symbol = amount.StarCount < 0 || !transaction ? string.Empty : "+";
+
+            if (decimalAmount < 0 || integerAmount < 0)
+            {
+                symbol = "-";
+            }
+
+            integerAmount = Math.Abs(integerAmount);
+            decimalAmount = Math.Abs(decimalAmount);
+
+            if (amount.NanostarCount != 0)
+            {
+                var culture = new CultureInfo(NativeUtils.GetCurrentCulture());
+                var separator = culture.NumberFormat.NumberDecimalSeparator;
+
+                return symbol + string.Format("{0:N0}{2}{1}", integerAmount, decimalAmount, separator).TrimEnd('0');
+            }
+
+            return symbol + integerAmount.ToString("N0");
+        }
+
         public static string TotalText(this Gift gift)
         {
             return Formatter.ShortNumber(gift.TotalCount);

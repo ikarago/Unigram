@@ -264,10 +264,10 @@ namespace Telegram.Views.Stars.Popups
 
         public async Task<PayResult> SubmitGiftAsync()
         {
-            if (_clientService.OwnedStarCount < _gift.StarCount)
+            if (_clientService.OwnedStarCount.StarCount < _gift.StarCount)
             {
                 var updated = await _clientService.GetStarTransactionsAsync(_clientService.MyId, string.Empty, null, string.Empty, 1) as StarTransactions;
-                if (updated is null || updated.StarCount < _gift.StarCount)
+                if (updated is null || updated.StarAmount.StarCount < _gift.StarCount)
                 {
                     return PayResult.StarsNeeded;
                 }

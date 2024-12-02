@@ -71,6 +71,7 @@
                                                     Margin="12,8,24,12"
                                                     Grid.ColumnSpan="2" />
                             <cells:StarAmountCell x:Name="AvailableStars"
+                                                  UsdRate="{x:Bind ViewModel.Stars.UsdRate, Mode=OneWay}"
                                                   Amount="{x:Bind ViewModel.Stars.AvailableAmount, Mode=OneWay}"
                                                   Margin="12,8,12,12"
                                                   Grid.Column="1" />
@@ -85,6 +86,7 @@
                                                     Margin="12,8,24,12"
                                                     Grid.Row="1" />
                             <cells:StarAmountCell x:Name="PreviousStars"
+                                                  UsdRate="{x:Bind ViewModel.Stars.UsdRate, Mode=OneWay}"
                                                   Amount="{x:Bind ViewModel.Stars.PreviousAmount, Mode=OneWay}"
                                                   Margin="12,8,12,12"
                                                   Grid.Column="1"
@@ -102,6 +104,7 @@
                                                     Grid.ColumnSpan="2"
                                                     Grid.Row="2" />
                             <cells:StarAmountCell x:Name="TotalStars"
+                                                  UsdRate="{x:Bind ViewModel.Stars.UsdRate, Mode=OneWay}"
                                                   Amount="{x:Bind ViewModel.Stars.TotalAmount, Mode=OneWay}"
                                                   Margin="12,8,12,12"
                                                   Grid.Column="1"

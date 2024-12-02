@@ -42,8 +42,8 @@ namespace Telegram.ViewModels
 
         public IStorageService StorageService => _storageService;
 
-        public string OwnedStarCount => ClientService.OwnedStarCount > 0
-            ? ClientService.OwnedStarCount.ToString("N0")
+        public string OwnedStarCount => ClientService.OwnedStarCount.IsPositive()
+            ? ClientService.OwnedStarCount.ToValue()
             : string.Empty;
 
         public MvxObservableCollection<SettingsSearchEntry> Results { get; private set; }

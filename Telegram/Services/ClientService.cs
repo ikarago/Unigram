@@ -66,7 +66,7 @@ namespace Telegram.Services
         bool IsPremium { get; }
         bool IsPremiumAvailable { get; }
 
-        long OwnedStarCount { get; }
+        StarAmount OwnedStarCount { get; }
 
         UnconfirmedSession UnconfirmedSession { get; }
 
@@ -334,7 +334,7 @@ namespace Telegram.Services
         private AuthorizationState _authorizationState;
         private ConnectionState _connectionState;
 
-        private long _ownedStarCount = -1;
+        private StarAmount _ownedStarCount;
 
         private JsonValueObject _config;
 
@@ -959,8 +959,8 @@ namespace Telegram.Services
             {
                 if (ownerId == null || ownerId.IsUser(Options.MyId))
                 {
-                    _ownedStarCount = transactions.StarCount;
-                    _aggregator.Publish(new UpdateOwnedStarCount(transactions.StarCount, transactions.NanostarCount));
+                    _ownedStarCount = transactions.StarAmount;
+                    _aggregator.Publish(new UpdateOwnedStarCount(transactions.StarAmount));
                 }
             }
 
@@ -1125,14 +1125,14 @@ namespace Telegram.Services
 
         public bool IsPremiumAvailable => _options.IsPremium || _options.IsPremiumAvailable;
 
-        public long OwnedStarCount
+        public StarAmount OwnedStarCount
         {
             get
             {
-                if (_ownedStarCount == -1)
+                if (_ownedStarCount == null)
                 {
                     Send(new GetStarTransactions(MyId, string.Empty, null, string.Empty, 1));
-                    return 0;
+                    return new StarAmount(0, 0);
                 }
 
                 return _ownedStarCount;
@@ -2958,7 +2958,7 @@ namespace Telegram.Services
             }
             else if (update is UpdateOwnedStarCount updateOwnedStarCount)
             {
-                _ownedStarCount = updateOwnedStarCount.StarCount;
+                _ownedStarCount = updateOwnedStarCount.StarAmount;
             }
 
             _aggregator.Publish(update);

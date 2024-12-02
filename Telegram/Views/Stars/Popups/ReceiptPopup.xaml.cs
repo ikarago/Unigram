@@ -231,7 +231,7 @@ namespace Telegram.Views.Stars.Popups
                 FromTitle.Text = user.FullName();
                 From.Header = Strings.StarsTransactionRecipient;
 
-                Title.Text = transaction.StarCount < 0
+                Title.Text = transaction.StarAmount.IsNegative()
                     ? Strings.Gift2TransactionRefundedConverted
                     : Strings.Gift2TransactionConverted;
                 Subtitle.Visibility = Visibility.Collapsed;
@@ -254,10 +254,10 @@ namespace Telegram.Views.Stars.Popups
                 FromTitle.Text = user.FullName();
                 From.Header = Strings.StarsTransactionRecipient;
 
-                Title.Text = transaction.StarCount < 0
+                Title.Text = transaction.StarAmount.IsNegative()
                     ? Strings.StarsGiftSent
                     : Strings.StarsGiftReceived;
-                Subtitle.Text = transaction.StarCount < 0
+                Subtitle.Text = transaction.StarAmount.IsNegative()
                     ? string.Format(Strings.ActionGiftStarsSubtitle, user.FirstName)
                     : Strings.ActionGiftStarsSubtitleYou;
                 Subtitle.Visibility = Visibility.Visible;
@@ -273,7 +273,7 @@ namespace Telegram.Views.Stars.Popups
                 FromTitle.Text = user.FullName();
                 From.Header = Strings.StarsTransactionRecipient;
 
-                Title.Text = transaction.StarCount < 0
+                Title.Text = transaction.StarAmount.IsNegative()
                     ? Strings.Gift2TransactionSent
                     : Strings.Gift2TransactionRefundedSent;
                 Subtitle.Visibility = Visibility.Collapsed;
@@ -459,8 +459,8 @@ namespace Telegram.Views.Stars.Popups
             Identifier.Text = transaction.Id;
             Date.Content = Formatter.DateAt(transaction.Date);
 
-            StarCount.Text = (transaction.StarCount < 0 ? string.Empty : "+") + transaction.StarCount.ToString("N0");
-            StarCount.Foreground = BootStrapper.Current.Resources[transaction.StarCount < 0 ? "SystemFillColorCriticalBrush" : "SystemFillColorSuccessBrush"] as Brush;
+            StarCount.Text = transaction.StarAmount.ToValue(true);
+            StarCount.Foreground = BootStrapper.Current.Resources[transaction.StarAmount.IsNegative() ? "SystemFillColorCriticalBrush" : "SystemFillColorSuccessBrush"] as Brush;
 
             Refund.Visibility = transaction.IsRefund
                 ? Visibility.Visible

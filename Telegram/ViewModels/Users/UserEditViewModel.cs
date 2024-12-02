@@ -80,8 +80,8 @@ namespace Telegram.ViewModels.Users
             }
         }
 
-        private long? _starCount;
-        public long? StarCount
+        private StarAmount _starCount;
+        public StarAmount StarCount
         {
             get => _starCount;
             set => Set(ref _starCount, value);
@@ -132,7 +132,7 @@ namespace Telegram.ViewModels.Users
                     var response = await ClientService.GetStarTransactionsAsync(new MessageSenderUser(userId), string.Empty, null, string.Empty, 1);
                     if (response is StarTransactions transactions)
                     {
-                        StarCount = transactions.StarCount;
+                        StarCount = transactions.StarAmount;
                     }
                 }
             }

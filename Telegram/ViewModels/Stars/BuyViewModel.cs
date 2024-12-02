@@ -27,7 +27,7 @@ namespace Telegram.ViewModels.Stars
             Options = new MvxObservableCollection<StarPaymentOption>();
         }
 
-        public string OwnedStarCount => ClientService.OwnedStarCount.ToString("N0");
+        public string OwnedStarCount => ClientService.OwnedStarCount.ToValue();
 
         public BuyStarsArgs Arguments { get; private set; }
 

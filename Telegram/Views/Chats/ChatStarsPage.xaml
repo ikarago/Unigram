@@ -33,14 +33,17 @@
                                               Footer="{CustomResource BotStarsOverviewInfo}"
                                               Background="{ThemeResource SettingsItemBackground}">
                         <cells:StarAmountCell x:Name="AvailableAmount"
+                                              UsdRate="{x:Bind ViewModel.UsdRate, Mode=OneWay}"
                                               Amount="{x:Bind ViewModel.AvailableAmount, Mode=OneWay}"
                                               Text="{CustomResource BotStarsOverviewAvailableBalance}"
                                               Margin="12,8" />
                         <!--<cells:StarAmountCell x:Name="PreviousAmount"
+                                              UsdRate="{x:Bind ViewModel.UsdRate, Mode=OneWay}"
                                               Amount="{x:Bind ViewModel.PreviousAmount, Mode=OneWay}"
                                               Text="{CustomResource BotStarsOverviewAvailableBalance}"
                                               Margin="12,8" />-->
                         <cells:StarAmountCell x:Name="TotalAmount"
+                                              UsdRate="{x:Bind ViewModel.UsdRate, Mode=OneWay}"
                                               Amount="{x:Bind ViewModel.TotalAmount, Mode=OneWay}"
                                               Text="{CustomResource BotStarsOverviewTotalBalance}"
                                               Margin="12,8" />

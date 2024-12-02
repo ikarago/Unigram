@@ -112,7 +112,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <controls:PremiumStarCount Margin="0,-4,0,-6" />
-                                <TextBlock Text="{x:Bind ViewModel.StarCount, Mode=OneWay}"
+                                <TextBlock Text="{x:Bind ConvertStarCount(ViewModel.StarCount), Mode=OneWay}"
                                            Grid.Column="1" />
                             </Grid>
                         </controls:BadgeButton.Badge>

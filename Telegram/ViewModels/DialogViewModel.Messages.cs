@@ -1792,7 +1792,7 @@ namespace Telegram.ViewModels
                     return;
                 }
 
-                await ShowPopupAsync(new Views.Stars.Popups.ReceiptPopup(ClientService, NavigationService, new StarTransaction(giftedStars.TransactionId, giftedStars.StarCount, 0, false, message.Date, type)));
+                await ShowPopupAsync(new Views.Stars.Popups.ReceiptPopup(ClientService, NavigationService, new StarTransaction(giftedStars.TransactionId, new StarAmount(giftedStars.StarCount, 0), false, message.Date, type)));
             }
             else if (message.Content is MessageGiftedPremium giftedPremium)
             {

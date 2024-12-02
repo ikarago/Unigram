@@ -156,7 +156,7 @@ namespace Telegram.Controls.Cells.Revenue
                 MediaPreview.Visibility = Visibility.Collapsed;
 
                 Title.Text = user.FullName();
-                Subtitle.Text = transaction.StarCount < 0
+                Subtitle.Text = transaction.StarAmount.IsNegative()
                     ? Strings.Gift2TransactionRefundedConverted
                     : Strings.Gift2TransactionConverted;
             }
@@ -168,7 +168,7 @@ namespace Telegram.Controls.Cells.Revenue
                 Photo.SetUser(clientService, user, 36);
                 MediaPreview.Visibility = Visibility.Collapsed;
 
-                Title.Text = transaction.StarCount < 0
+                Title.Text = transaction.StarAmount.IsNegative()
                     ? Strings.StarsGiftSent
                     : Strings.StarsGiftReceived;
                 Subtitle.Text = user.FullName();
@@ -182,7 +182,7 @@ namespace Telegram.Controls.Cells.Revenue
                 MediaPreview.Visibility = Visibility.Collapsed;
 
                 Title.Text = user.FullName();
-                Subtitle.Text = transaction.StarCount < 0
+                Subtitle.Text = transaction.StarAmount.IsNegative()
                     ? Strings.Gift2TransactionSent
                     : Strings.Gift2TransactionRefundedSent;
             }
@@ -330,8 +330,8 @@ namespace Telegram.Controls.Cells.Revenue
                 }
             }
 
-            StarCount.Text = (transaction.StarCount < 0 ? string.Empty : "+") + transaction.StarCount.ToString("N0");
-            StarCount.Foreground = BootStrapper.Current.Resources[transaction.StarCount < 0 ? "SystemFillColorCriticalBrush" : "SystemFillColorSuccessBrush"] as Brush;
+            StarCount.Text = transaction.StarAmount.ToValue(true);
+            StarCount.Foreground = BootStrapper.Current.Resources[transaction.StarAmount.IsNegative() ? "SystemFillColorCriticalBrush" : "SystemFillColorSuccessBrush"] as Brush;
         }
 
         private void UpdateMedia(IClientService clientService, PaidMedia media, Border target, ref long token)

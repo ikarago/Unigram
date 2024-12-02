@@ -210,7 +210,7 @@ namespace Telegram.ViewModels
             var response = await ClientService.SendAsync(new GetStarTransactions(senderId, string.Empty, null, string.Empty, 1));
             if (response is StarTransactions transactions)
             {
-                StarCount = transactions.StarCount;
+                StarCount = transactions.StarAmount;
             }
 
             var response2 = await ClientService.SendAsync(new GetChatRevenueStatistics(chatId, false));
@@ -1248,8 +1248,8 @@ namespace Telegram.ViewModels
             NavigationService.NavigateToChat(_chat.Id, savedMessagesTopicId: topic.Id);
         }
 
-        private long _starCount;
-        public long StarCount
+        private StarAmount _starCount;
+        public StarAmount StarCount
         {
             get => _starCount;
             set => Set(ref _starCount, value);

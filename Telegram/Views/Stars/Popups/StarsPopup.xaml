@@ -70,7 +70,7 @@
                                                                    Grid.Column="4"
                                                                    Grid.RowSpan="2" />
 
-                                        <TextBlock Text="{x:Bind ConvertCount(ViewModel.OwnedStarCount), Mode=OneWay}"
+                                        <TextBlock Text="{x:Bind ViewModel.OwnedStarCount, Mode=OneWay}"
                                                    FontWeight="SemiBold"
                                                    FontSize="28" />
                                     </StackPanel>

@@ -217,14 +217,14 @@ namespace Telegram.ViewModels.Chats
 
                 UpdateAmount(statistics.RevenueAmount);
 
-                Availability = statistics.RevenueAmount.TotalAmount > 0 && Stars.TotalAmount.CryptocurrencyAmount > 0
+                Availability = statistics.RevenueAmount.TotalAmount > 0 && Stars.TotalAmount.IsPositive()
                     ? ChatRevenueAvailability.CryptoAndStars
                     : statistics.RevenueAmount.TotalAmount > 0
                     ? ChatRevenueAvailability.Crypto
                     : ChatRevenueAvailability.Stars;
 
                 SelectedIndex = statistics.RevenueAmount.TotalAmount > 0 ? 0 : 1;
-                IsSelectionVisible = statistics.RevenueAmount.TotalAmount > 0 && Stars.TotalAmount.CryptocurrencyAmount > 0;
+                IsSelectionVisible = statistics.RevenueAmount.TotalAmount > 0 && Stars.TotalAmount.IsPositive();
             }
 
             if (Chat.Type is ChatTypeSupergroup)
