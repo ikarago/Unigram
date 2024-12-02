@@ -15,7 +15,7 @@ using Telegram.ViewModels.Delegates;
 using Telegram.Views.Business;
 using Telegram.Views.Folders;
 using Telegram.Views.Settings;
-using Telegram.Views.Stars.Popups;
+using Telegram.Views.Stars;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -171,9 +171,9 @@ namespace Telegram.Views
             MasterDetail.NavigationService.ShowPromo(new PremiumSourceSettings());
         }
 
-        private async void Stars_Click(object sender, RoutedEventArgs e)
+        private void Stars_Click(object sender, RoutedEventArgs e)
         {
-            await MasterDetail.NavigationService.ShowPopupAsync(new StarsPopup());
+            MasterDetail.NavigationService.Navigate(typeof(StarsPage));
         }
 
         private void Business_Click(object sender, RoutedEventArgs e)

@@ -187,16 +187,8 @@ namespace Telegram.Views.Stars.Popups
                     {
                         Hide(ContentDialogResult.Secondary);
 
-                        var popup = new StarsPopup();
-
-                        void handler(object sender, object e)
-                        {
-                            popup.Opened -= handler;
-                            ToastPopup.Show(XamlRoot, string.Format("**{0}**\n{1}", Strings.Gift2ConvertedTitle, Locale.Declension(Strings.R.Gift2Converted, _gift.Gift.StarCount)), ToastPopupIcon.StarsTopup);
-                        }
-
-                        _ = _navigationService.ShowPopupAsync(popup);
-                        popup.Opened += handler;
+                        _navigationService.Navigate(typeof(StarsPage));
+                        ToastPopup.Show(XamlRoot, string.Format("**{0}**\n{1}", Strings.Gift2ConvertedTitle, Locale.Declension(Strings.R.Gift2Converted, _gift.Gift.StarCount)), ToastPopupIcon.StarsTopup);
                     }
                 }
             }

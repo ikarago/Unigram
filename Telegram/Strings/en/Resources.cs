@@ -17649,6 +17649,16 @@ namespace Telegram
         public static string UserAcceptedToGroupAction => Resource.GetString("UserAcceptedToGroupAction");
         
         /// <summary>
+        /// Localized resource similar to "Distribute links to mini apps and earn a share of their revenue in Stars."
+        /// </summary>
+        public static string UserAffiliateProgramRowText => Resource.GetString("UserAffiliateProgramRowText");
+        
+        /// <summary>
+        /// Localized resource similar to "Earn Stars"
+        /// </summary>
+        public static string UserAffiliateProgramRowTitle => Resource.GetString("UserAffiliateProgramRowTitle");
+        
+        /// <summary>
         /// Localized resource similar to "Bio"
         /// </summary>
         public static string UserBio => Resource.GetString("UserBio");

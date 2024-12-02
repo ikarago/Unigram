@@ -11745,6 +11745,12 @@ If you are not comfortable with Telegram&apos;s modest needs, it won&apos;t be p
   <data name="UserAcceptedToGroupAction" xml:space="preserve">
     <value>un1 was accepted into the group</value>
   </data>
+  <data name="UserAffiliateProgramRowText" xml:space="preserve">
+    <value>Distribute links to mini apps and earn a share of their revenue in Stars.</value>
+  </data>
+  <data name="UserAffiliateProgramRowTitle" xml:space="preserve">
+    <value>Earn Stars</value>
+  </data>
   <data name="UserBio" xml:space="preserve">
     <value>Bio</value>
   </data>

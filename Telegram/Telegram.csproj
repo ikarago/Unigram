@@ -1367,6 +1367,9 @@
     <Compile Include="Views\Chats\ChatInviteLinksPage.xaml.cs">
       <DependentUpon>ChatInviteLinksPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Stars\StarsPage.xaml.cs">
+      <DependentUpon>StarsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Tabbed\WebBrowserPage.xaml.cs">
       <DependentUpon>WebBrowserPage.xaml</DependentUpon>
     </Compile>
@@ -1691,9 +1694,6 @@
     </Compile>
     <Compile Include="Views\Stars\Popups\PayPopup.xaml.cs">
       <DependentUpon>PayPopup.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Stars\Popups\StarsPopup.xaml.cs">
-      <DependentUpon>StarsPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Stars\Popups\BuyPopup.xaml.cs">
       <DependentUpon>BuyPopup.xaml</DependentUpon>
@@ -3295,6 +3295,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Stars\StarsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Tabbed\WebBrowserPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -3520,10 +3524,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Stars\Popups\PayPopup.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Stars\Popups\StarsPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

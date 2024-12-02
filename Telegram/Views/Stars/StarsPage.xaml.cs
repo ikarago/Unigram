@@ -9,33 +9,33 @@ using Telegram.Controls;
 using Telegram.Controls.Cells.Revenue;
 using Telegram.Td.Api;
 using Telegram.ViewModels.Stars;
+using Telegram.Views.Chats;
 using Telegram.Views.Popups;
+using Telegram.Views.Stars.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Telegram.Views.Stars.Popups
+namespace Telegram.Views.Stars
 {
-    public sealed partial class StarsPopup : ContentPopup
+    public sealed partial class StarsPage : HostedPage
     {
         public StarsViewModel ViewModel => DataContext as StarsViewModel;
 
-        public StarsPopup()
+        public StarsPage()
         {
             InitializeComponent();
+            Title = Strings.TelegramStars;
         }
 
-        private async void OnItemClick(object sender, ItemClickEventArgs e)
+        private void OnItemClick(object sender, ItemClickEventArgs e)
         {
             if (e.ClickedItem is StarTransaction transaction)
             {
-                Hide();
-                await ViewModel.ShowPopupAsync(new ReceiptPopup(ViewModel.ClientService, ViewModel.NavigationService, transaction));
-                await this.ShowQueuedAsync(XamlRoot);
+                ViewModel.ShowPopup(new ReceiptPopup(ViewModel.ClientService, ViewModel.NavigationService, transaction));
             }
             else if (e.ClickedItem is StarSubscription subscription)
             {
-                Hide();
-                await ViewModel.ShowPopupAsync(new SubscriptionPopup(ViewModel.ClientService, ViewModel.NavigationService, subscription));
-                await this.ShowQueuedAsync(XamlRoot);
+                ViewModel.ShowPopup(new SubscriptionPopup(ViewModel.ClientService, ViewModel.NavigationService, subscription));
             }
         }
 
@@ -59,27 +59,26 @@ namespace Telegram.Views.Stars.Popups
 
         private void Buy_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            Hide();
             ViewModel.NavigationService.ShowPopupAsync(new BuyPopup());
         }
 
         private async void Gift_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            Hide();
-
             var user = await ChooseChatsPopup.PickUserAsync(ViewModel.ClientService, ViewModel.NavigationService, Strings.GiftStarsTitle, false);
-            if (user == null)
+            if (user != null)
             {
-                _ = this.ShowQueuedAsync(XamlRoot);
-                return;
+                ViewModel.NavigationService.ShowPopup(new BuyPopup(), BuyStarsArgs.ForReceiverUser(user.Id));
             }
-
-            await ViewModel.NavigationService.ShowPopupAsync(new BuyPopup(), BuyStarsArgs.ForReceiverUser(user.Id));
         }
 
         private void Footer_Click(object sender, TextUrlClickEventArgs e)
         {
             MessageHelper.OpenUrl(null, null, Strings.StarsTOSLink);
+        }
+
+        private void Affiliate_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.NavigationService.Navigate(typeof(ChatAffiliatePage), ViewModel.ClientService.Options.MyId);
         }
     }
 }
