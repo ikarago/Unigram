@@ -1268,7 +1268,7 @@ namespace Telegram.Common
                     {
                         navigation.NavigateToChat(chat);
 
-                        if (referrer != null)
+                        if (chat.LastMessage != null && referrer != null)
                         {
                             clientService.Send(new SendBotStartMessage(user.Id, chat.Id, string.Empty));
                         }

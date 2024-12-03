@@ -426,6 +426,15 @@
                 </Border>
             </controls:HeaderedControl>
 
+            <controls:HeaderedControl x:Name="AffiliateProgramRoot">
+                <controls:BadgeButton x:Name="AffiliateProgram"
+                                      Content="{CustomResource ProfileBotAffiliateProgram}"
+                                      Click="{x:Bind ViewModel.OpenAffiliate}"
+                                      Style="{StaticResource GlyphBadgeButtonStyle}"
+                                      Glyph="&#xEAA6;"
+                                      Visibility="Collapsed" />
+            </controls:HeaderedControl>
+
             <controls:HeaderedControl>
                 <controls:BadgeButton x:Name="Members"
                                       Content="{CustomResource ChannelSubscribers}"

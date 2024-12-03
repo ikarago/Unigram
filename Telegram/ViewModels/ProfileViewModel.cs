@@ -23,6 +23,7 @@ using Telegram.Views;
 using Telegram.Views.Chats;
 using Telegram.Views.Popups;
 using Telegram.Views.Premium.Popups;
+using Telegram.Views.Stars.Popups;
 using Telegram.Views.Supergroups;
 using Telegram.Views.Supergroups.Popups;
 using Telegram.Views.Users;
@@ -1311,6 +1312,25 @@ namespace Telegram.ViewModels
             }
 
             NavigationService.Navigate(typeof(SupergroupMembersPage), chat.Id);
+        }
+
+        public async void OpenAffiliate()
+        {
+            var chat = _chat;
+            if (chat == null || !ClientService.TryGetUser(chat, out User user) || !ClientService.TryGetUserFull(user.Id, out UserFullInfo fullInfo))
+            {
+                return;
+            }
+
+            var response = await ClientService.SendAsync(new GetChatAffiliateProgram(ClientService.Options.MyId, user.Id));
+            if (response is ChatAffiliateProgram program)
+            {
+                ShowPopup(new ConnectedProgramPopup(ClientService, NavigationService, program, ClientService.MyId));
+            }
+            else
+            {
+                ShowPopup(new AffiliateProgramPopup(ClientService, NavigationService, new FoundAffiliateProgram(user.Id, fullInfo.BotInfo.AffiliateProgram), ClientService.MyId));
+            }
         }
 
         public virtual ChatMemberCollection CreateMembers(long supergroupId)

@@ -37,6 +37,7 @@ namespace Telegram.Views.Stars.Popups
 
             _program = program;
 
+            _clientService.Send(new GetUserFullInfo(program.BotUserId));
             _items = new ObservableCollection<MessageSender>();
 
             InitializeOwnedChats();
@@ -180,12 +181,11 @@ namespace Telegram.Views.Stars.Popups
                 Hide();
                 _navigationService.ShowPopup(new ConnectedProgramPopup(_clientService, _navigationService, _program, sender));
             }
-            else
+            else if (_clientService.TryGetUserFull(_program.BotUserId, out UserFullInfo fullInfo))
             {
                 Hide();
-                //_navigationService.ShowPopup(new AffiliateProgramPopup(_clientService, _navigationService, new FoundAffiliateProgram(_program.BotUserId, new AffiliateProgramInfo(_program.Parameters, 0, null))))
+                _navigationService.ShowPopup(new AffiliateProgramPopup(_clientService, _navigationService, new FoundAffiliateProgram(_program.BotUserId, fullInfo.BotInfo.AffiliateProgram), sender));
             }
-
         }
 
         private void Purchase_Click(object sender, RoutedEventArgs e)

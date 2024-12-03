@@ -43,6 +43,10 @@ namespace Telegram.Views.Stars.Popups
             InitializeOwnedChats();
             UpdateAlias(alias);
 
+            TableRoot.Visibility = program.Parameters.DailyRevenuePerUserAmount != null
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
             if (clientService.TryGetUser(program.BotUserId, out User botUser) && botUser.Type is UserTypeBot userTypeBot)
             {
                 var percent = program.Parameters.Parameters.CommissionPercent();
