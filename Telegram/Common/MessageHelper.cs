@@ -564,7 +564,7 @@ namespace Telegram.Common
             }
             else if (internalLink is InternalLinkTypePublicChat publicChat)
             {
-                NavigateToUsername(clientService, navigation, publicChat.ChatUsername, null, null, publicChat.DraftText, publicChat.OpenProfile);
+                NavigateToUsername(clientService, navigation, publicChat.ChatUsername, draftText: publicChat.DraftText, openProfile: publicChat.OpenProfile);
             }
             else if (internalLink is InternalLinkTypeQrCodeAuthentication)
             {
@@ -613,6 +613,10 @@ namespace Telegram.Common
             else if (internalLink is InternalLinkTypeMainWebApp mainWebApp)
             {
                 NavigateToMainWebApp(clientService, navigation, mainWebApp.BotUsername, mainWebApp.StartParameter, mainWebApp.Mode, source);
+            }
+            else if (internalLink is InternalLinkTypeChatAffiliateProgram chatAffiliateProgram)
+            {
+                NavigateToUsername(clientService, navigation, chatAffiliateProgram.Username, referrer: chatAffiliateProgram.Referrer);
             }
         }
 
@@ -1241,9 +1245,9 @@ namespace Telegram.Common
             }
         }
 
-        public static async void NavigateToUsername(IClientService clientService, INavigationService navigation, string username, string videoChat = null, string game = null, string draftText = null, bool openProfile = false)
+        public static async void NavigateToUsername(IClientService clientService, INavigationService navigation, string username, string videoChat = null, string game = null, string draftText = null, string referrer = null, bool openProfile = false)
         {
-            var response = await clientService.SendAsync(new SearchPublicChat(username));
+            var response = await clientService.SendAsync(referrer != null ? new SearchChatAffiliateProgram(username, referrer) : new SearchPublicChat(username));
             if (response is Chat chat)
             {
                 if (game != null)
@@ -1263,6 +1267,11 @@ namespace Telegram.Common
                     else
                     {
                         navigation.NavigateToChat(chat);
+
+                        if (referrer != null)
+                        {
+                            clientService.Send(new SendBotStartMessage(user.Id, chat.Id, string.Empty));
+                        }
                     }
                 }
                 else if (videoChat != null)
