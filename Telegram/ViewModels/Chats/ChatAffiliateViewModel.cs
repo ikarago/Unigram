@@ -1,16 +1,21 @@
 ﻿using Rg.DiffUtils;
+using System;
 using System.Threading.Tasks;
 using Telegram.Collections;
+using Telegram.Common;
+using Telegram.Controls;
 using Telegram.Navigation;
 using Telegram.Navigation.Services;
 using Telegram.Services;
 using Telegram.Td.Api;
+using Telegram.Views.Stars.Popups;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Navigation;
 
 namespace Telegram.ViewModels.Chats
 {
-    public partial class ChatAffiliateViewModel : ViewModelBase, IIncrementalCollectionOwner, IDiffHandler<FoundAffiliateProgram>
+    public partial class ChatAffiliateViewModel : ViewModelBase, IHandle, IIncrementalCollectionOwner, IDiffHandler<ChatAffiliateProgram>, IDiffHandler<FoundAffiliateProgram>
     {
         private long _chatId;
 
@@ -20,6 +25,7 @@ namespace Telegram.ViewModels.Chats
         public ChatAffiliateViewModel(IClientService clientService, ISettingsService settingsService, IEventAggregator aggregator)
             : base(clientService, settingsService, aggregator)
         {
+            Programs = new SearchCollection<ChatAffiliateProgram, IncrementalCollection<ChatAffiliateProgram>>(UpdatePrograms, this);
             FoundPrograms = new SearchCollection<FoundAffiliateProgram, IncrementalCollection<FoundAffiliateProgram>>(UpdateFoundPrograms, this);
         }
 
@@ -28,17 +34,40 @@ namespace Telegram.ViewModels.Chats
             if (parameter is long chatId)
             {
                 _chatId = chatId;
-                _programs = new ChatProgramsCollection(ClientService, chatId);
 
+                Programs.Reload();
                 FoundPrograms.UpdateSender(new AffiliateProgramSortOrderProfitability());
             }
 
             return Task.CompletedTask;
         }
 
-        public IncrementalCollection<ChatAffiliateProgram> Programs => _programs?.Items;
+        public override void Subscribe()
+        {
+            Aggregator.Subscribe<UpdateChatAffiliatePrograms>(this, Handle);
+        }
+
+        private void Handle(UpdateChatAffiliatePrograms update)
+        {
+            if (update.ChatId == _chatId)
+            {
+                BeginOnUIThread(() =>
+                {
+                    Programs.Reload();
+                    FoundPrograms.Reload();
+                });
+            }
+        }
+
+        public SearchCollection<ChatAffiliateProgram, IncrementalCollection<ChatAffiliateProgram>> Programs { get; }
 
         public SearchCollection<FoundAffiliateProgram, IncrementalCollection<FoundAffiliateProgram>> FoundPrograms { get; }
+
+        private IncrementalCollection<ChatAffiliateProgram> UpdatePrograms(object arg1, string arg2)
+        {
+            _programs = new ChatProgramsCollection(ClientService, _chatId);
+            return _programs?.Items;
+        }
 
         private IncrementalCollection<FoundAffiliateProgram> UpdateFoundPrograms(object arg1, string arg2)
         {
@@ -60,9 +89,19 @@ namespace Telegram.ViewModels.Chats
             }
         }
 
+        public bool CompareItems(ChatAffiliateProgram oldItem, ChatAffiliateProgram newItem)
+        {
+            return oldItem?.BotUserId == newItem?.BotUserId;
+        }
+
         public bool CompareItems(FoundAffiliateProgram oldItem, FoundAffiliateProgram newItem)
         {
-            return oldItem.BotUserId == newItem.BotUserId;
+            return oldItem?.BotUserId == newItem?.BotUserId;
+        }
+
+        public void UpdateItem(ChatAffiliateProgram oldItem, ChatAffiliateProgram newItem)
+        {
+            //throw new System.NotImplementedException();
         }
 
         public void UpdateItem(FoundAffiliateProgram oldItem, FoundAffiliateProgram newItem)
@@ -72,9 +111,9 @@ namespace Telegram.ViewModels.Chats
 
         public Task<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
         {
-            if (_programs.HasMoreItems)
+            if (Programs.HasMoreItems)
             {
-                return _programs.LoadMoreItemsAsync(count);
+                return Programs.LoadMoreItemsAsync(count).AsTask();
             }
 
             return _foundPrograms.LoadMoreItemsAsync(count);
@@ -172,6 +211,63 @@ namespace Telegram.ViewModels.Chats
             }
 
             public bool HasMoreItems => _nextOffset != null;
+        }
+
+        public void OpenProgram(object item)
+        {
+            if (item is FoundAffiliateProgram foundProgram)
+            {
+                ShowPopup(new AffiliateProgramPopup(ClientService, NavigationService, foundProgram, new MessageSenderChat(_chatId)));
+            }
+            else if (item is ChatAffiliateProgram program)
+            {
+                ShowPopup(new ConnectedProgramPopup(ClientService, NavigationService, program, new MessageSenderChat(_chatId)));
+            }
+        }
+
+        public void LaunchProgram(ChatAffiliateProgram program)
+        {
+            if (program == null || !ClientService.TryGetUser(program.BotUserId, out User user))
+            {
+                return;
+            }
+
+            if (user.Type is UserTypeBot { HasMainWebApp: true })
+            {
+                MessageHelper.NavigateToMainWebApp(ClientService, NavigationService, user, string.Empty, new WebAppOpenModeFullSize());
+            }
+            else
+            {
+                NavigationService.NavigateToUser(program.BotUserId);
+            }
+        }
+
+        public void CopyProgram(ChatAffiliateProgram program)
+        {
+            MessageHelper.CopyLink(XamlRoot, program.Url);
+        }
+
+        public async void DisconnectProgram(ChatAffiliateProgram program)
+        {
+            if (program == null || !ClientService.TryGetUser(program.BotUserId, out User user))
+            {
+                return;
+            }
+
+            var confirm = await ShowPopupAsync(string.Format(Strings.LeaveAffiliateLinkAlert, user.FirstName), Strings.LeaveAffiliateLink, Strings.LeaveAffiliateLinkButton, Strings.Cancel, destructive: true);
+            if (confirm == ContentDialogResult.Primary)
+            {
+                var response = await ClientService.SendAsync(new DisconnectChatAffiliateProgram(_chatId, program.Url));
+                if (response is ChatAffiliateProgram)
+                {
+                    Programs.Reload();
+                    FoundPrograms.Reload();
+                }
+                else if (response is Error error)
+                {
+                    ToastPopup.ShowError(XamlRoot, error);
+                }
+            }
         }
     }
 }

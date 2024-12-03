@@ -120,15 +120,15 @@ namespace Telegram.Td.Api
             integerAmount = Math.Abs(integerAmount);
             decimalAmount = Math.Abs(decimalAmount);
 
+            var culture = new CultureInfo(NativeUtils.GetCurrentCulture());
+            var separator = culture.NumberFormat.NumberDecimalSeparator;
+
             if (amount.NanostarCount != 0)
             {
-                var culture = new CultureInfo(NativeUtils.GetCurrentCulture());
-                var separator = culture.NumberFormat.NumberDecimalSeparator;
-
-                return symbol + string.Format("{0:N0}{2}{1}", integerAmount, decimalAmount, separator).TrimEnd('0');
+                return symbol + string.Format(culture, "{0:N0}{2}{1}", integerAmount, decimalAmount, separator).TrimEnd('0');
             }
 
-            return symbol + integerAmount.ToString("N0");
+            return symbol + integerAmount.ToString("N0", culture);
         }
 
         public static string TotalText(this Gift gift)

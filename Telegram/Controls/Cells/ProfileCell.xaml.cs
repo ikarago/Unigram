@@ -192,7 +192,7 @@ namespace Telegram.Controls.Cells
                 var percent = program.Parameters.Parameters.CommissionPercent();
                 var duration = program.Parameters.Parameters.Duration();
 
-                SubtitleLabel.Text = string.Format("{0} - {1}", percent, duration);
+                SubtitleLabel.Text = string.Format("{0} • {1}", percent, duration);
             }
             else if (args.Phase == 2)
             {
@@ -230,7 +230,7 @@ namespace Telegram.Controls.Cells
                 var percent = program.Parameters.CommissionPercent();
                 var duration = program.Parameters.Duration();
 
-                SubtitleLabel.Text = string.Format("{0} - {1}", percent, duration);
+                SubtitleLabel.Text = string.Format("{0} • {1}", percent, duration);
             }
             else if (args.Phase == 2)
             {

@@ -1,12 +1,14 @@
 ﻿using Telegram.Common;
 using Telegram.Controls;
 using Telegram.Controls.Cells;
+using Telegram.Controls.Media;
 using Telegram.Td.Api;
 using Telegram.ViewModels.Chats;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Documents;
+using Windows.UI.Xaml.Input;
 
 namespace Telegram.Views.Chats
 {
@@ -29,9 +31,27 @@ namespace Telegram.Views.Chats
                 args.ItemContainer = new TableListViewItem();
                 args.ItemContainer.Style = sender.ItemContainerStyle;
                 args.ItemContainer.ContentTemplate = sender.ItemTemplate;
+                args.ItemContainer.ContextRequested += OnContextRequested;
             }
 
             args.IsContainerPrepared = true;
+        }
+
+        private void OnContextRequested(UIElement sender, ContextRequestedEventArgs args)
+        {
+            var program = ProgramsHost.ItemFromContainer(sender) as ChatAffiliateProgram;
+            if (program == null)
+            {
+                return;
+            }
+
+            var flyout = new MenuFlyout();
+
+            flyout.CreateFlyoutItem(ViewModel.LaunchProgram, program, Strings.ProfileBotOpenApp, Icons.Bot);
+            flyout.CreateFlyoutItem(ViewModel.CopyProgram, program, Strings.CopyLink, Icons.DocumentCopy);
+            flyout.CreateFlyoutItem(ViewModel.DisconnectProgram, program, Strings.LeaveAffiliateLinkButton, Icons.Delete, destructive: true);
+
+            flyout.ShowAt(sender, args);
         }
 
         private void OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
@@ -46,7 +66,7 @@ namespace Telegram.Views.Chats
                 {
                     cell.UpdateFoundAffiliateProgram(ViewModel.ClientService, args, OnContainerContentChanging);
                 }
-                else
+                else if (args.Item is ChatAffiliateProgram)
                 {
                     cell.UpdateAffiliateProgram(ViewModel.ClientService, args, OnContainerContentChanging);
                 }
@@ -57,7 +77,7 @@ namespace Telegram.Views.Chats
 
         private void OnItemClick(object sender, ItemClickEventArgs e)
         {
-
+            ViewModel.OpenProgram(e.ClickedItem);
         }
 
         private string ConvertSortOrder(AffiliateProgramSortOrder sortOrder)

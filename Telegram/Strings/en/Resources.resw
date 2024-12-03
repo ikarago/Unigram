@@ -986,6 +986,12 @@ Your prize is **{0} Stars**.</value>
   <data name="AffiliateProgramExistingProgramsTitle" xml:space="preserve">
     <value>View existing programs</value>
   </data>
+  <data name="AffiliateProgramJoinedText" xml:space="preserve">
+    <value>You can now copy the referral link.</value>
+  </data>
+  <data name="AffiliateProgramJoinedTitle" xml:space="preserve">
+    <value>Joined Program</value>
+  </data>
   <data name="AffiliateProgramStart" xml:space="preserve">
     <value>Start Affiliate Program</value>
   </data>
@@ -3290,6 +3296,73 @@ Note: if you forget your passcode, you&apos;ll need to log out or reinstall the 
   </data>
   <data name="ChannelAffiliateProgramFeature3Title" xml:space="preserve">
     <value>Simple</value>
+  </data>
+  <data name="ChannelAffiliateProgramJoinButton" xml:space="preserve">
+    <value>Join Program</value>
+  </data>
+  <data name="ChannelAffiliateProgramJoinButtonInfo" xml:space="preserve">
+    <value>By joining this program, you agree to the **Terms and Services** of Affiliate Programs.</value>
+  </data>
+  <data name="ChannelAffiliateProgramJoinButtonInfoLink" xml:space="preserve">
+    <value>https://telegram.org/privacy</value>
+  </data>
+  <data name="ChannelAffiliateProgramJoinDailyRevenue" xml:space="preserve">
+    <value>Their average daily
+revenue per user</value>
+  </data>
+  <data name="ChannelAffiliateProgramJoinMonthlyUsers" xml:space="preserve">
+    <value>Monthly users</value>
+  </data>
+  <data name="ChannelAffiliateProgramJoinText" xml:space="preserve">
+    <value>**{0}** will share **{1}** of the revenue from each user you refer to it for **{2}**.</value>
+  </data>
+  <data name="ChannelAffiliateProgramJoinText_Lifetime" xml:space="preserve">
+    <value>lifetime</value>
+  </data>
+  <data name="ChannelAffiliateProgramJoinText_Months_one" xml:space="preserve">
+    <value>{0} month</value>
+  </data>
+  <data name="ChannelAffiliateProgramJoinText_Months_other" xml:space="preserve">
+    <value>{0} months</value>
+  </data>
+  <data name="ChannelAffiliateProgramJoinText_Years_one" xml:space="preserve">
+    <value>{0} year</value>
+  </data>
+  <data name="ChannelAffiliateProgramJoinText_Years_other" xml:space="preserve">
+    <value>{0} years</value>
+  </data>
+  <data name="ChannelAffiliateProgramJoinTitle" xml:space="preserve">
+    <value>Affiliate Program</value>
+  </data>
+  <data name="ChannelAffiliateProgramLinkCopy" xml:space="preserve">
+    <value>Copy Link</value>
+  </data>
+  <data name="ChannelAffiliateProgramLinkOpened_one" xml:space="preserve">
+    <value>{0} user has opened {1} through this link.</value>
+  </data>
+  <data name="ChannelAffiliateProgramLinkOpened_other" xml:space="preserve">
+    <value>{0} users have opened {1} through this link.</value>
+  </data>
+  <data name="ChannelAffiliateProgramLinkOpenedNone" xml:space="preserve">
+    <value>No one has opened {0} through this link.</value>
+  </data>
+  <data name="ChannelAffiliateProgramLinkRejoin" xml:space="preserve">
+    <value>Rejoin Program</value>
+  </data>
+  <data name="ChannelAffiliateProgramLinkSendTo" xml:space="preserve">
+    <value>Commissions will be sent to:</value>
+  </data>
+  <data name="ChannelAffiliateProgramLinkTextChannel" xml:space="preserve">
+    <value>Share this link with your subscribers to earn a **{0}** commission on their spending in **{1}** for **{2}**.</value>
+  </data>
+  <data name="ChannelAffiliateProgramLinkTextRevoked" xml:space="preserve">
+    <value>You revoked this referral link.</value>
+  </data>
+  <data name="ChannelAffiliateProgramLinkTextUser" xml:space="preserve">
+    <value>Share this link with your friends to earn a **{0}** commission on their spending in **{1}** for **{2}**.</value>
+  </data>
+  <data name="ChannelAffiliateProgramLinkTitle" xml:space="preserve">
+    <value>Referral Link</value>
   </data>
   <data name="ChannelAffiliateProgramMyPrograms" xml:space="preserve">
     <value>My Programs</value>
@@ -6789,6 +6862,15 @@ You can change your language back at any time in Settings.</value>
   </data>
   <data name="LeaveAComment" xml:space="preserve">
     <value>Leave a comment</value>
+  </data>
+  <data name="LeaveAffiliateLink" xml:space="preserve">
+    <value>Revoke Link</value>
+  </data>
+  <data name="LeaveAffiliateLinkAlert" xml:space="preserve">
+    <value>Are you sure you want to revoke the link of **{0}**?</value>
+  </data>
+  <data name="LeaveAffiliateLinkButton" xml:space="preserve">
+    <value>Leave</value>
   </data>
   <data name="LeaveChannelMenu" xml:space="preserve">
     <value>Leave channel</value>

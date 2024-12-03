@@ -61,6 +61,8 @@
                 <TextBlock x:Name="TitleText"
                            Style="{StaticResource BodyTextBlockStyle}"
                            FontFamily="{ThemeResource EmojiThemeFontFamily}"
+                           TextWrapping="NoWrap"
+                           TextTrimming="CharacterEllipsis"
                            VerticalAlignment="Center"
                            Margin="8,1,4,3"
                            Grid.Column="1" />

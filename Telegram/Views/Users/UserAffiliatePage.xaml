@@ -21,16 +21,16 @@
                                            Text="{CustomResource BotAffiliateProgramText}" />
 
                 <controls:HeaderedControl>
-                    <controls:BadgeButton Badge="{CustomResource BotAffiliateProgramFeature1Title}"
-                                          Content="{CustomResource BotAffiliateProgramFeature1}"
+                    <controls:BadgeButton Content="{CustomResource BotAffiliateProgramFeature1Title}"
+                                          Badge="{CustomResource BotAffiliateProgramFeature1}"
                                           Style="{StaticResource GlyphSubbadgeBadgeButtonStyle}"
                                           Glyph="&#xE9B5;" />
-                    <controls:BadgeButton Badge="{CustomResource BotAffiliateProgramFeature2Title}"
-                                          Content="{CustomResource BotAffiliateProgramFeature2}"
+                    <controls:BadgeButton Content="{CustomResource BotAffiliateProgramFeature2Title}"
+                                          Badge="{CustomResource BotAffiliateProgramFeature2}"
                                           Style="{StaticResource GlyphSubbadgeBadgeButtonStyle}"
                                           Glyph="&#xE95C;" />
-                    <controls:BadgeButton Badge="{CustomResource BotAffiliateProgramFeature3Title}"
-                                          Content="{CustomResource BotAffiliateProgramFeature3}"
+                    <controls:BadgeButton Content="{CustomResource BotAffiliateProgramFeature3Title}"
+                                          Badge="{CustomResource BotAffiliateProgramFeature3}"
                                           Style="{StaticResource GlyphSubbadgeBadgeButtonStyle}"
                                           Glyph="&#xE9F8;" />
                 </controls:HeaderedControl>

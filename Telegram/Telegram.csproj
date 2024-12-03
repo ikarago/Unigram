@@ -481,6 +481,7 @@
     <Compile Include="Td\Api\MessageAsyncStory.cs" />
     <Compile Include="Td\Api\NameColor.cs" />
     <Compile Include="Td\Api\ProfileColor.cs" />
+    <Compile Include="Td\Api\UpdateChatAffiliatePrograms.cs" />
     <Compile Include="Td\Api\UpdateChatSwitchInlineQuery.cs" />
     <Compile Include="Td\Api\UpdateGreetingSticker.cs" />
     <Compile Include="Td\Api\UpdateMessageEffect.cs" />
@@ -1353,6 +1354,12 @@
     </Compile>
     <Compile Include="Views\Calls\Popups\VideoChatStreamsPopup.xaml.cs">
       <DependentUpon>VideoChatStreamsPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Stars\Popups\ConnectedProgramPopup.xaml.cs">
+      <DependentUpon>ConnectedProgramPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Stars\Popups\AffiliateProgramPopup.xaml.cs">
+      <DependentUpon>AffiliateProgramPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Stars\Popups\UserGiftPopup.xaml.cs">
       <DependentUpon>UserGiftPopup.xaml</DependentUpon>
@@ -3286,6 +3293,14 @@
     <Page Include="Views\Calls\Popups\VideoChatStreamsPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Stars\Popups\ConnectedProgramPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Stars\Popups\AffiliateProgramPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Stars\Popups\UserGiftPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
