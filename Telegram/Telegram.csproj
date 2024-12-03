@@ -1355,11 +1355,11 @@
     <Compile Include="Views\Calls\Popups\VideoChatStreamsPopup.xaml.cs">
       <DependentUpon>VideoChatStreamsPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Stars\Popups\ConnectedProgramPopup.xaml.cs">
-      <DependentUpon>ConnectedProgramPopup.xaml</DependentUpon>
+    <Compile Include="Views\Stars\Popups\ChatAffiliateProgramPopup.xaml.cs">
+      <DependentUpon>ChatAffiliateProgramPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Stars\Popups\AffiliateProgramPopup.xaml.cs">
-      <DependentUpon>AffiliateProgramPopup.xaml</DependentUpon>
+    <Compile Include="Views\Stars\Popups\FoundAffiliateProgramPopup.xaml.cs">
+      <DependentUpon>FoundAffiliateProgramPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Stars\Popups\UserGiftPopup.xaml.cs">
       <DependentUpon>UserGiftPopup.xaml</DependentUpon>
@@ -3294,11 +3294,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Stars\Popups\ConnectedProgramPopup.xaml">
+    <Page Include="Views\Stars\Popups\ChatAffiliateProgramPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Stars\Popups\AffiliateProgramPopup.xaml">
+    <Page Include="Views\Stars\Popups\FoundAffiliateProgramPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

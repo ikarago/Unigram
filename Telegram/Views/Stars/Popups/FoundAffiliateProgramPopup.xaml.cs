@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Hosting;
 
 namespace Telegram.Views.Stars.Popups
 {
-    public sealed partial class AffiliateProgramPopup : ContentPopup
+    public sealed partial class FoundAffiliateProgramPopup : ContentPopup
     {
         private readonly IClientService _clientService;
         private readonly INavigationService _navigationService;
@@ -29,7 +29,7 @@ namespace Telegram.Views.Stars.Popups
 
         private readonly ObservableCollection<MessageSender> _items;
 
-        public AffiliateProgramPopup(IClientService clientService, INavigationService navigationService, FoundAffiliateProgram program, MessageSender alias)
+        public FoundAffiliateProgramPopup(IClientService clientService, INavigationService navigationService, FoundAffiliateProgram program, MessageSender alias)
         {
             InitializeComponent();
 
@@ -146,6 +146,11 @@ namespace Telegram.Views.Stars.Popups
 
         private void UpdateAlias(MessageSender sender)
         {
+            if (_selectedAlias.AreTheSame(sender))
+            {
+                return;
+            }
+
             _selectedAlias = sender;
 
             if (_clientService.TryGetUser(sender, out User senderUser))
@@ -238,7 +243,7 @@ namespace Telegram.Views.Stars.Popups
             {
                 Hide();
 
-                var popup = new ConnectedProgramPopup(_clientService, _navigationService, program, _selectedAlias);
+                var popup = new ChatAffiliateProgramPopup(_clientService, _navigationService, program, _selectedAlias);
                 var aggregator = TypeResolver.Current.Resolve<IEventAggregator>(_clientService.SessionId);
 
                 aggregator.Publish(new UpdateChatAffiliatePrograms(chatId));

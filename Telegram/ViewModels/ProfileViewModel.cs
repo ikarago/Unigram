@@ -1325,11 +1325,11 @@ namespace Telegram.ViewModels
             var response = await ClientService.SendAsync(new GetChatAffiliateProgram(ClientService.Options.MyId, user.Id));
             if (response is ChatAffiliateProgram program)
             {
-                ShowPopup(new ConnectedProgramPopup(ClientService, NavigationService, program, ClientService.MyId));
+                ShowPopup(new ChatAffiliateProgramPopup(ClientService, NavigationService, program, ClientService.MyId));
             }
             else
             {
-                ShowPopup(new AffiliateProgramPopup(ClientService, NavigationService, new FoundAffiliateProgram(user.Id, fullInfo.BotInfo.AffiliateProgram), ClientService.MyId));
+                ShowPopup(new FoundAffiliateProgramPopup(ClientService, NavigationService, new FoundAffiliateProgram(user.Id, fullInfo.BotInfo.AffiliateProgram), ClientService.MyId));
             }
         }
 

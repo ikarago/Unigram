@@ -217,11 +217,11 @@ namespace Telegram.ViewModels.Chats
         {
             if (item is FoundAffiliateProgram foundProgram)
             {
-                ShowPopup(new AffiliateProgramPopup(ClientService, NavigationService, foundProgram, new MessageSenderChat(_chatId)));
+                ShowPopup(new FoundAffiliateProgramPopup(ClientService, NavigationService, foundProgram, new MessageSenderChat(_chatId)));
             }
             else if (item is ChatAffiliateProgram program)
             {
-                ShowPopup(new ConnectedProgramPopup(ClientService, NavigationService, program, new MessageSenderChat(_chatId)));
+                ShowPopup(new ChatAffiliateProgramPopup(ClientService, NavigationService, program, new MessageSenderChat(_chatId)));
             }
         }
 

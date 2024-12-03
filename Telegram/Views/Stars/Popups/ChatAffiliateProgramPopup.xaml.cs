@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Telegram.Views.Stars.Popups
 {
-    public sealed partial class ConnectedProgramPopup : ContentPopup
+    public sealed partial class ChatAffiliateProgramPopup : ContentPopup
     {
         private readonly IClientService _clientService;
         private readonly INavigationService _navigationService;
@@ -28,7 +28,7 @@ namespace Telegram.Views.Stars.Popups
 
         private readonly ObservableCollection<MessageSender> _items;
 
-        public ConnectedProgramPopup(IClientService clientService, INavigationService navigationService, ChatAffiliateProgram program, MessageSender alias)
+        public ChatAffiliateProgramPopup(IClientService clientService, INavigationService navigationService, ChatAffiliateProgram program, MessageSender alias)
         {
             InitializeComponent();
 
@@ -36,6 +36,8 @@ namespace Telegram.Views.Stars.Popups
             _navigationService = navigationService;
 
             _program = program;
+
+            _selectedAlias = alias;
 
             _clientService.Send(new GetUserFullInfo(program.BotUserId));
             _items = new ObservableCollection<MessageSender>();
@@ -155,9 +157,14 @@ namespace Telegram.Views.Stars.Popups
 
         private async void UpdateAlias(MessageSender sender)
         {
+            if (_selectedAlias.AreTheSame(sender))
+            {
+                return;
+            }
+
             var chatId = 0L;
 
-            if (_selectedAlias is MessageSenderUser senderUser)
+            if (sender is MessageSenderUser senderUser)
             {
                 var response1 = await _clientService.SendAsync(new CreatePrivateChat(senderUser.UserId, false));
                 if (response1 is Chat chat)
@@ -165,7 +172,7 @@ namespace Telegram.Views.Stars.Popups
                     chatId = chat.Id;
                 }
             }
-            else if (_selectedAlias is MessageSenderChat senderChat)
+            else if (sender is MessageSenderChat senderChat)
             {
                 chatId = senderChat.ChatId;
             }
@@ -179,12 +186,12 @@ namespace Telegram.Views.Stars.Popups
             if (response is ChatAffiliateProgram program)
             {
                 Hide();
-                _navigationService.ShowPopup(new ConnectedProgramPopup(_clientService, _navigationService, _program, sender));
+                _navigationService.ShowPopup(new ChatAffiliateProgramPopup(_clientService, _navigationService, _program, sender));
             }
             else if (_clientService.TryGetUserFull(_program.BotUserId, out UserFullInfo fullInfo))
             {
                 Hide();
-                _navigationService.ShowPopup(new AffiliateProgramPopup(_clientService, _navigationService, new FoundAffiliateProgram(_program.BotUserId, fullInfo.BotInfo.AffiliateProgram), sender));
+                _navigationService.ShowPopup(new FoundAffiliateProgramPopup(_clientService, _navigationService, new FoundAffiliateProgram(_program.BotUserId, fullInfo.BotInfo.AffiliateProgram), sender));
             }
         }
 

@@ -1,4 +1,4 @@
-﻿<controls:ContentPopup x:Class="Telegram.Views.Stars.Popups.AffiliateProgramPopup"
+﻿<controls:ContentPopup x:Class="Telegram.Views.Stars.Popups.FoundAffiliateProgramPopup"
                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -50,6 +50,7 @@
                            Text="{CustomResource ChannelAffiliateProgramJoinTitle}"
                            Style="{StaticResource PopupTextBlockStyle}"
                            TextAlignment="Center"
+                           HorizontalAlignment="Center"
                            VerticalAlignment="Top"
                            Grid.Row="1" />
                 <TextBlock x:Name="Subtitle"
@@ -112,7 +113,7 @@
                                Grid.Column="1" />
 
                     <Grid Width="20"
-                          Height="24"
+                          Height="20"
                           Margin="0,0,8,0"
                           Grid.Column="2">
 
