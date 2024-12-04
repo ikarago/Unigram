@@ -348,14 +348,22 @@ namespace Telegram.Controls.Gallery
 
         private string FormatTime(double time)
         {
-            var span = TimeSpan.FromSeconds(time);
-            if (span.TotalHours >= 1)
+            try
             {
-                return span.ToString("h\\:mm\\:ss");
+                var span = TimeSpan.FromSeconds(time);
+                if (span.TotalHours >= 1)
+                {
+                    return span.ToString("h\\:mm\\:ss");
+                }
+                else
+                {
+                    return span.ToString("mm\\:ss");
+                }
             }
-            else
+            catch
             {
-                return span.ToString("mm\\:ss");
+                // May overflow
+                return "00:00";
             }
         }
 
