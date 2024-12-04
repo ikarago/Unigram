@@ -83,7 +83,7 @@ namespace Telegram.Views.Popups
             {
                 foreach (var user in ScrollingHost.SelectedItems.OfType<User>())
                 {
-                    var chat = await _clientService.SendAsync(new CreatePrivateChat(user.Id, true)) as Chat;
+                    var chat = await _clientService.SendAsync(new CreatePrivateChat(user.Id, false)) as Chat;
                     if (chat != null)
                     {
                         _clientService.Send(new SendMessage(chat.Id, 0, null, null, null, new InputMessageText(new FormattedText(_inviteLink.InviteLink, Array.Empty<TextEntity>()), null, false)));

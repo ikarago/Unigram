@@ -594,7 +594,7 @@ namespace Telegram.ViewModels
 
         public async void NavigateToMyProfile(bool savedMessages)
         {
-            await ClientService.SendAsync(new CreatePrivateChat(ClientService.Options.MyId, true));
+            await ClientService.SendAsync(new CreatePrivateChat(ClientService.Options.MyId, false));
 
             if (savedMessages)
             {

@@ -177,7 +177,7 @@ namespace Telegram.Views.Premium.Popups
                 else
                 {
                     Hide();
-                    await _clientService.SendAsync(new CreatePrivateChat(_clientService.Options.MyId, true));
+                    await _clientService.SendAsync(new CreatePrivateChat(_clientService.Options.MyId, false));
                     await _navigationService.ShowPopupAsync(new SendGiftPopup(_clientService, _navigationService, gift, _userId));
                 }
             }
