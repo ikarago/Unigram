@@ -4,6 +4,7 @@
 // Distributed under the GNU General Public License v3.0. (See accompanying
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Telegram.Controls.Chats;
@@ -68,7 +69,7 @@ namespace Telegram.Collections
                 {
                     _hasMore = false;
 
-                    var response = await _clientService.SendAsync(new SearchStickers(_type, _query, 20));
+                    var response = await _clientService.SendAsync(new SearchStickers(_type, _query, string.Empty, Array.Empty<string>(), 0, 20));
                     if (response is Stickers stickers)
                     {
                         foreach (var sticker in stickers.StickersValue)

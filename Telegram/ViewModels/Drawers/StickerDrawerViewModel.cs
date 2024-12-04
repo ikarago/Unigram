@@ -699,7 +699,7 @@ namespace Telegram.ViewModels.Drawers
                 if (phase == 0)
                 {
                     Function task = _emojiOnly
-                        ? new SearchStickers(_type, _query, 100)
+                        ? new SearchStickers(_type, _query, string.Empty, Array.Empty<string>(), 0, 100)
                         : new SearchInstalledStickerSets(_type, _query, 100);
 
                     var response = await _clientService.SendAsync(task);

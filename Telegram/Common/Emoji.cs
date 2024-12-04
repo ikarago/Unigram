@@ -4,6 +4,7 @@
 // Distributed under the GNU General Public License v3.0. (See accompanying
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -244,7 +245,7 @@ namespace Telegram.Common
             var result = new List<StickerViewModel>();
             var query = string.Join(" ", emojis);
 
-            var resp = await clientService.SendAsync(new SearchStickers(new StickerTypeCustomEmoji(), query, 100));
+            var resp = await clientService.SendAsync(new SearchStickers(new StickerTypeCustomEmoji(), query, string.Empty, Array.Empty<string>(), 0, 100));
             if (resp is Stickers stickers)
             {
                 foreach (var item in stickers.StickersValue)
