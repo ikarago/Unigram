@@ -28,7 +28,7 @@ namespace Telegram.Controls
         #endregion
     }
 
-    public partial class GlyphHyperlinkButton : HyperlinkButton
+    public partial class GlyphHyperlinkButton : HyperlinkButtonEx
     {
         public GlyphHyperlinkButton()
         {

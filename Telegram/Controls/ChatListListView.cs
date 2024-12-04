@@ -185,7 +185,7 @@ namespace Telegram.Controls
                 }
             }
 
-            if (_changingView || direction == CarouselDirection.None || !IsConnected || !PowerSavingPolicy.AreSmoothTransitionsEnabled)
+            if (_changingView || _tracker == null || direction == CarouselDirection.None || !IsConnected || !PowerSavingPolicy.AreSmoothTransitionsEnabled)
             {
                 Continue(true);
                 return;

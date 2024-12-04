@@ -53,6 +53,12 @@ namespace Telegram.Controls
         public FileButton()
         {
             DefaultStyleKey = typeof(FileButton);
+            Connected += OnConnected;
+        }
+
+        private void OnConnected(object sender, RoutedEventArgs e)
+        {
+            // Used to enable FrameworkElementEx
         }
 
         public MessageContentState State => _state;
@@ -112,7 +118,7 @@ namespace Telegram.Controls
         {
             set
             {
-                if (_shouldEnqueueProgress)
+                if (_shouldEnqueueProgress || !IsConnected)
                 {
                     _enqueuedProgress = value;
                 }
@@ -240,7 +246,7 @@ namespace Telegram.Controls
 
             _label.Text = newValue;
 
-            if (_hasContainer && (clearContainer || !animate) && this.IsConnected())
+            if (_hasContainer && (clearContainer || !animate) && IsConnected)
             {
                 _hasContainer = false;
                 ElementComposition.SetElementChildVisual(RootGrid, null);
@@ -370,7 +376,7 @@ namespace Telegram.Controls
         {
             try
             {
-                if (_state == MessageContentState.Downloading && this.IsConnected())
+                if (_state == MessageContentState.Downloading && IsConnected)
                 {
                     OnGlyphChanged(Icons.Cancel, Icons.ArrowDownload, true, Strings.AccActionCancelDownload, false);
                     InternalProgress = _enqueuedProgress;

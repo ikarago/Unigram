@@ -657,7 +657,10 @@ namespace Telegram.Services
 
         public bool TryGetTimeZone(string timeZoneId, out TimeZone timeZone)
         {
-            return _timezones.TryGetValue(timeZoneId, out timeZone);
+            lock (_timezones)
+            {
+                return _timezones.TryGetValue(timeZoneId, out timeZone);
+            }
         }
 
         private void UpdateGreetingStickers()
