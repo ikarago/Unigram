@@ -58,7 +58,7 @@ namespace Telegram.Views.Stars.Popups
 
                 TextBlockHelper.SetMarkdown(Subtitle, string.Format(Strings.ChannelAffiliateProgramJoinText, botUser.FirstName, percent, duration));
 
-                Photo2.SetUser(clientService, botUser, 64);
+                Photo1.SetUser(clientService, botUser, 64);
 
                 MonthlyUsers.Content = userTypeBot.ActiveUserCount;
             }
@@ -155,14 +155,14 @@ namespace Telegram.Views.Stars.Popups
 
             if (_clientService.TryGetUser(sender, out User senderUser))
             {
-                Photo1.SetUser(_clientService, senderUser, 64);
+                Photo2.SetUser(_clientService, senderUser, 64);
 
                 Photo.SetUser(_clientService, senderUser, 28);
                 TitleText.Text = senderUser.FullName();
             }
             else if (_clientService.TryGetChat(sender, out Chat senderChat))
             {
-                Photo1.SetChat(_clientService, senderChat, 64);
+                Photo2.SetChat(_clientService, senderChat, 64);
 
                 Photo.SetChat(_clientService, senderChat, 28);
                 TitleText.Text = senderChat.Title;
