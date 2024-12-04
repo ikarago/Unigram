@@ -80,7 +80,12 @@ namespace Telegram.Collections
             return _cancellation;
         }
 
-        public async void Update(TSource source)
+        public void Update(TSource source)
+        {
+            UpdateImpl(source, false);
+        }
+
+        private async void UpdateImpl(TSource source, bool reentrancy)
         {
             if (source is ISupportIncrementalLoading incremental && incremental.HasMoreItems)
             {
@@ -105,14 +110,13 @@ namespace Telegram.Collections
                     ReplaceDiff(diff);
                     UpdateEmpty();
 
-                    if (Count < 1 && incremental.HasMoreItems)
-                    {
-                        // This is 100% illegal and will cause a lot
-                        // but really a lot of problems for sure.
-                        Add(default);
-                    }
-
                     _loading = false;
+
+                    // I'm not sure in what conditions this can happen, but it happens
+                    if (Count < 1 && incremental.HasMoreItems && !reentrancy)
+                    {
+                        UpdateImpl(source, true);
+                    }
                 }
             }
         }

@@ -8,8 +8,6 @@ using System;
 using System.Threading.Tasks;
 using Telegram.Navigation;
 using Telegram.Navigation.Services;
-using Telegram.Services;
-using Telegram.Services.Keyboard;
 using Telegram.Views.Host;
 using Windows.Devices.Input;
 using Windows.Foundation;

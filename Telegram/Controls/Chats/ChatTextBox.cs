@@ -464,19 +464,15 @@ namespace Telegram.Controls.Chats
                         return false;
                     }
 
-                    var members = true;
-                    if (chat.Type is ChatTypePrivate || chat.Type is ChatTypeSecret || chat.Type is ChatTypeSupergroup supergroup && supergroup.IsChannel)
-                    {
-                        members = false;
-                    }
-
                     if (prev is UsernameCollection && prev.Query.Equals(result))
                     {
                         autocomplete = prev;
                         return true;
                     }
 
-                    autocomplete = new UsernameCollection(ViewModel.ClientService, ViewModel.Chat.Id, ViewModel.ThreadId, result, index == 0, members && result.Length > 0, false);
+                    var members = chat.Type is ChatTypePrivate or ChatTypeSecret or ChatTypeSupergroup { IsChannel: true };
+
+                    autocomplete = new UsernameCollection(ViewModel.ClientService, ViewModel.Chat.Id, ViewModel.ThreadId, result, index == 0, members, false);
                     return true;
                 }
                 else if (entity == AutocompleteEntity.Hashtag)
@@ -1213,7 +1209,12 @@ namespace Telegram.Controls.Chats
             return _cancellation;
         }
 
-        public async void Update(IAutocompleteCollection source)
+        public void Update(IAutocompleteCollection source)
+        {
+            UpdateImpl(source, false);
+        }
+
+        private async void UpdateImpl(IAutocompleteCollection source, bool reentrancy)
         {
             if (source is ISupportIncrementalLoading incremental && incremental.HasMoreItems)
             {
@@ -1238,14 +1239,13 @@ namespace Telegram.Controls.Chats
                     ReplaceDiff(diff);
                     UpdateEmpty();
 
-                    if (Count < 1 && incremental.HasMoreItems)
-                    {
-                        // This is 100% illegal and will cause a lot
-                        // but really a lot of problems for sure.
-                        Add(default);
-                    }
-
                     _loading = false;
+
+                    // I'm not sure in what condition this can happen, but it happens
+                    if (Count < 1 && incremental.HasMoreItems && !reentrancy)
+                    {
+                        UpdateImpl(source, true);
+                    }
                 }
             }
         }
@@ -1272,13 +1272,6 @@ namespace Telegram.Controls.Chats
 
                     ReplaceDiff(diff);
                     UpdateEmpty();
-
-                    if (Count < 1 && incremental.HasMoreItems)
-                    {
-                        // This is 100% illegal and will cause a lot
-                        // but really a lot of problems for sure.
-                        Add(default);
-                    }
 
                     _loading = false;
                 }

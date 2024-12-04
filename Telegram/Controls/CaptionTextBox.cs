@@ -121,15 +121,9 @@ namespace Telegram.Controls
                         return;
                     }
 
-                    var members = true;
-                    if (chat.Type is ChatTypePrivate || chat.Type is ChatTypeSecret || chat.Type is ChatTypeSupergroup supergroup && supergroup.IsChannel)
+                    if (chat.Type is ChatTypePrivate or ChatTypeSecret or ChatTypeSupergroup { IsChannel: true })
                     {
-                        members = false;
-                    }
-
-                    if (members)
-                    {
-                        View.Autocomplete = new ChatTextBox.UsernameCollection(viewModel.ClientService, viewModel.Chat.Id, viewModel.ThreadId, result, false, members && result.Length > 0, false);
+                        View.Autocomplete = new ChatTextBox.UsernameCollection(viewModel.ClientService, viewModel.Chat.Id, viewModel.ThreadId, result, false, true, false);
                         return;
                     }
                 }
