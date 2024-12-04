@@ -537,11 +537,14 @@ namespace Telegram.Views.Popups
             var storage = content.DataContext as StorageMedia;
 
             var glyph = content.FindName("Glyph") as AnimatedGlyphButton;
-            glyph.Glyph = storage is StoragePhoto
-                ? Icons.ImageFilled24
-                : storage is StorageVideo or StorageAudio
-                ? Icons.PlayFilled24
-                : Icons.DocumentFilled24;
+            if (glyph != null)
+            {
+                glyph.Glyph = storage is StoragePhoto
+                    ? Icons.ImageFilled24
+                    : storage is StorageVideo or StorageAudio
+                    ? Icons.PlayFilled24
+                    : Icons.DocumentFilled24;
+            }
         }
 
         private void MediaItem_PointerEntered(object sender, PointerRoutedEventArgs e)

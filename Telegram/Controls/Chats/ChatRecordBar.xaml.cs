@@ -314,6 +314,12 @@ namespace Telegram.Controls.Chats
         {
             try
             {
+                var element = _videoElement;
+                if (element == null || !element.IsConnected())
+                {
+                    return;
+                }
+
                 var target = new RenderTargetBitmap();
                 await target.RenderAsync(_videoElement);
                 var pixels = await target.GetPixelsAsync();
@@ -350,10 +356,10 @@ namespace Telegram.Controls.Chats
 
             _blobVisual.StopAnimating();
 
+            await SaveLastFrameAsync();
+
             if (_videoPopup != null)
             {
-                await SaveLastFrameAsync();
-
                 _videoPopup.IsOpen = false;
                 _videoPopup = null;
 
