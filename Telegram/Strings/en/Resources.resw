@@ -953,6 +953,12 @@ Your prize is **{0} Stars**.</value>
   <data name="AdReported" xml:space="preserve">
     <value>We will review this ad to ensure it matches our **Ad Policies and Guidelines**.</value>
   </data>
+  <data name="AffiliateLinkExpiredText" xml:space="preserve">
+    <value>This link was part of an affiliate program, that has been terminated by the app owner.</value>
+  </data>
+  <data name="AffiliateLinkExpiredTitle" xml:space="preserve">
+    <value>Link expired</value>
+  </data>
   <data name="AffiliateProgramAlert" xml:space="preserve">
     <value>Warning</value>
   </data>

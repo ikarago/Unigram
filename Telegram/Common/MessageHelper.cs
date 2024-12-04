@@ -1283,6 +1283,10 @@ namespace Telegram.Common
                     navigation.NavigateToChat(chat);
                 }
             }
+            else if (referrer != null)
+            {
+                navigation.ShowPopup(Strings.AffiliateLinkExpiredText, Strings.AffiliateLinkExpiredTitle, Strings.OK);
+            }
             else
             {
                 navigation.ShowToast(Strings.NoUsernameFound, ToastPopupIcon.Info);
