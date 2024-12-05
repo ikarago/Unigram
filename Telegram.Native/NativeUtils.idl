@@ -54,6 +54,8 @@ namespace Telegram.Native
         static FatalError GetFatalError(Boolean onlyNative);
         static FatalError GetBackTrace(UInt64 code);
 
+        static String GetLogMessage(Int64 format, Int64 args);
+
         static void Crash();
     }
 } // namespace Telegram.Native

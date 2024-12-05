@@ -49,6 +49,8 @@ namespace winrt::Telegram::Native::implementation
         static winrt::Telegram::Native::FatalError GetFatalError(bool onlyNative);
         static winrt::Telegram::Native::FatalError GetBackTrace(DWORD code);
 
+        static hstring GetLogMessage(int64_t format, int64_t args);
+
         static void Crash();
 
         static FatalErrorCallback Callback;

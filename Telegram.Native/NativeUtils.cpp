@@ -684,4 +684,17 @@ namespace winrt::Telegram::Native::implementation
         *ciao = 42;
     }
 
+    hstring NativeUtils::GetLogMessage(int64_t format, int64_t args)
+    {
+        int byteLength = vsnprintf(NULL, NULL, (char*)format, (va_list)args) + 1;
+        if (byteLength <= 1)
+            return L"";
+
+        char* buffer = new char[byteLength];
+        vsprintf(buffer, (char*)format, (va_list)args);
+        hstring result = winrt::to_hstring(std::string(buffer, byteLength));
+        delete[] buffer;
+        return result;
+    }
+
 } // namespace winrt::Telegram::Native::implementation

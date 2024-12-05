@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Telegram.Native;
 
 namespace LibVLCSharp.Shared
 {
@@ -828,7 +829,7 @@ namespace LibVLCSharp.Shared
 
             try
             {
-                var message = MarshalUtils.GetLogMessage(format, args);
+                var message = NativeUtils.GetLogMessage((long)format, (long)args);
 
                 GetLogContext(logContext, out var module, out var file, out var line);
 
