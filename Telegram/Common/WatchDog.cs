@@ -1,6 +1,7 @@
 ﻿using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.AppCenter.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -127,6 +128,17 @@ namespace Telegram
             //    }
             //};
 
+            Crashes.UnhandledExceptionOccurring += (s, args) =>
+            {
+                var error = NativeUtils.GetFatalError(false);
+                if (error != null)
+                {
+                    args.Frames = error.Frames
+                        .Select(x => new NativeStackFrame((IntPtr)x.NativeIP, (IntPtr)x.NativeImageBase))
+                        .ToList();
+                }
+            };
+
             Crashes.CreatingErrorReport += (s, args) =>
             {
                 Track(args.ReportId, args.Exception);
@@ -201,11 +213,9 @@ namespace Telegram
             }
 
             var error = NativeUtils.GetFatalError(false);
-            var exception = ToException2(error);
-
-            if (exception != null)
+            if (error != null)
             {
-                Crashes.TrackError(exception);
+                FatalErrorCallback(error);
             }
 
             if (SettingsService.Current.Diagnostics.ShowMemoryUsage && Window.Current != null)
@@ -259,29 +269,14 @@ namespace Telegram
             }
         }
 
-        class StackFrame : NativeStackFrame
-        {
-            private FatalErrorFrame _frame;
-
-            public StackFrame(FatalErrorFrame frame)
-            {
-                _frame = frame;
-            }
-
-            public override IntPtr GetNativeIP()
-            {
-                return (IntPtr)_frame.NativeIP;
-            }
-
-            public override IntPtr GetNativeImageBase()
-            {
-                return (IntPtr)_frame.NativeImageBase;
-            }
-        }
-
         public static void FatalErrorCallback(FatalError error)
         {
-            Crashes.TrackCrash(ToException(error));
+            var exception = ToException(error);
+            var frames = error.Frames
+                .Select(x => new NativeStackFrame((IntPtr)x.NativeIP, (IntPtr)x.NativeImageBase))
+                .ToList();
+
+            Crashes.TrackCrash(exception, frames);
         }
 
         private static Exception ToException(FatalError error)
@@ -293,20 +288,10 @@ namespace Telegram
 
             if (error.StackTrace.Contains("libvlc.dll") || error.StackTrace.Contains("libvlccore.dll"))
             {
-                return new VLCException(error.Message + Environment.NewLine + error.StackTrace, error.StackTrace, error.Frames.Select(x => new StackFrame(x)));
+                return new VLCException(error.Message + Environment.NewLine + error.StackTrace, error.StackTrace);
             }
 
-            return new NativeException(error.Message + Environment.NewLine + error.StackTrace, error.StackTrace, error.Frames.Select(x => new StackFrame(x)));
-        }
-
-        private static Exception ToException2(FatalError error)
-        {
-            if (error == null)
-            {
-                return null;
-            }
-
-            return new Exception(error.Message + Environment.NewLine + error.StackTrace);
+            return new NativeException(error.Message + Environment.NewLine + error.StackTrace, error.StackTrace);
         }
 
         private static void FatalErrorCallback(int verbosityLevel, string message)
@@ -431,10 +416,18 @@ namespace Telegram
         }
     }
 
-    public partial class VLCException : NativeException
+    public partial class VLCException : Exception
     {
-        public VLCException(string message, string stackTrace, IEnumerable<NativeStackFrame> frames)
-            : base(message, stackTrace, frames)
+        public VLCException(string message, string stackTrace)
+            : base(message + "\n" + stackTrace)
+        {
+        }
+    }
+
+    public partial class NativeException : Exception
+    {
+        public NativeException(string message, string stackTrace)
+            : base(message + "\n" + stackTrace)
         {
         }
     }
