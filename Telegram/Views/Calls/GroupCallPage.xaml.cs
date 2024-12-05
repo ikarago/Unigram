@@ -1122,31 +1122,31 @@ namespace Telegram.Views.Calls
             {
                 case ButtonState.CancelReminder:
                     colors = ButtonColors.Disabled;
-                    AudioInfo.Text = Strings.VoipGroupCancelReminder;
+                    Audio.Content = AudioInfo.Text = Strings.VoipGroupCancelReminder;
                     Lottie.AutoPlay = true;
                     Lottie.Source = new LocalFileSource("ms-appx:///Assets/Animations/VoiceCancelReminder.tgs");
                     break;
                 case ButtonState.SetReminder:
                     colors = ButtonColors.Disabled;
-                    AudioInfo.Text = Strings.VoipGroupSetReminder;
+                    Audio.Content = AudioInfo.Text = Strings.VoipGroupSetReminder;
                     Lottie.AutoPlay = true;
                     Lottie.Source = new LocalFileSource("ms-appx:///Assets/Animations/VoiceSetReminder.tgs");
                     break;
                 case ButtonState.Start:
                     colors = ButtonColors.Disabled;
-                    AudioInfo.Text = Strings.VoipGroupStartNow;
+                    Audio.Content = AudioInfo.Text = Strings.VoipGroupStartNow;
                     Lottie.AutoPlay = false;
                     Lottie.Source = new LocalFileSource("ms-appx:///Assets/Animations/VoiceStart.tgs");
                     break;
                 case ButtonState.Unmute:
                     colors = ButtonColors.Unmute;
-                    AudioInfo.Text = Strings.VoipTapToMute;
+                    Audio.Content = AudioInfo.Text = Strings.VoipTapToMute;
                     Lottie.AutoPlay = true;
                     Lottie.Source = new LocalFileSource("ms-appx:///Assets/Animations/VoiceUnmute.tgs");
                     break;
                 case ButtonState.Mute:
                     colors = ButtonColors.Mute;
-                    AudioInfo.Text = Strings.VoipGroupUnmute;
+                    Audio.Content = AudioInfo.Text = Strings.VoipGroupUnmute;
                     switch (_prevState)
                     {
                         case ButtonState.CancelReminder:
@@ -1175,7 +1175,7 @@ namespace Telegram.Views.Calls
                 case ButtonState.RaiseHand:
                 case ButtonState.HandRaised:
                     colors = ButtonColors.Disabled;
-                    AudioInfo.Text = state == ButtonState.HandRaised
+                    Audio.Content = AudioInfo.Text = state == ButtonState.HandRaised
                         ? Strings.VoipMutedTapedForSpeak
                         : Strings.VoipMutedByAdmin;
                     switch (_prevState)
