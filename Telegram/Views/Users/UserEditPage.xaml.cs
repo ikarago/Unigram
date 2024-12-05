@@ -96,7 +96,7 @@ namespace Telegram.Views.Users
             {
                 AffiliateProgram.Badge = fullInfo.BotInfo.AffiliateProgram.Parameters.CommissionPercent();
             }
-            else
+            else if (AffiliateProgram != null)
             {
                 AffiliateProgram.Badge = Strings.AffiliateProgramBotOff;
             }
