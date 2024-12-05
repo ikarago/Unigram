@@ -3049,6 +3049,7 @@ namespace Telegram.Views
             placeholder.Text = "...";
             placeholder.FontSize = 12;
             placeholder.Icon = MenuFlyoutHelper.CreateIcon(played ? Icons.Play : Icons.Seen);
+            placeholder.HorizontalAlignment = HorizontalAlignment.Left;
 
             // Width must be fixed because viewers are loaded asynchronously
             placeholder.Width = 200;

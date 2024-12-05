@@ -11164,7 +11164,7 @@
         {
           "order": 397,
           "id": 83,
-          "name": "uniE768",
+          "name": "ic_fluent_play_20_regular",
           "prevSize": 32,
           "code": 59240,
           "tempChar": ""
@@ -12965,16 +12965,17 @@
         {
           "id": 83,
           "paths": [
-            "M321.022 182.070c8.492-4.4 18.727-3.7 26.541 1.816l435.198 307.2c6.799 4.797 10.839 12.596 10.839 20.914 0 8.32-4.040 16.118-10.839 20.915l-435.198 307.2c-7.813 5.514-18.049 6.216-26.541 1.812-8.492-4.398-13.822-13.164-13.822-22.728v-614.4c0-9.564 5.331-18.33 13.822-22.73zM358.4 254.206v515.586l365.21-257.792-365.21-257.794z"
+            "M881.684 444.776c53.012 29.162 53.012 105.286 0 134.45l-511.846 281.549c-51.184 28.16-113.838-8.842-113.838-67.22v-563.106c0-58.381 62.654-95.379 113.838-67.225l511.846 281.553zM856.991 534.41c17.674-9.723 17.674-35.098 0-44.818l-511.845-281.552c-17.061-9.385-37.946 2.948-37.946 22.408v563.106c0 19.461 20.884 31.79 37.946 22.405l511.844-281.549z"
           ],
-          "attrs": [],
+          "attrs": [
+            {}
+          ],
           "grid": 0,
           "tags": [
             "ic_fluent_play_20_regular"
           ],
           "isMulticolor": false,
-          "isMulticolor2": false,
-          "colorPermutations": {}
+          "isMulticolor2": false
         },
         {
           "id": 79,
@@ -14050,7 +14051,7 @@
       "metadata": {
         "fontFamily": "Telegram",
         "majorVersion": 2,
-        "minorVersion": 136
+        "minorVersion": 137
       },
       "metrics": {
         "emSize": 1024,
@@ -14076,7 +14077,7 @@
     },
     "historySize": 100,
     "quickUsageToken": {
-      "Telegram": "YzA5OWE2ZGM4MCMxNzMzMjIwNjk1I0hHSUs2d2dKQldKd2J4ZkIzOWc4RU5JOWhCWkExY2VsS1M0QytvN25WUm5G"
+      "Telegram": "NTJlZDcxZmE2OCMxNzMzMzk5MzEzI0hUNEUxSE00L2YrRFdmZk9CT1Npa3F0ajZiQUVmNEFFSWk3ekNydWpnVXp1"
     },
     "gridSize": 16
   },
