@@ -43,10 +43,10 @@ namespace LibVLCSharp.Shared.Helpers
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "libvlc_free", SetLastError = true)]
             public static extern void LibVLCFree(IntPtr ptr);
 
-            [DllImport(Constants.Msvcrt, EntryPoint = "vsprintf", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(Constants.Msvcrt, EntryPoint = "vsprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsprintf_windows(IntPtr buffer, IntPtr format, IntPtr args);
 
-            [DllImport(Constants.Msvcrt, EntryPoint = "vsnprintf", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(Constants.Msvcrt, EntryPoint = "vsnprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsnprintf_windows(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args);
 #pragma warning restore IDE1006 // Naming Styles
         }
