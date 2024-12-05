@@ -13,6 +13,8 @@ using Telegram.Navigation;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
+using Windows.UI.Xaml.Automation.Peers;
+using Windows.UI.Xaml.Automation.Provider;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 
@@ -67,6 +69,11 @@ namespace Telegram.Controls
 
         public bool IsSmall { get; set; }
 
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            return new FileButtonAutomationPeer(this);
+        }
+
         protected override void OnApplyTemplate()
         {
             RootGrid = GetTemplateChild(nameof(RootGrid)) as Grid;
@@ -83,7 +90,7 @@ namespace Telegram.Controls
 
             if (ProgressBar != null)
             {
-                ProgressBar.Value = _enqueuedProgress;
+                ProgressBar.Value = _progress;
             }
         }
 
@@ -100,8 +107,10 @@ namespace Telegram.Controls
 
         #endregion
 
+        private double _progress;
         public double Progress
         {
+            get => _progress;
             set
             {
                 if (_shouldEnqueueProgress || ProgressBar == null || !IsConnected)
@@ -116,6 +125,14 @@ namespace Telegram.Controls
                 {
                     ProgressBar.Value = value;
                 }
+
+                if (AutomationPeer.ListenerExists(AutomationEvents.PropertyChanged))
+                {
+                    var peer = FrameworkElementAutomationPeer.FromElement(this);
+                    peer?.RaisePropertyChangedEvent(ValuePatternIdentifiers.ValueProperty, _progress, value);
+                }
+
+                _progress = value;
             }
         }
 
@@ -391,5 +408,40 @@ namespace Telegram.Controls
             }
             return new CompositionPath(result);
         }
+    }
+
+    public class FileButtonAutomationPeer : HyperlinkButtonAutomationPeer, IValueProvider
+    {
+        private readonly FileButton _owner;
+
+        public FileButtonAutomationPeer(FileButton owner)
+            : base(owner)
+        {
+            _owner = owner;
+        }
+
+        protected override object GetPatternCore(PatternInterface patternInterface)
+        {
+            if (patternInterface == PatternInterface.Value)
+            {
+                return this;
+            }
+
+            return base.GetPatternCore(patternInterface);
+        }
+
+        protected override AutomationControlType GetAutomationControlTypeCore()
+        {
+            return AutomationControlType.Button;
+        }
+
+        public void SetValue(string value)
+        {
+            // Not implemented
+        }
+
+        public bool IsReadOnly => true;
+
+        public string Value => _owner.Progress.ToString("P0");
     }
 }
