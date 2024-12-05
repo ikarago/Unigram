@@ -34,6 +34,8 @@ namespace Telegram.Controls
 
         private State _state;
 
+        private ProgressBarRing ProgressBar;
+
         public DownloadsIndicator()
         {
             DefaultStyleKey = typeof(DownloadsIndicator);
@@ -73,6 +75,8 @@ namespace Telegram.Controls
 
         protected override void OnApplyTemplate()
         {
+            ProgressBar = GetTemplateChild(nameof(ProgressBar)) as ProgressBarRing;
+
             var target = GetTemplateChild("Target") as FrameworkElement;
             if (target != null)
             {
@@ -133,22 +137,20 @@ namespace Telegram.Controls
 
         #region Progress
 
+        private double _progress;
         public double Progress
         {
-            get { return (double)GetValue(ProgressProperty); }
-            set { SetValue(ProgressProperty, value); }
+            get => _progress;
+            set => OnProgressChanged(_progress, _progress = value);
         }
 
-        public static readonly DependencyProperty ProgressProperty =
-            DependencyProperty.Register("Progress", typeof(double), typeof(DownloadsIndicator), new PropertyMetadata(0d, OnProgressChanged));
-
-        private static void OnProgressChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private void OnProgressChanged(double oldValue, double newValue)
         {
-            ((DownloadsIndicator)d).OnProgressChanged((double)e.NewValue, (double)e.OldValue);
-        }
+            if (ProgressBar != null)
+            {
+                ProgressBar.Value = newValue;
+            }
 
-        private void OnProgressChanged(double newValue, double oldValue)
-        {
             if (newValue == 0 && _state != State.Normal)
             {
                 _state = State.Normal;

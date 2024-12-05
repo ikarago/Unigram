@@ -39,6 +39,8 @@ namespace Telegram.Controls
     {
         private Grid RootGrid;
 
+        private ProgressBarRing ProgressBar;
+
         private TextBlock ContentPresenter1;
         private TextBlock ContentPresenter2;
         private TextBlock _label;
@@ -69,6 +71,8 @@ namespace Telegram.Controls
         {
             RootGrid = GetTemplateChild(nameof(RootGrid)) as Grid;
 
+            ProgressBar = GetTemplateChild(nameof(ProgressBar)) as ProgressBarRing;
+
             ContentPresenter1 = GetTemplateChild(nameof(ContentPresenter1)) as TextBlock;
             ContentPresenter2 = GetTemplateChild(nameof(ContentPresenter2)) as TextBlock;
 
@@ -76,30 +80,12 @@ namespace Telegram.Controls
             ContentPresenter2.Text = string.Empty;
 
             _label = ContentPresenter1;
-        }
 
-        #region Progress
-
-        public double InternalProgress
-        {
-            get => (double)GetValue(InternalProgressProperty);
-            set
+            if (ProgressBar != null)
             {
-                try
-                {
-                    SetValue(InternalProgressProperty, value);
-                }
-                catch
-                {
-                    // All the remote procedure calls must be wrapped in a try-catch block
-                }
+                ProgressBar.Value = _enqueuedProgress;
             }
         }
-
-        public static readonly DependencyProperty InternalProgressProperty =
-            DependencyProperty.Register("InternalProgress", typeof(double), typeof(FileButton), new PropertyMetadata(0.0));
-
-        #endregion
 
         #region ProgressVisibility
 
@@ -118,17 +104,17 @@ namespace Telegram.Controls
         {
             set
             {
-                if (_shouldEnqueueProgress || !IsConnected)
+                if (_shouldEnqueueProgress || ProgressBar == null || !IsConnected)
                 {
                     _enqueuedProgress = value;
                 }
                 else if (_state is MessageContentState.Downloading or MessageContentState.Uploading)
                 {
-                    InternalProgress = Math.Max(0.05, value);
+                    ProgressBar.Value = Math.Max(0.05, value);
                 }
                 else
                 {
-                    InternalProgress = value;
+                    ProgressBar.Value = value;
                 }
             }
         }
@@ -376,10 +362,10 @@ namespace Telegram.Controls
         {
             try
             {
-                if (_state == MessageContentState.Downloading && IsConnected)
+                if (_state == MessageContentState.Downloading && ProgressBar != null && IsConnected)
                 {
                     OnGlyphChanged(Icons.Cancel, Icons.ArrowDownload, true, Strings.AccActionCancelDownload, false);
-                    InternalProgress = _enqueuedProgress;
+                    ProgressBar.Value = _enqueuedProgress;
                 }
 
                 _shouldEnqueueProgress = false;

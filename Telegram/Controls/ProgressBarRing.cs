@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Media;
 
 namespace Telegram.Controls
 {
-    public partial class ProgressBarRing : ProgressBar
+    public partial class ProgressBarRing : Control
     {
         private readonly FrameworkElementState _manager;
 
@@ -124,7 +124,14 @@ namespace Telegram.Controls
             }
         }
 
-        protected override void OnValueChanged(double oldValue, double newValue)
+        private double _value;
+        public double Value
+        {
+            get => _value;
+            set => OnValueChanged(_value, _value = value);
+        }
+
+        private void OnValueChanged(double oldValue, double newValue)
         {
             if (double.IsNaN(newValue))
             {
