@@ -121,7 +121,7 @@ namespace Telegram.Controls
                         return;
                     }
 
-                    if (chat.Type is ChatTypePrivate or ChatTypeSecret or ChatTypeSupergroup { IsChannel: false })
+                    if (chat.Type is ChatTypeBasicGroup or ChatTypeSupergroup { IsChannel: false })
                     {
                         View.Autocomplete = new ChatTextBox.UsernameCollection(viewModel.ClientService, viewModel.Chat.Id, viewModel.ThreadId, result, false, true, false);
                         return;

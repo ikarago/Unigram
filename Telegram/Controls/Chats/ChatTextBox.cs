@@ -470,7 +470,7 @@ namespace Telegram.Controls.Chats
                         return true;
                     }
 
-                    var members = chat.Type is ChatTypePrivate or ChatTypeSecret or ChatTypeSupergroup { IsChannel: false };
+                    var members = chat.Type is ChatTypePrivate or ChatTypeSecret or ChatTypeBasicGroup or ChatTypeSupergroup { IsChannel: false };
 
                     autocomplete = new UsernameCollection(ViewModel.ClientService, ViewModel.Chat.Id, ViewModel.ThreadId, result, index == 0, members, false);
                     return true;
