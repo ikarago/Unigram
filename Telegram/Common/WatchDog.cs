@@ -130,13 +130,9 @@ namespace Telegram
 
             Crashes.UnhandledExceptionOccurring += (s, args) =>
             {
-                var error = NativeUtils.GetFatalError(false);
-                if (error != null)
-                {
-                    args.Frames = error.Frames
-                        .Select(x => new NativeStackFrame((IntPtr)x.NativeIP, (IntPtr)x.NativeImageBase))
-                        .ToList();
-                }
+                args.Frames = NativeUtils.GetStowedException()
+                    .Select(x => new NativeStackFrame(x.NativeIP, x.NativeImageBase))
+                    .ToList();
             };
 
             Crashes.CreatingErrorReport += (s, args) =>
@@ -267,7 +263,7 @@ namespace Telegram
         {
             var exception = ToException(error);
             var frames = error.Frames
-                .Select(x => new NativeStackFrame((IntPtr)x.NativeIP, (IntPtr)x.NativeImageBase))
+                .Select(x => new NativeStackFrame(x.NativeIP, x.NativeImageBase))
                 .ToList();
 
             Crashes.TrackCrash(exception, frames);

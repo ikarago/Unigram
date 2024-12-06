@@ -39,7 +39,7 @@ namespace winrt::Telegram::Native::implementation
         Callback = callback;
     }
 
-    winrt::Telegram::Native::FatalError NativeUtils::GetFatalError(bool onlyNative)
+    winrt::Windows::Foundation::Collections::IVector<winrt::Telegram::Native::FatalErrorFrame> NativeUtils::GetStowedException()
     {
         HRESULT result;
 
@@ -75,10 +75,7 @@ namespace winrt::Telegram::Native::implementation
 
         if (stowed != nullptr && stowed->ExceptionForm == 1 && stowed->Header.Signature == 'SE02')
         {
-            std::wstring trace;
             auto frames = winrt::single_threaded_vector<FatalErrorFrame>();
-
-            bool skipping = false;
 
             for (int i = 0; i < stowed->StackTraceWords; ++i)
             {
@@ -104,48 +101,17 @@ namespace winrt::Telegram::Native::implementation
                 auto moduleBase = (const unsigned char*)moduleBaseVoid;
                 if (moduleBase != nullptr)
                 {
-                    wchar_t modulePath[MAX_PATH];
-                    GetModuleFileName((HMODULE)moduleBase, modulePath, MAX_PATH);
-
-                    auto moduleFilename = std::wstring(modulePath);
-
-                    int moduleFilenamePos = moduleFilename.find_last_of(L"\\");
-                    if (moduleFilenamePos >= 0)
-                    {
-                        moduleFilename = moduleFilename.substr(moduleFilenamePos + 1);
-                    }
-
-                    if (moduleFilename.rfind(L"Telegram", 0) != 0)
-                    {
-                        skipping = true;
-                        continue;
-                    }
-
-                    if (skipping)
-                    {
-                        skipping = false;
-                        trace += L"    ...\n";
-                    }
-
-                    trace += wstrprintf(L"   at %s+0x%08lx\n", moduleFilename, (uint32_t)((unsigned char*)pointer - moduleBase));
                     frames.Append({ (intptr_t)pointer, (intptr_t)moduleBase });
                 }
                 else
                 {
-                    trace += wstrprintf(L"   at %s+0x%016llx\n", L"unknown", (uint64_t)pointer);
+                    //trace += wstrprintf(L"   at %s+0x%016llx\n", L"unknown", (uint64_t)pointer);
                 }
             }
 
             if (frames.Size())
             {
-                BSTR description;
-                BSTR restrictedDescription;
-                BSTR reserved;
-                HRESULT hresult;
-                CleanupIfFailed(result, info->GetErrorDetails(&description, &hresult, &restrictedDescription, &reserved));
-
-                auto error = winrt::make_self<FatalError>(stowed->ResultCode, hstring(description), hstring(trace), frames);
-                return error.as<winrt::Telegram::Native::FatalError>();
+                return frames;
             }
         }
 
