@@ -1894,7 +1894,6 @@
     <Content Include="Assets\Audio\voip_incoming.mp3" />
     <Content Include="Assets\Audio\voip_ringback.mp3" />
     <Compile Include="Controls\GlyphToggleButton.cs" />
-    <Compile Include="Controls\ProgressShape.cs" />
     <Compile Include="Controls\ProgressVoice.cs" />
     <Compile Include="Converters\LastSeenConverter.cs" />
     <Compile Include="ViewModels\InstantViewModel.cs" />
