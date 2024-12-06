@@ -4025,7 +4025,7 @@ namespace Telegram.ViewModels
             dialog.Value = chat.MessageAutoDeleteTime;
 
             var confirm = await ShowPopupAsync(dialog);
-            if (confirm != ContentDialogResult.Primary)
+            if (confirm != ContentDialogResult.Primary || chat.MessageAutoDeleteTime == dialog.Value)
             {
                 return;
             }

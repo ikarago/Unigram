@@ -1205,17 +1205,17 @@ namespace Telegram.ViewModels
                 return;
             }
 
-            if (ttl is int value)
+            if (ttl is int value && value != chat.MessageAutoDeleteTime)
             {
                 ClientService.Send(new SetChatMessageAutoDeleteTime(chat.Id, value));
             }
-            else
+            else if (ttl == null)
             {
                 var dialog = new ChatTtlPopup(chat.Type is ChatTypeSecret ? ChatTtlType.Secret : ChatTtlType.Normal);
                 dialog.Value = chat.MessageAutoDeleteTime;
 
                 var confirm = await ShowPopupAsync(dialog);
-                if (confirm != ContentDialogResult.Primary)
+                if (confirm != ContentDialogResult.Primary || chat.MessageAutoDeleteTime == dialog.Value)
                 {
                     return;
                 }
