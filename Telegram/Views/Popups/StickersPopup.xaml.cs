@@ -73,49 +73,32 @@ namespace Telegram.Views.Popups
 
         #region Show
 
-        public Action<Sticker> ItemClick { get; set; }
-
         public static Task<ContentDialogResult> ShowAsync(INavigationService navigation, StickerSet parameter)
         {
-            return ShowAsyncInternal(navigation, parameter, null);
-        }
-
-        public static Task<ContentDialogResult> ShowAsync(INavigationService navigation, StickerSet parameter, Action<Sticker> callback)
-        {
-            return ShowAsyncInternal(navigation, parameter, callback);
+            return ShowAsyncInternal(navigation, parameter);
         }
 
         public static Task<ContentDialogResult> ShowAsync(INavigationService navigation, HashSet<long> parameter)
         {
-            return ShowAsyncInternal(navigation, parameter, null);
-        }
-
-        public static Task<ContentDialogResult> ShowAsync(INavigationService navigation, HashSet<long> parameter, Action<Sticker> callback)
-        {
-            return ShowAsyncInternal(navigation, parameter, callback);
+            return ShowAsyncInternal(navigation, parameter);
         }
 
         public static Task<ContentDialogResult> ShowAsync(INavigationService navigation, long parameter)
         {
-            return ShowAsyncInternal(navigation, parameter, null);
-        }
-
-        public static Task<ContentDialogResult> ShowAsync(INavigationService navigation, long parameter, Action<Sticker> callback)
-        {
-            return ShowAsyncInternal(navigation, parameter, callback);
+            return ShowAsyncInternal(navigation, parameter);
         }
 
         public static Task<ContentDialogResult> ShowAsync(INavigationService navigation, InputFileId parameter)
         {
-            return ShowAsyncInternal(navigation, parameter, null);
+            return ShowAsyncInternal(navigation, parameter);
         }
 
-        public static Task<ContentDialogResult> ShowAsync(INavigationService navigation, InputFileId parameter, Action<Sticker> callback)
+        public static Task<ContentDialogResult> ShowAsync(INavigationService navigation, string parameter)
         {
-            return ShowAsyncInternal(navigation, parameter, callback);
+            return ShowAsyncInternal(navigation, parameter);
         }
 
-        private static Task<ContentDialogResult> ShowAsyncInternal(INavigationService navigation, object parameter, Action<Sticker> callback)
+        private static Task<ContentDialogResult> ShowAsyncInternal(INavigationService navigation, object parameter)
         {
             var popup = new StickersPopup(navigation);
 
@@ -126,22 +109,11 @@ namespace Telegram.Views.Popups
             handler = new RoutedEventHandler(async (s, args) =>
             {
                 popup.Loaded -= handler;
-                popup.ItemClick = callback;
                 await popup.ViewModel.NavigatedToAsync(parameter, NavigationMode.New, null);
             });
 
             popup.Loaded += handler;
             return popup.ShowQueuedAsync(navigation.XamlRoot);
-        }
-
-        public static Task<ContentDialogResult> ShowAsync(INavigationService navigation, string parameter)
-        {
-            return ShowAsyncInternal(navigation, parameter, null);
-        }
-
-        public static Task<ContentDialogResult> ShowAsync(INavigationService navigation, string parameter, Action<Sticker> callback)
-        {
-            return ShowAsyncInternal(navigation, parameter, callback);
         }
 
         #endregion
@@ -259,34 +231,11 @@ namespace Telegram.Views.Popups
 
         #endregion
 
-        private async void Share_Click(object sender, RoutedEventArgs e)
-        {
-            var builder = new StringBuilder();
-
-            foreach (var item in ViewModel.Items)
-            {
-                if (builder.Length > 0)
-                {
-                    builder.AppendLine();
-                }
-
-                builder.Append(MeUrlPrefixConverter.Convert(ViewModel.ClientService, $"addstickers/{item.Name}"));
-            }
-
-            Hide();
-
-            var text = builder.ToString();
-            var formatted = new FormattedText(text, Array.Empty<TextEntity>());
-
-            // TODO: currently not used
-            //await new ChooseChatsPopup().ShowAsync(formatted);
-        }
-
         private void List_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (ItemClick != null && e.ClickedItem is ViewModels.Drawers.StickerViewModel sticker)
+            if (ViewModel.NavigationService.Content is Page { Content: ChatView view } && e.ClickedItem is ViewModels.Drawers.StickerViewModel sticker)
             {
-                ItemClick(sticker);
+                view.Stickers_ItemClick(sticker);
                 Hide();
             }
         }
@@ -307,6 +256,7 @@ namespace Telegram.Views.Popups
 
         private void Share()
         {
+            Hide();
             ViewModel.ShowPopup(new ChooseChatsPopup(), new ChooseChatsConfigurationPostLink(new InternalLinkTypeStickerSet(ViewModel.Items[0].Name, ViewModel.StickerType is StickerTypeCustomEmoji)));
         }
 

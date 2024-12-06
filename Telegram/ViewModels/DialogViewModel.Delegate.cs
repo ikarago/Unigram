@@ -239,7 +239,7 @@ namespace Telegram.ViewModels
         {
             if (sticker.SetId != 0)
             {
-                await StickersPopup.ShowAsync(NavigationService, sticker.SetId, Sticker_Click);
+                await StickersPopup.ShowAsync(NavigationService, sticker.SetId);
             }
         }
 
