@@ -900,6 +900,18 @@ public static class VoipCallCoordinator_stub
 }
 public static class VoipPhoneCall_stub
 {
+    public static void NotifyCallAccepted_stub(this Windows.ApplicationModel.Calls.VoipPhoneCall sender, Windows.ApplicationModel.Calls.VoipPhoneCallMedia media)
+    {
+        try
+        {
+            sender.NotifyCallAccepted(media);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(Environment.StackTrace);
+            throw new RuntimeException(ex);
+        }
+    }
     public static void NotifyCallActive_stub(this Windows.ApplicationModel.Calls.VoipPhoneCall sender)
     {
         try
@@ -6156,11 +6168,35 @@ public static class NativeUtils_stub
             throw new RuntimeException(ex);
         }
     }
+    public static string GetLogMessage_stub(long format, long args)
+    {
+        try
+        {
+            return Telegram.Native.NativeUtils.GetLogMessage(format, args);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(Environment.StackTrace);
+            throw new RuntimeException(ex);
+        }
+    }
     public static int GetScaleForCurrentView_stub()
     {
         try
         {
             return Telegram.Native.NativeUtils.GetScaleForCurrentView();
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(Environment.StackTrace);
+            throw new RuntimeException(ex);
+        }
+    }
+    public static System.Collections.Generic.IList<Telegram.Native.FatalErrorFrame> GetStowedException_stub()
+    {
+        try
+        {
+            return Telegram.Native.NativeUtils.GetStowedException();
         }
         catch (Exception ex)
         {
@@ -6348,6 +6384,18 @@ public static class QrBuffer_stub
 }
 public static class VideoAnimation_stub
 {
+    public static Windows.Storage.Streams.IRandomAccessStream GetAlbumCover_stub(this Telegram.Native.VideoAnimation sender)
+    {
+        try
+        {
+            return sender.GetAlbumCover();
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(Environment.StackTrace);
+            throw new RuntimeException(ex);
+        }
+    }
     public static Telegram.Native.VideoAnimation LoadFromFile_stub(Telegram.Native.IVideoAnimationSource file, bool preview, bool limitFps, bool probe)
     {
         try
