@@ -2053,13 +2053,18 @@ namespace Telegram.Controls.Messages
             var content = string.Empty;
             var entities = active ? new List<TextEntity>() : null;
 
-            if (message.SenderId is MessageSenderUser user && user.UserId == message.ClientService.Options.MyId)
+            if (giftedStars.GifterUserId == message.ClientService.Options.MyId)
             {
                 content = ReplaceWithLink(Strings.ActionGiftOutbound, "un2", giftedStars, entities);
             }
-            else if (message.ClientService.TryGetUser(message.SenderId, out User senderUser))
+            else if (message.ClientService.TryGetUser(giftedStars.GifterUserId, out User senderUser))
             {
                 content = ReplaceWithLink(Strings.ActionGiftInbound, "un1", senderUser, entities);
+                content = ReplaceWithLink(content, "un2", giftedStars, entities);
+            }
+            else
+            {
+                content = ReplaceWithLink(Strings.ActionGiftInbound, "un1", Strings.StarsTransactionUnknown, entities);
                 content = ReplaceWithLink(content, "un2", giftedStars, entities);
             }
 
@@ -2701,7 +2706,7 @@ namespace Telegram.Controls.Messages
             return (string.Empty, null);
         }
 
-        public static string ReplaceWithLink(string source, string param, BaseObject obj, IList<TextEntity> entities)
+        public static string ReplaceWithLink(string source, string param, object obj, IList<TextEntity> entities)
         {
             var start = source.IndexOf(param);
             if (start >= 0)
@@ -2747,6 +2752,11 @@ namespace Telegram.Controls.Messages
                 {
                     name = $"\U0001F4C3 {forumTopicInfo.Name}";
                     id = "tg-topic://";
+                }
+                else if (obj is string value)
+                {
+                    name = value;
+                    id = null;
                 }
                 else
                 {

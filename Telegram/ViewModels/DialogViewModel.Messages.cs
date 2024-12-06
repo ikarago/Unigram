@@ -1782,17 +1782,11 @@ namespace Telegram.ViewModels
             }
             else if (message.Content is MessageGiftedStars giftedStars)
             {
-                StarTransactionType type;
-                if (message.SenderId is MessageSenderUser senderUser)
-                {
-                    type = new StarTransactionTypeUserDeposit(senderUser.UserId, giftedStars.Sticker);
-                }
-                else
-                {
-                    return;
-                }
+                var type = new StarTransactionTypeUserDeposit(giftedStars.GifterUserId, giftedStars.Sticker);
+                var amount = new StarAmount(giftedStars.StarCount, 0);
+                var transaction = new StarTransaction(giftedStars.TransactionId, amount, false, message.Date, type);
 
-                await ShowPopupAsync(new Views.Stars.Popups.ReceiptPopup(ClientService, NavigationService, new StarTransaction(giftedStars.TransactionId, new StarAmount(giftedStars.StarCount, 0), false, message.Date, type)));
+                await ShowPopupAsync(new Views.Stars.Popups.ReceiptPopup(ClientService, NavigationService, transaction));
             }
             else if (message.Content is MessageGiftedPremium giftedPremium)
             {

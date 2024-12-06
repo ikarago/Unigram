@@ -10874,6 +10874,12 @@ The channel &quot;**{1}**&quot; will become private.</value>
   <data name="StarsTransactionTOS" xml:space="preserve">
     <value>Review the **Terms of Service** for Stars.</value>
   </data>
+  <data name="StarsTransactionUnknown" xml:space="preserve">
+    <value>Unknown User</value>
+  </data>
+  <data name="StarsTransactionUnknownLink" xml:space="preserve">
+    <value>https://fragment.com/stars</value>
+  </data>
   <data name="StarsTransactionUnsupported" xml:space="preserve">
     <value>In-App Purchase</value>
   </data>

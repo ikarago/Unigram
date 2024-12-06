@@ -248,10 +248,18 @@ namespace Telegram.Views.Stars.Popups
             else if (transaction.Type is StarTransactionTypeUserDeposit userDeposit)
             {
                 var user = clientService.GetUser(userDeposit.UserId);
+                if (user != null)
+                {
+                    FromPhoto.SetUser(clientService, user, 24);
+                    FromTitle.Text = user.FullName();
+                }
+                else
+                {
+                    FromPhoto.Source = new PlaceholderImage(Icons.FragmentFilled, true, Colors.Black, Colors.Black);
+                    FromTitle.Text = Strings.StarsTransactionUnknown;
+                }
 
-                FromPhoto.SetUser(clientService, user, 24);
                 FromPhoto.Visibility = Visibility.Visible;
-                FromTitle.Text = user.FullName();
                 From.Header = Strings.StarsTransactionRecipient;
 
                 Title.Text = transaction.StarAmount.IsNegative()
