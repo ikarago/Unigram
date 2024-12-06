@@ -9,7 +9,8 @@
                        PrimaryButtonText="Button1"
                        PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
                        Padding="0,24,0,0"
-                       VerticalContentAlignment="Stretch">
+                       VerticalContentAlignment="Stretch"
+                       IsDismissButtonVisible="True">
 
     <Grid>
         <ListView x:Name="ScrollingHost"
