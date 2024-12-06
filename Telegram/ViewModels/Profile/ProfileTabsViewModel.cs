@@ -508,10 +508,21 @@ namespace Telegram.ViewModels.Profile
                 return;
             }
 
-            var items = messages.Select(x => x.Get()).ToArray();
+            var items = messages
+                .DistinctBy(x => x.Id)
+                .Select(x => x.Get())
+                .ToList();
+
             var properties = await ClientService.GetMessagePropertiesAsync(items.Select(x => new MessageId(x)));
 
-            var updated = items.Where(x => properties.ContainsKey(new MessageId(x))).ToArray();
+            var updated = items
+                .Where(x => properties.ContainsKey(new MessageId(x)))
+                .ToList();
+
+            if (updated.Empty())
+            {
+                return;
+            }
 
             var popup = new DeleteMessagesPopup(ClientService, SavedMessagesTopicId, chat, updated, properties);
 

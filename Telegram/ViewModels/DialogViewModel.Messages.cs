@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Common;
@@ -271,7 +270,10 @@ namespace Telegram.ViewModels
                 return;
             }
 
-            var items = messages.Select(x => x.Get()).ToArray();
+            var items = messages
+                .DistinctBy(x => x.Id)
+                .Select(x => x.Get())
+                .ToList();
 
             IDictionary<MessageId, MessageProperties> properties;
             if (_type == DialogType.BusinessReplies)
@@ -287,7 +289,10 @@ namespace Telegram.ViewModels
                 properties = await ClientService.GetMessagePropertiesAsync(items.Select(x => new MessageId(x)));
             }
 
-            var updated = items.Where(x => properties.ContainsKey(new MessageId(x))).ToArray();
+            var updated = items
+                .Where(x => properties.ContainsKey(new MessageId(x)))
+                .ToList();
+
             if (updated.Empty())
             {
                 return;

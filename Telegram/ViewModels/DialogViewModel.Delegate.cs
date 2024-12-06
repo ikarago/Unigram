@@ -595,7 +595,7 @@ namespace Telegram.ViewModels
 
 
 
-        public async void Select(MessageViewModel message)
+        public void Select(MessageViewModel message)
         {
             if (message.IsService)
             {
@@ -627,26 +627,10 @@ namespace Telegram.ViewModels
                 message.SelectionChanged();
             }
 
-            RaisePropertyChanged(nameof(CanCopySelectedMessage));
-            RaisePropertyChanged(nameof(CanReportSelectedMessages));
-
-            RaisePropertyChanged(nameof(SelectedCount));
-
-            if (_type is DialogType.BusinessReplies)
-            {
-                CanDeleteSelectedMessages = true;
-                CanForwardSelectedMessages = false;
-            }
-            else
-            {
-                var properties = await ClientService.GetMessagePropertiesAsync(SelectedItems.Values.Select(x => new MessageId(x)));
-
-                CanDeleteSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeDeletedForAllUsers || x.CanBeDeletedOnlyForSelf);
-                CanForwardSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeForwarded);
-            }
+            UpdateSelectionState();
         }
 
-        public async void Unselect(MessageViewModel message, bool updateSelection = false)
+        public void Unselect(MessageViewModel message, bool updateSelection = false)
         {
             if (message.MediaAlbumId != 0)
             {
@@ -678,6 +662,11 @@ namespace Telegram.ViewModels
                 IsSelectionEnabled = false;
             }
 
+            UpdateSelectionState();
+        }
+
+        private async void UpdateSelectionState()
+        {
             RaisePropertyChanged(nameof(CanCopySelectedMessage));
             RaisePropertyChanged(nameof(CanReportSelectedMessages));
 
@@ -690,7 +679,8 @@ namespace Telegram.ViewModels
             }
             else
             {
-                var properties = await ClientService.GetMessagePropertiesAsync(SelectedItems.Values.Select(x => new MessageId(x)));
+                var selectedItems = SelectedItems.Values.ToList();
+                var properties = await ClientService.GetMessagePropertiesAsync(selectedItems.Select(x => new MessageId(x)));
 
                 CanDeleteSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeDeletedForAllUsers || x.CanBeDeletedOnlyForSelf);
                 CanForwardSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeForwarded);

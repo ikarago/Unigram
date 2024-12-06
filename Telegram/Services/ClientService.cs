@@ -1448,7 +1448,7 @@ namespace Telegram.Services
         {
             var map = new Dictionary<MessageId, MessageProperties>();
 
-            foreach (var messageId in messageIds.ToArray())
+            foreach (var messageId in messageIds)
             {
                 var properties = await SendAsync(new GetMessageProperties(messageId.ChatId, messageId.Id)) as MessageProperties;
                 if (properties != null)
