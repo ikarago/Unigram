@@ -5376,15 +5376,15 @@ namespace Telegram.Views
             var options = ViewModel.ClientService.Options;
             if (chat.Id == options.MyId || chat.Id == options.RepliesBotChatId || chat.Id == options.VerificationCodesBotChatId)
             {
-                ViewModel.LastSeen = null;
+                ViewModel.UpdateLastSeen(null as string);
             }
             else if (ViewModel.Type == DialogType.ScheduledMessages)
             {
-                ViewModel.LastSeen = null;
+                ViewModel.UpdateLastSeen(null as string);
             }
             else
             {
-                ViewModel.LastSeen = LastSeenConverter.GetLabel(user, true);
+                ViewModel.UpdateLastSeen(user);
             }
         }
 
@@ -5474,8 +5474,7 @@ namespace Telegram.Views
             else if (group.Status is ChatMemberStatusLeft or ChatMemberStatusBanned)
             {
                 ShowAction(Strings.DeleteThisGroup, true);
-
-                ViewModel.LastSeen = Strings.YouLeft;
+                ViewModel.UpdateLastSeen(Strings.YouLeft);
             }
             else if (group.Status is ChatMemberStatusCreator creator && !creator.IsMember)
             {
@@ -5507,7 +5506,7 @@ namespace Telegram.Views
                     TextField.IsReadOnly = readOnly;
                 }
 
-                ViewModel.LastSeen = Locale.Declension(Strings.R.Members, group.MemberCount);
+                ViewModel.UpdateLastSeen(Locale.Declension(Strings.R.Members, group.MemberCount));
             }
 
             if (fullInfo == null)
@@ -5515,7 +5514,7 @@ namespace Telegram.Views
                 return;
             }
 
-            ViewModel.LastSeen = Locale.Declension(Strings.R.Members, fullInfo.Members.Count);
+            ViewModel.UpdateLastSeen(Locale.Declension(Strings.R.Members, fullInfo.Members.Count));
 
             btnVoiceMessage.IsRestricted = false;
 
@@ -5672,15 +5671,15 @@ namespace Telegram.Views
 
             if (ViewModel.Type == DialogType.History)
             {
-                ViewModel.LastSeen = Locale.Declension(group.IsChannel ? Strings.R.Subscribers : Strings.R.Members, group.MemberCount);
+                ViewModel.UpdateLastSeen(Locale.Declension(group.IsChannel ? Strings.R.Subscribers : Strings.R.Members, group.MemberCount));
             }
             else if (ViewModel.Type == DialogType.Thread && ViewModel.Topic != null)
             {
-                ViewModel.LastSeen = string.Format(Strings.TopicProfileStatus, chat.Title);
+                ViewModel.UpdateLastSeen(string.Format(Strings.TopicProfileStatus, chat.Title));
             }
             else
             {
-                ViewModel.LastSeen = null;
+                ViewModel.UpdateLastSeen(null as string);
             }
 
             if (group.IsChannel)
@@ -5698,15 +5697,15 @@ namespace Telegram.Views
 
             if (ViewModel.Type == DialogType.History)
             {
-                ViewModel.LastSeen = Locale.Declension(group.IsChannel ? Strings.R.Subscribers : Strings.R.Members, fullInfo.MemberCount);
+                ViewModel.UpdateLastSeen(Locale.Declension(group.IsChannel ? Strings.R.Subscribers : Strings.R.Members, fullInfo.MemberCount));
             }
             else if (ViewModel.Type == DialogType.Thread && ViewModel.Topic != null)
             {
-                ViewModel.LastSeen = string.Format(Strings.TopicProfileStatus, chat.Title);
+                ViewModel.UpdateLastSeen(string.Format(Strings.TopicProfileStatus, chat.Title));
             }
             else
             {
-                ViewModel.LastSeen = null;
+                ViewModel.UpdateLastSeen(null as string);
             }
 
             btnVoiceMessage.IsRestricted = false;

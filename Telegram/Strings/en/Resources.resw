@@ -6848,11 +6848,26 @@ You can change your language back at any time in Settings.</value>
   <data name="LastSeenFormatted" xml:space="preserve">
     <value>last seen {0}</value>
   </data>
+  <data name="LastSeenHours_one" xml:space="preserve">
+    <value>last seen {0} hour ago</value>
+  </data>
+  <data name="LastSeenHours_other" xml:space="preserve">
+    <value>last seen {0} hours ago</value>
+  </data>
+  <data name="LastSeenMinutes_one" xml:space="preserve">
+    <value>last seen {0} minute ago</value>
+  </data>
+  <data name="LastSeenMinutes_other" xml:space="preserve">
+    <value>last seen {0} minutes ago</value>
+  </data>
   <data name="LastSeenNobody" xml:space="preserve">
     <value>Nobody</value>
   </data>
   <data name="LastSeenNobodyPremium" xml:space="preserve">
     <value>Premium users</value>
+  </data>
+  <data name="LastSeenNow" xml:space="preserve">
+    <value>last seen just now</value>
   </data>
   <data name="LastSeenTitle" xml:space="preserve">
     <value>Who can see my last seen time?</value>

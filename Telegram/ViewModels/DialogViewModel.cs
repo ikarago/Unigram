@@ -221,6 +221,8 @@ namespace Telegram.ViewModels
         private DialogType _type => Type;
         public virtual DialogType Type => DialogType.History;
 
+        private DispatcherTimer _lastSeenTimer;
+
         private string _lastSeen;
         public string LastSeen
         {
@@ -234,6 +236,40 @@ namespace Telegram.ViewModels
             {
                 Set(ref _lastSeen, value);
                 RaisePropertyChanged(nameof(Subtitle));
+            }
+        }
+
+        public void UpdateLastSeen(string value)
+        {
+            _lastSeenTimer?.Stop();
+            LastSeen = value;
+        }
+
+        public void UpdateLastSeen(User user)
+        {
+            var interval = LastSeenConverter.OnlinePhraseChange(user.Status, DateTime.Now);
+            if (interval > 0 && _lastSeenTimer == null)
+            {
+                _lastSeenTimer ??= new DispatcherTimer();
+                _lastSeenTimer.Tick += LastSeenTimer_Tick;
+            }
+
+            _lastSeenTimer?.Stop();
+
+            if (interval > 0)
+            {
+                _lastSeenTimer.Interval = TimeSpan.FromSeconds(interval);
+                _lastSeenTimer.Start();
+            }
+
+            LastSeen = LastSeenConverter.GetLabel(user, true, true);
+        }
+
+        private void LastSeenTimer_Tick(object sender, object e)
+        {
+            if (ClientService.TryGetUser(Chat, out User user))
+            {
+                UpdateLastSeen(user);
             }
         }
 
@@ -2356,6 +2392,7 @@ namespace Telegram.ViewModels
                 return;
             }
 
+            _lastSeenTimer?.Stop();
             _groupedMessages.Clear();
             _hasLoadedLastPinnedMessage = false;
             _chatActionManager = null;

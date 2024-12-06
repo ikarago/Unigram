@@ -62,7 +62,7 @@ namespace Telegram.Converters
             }
         }
 
-        public static string GetLabel(User user, bool details)
+        public static string GetLabel(User user, bool details, bool relative = false)
         {
             if (user == null)
             {
@@ -97,7 +97,7 @@ namespace Telegram.Converters
 
             if (user.Status is UserStatusOffline offline)
             {
-                return FormatDateOnline(offline.WasOnline);
+                return FormatDateOnline(offline.WasOnline, relative);
             }
             else if (user.Status is UserStatusOnline online)
             {
@@ -107,7 +107,7 @@ namespace Telegram.Converters
                 }
                 else
                 {
-                    return FormatDateOnline(online.Expires);
+                    return FormatDateOnline(online.Expires, relative);
                 }
             }
             else if (user.Status is UserStatusRecently)
@@ -128,17 +128,38 @@ namespace Telegram.Converters
             }
         }
 
-        private static string FormatDateOnline(long date)
+        private static string FormatDateOnline(long till, bool relative)
         {
             try
             {
                 var rightNow = DateTime.Now;
+                var now = rightNow.ToTimestamp();
+
                 int day = rightNow.DayOfYear;
                 int year = rightNow.Year;
 
-                var online = Formatter.ToLocalTime(date);
+                var online = Formatter.ToLocalTime(till);
                 int dateDay = online.DayOfYear;
                 int dateYear = online.Year;
+
+                if (relative)
+                {
+                    var minutes = (now - till) / 60;
+                    if (minutes < 1)
+                    {
+                        return Strings.LastSeenNow;
+                    }
+                    else if (minutes < 60)
+                    {
+                        return Locale.Declension(Strings.R.LastSeenMinutes, minutes);
+                    }
+
+                    var hours = (now - till) / 3600;
+                    if (hours < 12)
+                    {
+                        return Locale.Declension(Strings.R.LastSeenHours, hours);
+                    }
+                }
 
                 if (dateDay == day && year == dateYear)
                 {
@@ -148,7 +169,7 @@ namespace Telegram.Converters
                 {
                     return string.Format(Strings.LastSeenFormatted, string.Format(Strings.YesterdayAtFormatted, Formatter.Time(online)));
                 }
-                else if (Math.Abs(DateTime.Now.ToTimestamp() / 1000 - date) < 31536000000L)
+                else if (Math.Abs(DateTime.Now.ToTimestamp() / 1000 - till) < 31536000000L)
                 {
                     string format = string.Format(Strings.formatDateAtTime, online.ToString(Strings.formatterMonth), Formatter.Time(online));
                     return string.Format(Strings.LastSeenDateFormatted, format);
@@ -185,6 +206,45 @@ namespace Telegram.Converters
                     user.Id == 796000 || user.Id == 482000 || user.Id == 490000 ||
                     user.Id == 496000 || user.Id == 497000 || user.Id == 498000 ||
                     user.Id == 4298000);
+        }
+
+        public static double OnlinePhraseChange(UserStatus status, DateTime now)
+        {
+            return Math.Clamp(OnlinePhraseChangeInSeconds(status, now.ToTimestamp()), 0, 86400);
+        }
+
+        public static double OnlinePhraseChangeInSeconds(UserStatus status, int now)
+        {
+            var till = status switch
+            {
+                UserStatusOnline online => online.Expires,
+                UserStatusOffline offline => offline.WasOnline,
+                _ => -1
+            };
+
+            if (till < 0)
+            {
+                return till;
+            }
+
+            if (till > now)
+            {
+                return till - now;
+            }
+
+            var minutes = (now - till) / 60;
+            if (minutes < 60)
+            {
+                return (minutes + 1) * 60 - (now - till);
+            }
+            var hours = (now - till) / 3600;
+            if (hours < 12)
+            {
+                return (hours + 1) * 3600 - (now - till);
+            }
+            var nowFull = Formatter.ToLocalTime(now);
+            var tomorrow = nowFull.Date.AddDays(1);
+            return (tomorrow - nowFull).TotalSeconds;
         }
     }
 }
