@@ -1089,7 +1089,7 @@ namespace Telegram.Controls
             {
                 flags = default;
 
-                var range = Document.GetRange(i, i + 1);
+                var range = Document.GetRange(selection.StartPosition + i, selection.StartPosition + i + 1);
                 if (range.ParagraphFormat.SpaceAfter != 0)
                 {
                     flags = TextStyle.Quote;
