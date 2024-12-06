@@ -14,6 +14,7 @@ using Telegram.Navigation;
 using Telegram.Navigation.Services;
 using Telegram.Services;
 using Telegram.Td.Api;
+using Telegram.Views.Chats;
 using Telegram.Views.Monetization.Popups;
 using Telegram.Views.Popups;
 using Telegram.Views.Stars.Popups;
@@ -40,13 +41,6 @@ namespace Telegram.ViewModels.Chats
         {
             get => _headerHeight;
             set => Set(ref _headerHeight, value);
-        }
-
-        private Chat _chat;
-        public Chat Chat
-        {
-            get => _chat;
-            set => Set(ref _chat, value);
         }
 
         private ChartViewData _revenue;
@@ -239,6 +233,22 @@ namespace Telegram.ViewModels.Chats
         public async void LearnMore()
         {
             await ShowPopupAsync(new LearnMorePopup());
+        }
+
+        public async void OpenAffiliate()
+        {
+            if (_ownerId is MessageSenderChat senderChat)
+            {
+                NavigationService.Navigate(typeof(ChatAffiliatePage), senderChat.ChatId);
+            }
+            else if (_ownerId is MessageSenderUser senderUser)
+            {
+                var response = await ClientService.SendAsync(new CreatePrivateChat(senderUser.UserId, false));
+                if (response is Chat chat)
+                {
+                    NavigationService.Navigate(typeof(ChatAffiliatePage), chat.Id);
+                }
+            }
         }
 
         public async Task<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
