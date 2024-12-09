@@ -153,12 +153,6 @@ namespace Telegram.Converters
                     {
                         return Locale.Declension(Strings.R.LastSeenMinutes, minutes);
                     }
-
-                    var hours = (now - till) / 3600;
-                    if (hours < 12)
-                    {
-                        return Locale.Declension(Strings.R.LastSeenHours, hours);
-                    }
                 }
 
                 if (dateDay == day && year == dateYear)
@@ -237,14 +231,8 @@ namespace Telegram.Converters
             {
                 return (minutes + 1) * 60 - (now - till);
             }
-            var hours = (now - till) / 3600;
-            if (hours < 12)
-            {
-                return (hours + 1) * 3600 - (now - till);
-            }
-            var nowFull = Formatter.ToLocalTime(now);
-            var tomorrow = nowFull.Date.AddDays(1);
-            return (tomorrow - nowFull).TotalSeconds;
+
+            return -1;
         }
     }
 }
