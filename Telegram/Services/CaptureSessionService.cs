@@ -77,6 +77,8 @@ namespace Telegram.Services
                 return null;
             }
 
+            WatchDog.MemoryStatus();
+
             var popup = new ChooseCapturePopup(canShareAudio);
 
             var confirm = await popup.ShowQueuedAsync(xamlRoot);

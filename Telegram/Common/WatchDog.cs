@@ -110,30 +110,12 @@ namespace Telegram
                 args.SetObserved();
             };
 
-            //Crashes.UnhandledErrorDetected = () =>
+            //Crashes.UnhandledExceptionOccurring += (s, args) =>
             //{
-            //    try
-            //    {
-            //        var error = ToException(NativeUtils.GetFatalError(false));
-            //        if (error != null)
-            //        {
-            //            Crashes.TrackCrash(error);
-            //        }
-
-            //        return null;
-            //    }
-            //    catch
-            //    {
-            //        return null;
-            //    }
+            //    args.Frames = NativeUtils.GetStowedException()
+            //        .Select(x => new NativeStackFrame(x.NativeIP, x.NativeImageBase))
+            //        .ToList();
             //};
-
-            Crashes.UnhandledExceptionOccurring += (s, args) =>
-            {
-                args.Frames = NativeUtils.GetStowedException()
-                    .Select(x => new NativeStackFrame(x.NativeIP, x.NativeImageBase))
-                    .ToList();
-            };
 
             Crashes.CreatingErrorReport += (s, args) =>
             {
@@ -338,6 +320,18 @@ namespace Telegram
         [DllImport("kernelbase.dll", ExactSpelling = true, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
+
+        public static void MemoryStatus()
+        {
+            var status = new MEMORYSTATUSEX();
+            GlobalMemoryStatusEx(status);
+
+            var memoryUsage = FileSizeConverter.Convert((long)MemoryManager.AppMemoryUsage);
+            var memoryUsageAvailable = FileSizeConverter.Convert((long)status.ullAvailPhys);
+            var memoryUsageTotal = FileSizeConverter.Convert((long)status.ullTotalPhys);
+
+            Logger.Debug(string.Format("Usage: {0}, available: {1}, total: {2}", memoryUsage, memoryUsageAvailable, memoryUsageTotal));
+        }
 
         public static string BuildReport(Exception exception)
         {
