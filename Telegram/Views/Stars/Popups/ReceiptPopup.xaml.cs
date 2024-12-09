@@ -4,6 +4,7 @@
 // Distributed under the GNU General Public License v3.0. (See accompanying
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
+using System.Collections.Generic;
 using System.Linq;
 using Telegram.Common;
 using Telegram.Controls;
@@ -128,34 +129,7 @@ namespace Telegram.Views.Stars.Popups
                 From.Header = Strings.StarsTransactionRecipient;
 
                 Title.Text = Strings.StarMediaPurchase;
-
-                if (botPaidMediaPurchase.Media.Count > 0)
-                {
-                    MediaPreview.Visibility = Visibility.Visible;
-
-                    UpdateMedia(clientService, botPaidMediaPurchase.Media[0], Media1, ref _media1Token);
-
-                    if (botPaidMediaPurchase.Media.Count > 1)
-                    {
-                        UpdateMedia(clientService, botPaidMediaPurchase.Media[1], Media2, ref _media2Token);
-
-                        Media2.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        Media2.Visibility = Visibility.Collapsed;
-                        Media1.HorizontalAlignment = HorizontalAlignment.Center;
-                        Media1.HorizontalAlignment = HorizontalAlignment.Center;
-                    }
-                }
-                else
-                {
-                    Photo.SetUser(clientService, botUser, 96);
-
-                    MediaPreview.Visibility = Visibility.Collapsed;
-                }
-
-                AnimatedPhoto.Visibility = Visibility.Collapsed;
+                UpdatePaidMedia(clientService, botPaidMediaPurchase.Media, botUser, null);
             }
             else if (transaction.Type is StarTransactionTypeBotInvoiceSale botInvoiceSale)
             {
@@ -193,34 +167,7 @@ namespace Telegram.Views.Stars.Popups
                 From.Header = Strings.StarsTransactionRecipient;
 
                 Title.Text = Strings.StarMediaPurchase;
-
-                if (botPaidMediaSale.Media.Count > 0)
-                {
-                    MediaPreview.Visibility = Visibility.Visible;
-
-                    UpdateMedia(clientService, botPaidMediaSale.Media[0], Media1, ref _media1Token);
-
-                    if (botPaidMediaSale.Media.Count > 1)
-                    {
-                        UpdateMedia(clientService, botPaidMediaSale.Media[1], Media2, ref _media2Token);
-
-                        Media2.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        Media2.Visibility = Visibility.Collapsed;
-                        Media1.HorizontalAlignment = HorizontalAlignment.Center;
-                        Media1.HorizontalAlignment = HorizontalAlignment.Center;
-                    }
-                }
-                else
-                {
-                    Photo.SetUser(clientService, botUser, 96);
-
-                    MediaPreview.Visibility = Visibility.Collapsed;
-                }
-
-                AnimatedPhoto.Visibility = Visibility.Collapsed;
+                UpdatePaidMedia(clientService, botPaidMediaSale.Media, botUser, null);
             }
             else if (transaction.Type is StarTransactionTypeGiftSale giftSale)
             {
@@ -306,23 +253,7 @@ namespace Telegram.Views.Stars.Popups
                 Subtitle.Visibility = Visibility.Collapsed;
 
                 Title.Text = Strings.StarMediaPurchase;
-
-                MediaPreview.Visibility = Visibility.Visible;
-
-                UpdateMedia(clientService, channelPaidMediaPurchase.Media[0], Media1, ref _media1Token);
-
-                if (channelPaidMediaPurchase.Media.Count > 1)
-                {
-                    UpdateMedia(clientService, channelPaidMediaPurchase.Media[1], Media2, ref _media2Token);
-
-                    Media2.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    Media2.Visibility = Visibility.Collapsed;
-                    Media1.HorizontalAlignment = HorizontalAlignment.Center;
-                    Media1.HorizontalAlignment = HorizontalAlignment.Center;
-                }
+                UpdatePaidMedia(clientService, channelPaidMediaPurchase.Media, null, chat);
             }
             else if (transaction.Type is StarTransactionTypeChannelPaidReactionSend channelPaidReactionSend)
             {
@@ -368,23 +299,7 @@ namespace Telegram.Views.Stars.Popups
                 Subtitle.Visibility = Visibility.Collapsed;
 
                 Title.Text = Strings.StarMediaPurchase;
-
-                MediaPreview.Visibility = Visibility.Visible;
-
-                UpdateMedia(clientService, channelPaidMediaSale.Media[0], Media1, ref _media1Token);
-
-                if (channelPaidMediaSale.Media.Count > 1)
-                {
-                    UpdateMedia(clientService, channelPaidMediaSale.Media[1], Media2, ref _media2Token);
-
-                    Media2.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    Media2.Visibility = Visibility.Collapsed;
-                    Media1.HorizontalAlignment = HorizontalAlignment.Center;
-                    Media1.HorizontalAlignment = HorizontalAlignment.Center;
-                }
+                UpdatePaidMedia(clientService, channelPaidMediaSale.Media, user, null);
             }
             else if (transaction.Type is StarTransactionTypeChannelPaidReactionReceive channelPaidReactionReceive)
             {
@@ -562,6 +477,43 @@ namespace Telegram.Views.Stars.Popups
             {
                 _clientService.DownloadFile(file.Id, 1);
             }
+        }
+
+        private void UpdatePaidMedia(IClientService clientService, IList<PaidMedia> paidMedia, User fallbackUser, Chat fallbackChat)
+        {
+            if (paidMedia.Count > 0)
+            {
+                MediaPreview.Visibility = Visibility.Visible;
+
+                UpdateMedia(clientService, paidMedia[0], Media1, ref _media1Token);
+
+                if (paidMedia.Count > 1)
+                {
+                    UpdateMedia(clientService, paidMedia[1], Media2, ref _media2Token);
+
+                    Media2.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    Media2.Visibility = Visibility.Collapsed;
+                    Media1.HorizontalAlignment = HorizontalAlignment.Center;
+                    Media1.HorizontalAlignment = HorizontalAlignment.Center;
+                }
+            }
+            else if (fallbackUser != null)
+            {
+                Photo.SetUser(clientService, fallbackUser, 96);
+
+                MediaPreview.Visibility = Visibility.Collapsed;
+            }
+            else if (fallbackChat != null)
+            {
+                Photo.SetChat(clientService, fallbackChat, 96);
+
+                MediaPreview.Visibility = Visibility.Collapsed;
+            }
+
+            AnimatedPhoto.Visibility = Visibility.Collapsed;
         }
 
         private void UpdateMedia(IClientService clientService, PaidMedia media, Border target, ref long token)
