@@ -51,12 +51,17 @@ namespace Telegram.Controls
             {
                 _core.WebResourceRequested -= OnWebResourceRequested;
                 _core.WebMessageReceived -= OnWebMessageReceived;
-
-                _core.Stop();
                 _core = null;
             }
 
-            Video.Close();
+            try
+            {
+                Video.Close();
+            }
+            catch
+            {
+                // All the remote procedure calls must be wrapped in a try-catch block
+            }
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
