@@ -2087,7 +2087,7 @@ namespace Telegram.Views
             }
             if (user != null && user.Type is not UserTypeDeleted && user.Id != ViewModel.ClientService.Options.MyId)
             {
-                if (!user.IsContact && !LastSeenConverter.IsServiceUser(user) && !LastSeenConverter.IsSupportUser(user))
+                if (!user.IsContact && !user.IsSupport)
                 {
                     if (!string.IsNullOrEmpty(user.PhoneNumber))
                     {

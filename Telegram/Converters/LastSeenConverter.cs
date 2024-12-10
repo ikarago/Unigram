@@ -69,11 +69,11 @@ namespace Telegram.Converters
                 return string.Empty;
             }
 
-            if (IsServiceUser(user))
+            if (user.Id == 777000)
             {
                 return Strings.ServiceNotifications;
             }
-            else if (IsSupportUser(user))
+            else if (user.IsSupport)
             {
                 return Strings.SupportStatus;
             }
@@ -180,26 +180,6 @@ namespace Telegram.Converters
             }
 
             return "LOC_ERR";
-        }
-
-        public static bool IsServiceUser(User user)
-        {
-            return user.Id == 777000;
-        }
-
-        public static bool IsSupportUser(User user)
-        {
-            return user != null && (user.IsSupport || user.Id / 1000 == 777 || user.Id == 333000 ||
-                    user.Id == 4240000 || user.Id == 4240000 || user.Id == 4244000 ||
-                    user.Id == 4245000 || user.Id == 4246000 || user.Id == 410000 ||
-                    user.Id == 420000 || user.Id == 431000 || user.Id == 431415000 ||
-                    user.Id == 434000 || user.Id == 4243000 || user.Id == 439000 ||
-                    user.Id == 449000 || user.Id == 450000 || user.Id == 452000 ||
-                    user.Id == 454000 || user.Id == 4254000 || user.Id == 455000 ||
-                    user.Id == 460000 || user.Id == 470000 || user.Id == 479000 ||
-                    user.Id == 796000 || user.Id == 482000 || user.Id == 490000 ||
-                    user.Id == 496000 || user.Id == 497000 || user.Id == 498000 ||
-                    user.Id == 4298000);
         }
 
         public static double OnlinePhraseChange(UserStatus status, DateTime now)
