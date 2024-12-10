@@ -231,7 +231,7 @@ namespace Telegram.Views.Popups
 
         private void List_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (ViewModel.NavigationService.Content is Page { Content: ChatView view } && e.ClickedItem is ViewModels.Drawers.StickerViewModel sticker)
+            if (ViewModel.NavigationService?.Content is Page { Content: ChatView view } && e.ClickedItem is ViewModels.Drawers.StickerViewModel sticker)
             {
                 view.Stickers_ItemClick(sticker);
                 Hide();
