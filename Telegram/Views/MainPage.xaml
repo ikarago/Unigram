@@ -269,7 +269,8 @@
 
         <controls:MenuButton x:Name="Photo"
                              Click="Photo_Click"
-                             GettingFocus="ChatsList_GettingFocus"
+                             GettingFocus="Photo_GettingFocus"
+                             LostFocus="Photo_LostFocus"
                              Type="Back"
                              TabIndex="0"
                              HorizontalAlignment="Left"
