@@ -3606,18 +3606,6 @@ public static class CoreWebView2_stub
             throw new RuntimeException(ex);
         }
     }
-    public static void Stop_stub(this Microsoft.Web.WebView2.Core.CoreWebView2 sender)
-    {
-        try
-        {
-            sender.Stop();
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(Environment.StackTrace);
-            throw new RuntimeException(ex);
-        }
-    }
 }
 public static class CoreWebView2Environment_stub
 {
@@ -6185,18 +6173,6 @@ public static class NativeUtils_stub
         try
         {
             return Telegram.Native.NativeUtils.GetScaleForCurrentView();
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(Environment.StackTrace);
-            throw new RuntimeException(ex);
-        }
-    }
-    public static System.Collections.Generic.IList<Telegram.Native.FatalErrorFrame> GetStowedException_stub()
-    {
-        try
-        {
-            return Telegram.Native.NativeUtils.GetStowedException();
         }
         catch (Exception ex)
         {
