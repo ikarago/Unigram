@@ -2868,7 +2868,7 @@ namespace Telegram.Views
 
         private void ChatsList_GettingFocus(UIElement sender, GettingFocusEventArgs args)
         {
-            if (AutomationPeer.ListenerExists(AutomationEvents.LiveRegionChanged))
+            try
             {
                 // ListViewBase ignores GettingFocus events with Direction equals to None
                 // What we do here is to simulate the default behavior, so that closing the active chat
@@ -2897,6 +2897,10 @@ namespace Telegram.Views
                         item.UseSystemFocusVisuals = false;
                     }
                 }
+            }
+            catch
+            {
+                // All the remote procedure calls must be wrapped in a try-catch block
             }
         }
 
@@ -3694,21 +3698,6 @@ namespace Telegram.Views
             MemoryLabel = null;
             LogoBasic = null;
             LogoEmoji = null;
-        }
-
-        private void Photo_GettingFocus(UIElement sender, GettingFocusEventArgs args)
-        {
-            if (args.Direction == FocusNavigationDirection.None)
-            {
-                Photo.UseSystemFocusVisuals = false;
-            }
-
-            ChatsList_GettingFocus(sender, args);
-        }
-
-        private void Photo_LostFocus(object sender, RoutedEventArgs e)
-        {
-            Photo.UseSystemFocusVisuals = true;
         }
     }
 }
