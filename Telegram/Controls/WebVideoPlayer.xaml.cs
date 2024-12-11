@@ -112,7 +112,15 @@ namespace Telegram.Controls
 
         public override void Stop()
         {
-            _core?.NavigateToString(string.Empty);
+            try
+            {
+                _core?.NavigateToString(string.Empty);
+            }
+            catch
+            {
+                // All the remote procedure calls must be wrapped in a try-catch block
+            }
+
             OnClosed();
         }
 
