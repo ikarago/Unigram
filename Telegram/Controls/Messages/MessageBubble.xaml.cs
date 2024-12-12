@@ -1157,7 +1157,7 @@ namespace Telegram.Controls.Messages
 
         private void ViaBot_Click(Hyperlink sender, HyperlinkClickEventArgs args)
         {
-            if (_message is not MessageViewModel message)
+            if (_message is not MessageViewModel message || message.Delegate?.IsDialog is not true)
             {
                 return;
             }
@@ -1196,7 +1196,7 @@ namespace Telegram.Controls.Messages
 
         private void From_Click(Hyperlink sender, HyperlinkClickEventArgs args)
         {
-            if (_message is not MessageViewModel message)
+            if (_message is not MessageViewModel message || message.Delegate?.IsDialog is not true)
             {
                 return;
             }

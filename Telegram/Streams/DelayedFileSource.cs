@@ -89,7 +89,7 @@ namespace Telegram.Streams
 
         public static DelayedFileSource FromStickerSetInfo(IClientService clientService, StickerSetInfo stickerSet)
         {
-            if (stickerSet.Thumbnail != null)
+            if (stickerSet?.Thumbnail != null)
             {
                 StickerFormat format = stickerSet.Thumbnail.Format switch
                 {
