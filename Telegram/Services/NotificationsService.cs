@@ -66,6 +66,30 @@ namespace Telegram.Services
             Handle(unreadCount.UnreadMessageCount);
         }
 
+        static NotificationsService()
+        {
+            RemoveCollections();
+        }
+
+        private static async void RemoveCollections()
+        {
+            if (SettingsService.Current.Notifications.HasRemovedCollections)
+            {
+                return;
+            }
+
+            SettingsService.Current.Notifications.HasRemovedCollections = true;
+
+            try
+            {
+                await ToastNotificationManager.GetDefault().GetToastCollectionManager().RemoveAllToastCollectionsAsync();
+            }
+            catch
+            {
+                // All the remote procedure calls must be wrapped in a try-catch block
+            }
+        }
+
         private void Subscribe()
         {
             _aggregator.Subscribe<UpdateUnreadMessageCount>(this, Handle)
