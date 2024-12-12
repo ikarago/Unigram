@@ -69,23 +69,24 @@ namespace Telegram.Views.Popups
 
         private bool _photoAllowed;
         private bool _videoAllowed;
+        private bool _audioAllowed;
         private bool _documentAllowed;
 
         public bool IsMediaAllowed
         {
             get
             {
-                if (_photoAllowed && _videoAllowed)
+                if (_photoAllowed && Items.Any(x => x is StoragePhoto))
                 {
-                    return Items.Any(x => x is StoragePhoto or StorageVideo);
+                    return true;
                 }
-                else if (_photoAllowed)
+                else if (_videoAllowed && Items.Any(x => x is StorageVideo))
                 {
-                    return Items.Any(x => x is StoragePhoto);
+                    return true;
                 }
-                else if (_videoAllowed)
+                else if (_audioAllowed && Items.Any(x => x is StorageAudio))
                 {
-                    return Items.Any(x => x is StorageVideo);
+                    return true;
                 }
 
                 return false;
@@ -244,6 +245,7 @@ namespace Telegram.Views.Popups
             _ttlAllowed = ttlAllowed;
             _photoAllowed = permissions.CanSendPhotos;
             _videoAllowed = permissions.CanSendVideos;
+            _audioAllowed = permissions.CanSendAudios;
             _documentAllowed = permissions.CanSendDocuments;
 
             DataContext = viewModel;
@@ -723,7 +725,7 @@ namespace Telegram.Views.Popups
                 IsFilesSelected = true;
             }
 
-            MoreButton.Visibility = Items.Any(x => x is StoragePhoto or StorageVideo)
+            MoreButton.Visibility = Items.Any(x => x is StoragePhoto or StorageVideo or StorageAudio)
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
@@ -759,7 +761,15 @@ namespace Telegram.Views.Popups
                     else
                     {
                         AddAlbum();
-                        view.Add(item);
+
+                        if (item is StorageDocument || (item is StoragePhoto && _photoAllowed) || (item is StorageVideo && _videoAllowed) || (item is StorageAudio && _audioAllowed))
+                        {
+                            view.Add(item);
+                        }
+                        else
+                        {
+                            view.Add(new StorageDocument(item));
+                        }
                     }
                 }
 
@@ -769,7 +779,7 @@ namespace Telegram.Views.Popups
             {
                 foreach (var item in Items)
                 {
-                    if (item is StorageDocument or StorageAudio)
+                    if (item is StorageDocument)
                     {
                         view.Add(item);
                     }
@@ -1326,7 +1336,8 @@ namespace Telegram.Views.Popups
             }
             else
             {
-                return oldItem.File?.Path == newItem.File?.Path;
+                return oldItem.File?.Path == newItem.File?.Path
+                    && oldItem.GetType() == newItem.GetType();
             }
         }
 
