@@ -409,6 +409,7 @@
                                         </Border>
 
                                         <TextBlock x:Name="NotificationTitle"
+                                                   Text="Unigram"
                                                    Style="{StaticResource CaptionTextBlockStyle}"
                                                    FontFamily="Segoe UI Variable"
                                                    Margin="8,0,0,4"
@@ -495,7 +496,7 @@
                                         <StackPanel Margin="0,4,0,5"
                                                     Grid.Column="1">
                                             <TextBlock x:Name="NotificationLine1"
-                                                       Text="{x:Bind ConvertName(ViewModel.ShowName), Mode=OneWay}"
+                                                       Text="{x:Bind ConvertName(ViewModel.ShowName, ViewModel.IsAllAccountsNotifications), Mode=OneWay}"
                                                        Style="{StaticResource BodyTextBlockStyle}"
                                                        FontFamily="Segoe UI Variable" />
                                             <TextBlock x:Name="NotificationLine2"
@@ -503,12 +504,6 @@
                                                        Style="{StaticResource BodyTextBlockStyle}"
                                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                        FontFamily="Segoe UI Variable" />
-                                            <TextBlock Text="{CustomResource NotificationPreviewAttribution}"
-                                                       Style="{StaticResource CaptionTextBlockStyle}"
-                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                       FontFamily="Segoe UI Variable"
-                                                       Margin="0,3,0,0"
-                                                       Padding="0,2,0,0" />
                                         </StackPanel>
                                     </Grid>
                                     <Grid Visibility="{x:Bind ViewModel.ShowReply, Mode=OneWay}"

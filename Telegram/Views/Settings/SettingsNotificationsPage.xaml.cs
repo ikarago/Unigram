@@ -4,6 +4,7 @@
 // Distributed under the GNU General Public License v3.0. (See accompanying
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
+using System.Linq;
 using Telegram.Td.Api;
 using Telegram.ViewModels.Settings;
 using Windows.UI.Xaml.Navigation;
@@ -23,17 +24,20 @@ namespace Telegram.Views.Settings
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             BackgroundControl.Update(ViewModel.ClientService, ViewModel.Aggregator);
-
-            if (ViewModel.ClientService.TryGetUser(ViewModel.ClientService.Options.MyId, out User user))
-            {
-                NotificationTitle.Text = user.FullName();
-            }
         }
 
         #region Binding
 
-        private string ConvertName(bool value)
+        private string ConvertName(bool value, bool _)
         {
+            if (value
+                && ViewModel.IsAllAccountsAvailable
+                && ViewModel.IsAllAccountsNotifications
+                && ViewModel.ClientService.TryGetUser(ViewModel.ClientService.Options.MyId, out User user))
+            {
+                return string.Format("{0} \u2b62 {1}", Strings.NotificationPreviewLine1, user.FullName());
+            }
+
             return value
                 ? Strings.NotificationPreviewLine1
                 : Strings.AppName;
