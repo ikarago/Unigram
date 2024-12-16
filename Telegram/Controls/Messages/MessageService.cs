@@ -2281,7 +2281,14 @@ namespace Telegram.Controls.Messages
             }
             else if (message.ChatId == message.ClientService.Options.TelegramServiceNotificationsChatId)
             {
-                content = ReplaceWithLink(Strings.ActionGift2Received, "un2", premiumGiftCode, entities);
+                if (premiumGiftCode.Amount > 0)
+                {
+                    content = ReplaceWithLink(Strings.ActionGift2Received, "un2", premiumGiftCode, entities);
+                }
+                else
+                {
+                    content = ReplaceWithLink(Strings.BoostingReceivedGiftNoName, "un2", premiumGiftCode, entities);
+                }
             }
             else if (message.ClientService.TryGetUser(message.SenderId, out User senderUser))
             {
