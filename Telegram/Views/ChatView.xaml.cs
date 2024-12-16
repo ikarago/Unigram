@@ -977,7 +977,7 @@ namespace Telegram.Views
             {
                 foreach (var popup in VisualTreeHelper.GetOpenPopupsForXamlRoot(XamlRoot))
                 {
-                    if (popup.Child is not ToolTip and not TeachingTip)
+                    if (popup.Child is not ToolTip and not Grid { Name: "TeachingTipRootGrid" } and not Grid { Children.Count: 0 })
                     {
                         return;
                     }
