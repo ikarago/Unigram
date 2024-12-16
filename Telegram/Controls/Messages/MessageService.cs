@@ -17,6 +17,7 @@ using Telegram.Streams;
 using Telegram.Td;
 using Telegram.Td.Api;
 using Telegram.ViewModels;
+using Telegram.ViewModels.Delegates;
 using Windows.UI;
 using Windows.UI.Text;
 using Windows.UI.Xaml;

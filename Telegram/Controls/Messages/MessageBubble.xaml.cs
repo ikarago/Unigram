@@ -24,6 +24,7 @@ using Telegram.Services;
 using Telegram.Td;
 using Telegram.Td.Api;
 using Telegram.ViewModels;
+using Telegram.ViewModels.Delegates;
 using Telegram.ViewModels.Stories;
 using Windows.Foundation;
 using Windows.UI;
