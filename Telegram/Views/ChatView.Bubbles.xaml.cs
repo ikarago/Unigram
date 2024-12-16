@@ -227,6 +227,10 @@ namespace Telegram.Views
                     {
                         bubble.UpdateMessageReactions(message, true);
                     }
+                    else if (root is MessageService service)
+                    {
+                        service.UpdateMessageReactions(message, true);
+                    }
                 }
 
                 if (message.Content is MessageAlbum album)

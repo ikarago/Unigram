@@ -891,7 +891,8 @@ namespace Telegram.ViewModels
                     message.InteractionInfo = update.InteractionInfo;
                     return true;
                 },
-                (bubble, message) => bubble.UpdateMessageInteractionInfo(message));
+                (bubble, message) => bubble.UpdateMessageInteractionInfo(message),
+                (service, message) => service.UpdateMessageInteractionInfo(message));
             }
         }
 
@@ -973,7 +974,7 @@ namespace Telegram.ViewModels
                 {
                     bubble.UpdateMessage(message);
                     Delegate?.ViewVisibleMessages();
-                }, update.Message.Id);
+                }, newMessageId: update.Message.Id);
 
                 if (Settings.Notifications.InAppSounds)
                 {
@@ -1045,7 +1046,7 @@ namespace Telegram.ViewModels
             }
         }
 
-        private void Handle(long messageId, Func<MessageViewModel, bool> update, Action<MessageBubble, MessageViewModel> action = null, long? newMessageId = null)
+        private void Handle(long messageId, Func<MessageViewModel, bool> update, Action<MessageBubble, MessageViewModel> action1 = null, Action<MessageService, MessageViewModel> action2 = null, long? newMessageId = null)
         {
             BeginOnUIThread(() =>
             {
@@ -1069,9 +1070,9 @@ namespace Telegram.ViewModels
                             message.UpdateWith(album.Messages[0]);
                             album.Invalidate();
 
-                            if (action != null)
+                            if (action1 != null)
                             {
-                                Delegate?.UpdateBubbleWithMediaAlbumId(message.MediaAlbumId, bubble => action(bubble, albumMessage));
+                                Delegate?.UpdateBubbleWithMediaAlbumId(message.MediaAlbumId, bubble => action1(bubble, albumMessage));
                             }
                         }
                     }
@@ -1088,9 +1089,19 @@ namespace Telegram.ViewModels
                         if (update == null || update(message))
                         {
                             // UpdateMessageSendSucceeded changes the message id
-                            if (action != null)
+                            if (action1 != null)
                             {
-                                Delegate?.UpdateBubbleWithMessageId(messageId, bubble => action(bubble, message));
+                                Delegate?.UpdateContainerWithMessageId(messageId, container =>
+                                {
+                                    if (action1 != null && container.ContentTemplateRoot is MessageSelector selector && selector.Content is MessageBubble bubble)
+                                    {
+                                        action1(bubble, message);
+                                    }
+                                    else if (action2 != null && container.ContentTemplateRoot is MessageService service)
+                                    {
+                                        action2(service, message);
+                                    }
+                                });
                             }
                         }
                     }

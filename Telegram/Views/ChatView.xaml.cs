@@ -2820,7 +2820,7 @@ namespace Telegram.Views
                 flyout.Items.RemoveAt(flyout.Items.Count - 1);
             }
 
-            if (element is MessageBubble bubble && selected.Count == 0)
+            if (element is IReactionsDelegate bubble && selected.Count == 0)
             {
                 flyout.Opened += async (s, args) =>
                 {

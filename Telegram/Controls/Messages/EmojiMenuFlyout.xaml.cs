@@ -11,6 +11,7 @@ using Telegram.Controls.Drawers;
 using Telegram.Services;
 using Telegram.Td.Api;
 using Telegram.ViewModels;
+using Telegram.ViewModels.Delegates;
 using Telegram.ViewModels.Drawers;
 using Telegram.ViewModels.Stories;
 using Telegram.Views.Popups;
@@ -52,7 +53,7 @@ namespace Telegram.Controls.Messages
         private readonly EmojiDrawerMode _mode;
 
         private readonly MessageViewModel _message;
-        private readonly MessageBubble _bubble;
+        private readonly IReactionsDelegate _bubble;
 
         private readonly StoryViewModel _story;
         private readonly FrameworkElement _reserved;
@@ -63,12 +64,12 @@ namespace Telegram.Controls.Messages
 
         public event EventHandler Opened;
 
-        public static EmojiMenuFlyout ShowAt(FrameworkElement element, MessageViewModel message, MessageBubble bubble, AvailableReactions reactions, EmojiDrawerViewModel viewModel)
+        public static EmojiMenuFlyout ShowAt(FrameworkElement element, MessageViewModel message, IReactionsDelegate bubble, AvailableReactions reactions, EmojiDrawerViewModel viewModel)
         {
             return new EmojiMenuFlyout(element, message, bubble, reactions, viewModel);
         }
 
-        private EmojiMenuFlyout(FrameworkElement element, MessageViewModel message, MessageBubble bubble, AvailableReactions reactions, EmojiDrawerViewModel viewModel)
+        private EmojiMenuFlyout(FrameworkElement element, MessageViewModel message, IReactionsDelegate bubble, AvailableReactions reactions, EmojiDrawerViewModel viewModel)
         {
             InitializeComponent();
 
@@ -85,9 +86,9 @@ namespace Telegram.Controls.Messages
 
         private void OnClosed(object sender, object e)
         {
-            if (_bubble != null && AutomationPeer.ListenerExists(AutomationEvents.LiveRegionChanged))
+            if (_bubble is FrameworkElement element && AutomationPeer.ListenerExists(AutomationEvents.LiveRegionChanged))
             {
-                var selector = _bubble.GetParent<SelectorItem>();
+                var selector = element.GetParent<SelectorItem>();
                 selector?.Focus(FocusState.Keyboard);
             }
         }
@@ -606,6 +607,5 @@ namespace Telegram.Controls.Messages
                 }
             }
         }
-
     }
 }

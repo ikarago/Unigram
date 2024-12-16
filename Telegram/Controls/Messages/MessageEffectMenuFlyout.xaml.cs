@@ -31,7 +31,7 @@ namespace Telegram.Controls.Messages
         private readonly IClientService _clientService;
 
         private readonly MessageViewModel _message;
-        private readonly MessageBubble _bubble;
+        private readonly IReactionsDelegate _bubble;
 
         private readonly StoryViewModel _story;
         private readonly FrameworkElement _reserved;
@@ -42,12 +42,12 @@ namespace Telegram.Controls.Messages
 
         public event EventHandler Opened;
 
-        public static MessageEffectMenuFlyout ShowAt(FrameworkElement element, MessageViewModel message, MessageBubble bubble, AvailableReactions reactions, EffectDrawerViewModel viewModel)
+        public static MessageEffectMenuFlyout ShowAt(FrameworkElement element, MessageViewModel message, IReactionsDelegate bubble, AvailableReactions reactions, EffectDrawerViewModel viewModel)
         {
             return new MessageEffectMenuFlyout(element, message, bubble, reactions, viewModel);
         }
 
-        private MessageEffectMenuFlyout(FrameworkElement element, MessageViewModel message, MessageBubble bubble, AvailableReactions reactions, EffectDrawerViewModel viewModel)
+        private MessageEffectMenuFlyout(FrameworkElement element, MessageViewModel message, IReactionsDelegate bubble, AvailableReactions reactions, EffectDrawerViewModel viewModel)
         {
             InitializeComponent();
 

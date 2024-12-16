@@ -62,7 +62,7 @@ namespace Telegram.Controls.Messages
         public bool Highlight { get; } = true;
     }
 
-    public sealed partial class MessageBubble : Control
+    public sealed partial class MessageBubble : Control, IReactionsDelegate
     {
         private MessageViewModel _message;
 

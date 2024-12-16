@@ -43,7 +43,7 @@ namespace Telegram.Controls.Messages
         private readonly IClientService _clientService;
 
         private readonly MessageViewModel _message;
-        private readonly MessageBubble _bubble;
+        private readonly IReactionsDelegate _bubble;
 
         private readonly StoryViewModel _story;
         private readonly FrameworkElement _reserved;
@@ -53,12 +53,12 @@ namespace Telegram.Controls.Messages
         private MenuFlyoutPresenter _presenter;
         private Popup _popup;
 
-        public static ReactionsMenuFlyout ShowAt(AvailableReactions reactions, MessageViewModel message, MessageBubble bubble, MenuFlyout flyout)
+        public static ReactionsMenuFlyout ShowAt(AvailableReactions reactions, MessageViewModel message, IReactionsDelegate bubble, MenuFlyout flyout)
         {
             return new ReactionsMenuFlyout(reactions, message, bubble, flyout);
         }
 
-        private ReactionsMenuFlyout(AvailableReactions reactions, MessageViewModel message, MessageBubble bubble, MenuFlyout flyout)
+        private ReactionsMenuFlyout(AvailableReactions reactions, MessageViewModel message, IReactionsDelegate bubble, MenuFlyout flyout)
         {
             _reactions = reactions;
             _message = message;
@@ -704,9 +704,9 @@ namespace Telegram.Controls.Messages
         {
             _popup.IsOpen = false;
 
-            if (_bubble != null && AutomationPeer.ListenerExists(AutomationEvents.LiveRegionChanged))
+            if (_bubble is FrameworkElement element && AutomationPeer.ListenerExists(AutomationEvents.LiveRegionChanged))
             {
-                var selector = _bubble.GetParent<SelectorItem>();
+                var selector = element.GetParent<SelectorItem>();
                 selector?.Focus(FocusState.Keyboard);
             }
         }

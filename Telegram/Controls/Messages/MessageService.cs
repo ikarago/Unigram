@@ -27,7 +27,7 @@ using Windows.UI.Xaml.Media;
 
 namespace Telegram.Controls.Messages
 {
-    public partial class MessageService : Button
+    public partial class MessageService : Button, IReactionsDelegate
     {
         private MessageViewModel _message;
 
@@ -43,12 +43,15 @@ namespace Telegram.Controls.Messages
             base.OnApplyTemplate();
 
             var content = FindName("Text") as FormattedTextBlock;
-            if (content == null)
+            if (content != null)
             {
-                return;
+                content.TextEntityClick += Message_TextEntityClick;
             }
 
-            content.TextEntityClick += Message_TextEntityClick;
+            if (_message != null)
+            {
+                UpdateMessageInteractionInfo(_message);
+            }
         }
 
         private void Message_TextEntityClick(object sender, TextEntityClickEventArgs e)
@@ -94,6 +97,7 @@ namespace Telegram.Controls.Messages
             }
 
             UpdateContent(message);
+            UpdateMessageInteractionInfo(message);
         }
 
         private void UpdateContent(MessageViewModel message)
@@ -2981,6 +2985,20 @@ namespace Telegram.Controls.Messages
             }
 
             return invoice;
+        }
+
+        public void UpdateMessageInteractionInfo(MessageViewModel message)
+        {
+            UpdateMessageReactions(message, false);
+        }
+
+        public void UpdateMessageReactions(MessageViewModel message, bool animate)
+        {
+            var reactions = GetTemplateChild("Reactions") as ReactionsPanel;
+            if (reactions != null)
+            {
+                reactions.UpdateMessageReactions(message, animate);
+            }
         }
     }
 }

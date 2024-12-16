@@ -339,8 +339,20 @@
             <messages:MessageService>
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
-                        <ContentPresenter HorizontalContentAlignment="Stretch"
-                                          VerticalContentAlignment="Stretch" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <ContentPresenter HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Stretch" />
+                            <messages:ReactionsPanel x:Name="Reactions"
+                                                     MaxWidth="{StaticResource MessageMaxWidth}"
+                                                     HorizontalAlignment="Stretch"
+                                                     HorizontalContentAlignment="Center"
+                                                     Padding="0,4,0,0"
+                                                     Grid.Row="1" />
+                        </Grid>
                     </ControlTemplate>
                 </Button.Template>
                 <StackPanel>
