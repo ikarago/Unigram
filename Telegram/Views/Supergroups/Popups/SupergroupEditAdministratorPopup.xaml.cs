@@ -112,7 +112,6 @@ namespace Telegram.Views.Supergroups.Popups
                 if (group.IsChannel)
                 {
                     CanManageMessagesRoot.Visibility = Visibility.Visible;
-                    CanManageStoriesRoot.Visibility = Visibility.Visible;
                     DeleteMessages.Visibility = Visibility.Collapsed;
                 }
 
