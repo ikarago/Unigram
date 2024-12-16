@@ -39,7 +39,7 @@ namespace Telegram.Views.Chats
 
         private void OnContextRequested(UIElement sender, ContextRequestedEventArgs args)
         {
-            var program = ProgramsHost.ItemFromContainer(sender) as ChatAffiliateProgram;
+            var program = ProgramsHost.ItemFromContainer(sender) as ConnectedAffiliateProgram;
             if (program == null)
             {
                 return;
@@ -66,9 +66,9 @@ namespace Telegram.Views.Chats
                 {
                     cell.UpdateFoundAffiliateProgram(ViewModel.ClientService, args, OnContainerContentChanging);
                 }
-                else if (args.Item is ChatAffiliateProgram)
+                else if (args.Item is ConnectedAffiliateProgram)
                 {
-                    cell.UpdateAffiliateProgram(ViewModel.ClientService, args, OnContainerContentChanging);
+                    cell.UpdateConnectedAffiliateProgram(ViewModel.ClientService, args, OnContainerContentChanging);
                 }
             }
 

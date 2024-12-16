@@ -1322,14 +1322,16 @@ namespace Telegram.ViewModels
                 return;
             }
 
-            var response = await ClientService.SendAsync(new GetChatAffiliateProgram(ClientService.Options.MyId, user.Id));
-            if (response is ChatAffiliateProgram program)
+            var affiliateType = new AffiliateTypeCurrentUser();
+
+            var response = await ClientService.SendAsync(new GetConnectedAffiliateProgram(affiliateType, user.Id));
+            if (response is ConnectedAffiliateProgram program)
             {
-                ShowPopup(new ChatAffiliateProgramPopup(ClientService, NavigationService, program, ClientService.MyId));
+                ShowPopup(new ConnectedAffiliateProgramPopup(ClientService, NavigationService, program, affiliateType));
             }
             else
             {
-                ShowPopup(new FoundAffiliateProgramPopup(ClientService, NavigationService, new FoundAffiliateProgram(user.Id, fullInfo.BotInfo.AffiliateProgram), ClientService.MyId));
+                ShowPopup(new FoundAffiliateProgramPopup(ClientService, NavigationService, new FoundAffiliateProgram(user.Id, fullInfo.BotInfo.AffiliateProgram), affiliateType));
             }
         }
 

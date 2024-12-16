@@ -189,8 +189,8 @@ namespace Telegram.Controls.Cells
             }
             else if (args.Phase == 1)
             {
-                var percent = program.Parameters.Parameters.CommissionPercent();
-                var duration = program.Parameters.Parameters.Duration();
+                var percent = program.Info.Parameters.CommissionPercent();
+                var duration = program.Info.Parameters.Duration();
 
                 SubtitleLabel.Text = string.Format("{0} • {1}", percent, duration);
             }
@@ -208,12 +208,12 @@ namespace Telegram.Controls.Cells
             args.Handled = true;
         }
 
-        public void UpdateAffiliateProgram(IClientService clientService, ContainerContentChangingEventArgs args, TypedEventHandler<ListViewBase, ContainerContentChangingEventArgs> callback)
+        public void UpdateConnectedAffiliateProgram(IClientService clientService, ContainerContentChangingEventArgs args, TypedEventHandler<ListViewBase, ContainerContentChangingEventArgs> callback)
         {
             args.ItemContainer.Tag = args.Item;
             Tag = args.Item;
 
-            var program = args.Item as ChatAffiliateProgram;
+            var program = args.Item as ConnectedAffiliateProgram;
 
             var user = clientService.GetUser(program.BotUserId);
             if (user == null)

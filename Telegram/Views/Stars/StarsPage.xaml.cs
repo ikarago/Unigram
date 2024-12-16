@@ -78,7 +78,7 @@ namespace Telegram.Views.Stars
 
         private void Affiliate_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.NavigationService.Navigate(typeof(ChatAffiliatePage), ViewModel.ClientService.Options.MyId);
+            ViewModel.NavigationService.Navigate(typeof(ChatAffiliatePage), new AffiliateTypeCurrentUser());
         }
     }
 }

@@ -25,11 +25,11 @@ namespace Telegram.Views.Stars.Popups
         private readonly INavigationService _navigationService;
         private readonly FoundAffiliateProgram _program;
 
-        private MessageSender _selectedAlias;
+        private AffiliateType _selectedType;
 
-        private readonly ObservableCollection<MessageSender> _items;
+        private readonly ObservableCollection<AffiliateType> _items;
 
-        public FoundAffiliateProgramPopup(IClientService clientService, INavigationService navigationService, FoundAffiliateProgram program, MessageSender alias)
+        public FoundAffiliateProgramPopup(IClientService clientService, INavigationService navigationService, FoundAffiliateProgram program, AffiliateType affiliateType)
         {
             InitializeComponent();
 
@@ -38,22 +38,22 @@ namespace Telegram.Views.Stars.Popups
 
             _program = program;
 
-            _items = new ObservableCollection<MessageSender>();
+            _items = new ObservableCollection<AffiliateType>();
 
             InitializeOwnedChats();
-            UpdateAlias(alias);
+            UpdateAlias(affiliateType);
 
-            TableRoot.Visibility = program.Parameters.DailyRevenuePerUserAmount != null
+            TableRoot.Visibility = program.Info.DailyRevenuePerUserAmount != null
                 ? Visibility.Visible
                 : Visibility.Collapsed;
 
             if (clientService.TryGetUser(program.BotUserId, out User botUser) && botUser.Type is UserTypeBot userTypeBot)
             {
-                var percent = program.Parameters.Parameters.CommissionPercent();
-                var duration = program.Parameters.Parameters.MonthCount > 0
-                    ? program.Parameters.Parameters.MonthCount >= 12
-                    ? Locale.Declension(Strings.R.ChannelAffiliateProgramJoinText_Years, program.Parameters.Parameters.MonthCount / 12)
-                    : Locale.Declension(Strings.R.ChannelAffiliateProgramJoinText_Months, program.Parameters.Parameters.MonthCount)
+                var percent = program.Info.Parameters.CommissionPercent();
+                var duration = program.Info.Parameters.MonthCount > 0
+                    ? program.Info.Parameters.MonthCount >= 12
+                    ? Locale.Declension(Strings.R.ChannelAffiliateProgramJoinText_Years, program.Info.Parameters.MonthCount / 12)
+                    : Locale.Declension(Strings.R.ChannelAffiliateProgramJoinText_Months, program.Info.Parameters.MonthCount)
                     : Strings.ChannelAffiliateProgramJoinText_Lifetime;
 
                 TextBlockHelper.SetMarkdown(Subtitle, string.Format(Strings.ChannelAffiliateProgramJoinText, botUser.FirstName, percent, duration));
@@ -63,19 +63,19 @@ namespace Telegram.Views.Stars.Popups
                 MonthlyUsers.Content = userTypeBot.ActiveUserCount;
             }
 
-            StarCount.Text = program.Parameters.DailyRevenuePerUserAmount.ToValue();
+            StarCount.Text = program.Info.DailyRevenuePerUserAmount.ToValue();
         }
 
         private async void InitializeOwnedChats()
         {
-            _items.Add(_clientService.MyId);
+            _items.Add(new AffiliateTypeCurrentUser());
 
             var response1 = await _clientService.SendAsync(new GetOwnedBots());
             if (response1 is Td.Api.Users users)
             {
                 foreach (var userId in users.UserIds)
                 {
-                    _items.Add(new MessageSenderUser(userId));
+                    _items.Add(new AffiliateTypeBot(userId));
                 }
             }
 
@@ -84,7 +84,7 @@ namespace Telegram.Views.Stars.Popups
             {
                 foreach (var chatId in chats.ChatIds)
                 {
-                    _items.Add(new MessageSenderChat(chatId));
+                    _items.Add(new AffiliateTypeChannel(chatId));
                 }
             }
         }
@@ -100,14 +100,14 @@ namespace Telegram.Views.Stars.Popups
 
             void handler(object sender, RoutedEventArgs _)
             {
-                if (sender is MenuFlyoutItem item && item.CommandParameter is MessageSender messageSender)
+                if (sender is MenuFlyoutItem item && item.CommandParameter is AffiliateType type)
                 {
                     item.Click -= handler;
-                    UpdateAlias(messageSender);
+                    UpdateAlias(type);
                 }
             }
 
-            foreach (var messageSender in _items)
+            foreach (var type in _items)
             {
                 var picture = new ProfilePicture();
                 picture.Width = 36;
@@ -116,12 +116,12 @@ namespace Telegram.Views.Stars.Popups
 
                 var item = new MenuFlyoutProfile();
                 item.Click += handler;
-                item.CommandParameter = messageSender;
+                item.CommandParameter = type;
                 item.Style = BootStrapper.Current.Resources["SendAsMenuFlyoutItemStyle"] as Style;
                 item.Icon = new FontIcon();
                 item.Tag = picture;
 
-                if (_clientService.TryGetUser(messageSender, out User senderUser))
+                if (_clientService.TryGetUser(type, out User senderUser))
                 {
                     picture.SetUser(_clientService, senderUser, 36);
 
@@ -130,7 +130,7 @@ namespace Telegram.Views.Stars.Popups
                         ? Strings.VoipGroupPersonalAccount
                         : Strings.Bot;
                 }
-                else if (_clientService.TryGetChat(messageSender, out Chat senderChat))
+                else if (_clientService.TryGetChat(type, out Chat senderChat))
                 {
                     picture.SetChat(_clientService, senderChat, 36);
 
@@ -144,23 +144,23 @@ namespace Telegram.Views.Stars.Popups
             flyout.ShowAt(Title, FlyoutPlacementMode.Bottom);
         }
 
-        private void UpdateAlias(MessageSender sender)
+        private void UpdateAlias(AffiliateType type)
         {
-            if (_selectedAlias.AreTheSame(sender))
+            if (_selectedType.AreTheSame(type))
             {
                 return;
             }
 
-            _selectedAlias = sender;
+            _selectedType = type;
 
-            if (_clientService.TryGetUser(sender, out User senderUser))
+            if (_clientService.TryGetUser(type, out User senderUser))
             {
                 Photo2.SetUser(_clientService, senderUser, 64);
 
                 Photo.SetUser(_clientService, senderUser, 28);
                 TitleText.Text = senderUser.FullName();
             }
-            else if (_clientService.TryGetChat(sender, out Chat senderChat))
+            else if (_clientService.TryGetChat(type, out Chat senderChat))
             {
                 Photo2.SetChat(_clientService, senderChat, 64);
 
@@ -218,35 +218,15 @@ namespace Telegram.Views.Stars.Popups
 
         private async Task<bool> SubmitAsync()
         {
-            var chatId = 0L;
-
-            if (_selectedAlias is MessageSenderUser senderUser)
-            {
-                var response1 = await _clientService.SendAsync(new CreatePrivateChat(senderUser.UserId, false));
-                if (response1 is Chat chat)
-                {
-                    chatId = chat.Id;
-                }
-            }
-            else if (_selectedAlias is MessageSenderChat senderChat)
-            {
-                chatId = senderChat.ChatId;
-            }
-
-            if (chatId == 0)
-            {
-                return false;
-            }
-
-            var response = await _clientService.SendAsync(new ConnectChatAffiliateProgram(chatId, _program.BotUserId));
-            if (response is ChatAffiliateProgram program)
+            var response = await _clientService.SendAsync(new ConnectAffiliateProgram(_selectedType, _program.BotUserId));
+            if (response is ConnectedAffiliateProgram program)
             {
                 Hide();
 
-                var popup = new ChatAffiliateProgramPopup(_clientService, _navigationService, program, _selectedAlias);
+                var popup = new ConnectedAffiliateProgramPopup(_clientService, _navigationService, program, _selectedType);
                 var aggregator = TypeResolver.Current.Resolve<IEventAggregator>(_clientService.SessionId);
 
-                aggregator.Publish(new UpdateChatAffiliatePrograms(chatId));
+                aggregator.Publish(new UpdateChatAffiliatePrograms(_selectedType));
 
                 void handler(object sender, object args)
                 {

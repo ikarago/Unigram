@@ -1941,6 +1941,24 @@ namespace Telegram.Td.Api
             return false;
         }
 
+        public static bool AreTheSame(this AffiliateType sender, AffiliateType compare)
+        {
+            if (sender is AffiliateTypeBot bot1 && compare is AffiliateTypeBot bot2)
+            {
+                return bot1.UserId == bot2.UserId;
+            }
+            else if (sender is AffiliateTypeChannel channel1 && compare is AffiliateTypeChannel channel2)
+            {
+                return channel1.ChatId == channel2.ChatId;
+            }
+            else if (sender is AffiliateTypeCurrentUser && compare is AffiliateTypeCurrentUser)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool AreTheSame(this GroupCallParticipant sender, GroupCallParticipant compare)
         {
             if (sender.IsCurrentUser && compare.IsCurrentUser)

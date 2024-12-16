@@ -194,7 +194,7 @@ namespace Telegram.ViewModels.Users
 
         public void Existing()
         {
-            NavigationService.Navigate(typeof(ChatAffiliatePage), _userId);
+            NavigationService.Navigate(typeof(ChatAffiliatePage), new AffiliateTypeBot(_userId));
         }
     }
 }

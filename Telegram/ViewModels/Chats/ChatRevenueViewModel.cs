@@ -13,6 +13,7 @@ using Telegram.Services;
 using Telegram.Td.Api;
 using Telegram.ViewModels.Supergroups;
 using Telegram.Views;
+using Telegram.Views.Chats;
 using Telegram.Views.Chats.Popups;
 using Telegram.Views.Monetization.Popups;
 using Windows.UI.Xaml.Data;
@@ -335,6 +336,25 @@ namespace Telegram.ViewModels.Chats
 
             ClientService.Send(new ToggleSupergroupCanHaveSponsoredMessages(supergroup.Id, DisableSponsoredMessages));
             DisableSponsoredMessages = !DisableSponsoredMessages;
+        }
+
+        public void OpenAffiliate()
+        {
+            if (_chat.Type is ChatTypeSupergroup or ChatTypeBasicGroup)
+            {
+                NavigationService.Navigate(typeof(ChatAffiliatePage), new AffiliateTypeChannel(_chat.Id));
+            }
+            else if (_chat.Type is ChatTypePrivate privata)
+            {
+                if (privata.UserId == ClientService.Options.MyId)
+                {
+                    NavigationService.Navigate(typeof(ChatAffiliatePage), new AffiliateTypeCurrentUser());
+                }
+                else
+                {
+                    NavigationService.Navigate(typeof(ChatAffiliatePage), new AffiliateTypeBot(privata.UserId));
+                }
+            }
         }
 
         public async Task<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)

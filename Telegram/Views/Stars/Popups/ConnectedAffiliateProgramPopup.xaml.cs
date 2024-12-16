@@ -18,17 +18,17 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Telegram.Views.Stars.Popups
 {
-    public sealed partial class ChatAffiliateProgramPopup : ContentPopup
+    public sealed partial class ConnectedAffiliateProgramPopup : ContentPopup
     {
         private readonly IClientService _clientService;
         private readonly INavigationService _navigationService;
-        private readonly ChatAffiliateProgram _program;
+        private readonly ConnectedAffiliateProgram _program;
 
-        private MessageSender _selectedAlias;
+        private AffiliateType _selectedType;
 
-        private readonly ObservableCollection<MessageSender> _items;
+        private readonly ObservableCollection<AffiliateType> _items;
 
-        public ChatAffiliateProgramPopup(IClientService clientService, INavigationService navigationService, ChatAffiliateProgram program, MessageSender alias)
+        public ConnectedAffiliateProgramPopup(IClientService clientService, INavigationService navigationService, ConnectedAffiliateProgram program, AffiliateType affiliateType)
         {
             InitializeComponent();
 
@@ -37,10 +37,10 @@ namespace Telegram.Views.Stars.Popups
 
             _program = program;
 
-            _selectedAlias = alias;
+            _selectedType = affiliateType;
 
             _clientService.Send(new GetUserFullInfo(program.BotUserId));
-            _items = new ObservableCollection<MessageSender>();
+            _items = new ObservableCollection<AffiliateType>();
 
             InitializeOwnedChats();
 
@@ -48,14 +48,14 @@ namespace Telegram.Views.Stars.Popups
 
             Link.Text = program.Url.Replace("https://", string.Empty);
 
-            _selectedAlias = alias;
+            _selectedType = affiliateType;
 
-            if (_clientService.TryGetUser(alias, out User senderUser))
+            if (_clientService.TryGetUser(affiliateType, out User senderUser))
             {
                 Photo.SetUser(_clientService, senderUser, 28);
                 TitleText.Text = senderUser.FullName();
             }
-            else if (_clientService.TryGetChat(alias, out Chat senderChat))
+            else if (_clientService.TryGetChat(affiliateType, out Chat senderChat))
             {
                 Photo.SetChat(_clientService, senderChat, 28);
                 TitleText.Text = senderChat.Title;
@@ -70,7 +70,7 @@ namespace Telegram.Views.Stars.Popups
                     : Locale.Declension(Strings.R.ChannelAffiliateProgramJoinText_Months, _program.Parameters.MonthCount)
                     : Strings.ChannelAffiliateProgramJoinText_Lifetime;
 
-                var message = alias is MessageSenderChat
+                var message = affiliateType is AffiliateTypeChannel
                     ? Strings.ChannelAffiliateProgramLinkTextChannel
                     : Strings.ChannelAffiliateProgramLinkTextUser;
 
@@ -84,14 +84,14 @@ namespace Telegram.Views.Stars.Popups
 
         private async void InitializeOwnedChats()
         {
-            _items.Add(_clientService.MyId);
+            _items.Add(new AffiliateTypeCurrentUser());
 
             var response1 = await _clientService.SendAsync(new GetOwnedBots());
             if (response1 is Td.Api.Users users)
             {
                 foreach (var userId in users.UserIds)
                 {
-                    _items.Add(new MessageSenderUser(userId));
+                    _items.Add(new AffiliateTypeBot(userId));
                 }
             }
 
@@ -100,7 +100,7 @@ namespace Telegram.Views.Stars.Popups
             {
                 foreach (var chatId in chats.ChatIds)
                 {
-                    _items.Add(new MessageSenderChat(chatId));
+                    _items.Add(new AffiliateTypeChannel(chatId));
                 }
             }
         }
@@ -111,14 +111,14 @@ namespace Telegram.Views.Stars.Popups
 
             void handler(object sender, RoutedEventArgs _)
             {
-                if (sender is MenuFlyoutItem item && item.CommandParameter is MessageSender messageSender)
+                if (sender is MenuFlyoutItem item && item.CommandParameter is AffiliateType type)
                 {
                     item.Click -= handler;
-                    UpdateAlias(messageSender);
+                    UpdateAlias(type);
                 }
             }
 
-            foreach (var messageSender in _items)
+            foreach (var type in _items)
             {
                 var picture = new ProfilePicture();
                 picture.Width = 36;
@@ -127,12 +127,12 @@ namespace Telegram.Views.Stars.Popups
 
                 var item = new MenuFlyoutProfile();
                 item.Click += handler;
-                item.CommandParameter = messageSender;
+                item.CommandParameter = type;
                 item.Style = BootStrapper.Current.Resources["SendAsMenuFlyoutItemStyle"] as Style;
                 item.Icon = new FontIcon();
                 item.Tag = picture;
 
-                if (_clientService.TryGetUser(messageSender, out User senderUser))
+                if (_clientService.TryGetUser(type, out User senderUser))
                 {
                     picture.SetUser(_clientService, senderUser, 36);
 
@@ -141,7 +141,7 @@ namespace Telegram.Views.Stars.Popups
                         ? Strings.VoipGroupPersonalAccount
                         : Strings.Bot;
                 }
-                else if (_clientService.TryGetChat(messageSender, out Chat senderChat))
+                else if (_clientService.TryGetChat(type, out Chat senderChat))
                 {
                     picture.SetChat(_clientService, senderChat, 36);
 
@@ -155,43 +155,23 @@ namespace Telegram.Views.Stars.Popups
             flyout.ShowAt(Title, FlyoutPlacementMode.Bottom);
         }
 
-        private async void UpdateAlias(MessageSender sender)
+        private async void UpdateAlias(AffiliateType type)
         {
-            if (_selectedAlias.AreTheSame(sender))
+            if (_selectedType.AreTheSame(type))
             {
                 return;
             }
 
-            var chatId = 0L;
-
-            if (sender is MessageSenderUser senderUser)
-            {
-                var response1 = await _clientService.SendAsync(new CreatePrivateChat(senderUser.UserId, false));
-                if (response1 is Chat chat)
-                {
-                    chatId = chat.Id;
-                }
-            }
-            else if (sender is MessageSenderChat senderChat)
-            {
-                chatId = senderChat.ChatId;
-            }
-
-            if (chatId == 0)
-            {
-                return;
-            }
-
-            var response = await _clientService.SendAsync(new GetChatAffiliateProgram(chatId, _program.BotUserId));
-            if (response is ChatAffiliateProgram program)
+            var response = await _clientService.SendAsync(new GetConnectedAffiliateProgram(type, _program.BotUserId));
+            if (response is ConnectedAffiliateProgram program)
             {
                 Hide();
-                _navigationService.ShowPopup(new ChatAffiliateProgramPopup(_clientService, _navigationService, _program, sender));
+                _navigationService.ShowPopup(new ConnectedAffiliateProgramPopup(_clientService, _navigationService, _program, type));
             }
             else if (_clientService.TryGetUserFull(_program.BotUserId, out UserFullInfo fullInfo))
             {
                 Hide();
-                _navigationService.ShowPopup(new FoundAffiliateProgramPopup(_clientService, _navigationService, new FoundAffiliateProgram(_program.BotUserId, fullInfo.BotInfo.AffiliateProgram), sender));
+                _navigationService.ShowPopup(new FoundAffiliateProgramPopup(_clientService, _navigationService, new FoundAffiliateProgram(_program.BotUserId, fullInfo.BotInfo.AffiliateProgram), type));
             }
         }
 

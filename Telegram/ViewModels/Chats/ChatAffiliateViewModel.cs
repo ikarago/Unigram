@@ -15,9 +15,9 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Telegram.ViewModels.Chats
 {
-    public partial class ChatAffiliateViewModel : ViewModelBase, IHandle, IIncrementalCollectionOwner, IDiffHandler<ChatAffiliateProgram>, IDiffHandler<FoundAffiliateProgram>
+    public partial class ChatAffiliateViewModel : ViewModelBase, IHandle, IIncrementalCollectionOwner, IDiffHandler<ConnectedAffiliateProgram>, IDiffHandler<FoundAffiliateProgram>
     {
-        private long _chatId;
+        private AffiliateType _affiliateType;
 
         private ChatProgramsCollection _programs;
         private FoundProgramsCollection _foundPrograms;
@@ -25,15 +25,15 @@ namespace Telegram.ViewModels.Chats
         public ChatAffiliateViewModel(IClientService clientService, ISettingsService settingsService, IEventAggregator aggregator)
             : base(clientService, settingsService, aggregator)
         {
-            Programs = new SearchCollection<ChatAffiliateProgram, IncrementalCollection<ChatAffiliateProgram>>(UpdatePrograms, this);
+            Programs = new SearchCollection<ConnectedAffiliateProgram, IncrementalCollection<ConnectedAffiliateProgram>>(UpdatePrograms, this);
             FoundPrograms = new SearchCollection<FoundAffiliateProgram, IncrementalCollection<FoundAffiliateProgram>>(UpdateFoundPrograms, this);
         }
 
         protected override Task OnNavigatedToAsync(object parameter, NavigationMode mode, NavigationState _)
         {
-            if (parameter is long chatId)
+            if (parameter is AffiliateType affiliateType)
             {
-                _chatId = chatId;
+                _affiliateType = affiliateType;
 
                 Programs.Reload();
                 FoundPrograms.UpdateSender(new AffiliateProgramSortOrderProfitability());
@@ -49,7 +49,7 @@ namespace Telegram.ViewModels.Chats
 
         private void Handle(UpdateChatAffiliatePrograms update)
         {
-            if (update.ChatId == _chatId)
+            if (update.AffiliateType.AreTheSame(_affiliateType))
             {
                 BeginOnUIThread(() =>
                 {
@@ -59,13 +59,13 @@ namespace Telegram.ViewModels.Chats
             }
         }
 
-        public SearchCollection<ChatAffiliateProgram, IncrementalCollection<ChatAffiliateProgram>> Programs { get; }
+        public SearchCollection<ConnectedAffiliateProgram, IncrementalCollection<ConnectedAffiliateProgram>> Programs { get; }
 
         public SearchCollection<FoundAffiliateProgram, IncrementalCollection<FoundAffiliateProgram>> FoundPrograms { get; }
 
-        private IncrementalCollection<ChatAffiliateProgram> UpdatePrograms(object arg1, string arg2)
+        private IncrementalCollection<ConnectedAffiliateProgram> UpdatePrograms(object arg1, string arg2)
         {
-            _programs = new ChatProgramsCollection(ClientService, _chatId);
+            _programs = new ChatProgramsCollection(ClientService, _affiliateType);
             return _programs?.Items;
         }
 
@@ -73,7 +73,7 @@ namespace Telegram.ViewModels.Chats
         {
             if (arg1 is AffiliateProgramSortOrder sortOrder)
             {
-                _foundPrograms = new FoundProgramsCollection(ClientService, _chatId, this, sortOrder);
+                _foundPrograms = new FoundProgramsCollection(ClientService, _affiliateType, this, sortOrder);
             }
 
             return _foundPrograms?.Items;
@@ -89,7 +89,7 @@ namespace Telegram.ViewModels.Chats
             }
         }
 
-        public bool CompareItems(ChatAffiliateProgram oldItem, ChatAffiliateProgram newItem)
+        public bool CompareItems(ConnectedAffiliateProgram oldItem, ConnectedAffiliateProgram newItem)
         {
             return oldItem?.BotUserId == newItem?.BotUserId;
         }
@@ -99,7 +99,7 @@ namespace Telegram.ViewModels.Chats
             return oldItem?.BotUserId == newItem?.BotUserId;
         }
 
-        public void UpdateItem(ChatAffiliateProgram oldItem, ChatAffiliateProgram newItem)
+        public void UpdateItem(ConnectedAffiliateProgram oldItem, ConnectedAffiliateProgram newItem)
         {
             //throw new System.NotImplementedException();
         }
@@ -124,26 +124,26 @@ namespace Telegram.ViewModels.Chats
         class ChatProgramsCollection : IIncrementalCollectionOwner
         {
             private readonly IClientService _clientService;
-            private readonly long _chatId;
+            private readonly AffiliateType _affiliateType;
 
             private string _nextOffset = string.Empty;
 
-            public ChatProgramsCollection(IClientService clientService, long chatId)
+            public ChatProgramsCollection(IClientService clientService, AffiliateType affiliateType)
             {
                 _clientService = clientService;
-                _chatId = chatId;
+                _affiliateType = affiliateType;
 
-                Items = new IncrementalCollection<ChatAffiliateProgram>(this);
+                Items = new IncrementalCollection<ConnectedAffiliateProgram>(this);
             }
 
-            public IncrementalCollection<ChatAffiliateProgram> Items { get; }
+            public IncrementalCollection<ConnectedAffiliateProgram> Items { get; }
 
             public async Task<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
             {
                 var totalCount = 0u;
 
-                var response = await _clientService.SendAsync(new GetChatAffiliatePrograms(_chatId, _nextOffset, 20));
-                if (response is ChatAffiliatePrograms programs)
+                var response = await _clientService.SendAsync(new GetConnectedAffiliatePrograms(_affiliateType, _nextOffset, 20));
+                if (response is ConnectedAffiliatePrograms programs)
                 {
                     foreach (var item in programs.Programs)
                     {
@@ -168,15 +168,15 @@ namespace Telegram.ViewModels.Chats
         class FoundProgramsCollection : IIncrementalCollectionOwner
         {
             private readonly IClientService _clientService;
-            private readonly long _chatId;
+            private readonly AffiliateType _affiliateType;
             private readonly AffiliateProgramSortOrder _sortOrder;
 
             private string _nextOffset = string.Empty;
 
-            public FoundProgramsCollection(IClientService clientService, long chatId, IIncrementalCollectionOwner owner, AffiliateProgramSortOrder sortOrder)
+            public FoundProgramsCollection(IClientService clientService, AffiliateType affiliateType, IIncrementalCollectionOwner owner, AffiliateProgramSortOrder sortOrder)
             {
                 _clientService = clientService;
-                _chatId = chatId;
+                _affiliateType = affiliateType;
                 _sortOrder = sortOrder;
 
                 Items = new IncrementalCollection<FoundAffiliateProgram>(owner);
@@ -190,7 +190,7 @@ namespace Telegram.ViewModels.Chats
             {
                 var totalCount = 0u;
 
-                var response = await _clientService.SendAsync(new SearchAffiliatePrograms(_chatId, _sortOrder, _nextOffset, 20));
+                var response = await _clientService.SendAsync(new SearchAffiliatePrograms(_affiliateType, _sortOrder, _nextOffset, 20));
                 if (response is FoundAffiliatePrograms programs)
                 {
                     foreach (var item in programs.Programs)
@@ -217,15 +217,15 @@ namespace Telegram.ViewModels.Chats
         {
             if (item is FoundAffiliateProgram foundProgram)
             {
-                ShowPopup(new FoundAffiliateProgramPopup(ClientService, NavigationService, foundProgram, new MessageSenderChat(_chatId)));
+                ShowPopup(new FoundAffiliateProgramPopup(ClientService, NavigationService, foundProgram, _affiliateType));
             }
-            else if (item is ChatAffiliateProgram program)
+            else if (item is ConnectedAffiliateProgram program)
             {
-                ShowPopup(new ChatAffiliateProgramPopup(ClientService, NavigationService, program, new MessageSenderChat(_chatId)));
+                ShowPopup(new ConnectedAffiliateProgramPopup(ClientService, NavigationService, program, _affiliateType));
             }
         }
 
-        public void LaunchProgram(ChatAffiliateProgram program)
+        public void LaunchProgram(ConnectedAffiliateProgram program)
         {
             if (program == null || !ClientService.TryGetUser(program.BotUserId, out User user))
             {
@@ -242,12 +242,12 @@ namespace Telegram.ViewModels.Chats
             }
         }
 
-        public void CopyProgram(ChatAffiliateProgram program)
+        public void CopyProgram(ConnectedAffiliateProgram program)
         {
             MessageHelper.CopyLink(XamlRoot, program.Url);
         }
 
-        public async void DisconnectProgram(ChatAffiliateProgram program)
+        public async void DisconnectProgram(ConnectedAffiliateProgram program)
         {
             if (program == null || !ClientService.TryGetUser(program.BotUserId, out User user))
             {
@@ -257,8 +257,8 @@ namespace Telegram.ViewModels.Chats
             var confirm = await ShowPopupAsync(string.Format(Strings.LeaveAffiliateLinkAlert, user.FirstName), Strings.LeaveAffiliateLink, Strings.LeaveAffiliateLinkButton, Strings.Cancel, destructive: true);
             if (confirm == ContentDialogResult.Primary)
             {
-                var response = await ClientService.SendAsync(new DisconnectChatAffiliateProgram(_chatId, program.Url));
-                if (response is ChatAffiliateProgram)
+                var response = await ClientService.SendAsync(new DisconnectAffiliateProgram(_affiliateType, program.Url));
+                if (response is ConnectedAffiliateProgram)
                 {
                     Programs.Reload();
                     FoundPrograms.Reload();

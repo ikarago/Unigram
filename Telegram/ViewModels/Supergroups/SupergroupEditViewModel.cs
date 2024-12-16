@@ -375,7 +375,7 @@ namespace Telegram.ViewModels.Supergroups
         {
             if (_chat is Chat chat)
             {
-                NavigationService.Navigate(typeof(ChatAffiliatePage), chat.Id);
+                NavigationService.Navigate(typeof(ChatAffiliatePage), new AffiliateTypeChannel(chat.Id));
             }
         }
 

@@ -1355,8 +1355,8 @@
     <Compile Include="Views\Calls\Popups\VideoChatStreamsPopup.xaml.cs">
       <DependentUpon>VideoChatStreamsPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Stars\Popups\ChatAffiliateProgramPopup.xaml.cs">
-      <DependentUpon>ChatAffiliateProgramPopup.xaml</DependentUpon>
+    <Compile Include="Views\Stars\Popups\ConnectedAffiliateProgramPopup.xaml.cs">
+      <DependentUpon>ConnectedAffiliateProgramPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Stars\Popups\FoundAffiliateProgramPopup.xaml.cs">
       <DependentUpon>FoundAffiliateProgramPopup.xaml</DependentUpon>
@@ -3293,7 +3293,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Stars\Popups\ChatAffiliateProgramPopup.xaml">
+    <Page Include="Views\Stars\Popups\ConnectedAffiliateProgramPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -3864,7 +3864,7 @@
       <Version>4.5.0</Version>
     </PackageReference>
     <PackageReference Include="Telegram.Td.UWP">
-      <Version>1.8.41</Version>
+      <Version>1.8.42</Version>
     </PackageReference>
     <PackageReference Include="VideoLAN.LibVLC.UWP">
       <Version>3.0.21</Version>

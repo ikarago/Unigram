@@ -235,18 +235,21 @@ namespace Telegram.ViewModels.Chats
             await ShowPopupAsync(new LearnMorePopup());
         }
 
-        public async void OpenAffiliate()
+        public void OpenAffiliate()
         {
             if (_ownerId is MessageSenderChat senderChat)
             {
-                NavigationService.Navigate(typeof(ChatAffiliatePage), senderChat.ChatId);
+                NavigationService.Navigate(typeof(ChatAffiliatePage), new AffiliateTypeChannel(senderChat.ChatId));
             }
             else if (_ownerId is MessageSenderUser senderUser)
             {
-                var response = await ClientService.SendAsync(new CreatePrivateChat(senderUser.UserId, false));
-                if (response is Chat chat)
+                if (senderUser.UserId == ClientService.Options.MyId)
                 {
-                    NavigationService.Navigate(typeof(ChatAffiliatePage), chat.Id);
+                    NavigationService.Navigate(typeof(ChatAffiliatePage), new AffiliateTypeCurrentUser());
+                }
+                else
+                {
+                    NavigationService.Navigate(typeof(ChatAffiliatePage), new AffiliateTypeBot(senderUser.UserId));
                 }
             }
         }

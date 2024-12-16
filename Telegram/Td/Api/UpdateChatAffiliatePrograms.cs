@@ -2,11 +2,11 @@
 {
     public class UpdateChatAffiliatePrograms
     {
-        public UpdateChatAffiliatePrograms(long chatId)
+        public UpdateChatAffiliatePrograms(AffiliateType affiliateType)
         {
-            ChatId = chatId;
+            AffiliateType = affiliateType;
         }
 
-        public long ChatId { get; set; }
+        public AffiliateType AffiliateType { get; set; }
     }
 }

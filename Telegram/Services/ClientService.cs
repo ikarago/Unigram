@@ -160,6 +160,7 @@ namespace Telegram.Services
 
         bool TryGetChat(long chatId, out Chat chat);
         bool TryGetChat(MessageSender sender, out Chat value);
+        bool TryGetChat(AffiliateType type, out Chat value);
 
         bool TryGetChatFromUser(long userId, out long value);
         bool TryGetChatFromUser(long userId, out Chat value);
@@ -178,6 +179,7 @@ namespace Telegram.Services
         bool TryGetUser(long id, out User value);
         bool TryGetUser(Chat chat, out User value);
         bool TryGetUser(MessageSender sender, out User value);
+        bool TryGetUser(AffiliateType type, out User value);
 
         UserFullInfo GetUserFull(long id);
         UserFullInfo GetUserFull(Chat chat);
@@ -1670,6 +1672,17 @@ namespace Telegram.Services
             return false;
         }
 
+        public bool TryGetChat(AffiliateType type, out Chat value)
+        {
+            if (type is AffiliateTypeChannel typeChannel)
+            {
+                return TryGetChat(typeChannel.ChatId, out value);
+            }
+
+            value = null;
+            return false;
+        }
+
         public bool TryGetChatFromUser(long userId, out long value)
         {
             return _usersToChats.TryGetValue(userId, out value);
@@ -1819,6 +1832,21 @@ namespace Telegram.Services
             if (sender is MessageSenderUser senderUser)
             {
                 return TryGetUser(senderUser.UserId, out value);
+            }
+
+            value = null;
+            return false;
+        }
+
+        public bool TryGetUser(AffiliateType type, out User value)
+        {
+            if (type is AffiliateTypeBot typeBot)
+            {
+                return TryGetUser(typeBot.UserId, out value);
+            }
+            else if (type is AffiliateTypeCurrentUser)
+            {
+                return TryGetUser(Options.MyId, out value);
             }
 
             value = null;
