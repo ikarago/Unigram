@@ -97,12 +97,12 @@ namespace Telegram.Td.Api
 
         public static bool IsNegative(this StarAmount amount)
         {
-            return amount.StarCount < 0 || amount.NanostarCount < 0;
+            return amount?.StarCount < 0 || amount?.NanostarCount < 0;
         }
 
         public static bool IsPositive(this StarAmount amount)
         {
-            return amount.StarCount > 0 || amount.NanostarCount > 0;
+            return amount?.StarCount > 0 || amount?.NanostarCount > 0;
         }
 
         public static string ToValue(this StarAmount amount, bool transaction = false)

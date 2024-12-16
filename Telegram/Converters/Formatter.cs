@@ -18,20 +18,20 @@ namespace Telegram.Converters
 {
     public static class Formatter
     {
-        public static IList<string> Languages { get; }
+        //public static IList<string> Languages { get; }
 
-        static Formatter()
-        {
-            var culture = NativeUtils.GetCurrentCulture();
-            var languages = GlobalizationPreferences.Languages.ToList();
+        //static Formatter()
+        //{
+        //    var culture = NativeUtils.GetCurrentCulture();
+        //    var languages = GlobalizationPreferences.Languages.ToList();
 
-            if (Windows.Globalization.Language.IsWellFormed(culture) && !languages.Contains(culture))
-            {
-                languages.Insert(0, culture);
-            }
+        //    if (Windows.Globalization.Language.IsWellFormed(culture) && !languages.Contains(culture))
+        //    {
+        //        languages.Insert(0, culture);
+        //    }
 
-            Languages = languages;
-        }
+        //    Languages = languages;
+        //}
 
         public static string UtcTimeOffset(int value)
         {
