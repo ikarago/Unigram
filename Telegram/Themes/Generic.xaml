@@ -3837,6 +3837,8 @@
                 Value="48" />
         <Setter Property="Height"
                 Value="48" />
+        <Setter Property="IsTabStop"
+                Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ProgressBarRing">
