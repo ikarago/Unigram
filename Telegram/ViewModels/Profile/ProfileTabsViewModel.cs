@@ -8,6 +8,7 @@ using Rg.DiffUtils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Collections;
@@ -95,7 +96,7 @@ namespace Telegram.ViewModels.Profile
             Items = new ObservableCollection<ProfileTabItem>();
 
             SelectedItems = new MvxObservableCollection<MessageWithOwner>();
-            SelectedItems.CollectionChanged += OnConnectionChanged;
+            SelectedItems.CollectionChanged += OnCollectionChanged;
 
             Media = new SearchCollection<MessageWithOwner, MediaCollection>(SetSearch, new SearchMessagesFilterPhotoAndVideo(), new MessageDiffHandler());
             Files = new SearchCollection<MessageWithOwner, MediaCollection>(SetSearch, new SearchMessagesFilterDocument(), new MessageDiffHandler());
@@ -105,9 +106,10 @@ namespace Telegram.ViewModels.Profile
             Animations = new SearchCollection<MessageWithOwner, MediaCollection>(SetSearch, new SearchMessagesFilterAnimation(), new MessageDiffHandler());
         }
 
-        private async void OnConnectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var properties = await ClientService.GetMessagePropertiesAsync(SelectedItems.Select(x => new MessageId(x)));
+            var selectedItems = SelectedItems.ToList();
+            var properties = await ClientService.GetMessagePropertiesAsync(selectedItems.Select(x => new MessageId(x)));
 
             CanDeleteSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeDeletedForAllUsers || x.CanBeDeletedOnlyForSelf);
             CanForwardSelectedMessages = properties.Count > 0 && properties.Values.All(x => x.CanBeForwarded);
