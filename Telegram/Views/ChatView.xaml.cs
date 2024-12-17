@@ -2664,6 +2664,11 @@ namespace Telegram.Views
                     }
                 }
 
+                if (message.Content is MessageGift gift && ViewModel.ClientService.TryGetUser(chat, out User user))
+                {
+                    flyout.CreateFlyoutItem(ViewModel.GiftPremium, message.IsOutgoing ? Strings.SendAnotherGift : string.Format(Strings.SendGiftTo, user.FirstName), Icons.GiftPremium);
+                }
+
                 // Generic
                 if (quote != null && MessageQuote_Loaded(quote, properties))
                 {

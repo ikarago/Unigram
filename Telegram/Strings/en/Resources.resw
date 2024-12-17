@@ -10160,6 +10160,9 @@ The channel &quot;**{1}**&quot; will become private.</value>
   <data name="SendAnonymously" xml:space="preserve">
     <value>Send anonymously</value>
   </data>
+  <data name="SendAnotherGift" xml:space="preserve">
+    <value>Send Another Gift</value>
+  </data>
   <data name="SendAsFile" xml:space="preserve">
     <value>Send as File</value>
   </data>
@@ -10192,6 +10195,9 @@ The channel &quot;**{1}**&quot; will become private.</value>
   </data>
   <data name="SendByEnterKey" xml:space="preserve">
     <value>Enter</value>
+  </data>
+  <data name="SendGiftTo" xml:space="preserve">
+    <value>Send Gift to {0}</value>
   </data>
   <data name="SendingAudio" xml:space="preserve">
     <value>sending audio...</value>

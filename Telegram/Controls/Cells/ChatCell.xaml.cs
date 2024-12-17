@@ -1313,7 +1313,7 @@ namespace Telegram.Controls.Cells
                         player.Style = BootStrapper.Current.Resources["InfoCustomEmojiStyle"] as Style;
 
                         var inline = new InlineUIContainer();
-                        inline.Child = new CustomEmojiContainer(BriefText, player);
+                        inline.Child = new CustomEmojiContainer(BriefText, player, baseline: 0);
 
                         // If the Span starts with a InlineUIContainer the RichTextBlock bugs and shows ellipsis
                         if (BriefLabel.Inlines.Empty())
