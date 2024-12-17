@@ -120,12 +120,15 @@
                                    AutomationProperties.AccessibilityView="Raw"
                                    FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          AutomationProperties.AccessibilityView="Raw"
-                                          HorizontalContentAlignment="Left"
-                                          Padding="0,11,12,12"
-                                          VerticalContentAlignment="Center"
-                                          Grid.Column="1" />
+                        <RichTextBlock x:Name="ContentPresenter"
+                                       AutomationProperties.AccessibilityView="Raw"
+                                       HorizontalAlignment="Left"
+                                       Padding="0,11,12,12"
+                                       VerticalAlignment="Center"
+                                       IsTextSelectionEnabled="False"
+                                       Grid.Column="1">
+                            <Paragraph />
+                        </RichTextBlock>
                         <ContentControl x:Name="BadgePresenter"
                                         FontSize="20"
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"

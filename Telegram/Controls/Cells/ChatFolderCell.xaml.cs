@@ -4,11 +4,15 @@
 // Distributed under the GNU General Public License v3.0. (See accompanying
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
+using System;
+using System.ComponentModel;
 using System.Numerics;
 using Telegram.Navigation;
+using Telegram.Td.Api;
 using Telegram.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Hosting;
 
 namespace Telegram.Controls.Cells
@@ -144,5 +148,47 @@ namespace Telegram.Controls.Cells
                 iconUnselected.Opacity = 0.6f;
             }
         }
+
+        #region Title
+
+        public static FormattedText GetTitle(DependencyObject obj)
+        {
+            return (FormattedText)obj.GetValue(TitleProperty);
+        }
+
+        public static void SetTitle(DependencyObject obj, FormattedText value)
+        {
+            obj.SetValue(TitleProperty, value);
+        }
+
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.RegisterAttached("Title", typeof(FormattedText), typeof(RichTextBlock), new PropertyMetadata(null, OnTitleChanged));
+
+        private static void OnTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var textBlock = d as RichTextBlock;
+            var paragraph = textBlock?.Blocks[0] as Paragraph;
+            var formattedText = e.NewValue as FormattedText;
+
+            var clientService = textBlock?.DataContext switch
+            {
+                ChatFolderViewModel chatFolder => chatFolder.ClientService,
+                ViewModelBase viewModel => viewModel.ClientService,
+                _ => null
+            };
+
+            if (clientService == null || formattedText == null)
+            {
+                return;
+            }
+
+            var size = textBlock.FontSize < 14
+                ? 14
+                : 20;
+
+            CustomEmojiIcon.AddPlain(textBlock, paragraph.Inlines, clientService, formattedText, size: size, loopCount: -1);
+        }
+
+        #endregion
     }
 }

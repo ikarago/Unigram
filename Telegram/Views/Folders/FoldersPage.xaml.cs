@@ -18,6 +18,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
@@ -139,7 +140,8 @@ namespace Telegram.Views.Folders
                     AutomationProperties.SetName(args.ItemContainer, folder.Title);
 
                     var glyph = content.Children[0] as TextBlock;
-                    var presenter = content.Children[1] as ContentPresenter;
+                    var presenter = content.Children[1] as RichTextBlock;
+                    var paragraph = presenter.Blocks[0] as Paragraph;
                     var badge = content.Children[2] as ContentControl;
                     var plate = content.Children[3] as Ellipse;
                     var chevron = content.Children[4];
@@ -152,9 +154,10 @@ namespace Telegram.Views.Folders
                         index--;
                     }
 
+                    CustomEmojiIcon.Add(presenter, paragraph.Inlines, ViewModel.ClientService, new FormattedText(folder.Title, Array.Empty<TextEntity>()));
+
                     plate.Fill = ViewModel.ClientService.GetAccentBrush(folder.ColorId);
                     glyph.Text = Icons.FolderToGlyph(icon).Item1;
-                    presenter.Content = folder.Title;
                     badge.Content = index >= ViewModel.ClientService.Options.ChatFolderCountMax
                         ? Icons.LockClosed
                         : folder.HasMyInviteLinks ? Icons.Link : string.Empty;

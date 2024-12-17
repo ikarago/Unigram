@@ -11,6 +11,7 @@ using Telegram.Navigation;
 using Telegram.Services;
 using Telegram.Streams;
 using Telegram.Td.Api;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -27,9 +28,7 @@ namespace Telegram.Controls
 
         public string Emoji { get; set; }
 
-
-
-        public static void Add(RichTextBlock parent, InlineCollection inlines, IClientService clientService, FormattedText message, string style = null)
+        public static void Add(RichTextBlock parent, InlineCollection inlines, IClientService clientService, FormattedText message, string style = null, double size = 20, int loopCount = 0)
         {
             inlines.Clear();
 
@@ -53,7 +52,10 @@ namespace Telegram.Controls
                         }
 
                         var player = new CustomEmojiIcon();
-                        player.LoopCount = 0;
+                        player.LoopCount = loopCount;
+                        player.Width = size;
+                        player.Height = size;
+                        player.FrameSize = new Size(size, size);
                         player.Source = new CustomEmojiFileSource(clientService, customEmoji.CustomEmojiId);
 
                         if (style != null)
@@ -62,8 +64,71 @@ namespace Telegram.Controls
                             player.Style = BootStrapper.Current.Resources[style] as Style;
                         }
 
+                        var baseline = parent.FontSize == 11 ? -3 : 0;
+
                         var inline = new InlineUIContainer();
-                        inline.Child = new CustomEmojiContainer(parent, player);
+                        inline.Child = new CustomEmojiContainer(parent, player, baseline, size: size);
+
+                        // If the Span starts with a InlineUIContainer the RichTextBlock bugs and shows ellipsis
+                        if (inlines.Empty())
+                        {
+                            inlines.Add(Icons.ZWNJ);
+                        }
+
+                        inlines.Add(inline);
+                        inlines.Add(Icons.ZWNJ);
+
+                        previous = entity.Offset + entity.Length;
+                    }
+                }
+
+                if (clean.Text.Length > previous)
+                {
+                    inlines.Add(clean.Text.Substring(previous));
+                }
+            }
+        }
+
+        public static void AddPlain(RichTextBlock parent, InlineCollection inlines, IClientService clientService, FormattedText message, string style = null, double size = 20, int loopCount = 0)
+        {
+            inlines.Clear();
+
+            if (message != null)
+            {
+                var clean = message.ReplaceSpoilers();
+                var previous = 0;
+
+                if (message.Entities != null)
+                {
+                    foreach (var entity in clean.Entities)
+                    {
+                        if (entity.Type is not TextEntityTypeCustomEmoji customEmoji)
+                        {
+                            continue;
+                        }
+
+                        if (entity.Offset > previous)
+                        {
+                            inlines.Add(clean.Text.Substring(previous, entity.Offset - previous));
+                        }
+
+                        var player = new CustomEmojiIcon();
+                        player.LoopCount = loopCount;
+                        player.Width = size;
+                        player.Height = size;
+                        player.FrameSize = new Size(size, size);
+                        player.Source = new CustomEmojiFileSource(clientService, customEmoji.CustomEmojiId);
+
+                        if (style != null)
+                        {
+                            // "InfoCustomEmojiStyle"
+                            player.Style = BootStrapper.Current.Resources[style] as Style;
+                        }
+
+                        var baseline = parent.FontSize == 11 ? -3 : 0;
+
+                        var inline = new InlineUIContainer();
+                        inline.Child = new CustomEmojiContainer(parent, player, baseline, size);
 
                         // If the Span starts with a InlineUIContainer the RichTextBlock bugs and shows ellipsis
                         if (inlines.Empty())
@@ -92,7 +157,7 @@ namespace Telegram.Controls
         private readonly CustomEmojiIcon _child;
         private readonly double _baseline;
 
-        public CustomEmojiContainer(RichTextBlock parent, CustomEmojiIcon child, int baseline = 0)
+        public CustomEmojiContainer(RichTextBlock parent, CustomEmojiIcon child, int baseline = 0, double size = 20)
         {
             _parent = parent;
             _child = child;
@@ -106,12 +171,47 @@ namespace Telegram.Controls
 
             HorizontalAlignment = HorizontalAlignment.Left;
             FlowDirection = FlowDirection.LeftToRight;
-            Margin = new Thickness(0, -2, 0, -6);
 
-            Width = 20;
-            Height = 20;
+            if (size == 20)
+            {
+                Margin = new Thickness(0, -2, 0, -6);
+            }
+            else
+            {
+                Margin = new Thickness(0, -4, 0, -4);
+            }
+
+            Width = size;
+            Height = size;
 
             EffectiveViewportChanged += OnEffectiveViewportChanged;
+        }
+
+        public CustomEmojiContainer(RichTextBlock parent, CustomEmojiIcon child, double size = 20)
+        {
+            _parent = parent;
+            _child = child;
+
+            child.IsViewportAware = true;
+            child.IsHitTestVisible = false;
+            child.IsEnabled = false;
+
+            Children.Add(child);
+
+            HorizontalAlignment = HorizontalAlignment.Left;
+            FlowDirection = FlowDirection.LeftToRight;
+
+            if (size == 20)
+            {
+                Margin = new Thickness(0, -2, 0, -6);
+            }
+            else
+            {
+                Margin = new Thickness(0, -4, 0, -4);
+            }
+
+            Width = size;
+            Height = size;
         }
 
         private bool _withinViewport;

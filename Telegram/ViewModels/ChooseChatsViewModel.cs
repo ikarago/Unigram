@@ -271,7 +271,7 @@ namespace Telegram.ViewModels
 
                 folders.Insert(index, new ChatFolderInfo { Id = Constants.ChatListMain, Title = Strings.FilterAllChats, Icon = new ChatFolderIcon("All") });
 
-                Folders = new ObservableCollection<ChatFolderViewModel>(folders.Select(x => new ChatFolderViewModel(x)));
+                Folders = new ObservableCollection<ChatFolderViewModel>(folders.Select(x => new ChatFolderViewModel(ClientService, x)));
 
                 foreach (var folder in Folders)
                 {

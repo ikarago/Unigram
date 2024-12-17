@@ -97,9 +97,12 @@
                     <controls:TopNavView.ItemTemplate>
                         <DataTemplate x:DataType="viewModels:ChatFolderViewModel">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{x:Bind Title, Mode=OneWay}"
-                                           FontFamily="{ThemeResource EmojiThemeFontFamily}"
-                                           VerticalAlignment="Bottom" />
+                                <RichTextBlock cells:ChatFolderCell.Title="{x:Bind Title, Mode=OneWay}"
+                                               FontFamily="{ThemeResource EmojiThemeFontFamily}"
+                                               VerticalAlignment="Bottom"
+                                               IsTextSelectionEnabled="False">
+                                    <Paragraph />
+                                </RichTextBlock>
 
                                 <controls:BadgeControl Text="{x:Bind UnreadCount, Mode=OneWay}"
                                                        IsUnmuted="{x:Bind IsUnmuted, Mode=OneWay}"
