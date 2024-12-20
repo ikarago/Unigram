@@ -90,7 +90,9 @@ namespace Telegram.Controls
             }
             else if (clientService.TryGetSupergroup(chat, out Supergroup supergroup))
             {
-                if (clientService.IsPremiumAvailable && chat.EmojiStatus != null && !supergroup.IsFake && !supergroup.IsScam)
+                var status = supergroup.VerificationStatus;
+
+                if (clientService.IsPremiumAvailable && chat.EmojiStatus != null && status?.IsFake is false && status?.IsScam is false)
                 {
                     CurrentType = IdentityIconType.None;
                     UnloadObject(ref Icon);
@@ -121,7 +123,9 @@ namespace Telegram.Controls
                 return;
             }
 
-            if (clientService.IsPremiumAvailable && user.EmojiStatus != null && !user.IsFake && !user.IsScam && (!chatList || user.Id != clientService.Options.MyId))
+            var status = user.VerificationStatus;
+
+            if (clientService.IsPremiumAvailable && user.EmojiStatus != null && status?.IsFake is false && status?.IsScam is false && (!chatList || user.Id != clientService.Options.MyId))
             {
                 CurrentType = IdentityIconType.Premium;
                 UnloadObject(ref Icon);
@@ -133,11 +137,11 @@ namespace Telegram.Controls
             {
                 var premium = user.IsPremium && clientService.IsPremiumAvailable && (!chatList || user.Id != clientService.Options.MyId);
 
-                if (premium || user.IsFake || user.IsScam || user.IsVerified)
+                if (premium || (status != null && status.BotVerification == null))
                 {
-                    CurrentType = user.IsFake
+                    CurrentType = status?.IsFake is true
                         ? IdentityIconType.Fake
-                        : user.IsScam
+                        : status?.IsScam is true
                         ? IdentityIconType.Scam
                         : premium
                         ? IdentityIconType.Premium
@@ -170,11 +174,12 @@ namespace Telegram.Controls
                 return;
             }
 
-            if (chat.IsFake || chat.IsScam || chat.IsVerified)
+            var status = chat.VerificationStatus;
+            if (status != null && (status.IsFake || status.IsScam || status.IsVerified))
             {
-                CurrentType = chat.IsFake
+                CurrentType = status.IsFake
                     ? IdentityIconType.Fake
-                    : chat.IsScam
+                    : status.IsScam
                     ? IdentityIconType.Scam
                     : IdentityIconType.Verified;
 
@@ -238,11 +243,12 @@ namespace Telegram.Controls
                 return;
             }
 
-            if (supergroup.IsFake || supergroup.IsScam || supergroup.IsVerified)
+            var status = supergroup.VerificationStatus;
+            if (status != null && (status.IsFake || status.IsScam || status.IsVerified))
             {
-                CurrentType = supergroup.IsFake
+                CurrentType = status.IsFake
                     ? IdentityIconType.Fake
-                    : supergroup.IsScam
+                    : status.IsScam
                     ? IdentityIconType.Scam
                     : IdentityIconType.Verified;
 

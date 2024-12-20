@@ -164,7 +164,7 @@ namespace Telegram.Services
 
             var protocol = VoipManager.Protocol;
 
-            var response = await ClientService.SendAsync(new CreateCall(user.Id, protocol, video));
+            var response = await ClientService.SendAsync(new CreateCall(user.Id, protocol, video, 0));
             if (response is Error error)
             {
                 if (error.Code == 400 && error.Message.Equals("PARTICIPANT_VERSION_OUTDATED"))

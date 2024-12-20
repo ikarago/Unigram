@@ -366,7 +366,7 @@ namespace Telegram.ViewModels
 
         private async Task LoadMessagesAsync(string query, CancellationToken cancellationToken)
         {
-            var response = await ClientService.SendAsync(new SearchMessages(null, false, query, _nextOffset ?? string.Empty, 50, null, 0, 0));
+            var response = await ClientService.SendAsync(new SearchMessages(null, query, _nextOffset ?? string.Empty, 50, null, null, 0, 0));
             if (response is FoundMessages messages && !cancellationToken.IsCancellationRequested)
             {
                 _nextOffset = string.IsNullOrEmpty(messages.NextOffset) ? null : messages.NextOffset;
