@@ -72,13 +72,13 @@ namespace Telegram.Controls.Messages.Content
         {
             _message = message;
 
-            LayoutRoot.Constraint = message;
-
             var sticker = GetContent(message, out bool premium);
             if (sticker == null || !_templateApplied)
             {
                 return;
             }
+
+            LayoutRoot.Constraint = message;
 
             var flip = false;
             var maxSize = 180d;
