@@ -137,7 +137,7 @@ namespace Telegram.Controls
             {
                 var premium = user.IsPremium && clientService.IsPremiumAvailable && (!chatList || user.Id != clientService.Options.MyId);
 
-                if (premium || (status != null && status.BotVerification == null))
+                if (premium || (status != null && (status.IsFake || status.IsScam || status.IsVerified)))
                 {
                     CurrentType = status?.IsFake is true
                         ? IdentityIconType.Fake
@@ -275,6 +275,65 @@ namespace Telegram.Controls
             UnloadObject(ref Icon);
             UnloadObject(ref Status);
         }
+
+        #region Helpers
+
+        public void SetStatus(IClientService clientService, User user, CustomEmojiIcon botVerified)
+        {
+            SetStatus(clientService, user, true);
+
+            if (user.VerificationStatus?.BotVerificationIconCustomEmojiId is not null and not 0)
+            {
+                botVerified.Source = new CustomEmojiFileSource(clientService, user.VerificationStatus.BotVerificationIconCustomEmojiId);
+                botVerified.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                botVerified.Source = null;
+                botVerified.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        public void SetStatus(IClientService clientService, Chat chat, CustomEmojiIcon botVerified)
+        {
+            long? verification;
+            if (clientService.TryGetUser(chat, out User user) && user.Id != clientService.Options.MyId)
+            {
+                verification = user.VerificationStatus?.BotVerificationIconCustomEmojiId;
+                SetStatus(clientService, user, true);
+            }
+            else if (clientService.TryGetSupergroup(chat, out Supergroup supergroup))
+            {
+                verification = supergroup.VerificationStatus?.BotVerificationIconCustomEmojiId;
+                SetStatus(supergroup);
+            }
+            else
+            {
+                verification = null;
+                ClearStatus();
+            }
+
+            if (verification is not null and not 0)
+            {
+                botVerified.Source = new CustomEmojiFileSource(clientService, verification.Value);
+                botVerified.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                botVerified.Source = null;
+                botVerified.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        public void ClearStatus(CustomEmojiIcon botVerified)
+        {
+            ClearStatus();
+
+            botVerified.Source = null;
+            botVerified.Visibility = Visibility.Collapsed;
+        }
+
+        #endregion
 
         private void LoadObject<T>(ref T element, /*[CallerArgumentExpression("element")]*/string name)
             where T : DependencyObject

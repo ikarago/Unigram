@@ -195,7 +195,7 @@ namespace Telegram.Views
         {
             Title.Text = user.FullName();
             Photo.SetUser(ViewModel.ClientService, user, 48);
-            Identity.SetStatus(ViewModel.ClientService, user);
+            Identity.SetStatus(ViewModel.ClientService, user, BotVerified);
         }
 
         public void UpdateUserFullInfo(Chat chat, User user, UserFullInfo fullInfo, bool secret, bool accessToken)

@@ -106,23 +106,29 @@
                   HorizontalAlignment="Center"
                   Grid.Row="1">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                <controls:CustomEmojiIcon x:Name="BotVerified"
+                                          VerticalAlignment="Bottom"
+                                          Margin="0,0,4,4" />
+
                 <TextBlock x:Name="Title"
                            TextWrapping="NoWrap"
                            TextTrimming="CharacterEllipsis"
                            TextAlignment="Center"
                            IsTextSelectionEnabled="True"
                            Style="{StaticResource SubtitleTextBlockStyle}"
-                           FontFamily="{ThemeResource EmojiThemeFontFamily}" />
+                           FontFamily="{ThemeResource EmojiThemeFontFamily}"
+                           Grid.Column="1" />
 
                 <HyperlinkButton x:Name="IdentityRoot"
                                  Click="Identity_Click"
                                  Style="{StaticResource EmptyHyperlinkButtonStyle}"
                                  VerticalAlignment="Bottom"
                                  Margin="4,0,0,4"
-                                 Grid.Column="1">
+                                 Grid.Column="2">
                     <controls:IdentityIcon x:Name="Identity" />
                 </HyperlinkButton>
             </Grid>

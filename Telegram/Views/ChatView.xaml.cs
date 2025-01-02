@@ -4449,20 +4449,20 @@ namespace Telegram.Views
             {
                 if (ViewModel.SavedMessagesTopic?.Type is SavedMessagesTopicTypeMyNotes)
                 {
-                    Identity.ClearStatus();
+                    Identity.ClearStatus(BotVerified);
                 }
                 else if (ViewModel.SavedMessagesTopic?.Type is SavedMessagesTopicTypeAuthorHidden)
                 {
-                    Identity.ClearStatus();
+                    Identity.ClearStatus(BotVerified);
                 }
                 else if (ViewModel.SavedMessagesTopic?.Type is SavedMessagesTopicTypeSavedFromChat savedFromChat && ViewModel.ClientService.TryGetChat(savedFromChat.ChatId, out Chat savedChat))
                 {
-                    Identity.SetStatus(_viewModel.ClientService, savedChat);
+                    Identity.SetStatus(_viewModel.ClientService, savedChat, BotVerified);
                 }
             }
             else
             {
-                Identity.SetStatus(_viewModel.ClientService, chat);
+                Identity.SetStatus(_viewModel.ClientService, chat, BotVerified);
             }
         }
 

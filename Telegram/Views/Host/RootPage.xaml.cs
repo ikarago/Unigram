@@ -600,7 +600,9 @@ namespace Telegram.Views.Host
                 photo.SetUser(session.ClientService, user, 28);
 
                 var identity = content.FindName("Identity") as IdentityIcon;
-                identity.SetStatus(session.ClientService, user);
+                var botVerified = content.FindName("BotVerified") as CustomEmojiIcon;
+
+                identity.SetStatus(session.ClientService, user, botVerified);
 
                 AutomationProperties.SetName(container, user.FullName());
             }

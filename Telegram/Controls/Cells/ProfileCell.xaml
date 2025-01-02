@@ -68,17 +68,22 @@
           HorizontalAlignment="Left"
           VerticalAlignment="Bottom">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
+        <controls:CustomEmojiIcon x:Name="BotVerified"
+                                  VerticalAlignment="Bottom"
+                                  Margin="0,0,4,0" />
         <TextBlock x:Name="TitleLabel"
                    FontFamily="{ThemeResource EmojiThemeFontFamily}"
                    TextWrapping="NoWrap"
-                   TextTrimming="CharacterEllipsis" />
+                   TextTrimming="CharacterEllipsis"
+                   Grid.Column="1" />
         <controls:IdentityIcon x:Name="Identity"
                                VerticalAlignment="Bottom"
                                Margin="4,0,0,0"
-                               Grid.Column="1" />
+                               Grid.Column="2" />
     </Grid>
     <TextBlock x:Name="SubtitleLabel"
                VerticalAlignment="Top"

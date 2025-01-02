@@ -118,20 +118,25 @@
                                   VerticalAlignment="Bottom"
                                   Margin="0,0,0,2">
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
+                                <controls:CustomEmojiIcon x:Name="BotVerified"
+                                                          VerticalAlignment="Bottom"
+                                                          Margin="0,0,4,0" />
                                 <TextBlock x:Name="TitleLabel"
                                            MaxLines="1"
                                            TextWrapping="NoWrap"
                                            TextTrimming="CharacterEllipsis"
                                            Style="{StaticResource BodyTextBlockStyle}"
-                                           FontFamily="{ThemeResource EmojiThemeFontFamilyWithSymbols}" />
+                                           FontFamily="{ThemeResource EmojiThemeFontFamilyWithSymbols}"
+                                           Grid.Column="1" />
                                 <controls:IdentityIcon x:Name="Identity"
                                                        VerticalAlignment="Bottom"
                                                        Margin="4,0,0,0"
-                                                       Grid.Column="1" />
+                                                       Grid.Column="2" />
                                 <TextBlock x:Name="MutedIcon"
                                            Text="&#xE979;"
                                            FontFamily="{StaticResource TelegramThemeFontFamily}"
@@ -139,7 +144,7 @@
                                            VerticalAlignment="Bottom"
                                            FontSize="16"
                                            Margin="4,0,0,0"
-                                           Grid.Column="2" />
+                                           Grid.Column="3" />
                             </Grid>
 
                             <TextBlock x:Name="TimeLabel"

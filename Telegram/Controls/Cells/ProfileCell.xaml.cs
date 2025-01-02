@@ -85,7 +85,7 @@ namespace Telegram.Controls.Cells
             Photo.Height = Segments.Height = photoSize;
             Photo.SetUser(clientService, user, photoSize);
 
-            Identity.SetStatus(clientService, user);
+            Identity.SetStatus(clientService, user, BotVerified);
         }
 
         public void UpdateUser(IClientService clientService, User user, ContainerContentChangingEventArgs args, TypedEventHandler<ListViewBase, ContainerContentChangingEventArgs> callback)
@@ -102,7 +102,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetUser(clientService, user, 36);
-                Identity.SetStatus(clientService, user);
+                Identity.SetStatus(clientService, user, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -127,7 +127,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetChat(clientService, activeStories.Chat, 36);
-                Identity.SetStatus(clientService, activeStories.Chat);
+                Identity.SetStatus(clientService, activeStories.Chat, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -159,7 +159,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetUser(clientService, user, 36);
-                Identity.SetStatus(clientService, user);
+                Identity.SetStatus(clientService, user, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -197,7 +197,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetUser(clientService, user, 36);
-                Identity.SetStatus(clientService, user);
+                Identity.SetStatus(clientService, user, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -235,7 +235,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetUser(clientService, user, 36);
-                Identity.SetStatus(clientService, user);
+                Identity.SetStatus(clientService, user, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -270,7 +270,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetUser(clientService, user, 36);
-                Identity.SetStatus(clientService, user);
+                Identity.SetStatus(clientService, user, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -303,7 +303,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetUser(clientService, user, 36);
-                Identity.SetStatus(clientService, user);
+                Identity.SetStatus(clientService, user, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -344,12 +344,12 @@ namespace Telegram.Controls.Cells
                 if (messageSender is User user)
                 {
                     Photo.SetUser(clientService, user, 36);
-                    Identity.SetStatus(clientService, user);
+                    Identity.SetStatus(clientService, user, BotVerified);
                 }
                 else if (messageSender is Chat chat)
                 {
                     Photo.SetChat(clientService, chat, 36);
-                    Identity.SetStatus(clientService, chat);
+                    Identity.SetStatus(clientService, chat, BotVerified);
                 }
             }
 
@@ -396,7 +396,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetChat(clientService, chat, 36);
-                Identity.SetStatus(clientService, chat);
+                Identity.SetStatus(clientService, chat, BotVerified);
 
                 SelectionOutline.RadiusX = 18;
                 SelectionOutline.RadiusY = 18;
@@ -431,7 +431,7 @@ namespace Telegram.Controls.Cells
                 else if (result.User != null)
                 {
                     TitleLabel.Text = result.User.FullName();
-                    Identity.SetStatus(clientService, result.User);
+                    Identity.SetStatus(clientService, result.User, BotVerified);
                 }
 
                 long? userId;
@@ -469,7 +469,7 @@ namespace Telegram.Controls.Cells
                 }
 
                 Photo.Clear();
-                Identity.ClearStatus();
+                Identity.ClearStatus(BotVerified);
             }
             else if (args.Phase == 1)
             {
@@ -548,12 +548,12 @@ namespace Telegram.Controls.Cells
                 if (result.Chat != null)
                 {
                     Photo.SetChat(clientService, result.Chat, 36);
-                    Identity.SetStatus(clientService, result.Chat);
+                    Identity.SetStatus(clientService, result.Chat, BotVerified);
                 }
                 else if (result.User != null)
                 {
                     Photo.SetUser(clientService, result.User, 36);
-                    Identity.SetStatus(clientService, result.User);
+                    Identity.SetStatus(clientService, result.User, BotVerified);
                 }
             }
 
@@ -657,7 +657,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetUser(clientService, user, 36);
-                Identity.SetStatus(clientService, user);
+                Identity.SetStatus(clientService, user, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -719,7 +719,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetChat(clientService, chat, 36);
-                Identity.SetStatus(clientService, chat);
+                Identity.SetStatus(clientService, chat, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -760,12 +760,12 @@ namespace Telegram.Controls.Cells
                 if (messageSender is User user)
                 {
                     Photo.SetUser(clientService, user, 36);
-                    Identity.SetStatus(clientService, user);
+                    Identity.SetStatus(clientService, user, BotVerified);
                 }
                 else if (messageSender is Chat chat)
                 {
                     Photo.SetChat(clientService, chat, 36);
-                    Identity.SetStatus(clientService, chat);
+                    Identity.SetStatus(clientService, chat, BotVerified);
                 }
             }
 
@@ -798,7 +798,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetUser(clientService, user, 36);
-                Identity.SetStatus(clientService, user);
+                Identity.SetStatus(clientService, user, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -834,13 +834,13 @@ namespace Telegram.Controls.Cells
                 {
                     Segments.SetUser(clientService, user, 36);
                     Photo.SetUser(clientService, user, 36);
-                    Identity.SetStatus(clientService, user);
+                    Identity.SetStatus(clientService, user, BotVerified);
                 }
                 else if (clientService.TryGetChat(interaction.ActorId, out Chat chat))
                 {
                     Segments.SetChat(clientService, chat, 36);
                     Photo.SetChat(clientService, chat, 36);
-                    Identity.SetStatus(clientService, chat);
+                    Identity.SetStatus(clientService, chat, BotVerified);
                 }
             }
 
@@ -886,12 +886,12 @@ namespace Telegram.Controls.Cells
                 if (messageSender is User user)
                 {
                     Photo.SetUser(clientService, user, 36);
-                    Identity.SetStatus(clientService, user);
+                    Identity.SetStatus(clientService, user, BotVerified);
                 }
                 else if (messageSender is Chat chat)
                 {
                     Photo.SetChat(clientService, chat, 36);
-                    Identity.SetStatus(clientService, chat);
+                    Identity.SetStatus(clientService, chat, BotVerified);
                 }
             }
 
@@ -918,14 +918,14 @@ namespace Telegram.Controls.Cells
                 TitleLabel.Text = user.FullName();
 
                 Photo.SetUser(clientService, user, 36);
-                Identity.SetStatus(clientService, user);
+                Identity.SetStatus(clientService, user, BotVerified);
             }
             else if (messageSender is Chat chat)
             {
                 TitleLabel.Text = chat.Title;
 
                 Photo.SetChat(clientService, chat, 36);
-                Identity.SetStatus(clientService, chat);
+                Identity.SetStatus(clientService, chat, BotVerified);
             }
         }
 
@@ -952,7 +952,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetChat(clientService, chat, 36);
-                Identity.SetStatus(clientService, chat);
+                Identity.SetStatus(clientService, chat, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -982,7 +982,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetChat(clientService, chat, 36);
-                Identity.SetStatus(clientService, chat);
+                Identity.SetStatus(clientService, chat, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -1011,7 +1011,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetChat(clientService, chat, 36);
-                Identity.SetStatus(clientService, chat);
+                Identity.SetStatus(clientService, chat, BotVerified);
             }
 
             if (args.Phase < 2)
@@ -1059,7 +1059,7 @@ namespace Telegram.Controls.Cells
 
                     Photo.SetChat(clientService, chat, 36);
                     Photo.Visibility = Visibility.Visible;
-                    Identity.SetStatus(clientService, chat);
+                    Identity.SetStatus(clientService, chat, BotVerified);
                 }
             }
 
@@ -1079,7 +1079,7 @@ namespace Telegram.Controls.Cells
             {
                 TitleLabel.Text = clientService.GetTitle(chat);
                 Photo.SetChat(clientService, chat, 36);
-                Identity.SetStatus(clientService, chat);
+                Identity.SetStatus(clientService, chat, BotVerified);
             }
             else if (element is FolderFlag flag)
             {
@@ -1120,7 +1120,7 @@ namespace Telegram.Controls.Cells
                 }
 
                 Photo.Source = PlaceholderImage.GetGlyph(MainPage.GetFolderIcon(flag.Flag), (int)flag.Flag);
-                Identity.ClearStatus();
+                Identity.ClearStatus(BotVerified);
             }
         }
 
@@ -1149,7 +1149,7 @@ namespace Telegram.Controls.Cells
             else if (args.Phase == 2)
             {
                 Photo.SetChat(clientService, chat, 36);
-                Identity.SetStatus(clientService, chat);
+                Identity.SetStatus(clientService, chat, BotVerified);
             }
 
             if (args.Phase < 2)

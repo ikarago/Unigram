@@ -111,6 +111,7 @@ namespace Telegram.Controls.Cells
         #region InitializeComponent
 
         private Grid PhotoPanel;
+        private CustomEmojiIcon BotVerified;
         private TextBlock TitleLabel;
         private IdentityIcon Identity;
         private TextBlock MutedIcon;
@@ -145,6 +146,7 @@ namespace Telegram.Controls.Cells
         protected override void OnApplyTemplate()
         {
             PhotoPanel = GetTemplateChild(nameof(PhotoPanel)) as Grid;
+            BotVerified = GetTemplateChild(nameof(BotVerified)) as CustomEmojiIcon;
             TitleLabel = GetTemplateChild(nameof(TitleLabel)) as TextBlock;
             Identity = GetTemplateChild(nameof(Identity)) as IdentityIcon;
             MutedIcon = GetTemplateChild(nameof(MutedIcon)) as TextBlock;
@@ -258,6 +260,7 @@ namespace Telegram.Controls.Cells
                     Photo.Source = PlaceholderImage.GetGlyph(Icons.MyNotesFilled, 5);
                     Photo.Shape = ProfilePictureShape.Ellipse;
                     Identity.ClearStatus();
+                    BotVerified.Visibility = Visibility.Collapsed;
                 }
                 else if (savedMessagesTopic.Type is SavedMessagesTopicTypeAuthorHidden)
                 {
@@ -265,6 +268,7 @@ namespace Telegram.Controls.Cells
                     Photo.Source = PlaceholderImage.GetGlyph(Icons.AuthorHiddenFilled, 5);
                     Photo.Shape = ProfilePictureShape.Ellipse;
                     Identity.ClearStatus();
+                    BotVerified.Visibility = Visibility.Collapsed;
                 }
 
                 if (message != null)
@@ -803,7 +807,33 @@ namespace Telegram.Controls.Cells
                 return;
             }
 
-            Identity.SetStatus(_clientService, chat);
+            long? verification;
+            if (_clientService.TryGetUser(chat, out User user) && user.Id != _clientService.Options.MyId)
+            {
+                verification = user.VerificationStatus?.BotVerificationIconCustomEmojiId;
+                Identity.SetStatus(_clientService, user, true);
+            }
+            else if (_clientService.TryGetSupergroup(chat, out Supergroup supergroup))
+            {
+                verification = supergroup.VerificationStatus?.BotVerificationIconCustomEmojiId;
+                Identity.SetStatus(supergroup);
+            }
+            else
+            {
+                verification = null;
+                Identity.ClearStatus();
+            }
+            
+            if (verification is not null and not 0)
+            {
+                BotVerified.Source = new CustomEmojiFileSource(_clientService, verification.Value);
+                BotVerified.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                BotVerified.Source = null;
+                BotVerified.Visibility = Visibility.Collapsed;
+            }
         }
 
         public void UpdateChatActiveStories(ChatActiveStories activeStories)

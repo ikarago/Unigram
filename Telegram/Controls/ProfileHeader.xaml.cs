@@ -374,6 +374,7 @@ namespace Telegram.Controls
                 var colors = color.ForTheme(_actualTheme);
 
                 Identity.Foreground = new SolidColorBrush(Colors.White);
+                BotVerified.ReplacementColor = new SolidColorBrush(Colors.White);
 
                 //HeaderRoot.BorderThickness = new Thickness(0, 0, 0, 1);
                 //HeaderRoot.CornerRadius = new CornerRadius(8, 0, 0, 0);
@@ -415,6 +416,7 @@ namespace Telegram.Controls
             else
             {
                 Identity.ClearValue(ForegroundProperty);
+                BotVerified.ClearValue(AnimatedImage.ReplacementColorProperty);
 
                 //HeaderRoot.Background = null;
                 //HeaderRoot.BorderThickness = new Thickness(0);
@@ -663,7 +665,7 @@ namespace Telegram.Controls
 
         public void UpdateChatEmojiStatus(Chat chat)
         {
-            Identity.SetStatus(ViewModel.ClientService, chat);
+            Identity.SetStatus(ViewModel.ClientService, chat, BotVerified);
         }
 
         public void UpdateChatActiveStories(Chat chat)

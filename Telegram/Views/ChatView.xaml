@@ -653,21 +653,27 @@
                     </Grid.RowDefinitions>
                     <Grid HorizontalAlignment="Left">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
+                        <controls:CustomEmojiIcon x:Name="BotVerified"
+                                                  VerticalAlignment="Bottom"
+                                                  Margin="0,0,4,0" />
+
                         <TextBlock x:Name="Title"
                                    Foreground="{ThemeResource PageHeaderForegroundBrush}"
                                    Style="{StaticResource BaseTextBlockStyle}"
                                    FontFamily="{ThemeResource EmojiThemeFontFamilyWithSymbols}"
                                    TextWrapping="NoWrap"
                                    TextTrimming="CharacterEllipsis"
-                                   MaxLines="1" />
+                                   MaxLines="1"
+                                   Grid.Column="1" />
 
                         <controls:IdentityIcon x:Name="Identity"
                                                VerticalAlignment="Bottom"
                                                Margin="4,0,0,0"
-                                               Grid.Column="1" />
+                                               Grid.Column="2" />
                     </Grid>
 
                     <Grid Visibility="{x:Bind ViewModel.LastSeen, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"

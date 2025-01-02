@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Media;
 using System.Linq;
 using System.Numerics;
 using Telegram.Common;
+using Telegram.Controls;
 using Telegram.Controls.Media;
 using Telegram.Controls.Messages;
 using Telegram.Navigation;
@@ -66,7 +67,7 @@ namespace Telegram.Views.Popups
                 Title.Text = user.FullName();
                 Subtitle.Text = Strings.Online;
 
-                Identity.SetStatus(clientService, user);
+                Identity.SetStatus(clientService, user, BotVerified);
 
                 BadgeText.Text = Strings.UserProfileIcon;
                 Reset.Content = Strings.UserProfileColorReset;
@@ -97,7 +98,7 @@ namespace Telegram.Views.Popups
                     }
                 }
 
-                Identity.SetStatus(clientService, chat);
+                Identity.SetStatus(clientService, chat, BotVerified);
 
                 BadgeText.Text = Strings.ChannelProfileLogo;
                 Reset.Content = Strings.UserProfileColorReset;
@@ -279,6 +280,7 @@ namespace Telegram.Views.Popups
                 var colors = color.ForTheme(_actualTheme);
 
                 Identity.Foreground = new SolidColorBrush(Colors.White);
+                BotVerified.ReplacementColor = new SolidColorBrush(Colors.White);
 
                 HeaderRoot.RequestedTheme = ElementTheme.Dark;
 
@@ -315,6 +317,7 @@ namespace Telegram.Views.Popups
             else
             {
                 Identity.ClearValue(ForegroundProperty);
+                BotVerified.ClearValue(AnimatedImage.ReplacementColorProperty);
 
                 HeaderRoot.ClearValue(Panel.BackgroundProperty);
                 HeaderRoot.RequestedTheme = ElementTheme.Default;

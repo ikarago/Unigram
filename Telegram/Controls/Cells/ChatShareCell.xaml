@@ -46,17 +46,23 @@
           VerticalAlignment="Center"
           Grid.Column="1">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
+        <controls:CustomEmojiIcon x:Name="BotVerified"
+                                  VerticalAlignment="Bottom"
+                                  Margin="0,0,4,0" />
+
         <TextBlock x:Name="TitleLabel"
                    FontFamily="{ThemeResource EmojiThemeFontFamilyWithSymbols}"
                    TextWrapping="NoWrap"
-                   TextTrimming="CharacterEllipsis" />
+                   TextTrimming="CharacterEllipsis"
+                   Grid.Column="1" />
 
         <controls:IdentityIcon x:Name="Identity"
                                VerticalAlignment="Bottom"
-                               Margin="4,0,0,2"
-                               Grid.Column="1" />
+                               Margin="4,0,0,0"
+                               Grid.Column="2" />
     </Grid>
 </controls:GridEx>
