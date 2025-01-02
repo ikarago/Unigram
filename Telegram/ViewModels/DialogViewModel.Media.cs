@@ -326,6 +326,7 @@ namespace Telegram.ViewModels
                 return;
             }
 
+            var linkPreview = GetLinkPreviewOptions();
             var formattedText = GetFormattedText(true);
 
             var mediaSelected = header.EditingMessage.Content is not MessageDocument;
@@ -375,7 +376,7 @@ namespace Telegram.ViewModels
             if (factory != null)
             {
                 header.EditingMessageMedia = factory;
-                await BeforeSendMessageAsync(popup.Caption);
+                await BeforeSendMessageAsync(popup.Caption, linkPreview);
             }
         }
     }

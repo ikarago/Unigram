@@ -2867,7 +2867,7 @@ namespace Telegram.ViewModels
             await SendMessageAsync(args);
         }
 
-        protected override LinkPreviewOptions DisableWebPreview()
+        public override LinkPreviewOptions GetLinkPreviewOptions()
         {
             var header = _composerHeader;
             if (header?.LinkPreviewOptions != null)
@@ -2917,7 +2917,7 @@ namespace Telegram.ViewModels
             return base.CreateSendMessageAlbum(chatId, messageThreadId, replyTo, messageSendOptions, inputMessageContent);
         }
 
-        protected override async Task<bool> BeforeSendMessageAsync(FormattedText formattedText)
+        protected override async Task<bool> BeforeSendMessageAsync(FormattedText formattedText, LinkPreviewOptions linkPreview)
         {
             if (Chat is not Chat chat)
             {
@@ -2925,8 +2925,6 @@ namespace Telegram.ViewModels
             }
 
             var header = _composerHeader;
-            var disablePreview = DisableWebPreview();
-
             if (header?.EditingMessage == null)
             {
                 return false;
@@ -2964,17 +2962,17 @@ namespace Telegram.ViewModels
                     {
                         if (textContent)
                         {
-                            function = new EditQuickReplyMessage(QuickReplyShortcut.Id, editing.Id, new InputMessageText(formattedText, disablePreview, true));
+                            function = new EditQuickReplyMessage(QuickReplyShortcut.Id, editing.Id, new InputMessageText(formattedText, linkPreview, true));
                         }
                         else
                         {
                             // TODO
-                            function = new EditQuickReplyMessage(QuickReplyShortcut.Id, editing.Id, new InputMessageText(formattedText, disablePreview, true));
+                            function = new EditQuickReplyMessage(QuickReplyShortcut.Id, editing.Id, new InputMessageText(formattedText, linkPreview, true));
                         }
                     }
                     else if (textContent)
                     {
-                        function = new EditMessageText(chat.Id, editing.Id, null, new InputMessageText(formattedText, disablePreview, true));
+                        function = new EditMessageText(chat.Id, editing.Id, null, new InputMessageText(formattedText, linkPreview, true));
                     }
                     else
                     {
