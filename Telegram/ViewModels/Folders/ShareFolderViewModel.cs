@@ -40,7 +40,7 @@ namespace Telegram.ViewModels.Folders
                 var response = await ClientService.SendAsync(new GetChatFolder(data.Item1));
                 if (response is ChatFolder folder)
                 {
-                    Title = folder.Title;
+                    Name = folder.Name;
 
                     var ids = new List<long>(data.Item2?.ChatIds ?? Array.Empty<long>());
 
@@ -101,11 +101,11 @@ namespace Telegram.ViewModels.Folders
 
         public MvxObservableCollection<Chat> SelectedItems { get; private set; } = new();
 
-        private string _title;
-        public string Title
+        private ChatFolderName _name;
+        public ChatFolderName Name
         {
-            get => _title;
-            set => Set(ref _title, value);
+            get => _name;
+            set => Set(ref _name, value);
         }
 
         private string _inviteLink;

@@ -4,8 +4,6 @@
 // Distributed under the GNU General Public License v3.0. (See accompanying
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
-using System;
-using System.ComponentModel;
 using System.Numerics;
 using Telegram.Navigation;
 using Telegram.Td.Api;
@@ -151,24 +149,24 @@ namespace Telegram.Controls.Cells
 
         #region Title
 
-        public static FormattedText GetTitle(DependencyObject obj)
+        public static ChatFolderName GetTitle(DependencyObject obj)
         {
-            return (FormattedText)obj.GetValue(TitleProperty);
+            return (ChatFolderName)obj.GetValue(TitleProperty);
         }
 
-        public static void SetTitle(DependencyObject obj, FormattedText value)
+        public static void SetTitle(DependencyObject obj, ChatFolderName value)
         {
             obj.SetValue(TitleProperty, value);
         }
 
         public static readonly DependencyProperty TitleProperty =
-            DependencyProperty.RegisterAttached("Title", typeof(FormattedText), typeof(RichTextBlock), new PropertyMetadata(null, OnTitleChanged));
+            DependencyProperty.RegisterAttached("Title", typeof(ChatFolderName), typeof(RichTextBlock), new PropertyMetadata(null, OnTitleChanged));
 
         private static void OnTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var textBlock = d as RichTextBlock;
             var paragraph = textBlock?.Blocks[0] as Paragraph;
-            var formattedText = e.NewValue as FormattedText;
+            var formattedText = e.NewValue as ChatFolderName;
 
             var clientService = textBlock?.DataContext switch
             {
@@ -186,7 +184,7 @@ namespace Telegram.Controls.Cells
                 ? 14
                 : 20;
 
-            CustomEmojiIcon.AddPlain(textBlock, paragraph.Inlines, clientService, formattedText, size: size, loopCount: -1);
+            CustomEmojiIcon.Add(textBlock, paragraph.Inlines, clientService, formattedText, size: size);
         }
 
         #endregion

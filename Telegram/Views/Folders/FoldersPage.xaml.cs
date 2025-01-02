@@ -137,7 +137,7 @@ namespace Telegram.Views.Folders
             {
                 if (args.Item is ChatFolderInfo folder)
                 {
-                    AutomationProperties.SetName(args.ItemContainer, folder.Title);
+                    AutomationProperties.SetName(args.ItemContainer, folder.Name.Text.Text);
 
                     var glyph = content.Children[0] as TextBlock;
                     var presenter = content.Children[1] as RichTextBlock;
@@ -154,7 +154,7 @@ namespace Telegram.Views.Folders
                         index--;
                     }
 
-                    CustomEmojiIcon.Add(presenter, paragraph.Inlines, ViewModel.ClientService, new FormattedText(folder.Title, Array.Empty<TextEntity>()));
+                    CustomEmojiIcon.Add(presenter, paragraph.Inlines, ViewModel.ClientService, folder.Name);
 
                     plate.Fill = ViewModel.ClientService.GetAccentBrush(folder.ColorId);
                     glyph.Text = Icons.FolderToGlyph(icon).Item1;
@@ -176,15 +176,17 @@ namespace Telegram.Views.Folders
                 }
                 else if (args.Item is RecommendedChatFolder recommended)
                 {
-                    AutomationProperties.SetName(args.ItemContainer, recommended.Folder.Title + ", " + recommended.Description);
+                    AutomationProperties.SetName(args.ItemContainer, recommended.Folder.Name.Text.Text + ", " + recommended.Description);
 
                     var icon = content.Children[0] as TextBlock;
-                    var title = content.Children[1] as TextBlock;
+                    var presenter = content.Children[1] as RichTextBlock;
+                    var paragraph = presenter.Blocks[0] as Paragraph;
                     var subtitle = content.Children[2] as TextBlock;
                     var add = content.Children[3] as Button;
 
+                    CustomEmojiIcon.Add(presenter, paragraph.Inlines, ViewModel.ClientService, recommended.Folder.Name);
+
                     icon.Text = Icons.FolderToGlyph(Icons.ParseFolder(recommended.Folder)).Item1;
-                    title.Text = recommended.Folder.Title;
                     subtitle.Text = recommended.Description;
 
                     add.CommandParameter = recommended;

@@ -53,6 +53,10 @@
                                     <controls:SettingsHeadline Source="ms-appx:///Assets/Animations/ChatListNewFolder.tgs" />
 
                                     <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
                                         <FlyoutBase.AttachedFlyout>
                                             <Flyout x:Name="EmojiFlyout"
                                                     Placement="Top"
@@ -71,11 +75,22 @@
                                                                      Height="360" />
                                             </Flyout>
                                         </FlyoutBase.AttachedFlyout>
-                                        <controls:HeaderedControl Header="{CustomResource FilterNameHint}"
-                                                                  BorderThickness="0">
+                                        <TextBlock Style="{StaticResource BaseTextBlockStyle}"
+                                                   MaxWidth="1000"
+                                                   Margin="24,16,24,8">
+                                            <Run Text="{x:Bind ConvertTitleHint(ViewModel.HasCustomEmoji), Mode=OneWay}" />
+                                            <Hyperlink Click="ToggleAnimations_Click"
+                                                       UnderlineStyle="None">
+                                                <Run Text="{x:Bind ConvertAnimate(ViewModel.HasCustomEmoji, ViewModel.AnimateCustomEmoji), Mode=OneWay}" />
+                                            </Hyperlink>
+                                        </TextBlock>
+
+                                        <controls:HeaderedControl BorderThickness="0"
+                                                                  Padding="0"
+                                                                  Grid.Row="1">
                                             <Grid>
                                                 <controls:CaptionTextBox x:Name="TitleField"
-                                                                         TextChangedForRealNoCap="TitleField_TextChanged"
+                                                                         TextChanged="TitleField_TextChanged"
                                                                          FontFamily="{ThemeResource EmojiThemeFontFamily}"
                                                                          Padding="58,11,6,12"
                                                                          Height="44"
@@ -107,7 +122,8 @@
                                                                       HorizontalAlignment="Left"
                                                                       VerticalAlignment="Bottom"
                                                                       Margin="24,0,24,0"
-                                                                      Grid.Column="1">
+                                                                      Grid.Column="1"
+                                                                      Grid.Row="1">
                                             <FlyoutBase.AttachedFlyout>
                                                 <Flyout>
                                                     <GridView x:Name="IconList"
@@ -266,7 +282,7 @@
                                           Margin="4,0,0,0"
                                           Grid.Column="1">
                                         <RichTextBlock x:Name="TagPreviewText"
-                                                       cells:ChatFolderCell.Title="{x:Bind ViewModel.Title, Mode=OneWay}"
+                                                       cells:ChatFolderCell.Title="{x:Bind ViewModel.Name, Mode=OneWay}"
                                                        TextLineBounds="Tight"
                                                        TextAlignment="Center"
                                                        OpticalMarginAlignment="TrimSideBearings"

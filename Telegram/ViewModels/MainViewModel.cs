@@ -239,7 +239,7 @@ namespace Telegram.ViewModels
                 folders.Insert(index, new ChatFolderInfo
                 {
                     Id = Constants.ChatListMain,
-                    Title = Strings.FilterAllChats,
+                    Name = new ChatFolderName(new FormattedText(Strings.FilterAllChats, Array.Empty<TextEntity>()), false),
                     Icon = new ChatFolderIcon("All")
                 });
 
@@ -612,13 +612,13 @@ namespace Telegram.ViewModels
         public static ChatFolderViewModel Main => new(new ChatListMain())
         {
             ChatFolderId = Constants.ChatListMain,
-            Title = new FormattedText(Strings.FilterAllChats, Array.Empty<TextEntity>())
+            Name = new ChatFolderName(new FormattedText(Strings.FilterAllChats, Array.Empty<TextEntity>()), false)
         };
 
         public static ChatFolderViewModel Archive => new(new ChatListArchive())
         {
             ChatFolderId = Constants.ChatListArchive,
-            Title = new FormattedText(Strings.ArchivedChats, Array.Empty<TextEntity>())
+            Name = new ChatFolderName(new FormattedText(Strings.ArchivedChats, Array.Empty<TextEntity>()), false)
         };
 
         public bool IsNavigationItem { get; }
@@ -645,10 +645,8 @@ namespace Telegram.ViewModels
             Info = info;
             ChatFolderId = info.Id;
 
-            _title = new FormattedText(info.Title, Array.Empty<TextEntity>());
+            _name = info.Name;
             _icon = Icons.ParseFolder(info.Icon);
-
-            _title = new FormattedText(info.Title, new[] { new TextEntity(0, 2, new TextEntityTypeCustomEmoji(4929336692923432961)) });
 
             var glyph = Icons.FolderToGlyph(_icon);
             _iconGlyph = glyph.Item1;
@@ -661,7 +659,7 @@ namespace Telegram.ViewModels
             ChatFolderId = id;
             IsNavigationItem = true;
 
-            Title = new FormattedText(title, Array.Empty<TextEntity>());
+            Name = new ChatFolderName(new FormattedText(title, Array.Empty<TextEntity>()), false);
             IconGlyph = glyph;
             FilledIconGlyph = filledGlyph;
         }
@@ -673,8 +671,7 @@ namespace Telegram.ViewModels
 
         public void Update(ChatFolderInfo info)
         {
-            //Title = new FormattedText(info.Title, Array.Empty<TextEntity>());
-            Title = new FormattedText(info.Title, new[] { new TextEntity(0, 2, new TextEntityTypeCustomEmoji(4929336692923432961)) });
+            Name = info.Name;
             Icon = Icons.ParseFolder(info.Icon);
 
             var glyph = Icons.FolderToGlyph(_icon);
@@ -688,11 +685,11 @@ namespace Telegram.ViewModels
 
         public ChatFolderInfo Info { get; }
 
-        private FormattedText _title;
-        public FormattedText Title
+        private ChatFolderName _name;
+        public ChatFolderName Name
         {
-            get => _title;
-            set => Set(ref _title, value);
+            get => _name;
+            set => Set(ref _name, value);
         }
 
         private ChatFolderIcon2 _icon;

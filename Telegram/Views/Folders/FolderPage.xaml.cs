@@ -40,6 +40,7 @@ namespace Telegram.Views.Folders
             EmojiPanel.DataContext = EmojiDrawerViewModel.Create(ViewModel.SessionId);
             TagPreviewText.DataContext = ViewModel;
 
+            TitleField.AllowedEntities = FormattedTextEntity.CustomEmoji;
             TitleField.CustomEmoji = CustomEmoji;
             TitleField.SetText(ViewModel.Title);
 
@@ -152,6 +153,25 @@ namespace Telegram.Views.Folders
         }
 
         #region Binding
+
+        private string ConvertTitleHint(bool hasAnimations)
+        {
+            return hasAnimations
+                ? string.Format("{0} \u2022", Strings.FilterNameHint)
+                : Strings.FilterNameHint;
+        }
+
+        private string ConvertAnimate(bool hasAnimations, bool animate)
+        {
+            if (hasAnimations)
+            {
+                return animate
+                    ? Strings.FilterNameAnimationsDisable
+                    : Strings.FilterNameAnimationsEnable;
+            }
+
+            return string.Empty;
+        }
 
         private string ConvertTitle(ChatFolder folder)
         {
@@ -311,9 +331,14 @@ namespace Telegram.Views.Folders
             }
         }
 
-        private void TitleField_TextChanged(object sender, EventArgs e)
+        private void TitleField_TextChanged(object sender, RoutedEventArgs e)
         {
             ViewModel.Title = TitleField.GetFormattedText();
+        }
+
+        private void ToggleAnimations_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            ViewModel.AnimateCustomEmoji = !ViewModel.AnimateCustomEmoji;
         }
     }
 }

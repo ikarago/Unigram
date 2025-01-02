@@ -55,7 +55,7 @@
                 Margin="0,0,0,6"
                 Grid.Row="1">
             <RichTextBlock x:Name="Title"
-                           cells:ChatFolderCell.Title="{x:Bind ViewModel.Title, Mode=OneWay}"
+                           cells:ChatFolderCell.Title="{x:Bind ViewModel.Name, Mode=OneWay}"
                            TextAlignment="Center"
                            TextWrapping="NoWrap"
                            IsTextSelectionEnabled="False"

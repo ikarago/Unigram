@@ -50,7 +50,7 @@ namespace Telegram.ViewModels.Folders
 
             public void UpdateItem(ChatFolderInfo oldItem, ChatFolderInfo newItem)
             {
-                oldItem.Title = newItem.Title;
+                oldItem.Name = newItem.Name;
                 oldItem.ColorId = newItem.ColorId;
                 oldItem.Icon = newItem.Icon;
                 oldItem.IsShareable = newItem.IsShareable;
@@ -84,7 +84,12 @@ namespace Telegram.ViewModels.Folders
         protected override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, NavigationState state)
         {
             var folders = ClientService.ChatFolders.ToList();
-            folders.Insert(ClientService.MainChatListPosition, new ChatFolderInfo(0, Strings.FilterAllChats, new ChatFolderIcon("All"), -1, false, false));
+            folders.Insert(ClientService.MainChatListPosition, new ChatFolderInfo
+            {
+                Id = Constants.ChatListMain,
+                Name = new ChatFolderName(new FormattedText(Strings.FilterAllChats, Array.Empty<TextEntity>()), false),
+                Icon = new ChatFolderIcon("All")
+            });
 
             Items.ReplaceDiff(folders);
             CanCreateNew = Items.Count < ClientService.Options.ChatFolderCountMax;
@@ -185,7 +190,12 @@ namespace Telegram.ViewModels.Folders
             BeginOnUIThread(() =>
             {
                 var folders = update.ChatFolders.ToList();
-                folders.Insert(ClientService.MainChatListPosition, new ChatFolderInfo(0, Strings.FilterAllChats, new ChatFolderIcon("All"), -1, false, false));
+                folders.Insert(ClientService.MainChatListPosition, new ChatFolderInfo
+                {
+                    Id = Constants.ChatListMain,
+                    Name = new ChatFolderName(new FormattedText(Strings.FilterAllChats, Array.Empty<TextEntity>()), false),
+                    Icon = new ChatFolderIcon("All")
+                });
 
                 Items.ReplaceDiff(folders);
                 RaisePropertyChanged(nameof(ShowTags));

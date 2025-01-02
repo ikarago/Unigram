@@ -5693,6 +5693,12 @@ Duration: {1}</value>
   <data name="FilterMuted" xml:space="preserve">
     <value>Muted</value>
   </data>
+  <data name="FilterNameAnimationsDisable" xml:space="preserve">
+    <value>Disable Animations</value>
+  </data>
+  <data name="FilterNameAnimationsEnable" xml:space="preserve">
+    <value>Enable Animations</value>
+  </data>
   <data name="FilterNameHint" xml:space="preserve">
     <value>Folder name</value>
   </data>

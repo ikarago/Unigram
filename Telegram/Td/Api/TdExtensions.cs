@@ -1785,12 +1785,9 @@ namespace Telegram.Td.Api
                 return x == y;
             }
 
-            var xIcon = x.Icon?.Name ?? string.Empty;
-            var yIcon = y.Icon?.Name ?? string.Empty;
-
-            return xIcon == yIcon
-                && x.ColorId == y.ColorId
-                && x.Title == y.Title
+            return x.ColorId == y.ColorId
+                && x.Icon.AreTheSame(y.Icon)
+                && x.Name.AreTheSame(y.Name)
                 && x.IsShareable == y.IsShareable
                 && x.ExcludeArchived == y.ExcludeArchived
                 && x.ExcludeMuted == y.ExcludeMuted
@@ -1803,6 +1800,25 @@ namespace Telegram.Td.Api
                 && x.ExcludedChatIds.SequenceEqual(y.ExcludedChatIds)
                 && x.IncludedChatIds.SequenceEqual(y.IncludedChatIds)
                 && x.PinnedChatIds.SequenceEqual(y.PinnedChatIds);
+        }
+
+        public static bool AreTheSame(this ChatFolderName x, ChatFolderName y)
+        {
+            if (x == null || y == null)
+            {
+                return x == y;
+            }
+
+            return x.AnimateCustomEmoji == y.AnimateCustomEmoji
+                && x.Text.AreTheSame(y.Text);
+        }
+
+        public static bool AreTheSame(this ChatFolderIcon x, ChatFolderIcon y)
+        {
+            var xName = x?.Name ?? string.Empty;
+            var yName = y?.Name ?? string.Empty;
+
+            return xName == yName;
         }
 
         public static InputBusinessStartPage ToInput(this BusinessStartPage x)

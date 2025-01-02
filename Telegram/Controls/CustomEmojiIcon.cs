@@ -28,7 +28,7 @@ namespace Telegram.Controls
 
         public string Emoji { get; set; }
 
-        public static void Add(RichTextBlock parent, InlineCollection inlines, IClientService clientService, FormattedText message, string style = null, double size = 20, int loopCount = 0)
+        public static void Add(RichTextBlock parent, InlineCollection inlines, IClientService clientService, FormattedText message, string style = null)
         {
             inlines.Clear();
 
@@ -52,10 +52,7 @@ namespace Telegram.Controls
                         }
 
                         var player = new CustomEmojiIcon();
-                        player.LoopCount = loopCount;
-                        player.Width = size;
-                        player.Height = size;
-                        player.FrameSize = new Size(size, size);
+                        player.LoopCount = 0;
                         player.Source = new CustomEmojiFileSource(clientService, customEmoji.CustomEmojiId);
 
                         if (style != null)
@@ -67,7 +64,7 @@ namespace Telegram.Controls
                         var baseline = parent.FontSize == 11 ? -3 : 0;
 
                         var inline = new InlineUIContainer();
-                        inline.Child = new CustomEmojiContainer(parent, player, baseline, size: size);
+                        inline.Child = new CustomEmojiContainer(parent, player, baseline: 0);
 
                         // If the Span starts with a InlineUIContainer the RichTextBlock bugs and shows ellipsis
                         if (inlines.Empty())
@@ -89,16 +86,16 @@ namespace Telegram.Controls
             }
         }
 
-        public static void AddPlain(RichTextBlock parent, InlineCollection inlines, IClientService clientService, FormattedText message, string style = null, double size = 20, int loopCount = 0)
+        public static void Add(RichTextBlock parent, InlineCollection inlines, IClientService clientService, ChatFolderName name, double size = 20)
         {
             inlines.Clear();
 
-            if (message != null)
+            if (name != null)
             {
-                var clean = message.ReplaceSpoilers();
+                var clean = name.Text.ReplaceSpoilers();
                 var previous = 0;
 
-                if (message.Entities != null)
+                if (name.Text.Entities != null)
                 {
                     foreach (var entity in clean.Entities)
                     {
@@ -113,22 +110,23 @@ namespace Telegram.Controls
                         }
 
                         var player = new CustomEmojiIcon();
-                        player.LoopCount = loopCount;
+                        player.IsViewportAware = name.AnimateCustomEmoji;
+                        player.LoopCount = name.AnimateCustomEmoji ? 0 : 1;
                         player.Width = size;
                         player.Height = size;
                         player.FrameSize = new Size(size, size);
                         player.Source = new CustomEmojiFileSource(clientService, customEmoji.CustomEmojiId);
 
-                        if (style != null)
-                        {
-                            // "InfoCustomEmojiStyle"
-                            player.Style = BootStrapper.Current.Resources[style] as Style;
-                        }
+                        //if (style != null)
+                        //{
+                        //    // "InfoCustomEmojiStyle"
+                        //    player.Style = BootStrapper.Current.Resources[style] as Style;
+                        //}
 
                         var baseline = parent.FontSize == 11 ? -3 : 0;
 
                         var inline = new InlineUIContainer();
-                        inline.Child = new CustomEmojiContainer(parent, player, baseline, size);
+                        inline.Child = new CustomEmojiContainer(parent, player, size: size);
 
                         // If the Span starts with a InlineUIContainer the RichTextBlock bugs and shows ellipsis
                         if (inlines.Empty())
@@ -157,7 +155,7 @@ namespace Telegram.Controls
         private readonly CustomEmojiIcon _child;
         private readonly double _baseline;
 
-        public CustomEmojiContainer(RichTextBlock parent, CustomEmojiIcon child, int baseline = 0, double size = 20)
+        public CustomEmojiContainer(RichTextBlock parent, CustomEmojiIcon child, int baseline = 0)
         {
             _parent = parent;
             _child = child;
@@ -171,18 +169,10 @@ namespace Telegram.Controls
 
             HorizontalAlignment = HorizontalAlignment.Left;
             FlowDirection = FlowDirection.LeftToRight;
+            Margin = new Thickness(0, -2, 0, -6);
 
-            if (size == 20)
-            {
-                Margin = new Thickness(0, -2, 0, -6);
-            }
-            else
-            {
-                Margin = new Thickness(0, -4, 0, -4);
-            }
-
-            Width = size;
-            Height = size;
+            Width = 20;
+            Height = 20;
 
             EffectiveViewportChanged += OnEffectiveViewportChanged;
         }
@@ -192,7 +182,7 @@ namespace Telegram.Controls
             _parent = parent;
             _child = child;
 
-            child.IsViewportAware = true;
+            //child.IsViewportAware = true;
             child.IsHitTestVisible = false;
             child.IsEnabled = false;
 

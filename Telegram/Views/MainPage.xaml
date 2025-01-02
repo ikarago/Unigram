@@ -543,7 +543,7 @@
                                             <controls:TopNavView.ItemTemplate>
                                                 <DataTemplate x:DataType="viewModels:ChatFolderViewModel">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <RichTextBlock cells:ChatFolderCell.Title="{x:Bind Title, Mode=OneWay}"
+                                                        <RichTextBlock cells:ChatFolderCell.Title="{x:Bind Name, Mode=OneWay}"
                                                                        FontFamily="{ThemeResource EmojiThemeFontFamily}"
                                                                        VerticalAlignment="Bottom"
                                                                        IsTextSelectionEnabled="False">

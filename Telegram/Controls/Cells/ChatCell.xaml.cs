@@ -823,7 +823,7 @@ namespace Telegram.Controls.Cells
                 verification = null;
                 Identity.ClearStatus();
             }
-            
+
             if (verification is not null and not 0)
             {
                 BotVerified.Source = new CustomEmojiFileSource(_clientService, verification.Value);
@@ -1147,24 +1147,49 @@ namespace Telegram.Controls.Cells
                     var folder = folders[i];
                     var foreground = _clientService.GetAccentBrush(folder.ColorId);
 
-                    BadgeControl badge;
+                    Border badge;
+                    RichTextBlock block;
+                    Paragraph paragraph;
                     if (i < Folders.Children.Count)
                     {
-                        badge = Folders.Children[i] as BadgeControl;
+                        badge = Folders.Children[i] as Border;
+                        block = badge.Child as RichTextBlock;
+                        paragraph = block.Blocks[0] as Paragraph;
                     }
                     else
                     {
-                        badge = new BadgeControl
+                        badge = new Border
                         {
+                            Height = 16,
+                            MinWidth = 16,
+                            HorizontalAlignment = HorizontalAlignment.Left,
+                            VerticalAlignment = VerticalAlignment.Bottom,
                             CornerRadius = new CornerRadius(4),
                             Margin = new Thickness(0, 0, 2, 0)
                         };
 
+                        block = new RichTextBlock
+                        {
+                            TextLineBounds = TextLineBounds.Tight,
+                            TextAlignment = TextAlignment.Center,
+                            OpticalMarginAlignment = OpticalMarginAlignment.TrimSideBearings,
+                            FontSize = 11,
+                            Padding = new Thickness(4, 0, 4, 0),
+                            VerticalAlignment = VerticalAlignment.Center,
+                            IsTextSelectionEnabled = false
+                        };
+
+                        paragraph = new Paragraph();
+
+                        block.Blocks.Add(paragraph);
+                        badge.Child = block;
+
                         Folders.Children.Add(badge);
                     }
 
-                    badge.Text = folder.Title;
-                    badge.Foreground = foreground;
+                    CustomEmojiIcon.Add(block, paragraph.Inlines, _clientService, folder.Name, 14);
+
+                    block.Foreground = foreground;
                     badge.Background = foreground.WithOpacity(0.2);
                 }
                 else
