@@ -4,23 +4,20 @@
 // Distributed under the GNU General Public License v3.0. (See accompanying
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
-using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Collections;
-using Telegram.Controls;
 using Telegram.Navigation;
 using Telegram.Navigation.Services;
 using Telegram.Services;
-using Telegram.Streams;
 using Telegram.Td.Api;
 using Telegram.Views.Stars.Popups;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Navigation;
 
 namespace Telegram.ViewModels.Profile
 {
-    public partial class ProfileGiftsTabViewModel : ViewModelBase, IIncrementalCollectionOwner
+    public partial class ProfileGiftsTabViewModel : ViewModelBase, IHandle, IIncrementalCollectionOwner
     {
         private long _userId;
         private string _nextOffsetId = string.Empty;
@@ -53,6 +50,50 @@ namespace Telegram.ViewModels.Profile
             return Task.CompletedTask;
         }
 
+        public override void Subscribe()
+        {
+            Aggregator.Subscribe<UpdateGiftIsSaved>(this, Handle)
+                .Subscribe<UpdateGiftIsSold>(Handle);
+        }
+
+        private void Handle(UpdateGiftIsSaved update)
+        {
+            if (_userId == update.SenderUserId)
+            {
+                BeginOnUIThread(() =>
+                {
+                    var userGift = Items.FirstOrDefault(x => x.MessageId == update.MessageId);
+                    if (userGift == null)
+                    {
+                        return;
+                    }
+
+                    userGift.IsSaved = update.IsSaved;
+
+                    var index = Items.IndexOf(userGift);
+                    Items.Remove(userGift);
+                    Items.Insert(index, userGift);
+                });
+            }
+        }
+
+        private void Handle(UpdateGiftIsSold update)
+        {
+            if (_userId == update.SenderUserId)
+            {
+                BeginOnUIThread(() =>
+                {
+                    var userGift = Items.FirstOrDefault(x => x.MessageId == update.MessageId);
+                    if (userGift == null)
+                    {
+                        return;
+                    }
+
+                    Items.Remove(userGift);
+                });
+            }
+        }
+
         public IncrementalCollection<UserGift> Items { get; private set; }
 
         public async Task<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
@@ -81,39 +122,14 @@ namespace Telegram.ViewModels.Profile
 
         public bool HasMoreItems { get; private set; } = true;
 
-        public async void OpenGift(UserGift userGift)
+        public void OpenGift(UserGift userGift)
         {
             if (userGift == null)
             {
                 return;
             }
 
-            var confirm = await ShowPopupAsync(new UserGiftPopup(ClientService, NavigationService, userGift, _userId));
-            if (confirm == ContentDialogResult.Primary)
-            {
-                var response = await ClientService.SendAsync(new ToggleGiftIsSaved(userGift.SenderUserId, userGift.MessageId, !userGift.IsSaved));
-                if (response is Ok)
-                {
-                    userGift.IsSaved = !userGift.IsSaved;
-
-                    var index = Items.IndexOf(userGift);
-                    Items.Remove(userGift);
-                    Items.Insert(index, userGift);
-
-                    if (userGift.IsSaved)
-                    {
-                        ToastPopup.Show(XamlRoot, string.Format("**{0}**\n{1}", Strings.Gift2MadePublicTitle, Strings.Gift2MadePublic), new DelayedFileSource(ClientService, userGift.Gift.Sticker));
-                    }
-                    else
-                    {
-                        ToastPopup.Show(XamlRoot, string.Format("**{0}**\n{1}", Strings.Gift2MadePrivateTitle, Strings.Gift2MadePrivate), new DelayedFileSource(ClientService, userGift.Gift.Sticker));
-                    }
-                }
-            }
-            else if (confirm == ContentDialogResult.Secondary)
-            {
-                Items.Remove(userGift);
-            }
+            ShowPopup(new UserGiftPopup(ClientService, NavigationService, userGift, _userId));
         }
     }
 }

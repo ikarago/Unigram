@@ -18,7 +18,6 @@ using Telegram.Converters;
 using Telegram.Entities;
 using Telegram.Native;
 using Telegram.Services;
-using Telegram.Streams;
 using Telegram.Td;
 using Telegram.Td.Api;
 using Telegram.ViewModels.Chats;
@@ -1764,26 +1763,21 @@ namespace Telegram.ViewModels
             else if (message.Content is MessageGift gift && ClientService.TryGetUser(message.Chat, out User user))
             {
                 var senderUserId = message.SenderId is MessageSenderUser senderUser ? senderUser.UserId : 0;
-                var userId = senderUserId == user.Id ? ClientService.Options.MyId : user.Id;
+                var receiverUserId = senderUserId == user.Id ? ClientService.Options.MyId : user.Id;
 
-                var userGift = new UserGift(senderUserId, gift.Text, gift.IsPrivate, gift.IsSaved, message.Date, gift.Gift, message.Id, gift.SellStarCount);
+                var userGift = new UserGift(senderUserId, gift.Text, gift.IsPrivate, gift.IsSaved, gift.CanBeUpgraded, false, gift.WasRefunded, message.Date, new SentGiftRegular(gift.Gift), message.Id, gift.SellStarCount, gift.PrepaidUpgradeStarCount, 0, 0);
 
-                var confirm = await ShowPopupAsync(new UserGiftPopup(ClientService, NavigationService, userGift, userId));
-                if (confirm == ContentDialogResult.Primary)
-                {
-                    var response = await ClientService.SendAsync(new ToggleGiftIsSaved(userGift.SenderUserId, userGift.MessageId, !userGift.IsSaved));
-                    if (response is Ok)
-                    {
-                        if (userGift.IsSaved)
-                        {
-                            ToastPopup.Show(XamlRoot, string.Format("**{0}**\n{1}", Strings.Gift2MadePrivateTitle, Strings.Gift2MadePrivate), new DelayedFileSource(ClientService, userGift.Gift.Sticker));
-                        }
-                        else
-                        {
-                            ToastPopup.Show(XamlRoot, string.Format("**{0}**\n{1}", Strings.Gift2MadePublicTitle, Strings.Gift2MadePublic), new DelayedFileSource(ClientService, userGift.Gift.Sticker));
-                        }
-                    }
-                }
+                ShowPopup(new UserGiftPopup(ClientService, NavigationService, userGift, receiverUserId));
+            }
+            else if (message.Content is MessageUpgradedGift upgradedGift && ClientService.TryGetUser(message.Chat, out User upgradedGiftUser))
+            {
+                var senderUserId = message.SenderId is MessageSenderUser senderUser ? senderUser.UserId : 0;
+                var receiverUserId = senderUserId == upgradedGiftUser.Id ? ClientService.Options.MyId : upgradedGiftUser.Id;
+
+                var text = upgradedGift.Gift.OriginalDetails?.Text ?? string.Empty.AsFormattedText();
+                var userGift = new UserGift(senderUserId, text, true, upgradedGift.IsSaved, false, upgradedGift.CanBeTransferred, false, message.Date, new SentGiftUpgraded(upgradedGift.Gift), message.Id, 0, 0, upgradedGift.TransferStarCount, upgradedGift.ExportDate);
+
+                ShowPopup(new UserGiftPopup(ClientService, NavigationService, userGift, receiverUserId));
             }
             else if (message.Content is MessageGiftedStars giftedStars)
             {

@@ -14,8 +14,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Margin="0,24,0,0">
-            <Grid>
+        <StackPanel>
+            <Grid x:Name="Header"
+                  Margin="0,24,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -44,9 +45,41 @@
                            Margin="12,0,12,8"
                            Grid.Row="3" />
             </Grid>
+            <controls:PatternBackground x:Name="UpgradedHeader"
+                                        CornerRadius="7,7,0,0"
+                                        Padding="0"
+                                        Margin="-24,0">
+                <controls:PatternBackground.Footer>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="UpgradedTitle"
+                                   Text="{CustomResource GiftTelegramPremiumTitle}"
+                                   Style="{StaticResource PopupTextBlockStyle}"
+                                   TextAlignment="Center"
+                                   VerticalAlignment="Top" />
+                        <TextBlock x:Name="UpgradedSubtitle"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   Foreground="#AAFFFFFF"
+                                   TextAlignment="Center"
+                                   Margin="12,0,12,8"
+                                   Grid.Row="1" />
+                    </Grid>
+                </controls:PatternBackground.Footer>
+                <controls:AnimatedImage x:Name="UpgradedAnimatedPhoto"
+                                        Width="120"
+                                        Height="120"
+                                        FrameSize="120,120"
+                                        DecodeFrameType="Logical"
+                                        IsViewportAware="True"
+                                        LoopCount="1"
+                                        Margin="0,-16,0,8" />
+            </controls:PatternBackground>
 
             <controls:TableView x:Name="TableRoot"
-                                Margin="-8,12,0,0">
+                                Margin="-8,12,-8,0">
                 <controls:TableViewItem x:Name="FirstSale"
                                         Header="{CustomResource Gift2SoldOutSheetFirstSale}"
                                         Visibility="Collapsed" />
@@ -103,19 +136,183 @@
                 </controls:TableViewItem>
                 <controls:TableViewItem x:Name="Date"
                                         Header="{CustomResource StarsTransactionDate}" />
+                <controls:TableViewItem x:Name="VisibilityRoot"
+                                        Header="{CustomResource Gift2Visibility}"
+                                        Padding="0"
+                                        Visibility="Collapsed">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="VisibilityText"
+                                   Margin="8,5,8,6"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   VerticalAlignment="Top" />
+
+                        <controls:BadgeButton x:Name="Toggle"
+                                              Click="Toggle_Click"
+                                              Glyph="{CustomResource Gift2StatusUpgrade}"
+                                              Style="{StaticResource SmallButtonStyle}"
+                                              VerticalAlignment="Center"
+                                              FontSize="11"
+                                              Padding="8,0"
+                                              CornerRadius="8"
+                                              BorderThickness="0"
+                                              Height="16"
+                                              Grid.Column="2" />
+                    </Grid>
+                </controls:TableViewItem>
                 <controls:TableViewItem x:Name="Availability"
                                         Header="{CustomResource Gift2Availability}"
                                         Visibility="Collapsed" />
+                <controls:TableViewItem x:Name="Status"
+                                        Header="{CustomResource Gift2Status}"
+                                        Padding="0"
+                                        Visibility="Collapsed">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{CustomResource Gift2StatusNonUnique}"
+                                   Margin="4,5,8,6"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   VerticalAlignment="Top" />
+
+                        <controls:BadgeButton x:Name="Upgrade"
+                                              Click="Upgrade_Click"
+                                              Glyph="{CustomResource Gift2StatusUpgrade}"
+                                              Style="{StaticResource SmallButtonStyle}"
+                                              VerticalAlignment="Center"
+                                              FontSize="11"
+                                              Padding="8,0"
+                                              CornerRadius="8"
+                                              BorderThickness="0"
+                                              Height="16"
+                                              Grid.Column="2" />
+                    </Grid>
+                </controls:TableViewItem>
             </controls:TableView>
             <Border x:Name="CaptionRoot"
                     Background="{ThemeResource ButtonBackground}"
                     BorderBrush="{ThemeResource ButtonBorderBrush}"
                     BorderThickness="1"
                     CornerRadius="0,0,4,4"
-                    Margin="-8,0,0,0"
+                    Margin="-8,0,-8,0"
                     Visibility="Collapsed">
                 <controls:FormattedTextBlock x:Name="Caption"
                                              Margin="8,5,4,6" />
+            </Border>
+
+            <controls:TableView x:Name="UpgradedTableRoot"
+                                Margin="-8,12,-8,0">
+                <controls:TableViewItem Header="{CustomResource Gift2Owner}"
+                                        Padding="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <controls:ProfilePicture x:Name="UpgradedFromPhoto"
+                                                 Margin="8,4,0,4"
+                                                 Width="24"
+                                                 Height="24" />
+                        <TextBlock Margin="8,5,4,6"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   VerticalAlignment="Top"
+                                   Grid.Column="1">
+                                <Hyperlink UnderlineStyle="None">
+                                    <Run x:Name="UpgradedFromTitle" />
+                                </Hyperlink>
+                        </TextBlock>
+                    </Grid>
+                </controls:TableViewItem>
+                <controls:TableViewItem Header="{CustomResource Gift2AttributeModel}"
+                                        Padding="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="UpgradedModel"
+                                   Margin="8,5,8,6"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   VerticalAlignment="Top" />
+
+                        <controls:BadgeButton x:Name="UpgradedModelRarity"
+                                              Click="UpgradedModelRarity_Click"
+                                              Style="{StaticResource SmallButtonStyle}"
+                                              VerticalAlignment="Center"
+                                              FontSize="11"
+                                              Padding="4,0"
+                                              CornerRadius="8"
+                                              BorderThickness="0"
+                                              Height="16"
+                                              Grid.Column="1" />
+                    </Grid>
+                </controls:TableViewItem>
+                <controls:TableViewItem Header="{CustomResource Gift2AttributeBackdrop}"
+                                        Padding="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="UpgradedBackdrop"
+                                   Margin="8,5,8,6"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   VerticalAlignment="Top" />
+
+                        <controls:BadgeButton x:Name="UpgradedBackdropRarity"
+                                              Click="UpgradedBackdropRarity_Click"
+                                              Style="{StaticResource SmallButtonStyle}"
+                                              VerticalAlignment="Center"
+                                              FontSize="11"
+                                              Padding="4,0"
+                                              CornerRadius="8"
+                                              BorderThickness="0"
+                                              Height="16"
+                                              Grid.Column="1" />
+                    </Grid>
+                </controls:TableViewItem>
+                <controls:TableViewItem Header="{CustomResource Gift2AttributeSymbol}"
+                                        Padding="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="UpgradedSymbol"
+                                   Margin="8,5,8,6"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   VerticalAlignment="Top" />
+
+                        <controls:BadgeButton x:Name="UpgradedSymbolRarity"
+                                              Click="UpgradedSymbolRarity_Click"
+                                              Style="{StaticResource SmallButtonStyle}"
+                                              VerticalAlignment="Center"
+                                              FontSize="11"
+                                              Padding="4,0"
+                                              CornerRadius="8"
+                                              BorderThickness="0"
+                                              Height="16"
+                                              Grid.Column="1" />
+                    </Grid>
+                </controls:TableViewItem>
+                <controls:TableViewItem x:Name="UpgradedQuantity"
+                                        Header="{CustomResource Gift2Quantity}" />
+            </controls:TableView>
+            <Border x:Name="UpgradedCaptionRoot"
+                    Background="{ThemeResource ButtonBackground}"
+                    BorderBrush="{ThemeResource ButtonBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="0,0,4,4"
+                    Margin="-8,0,-8,0"
+                    Visibility="Collapsed">
+                <controls:FormattedTextBlock x:Name="UpgradedCaption"
+                                             TextAlignment="Center"
+                                             Margin="8,5,8,6" />
             </Border>
 
             <Border Height="8" />

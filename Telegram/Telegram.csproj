@@ -309,6 +309,9 @@
     <Compile Include="Controls\NativeVideoPlayer.xaml.cs">
       <DependentUpon>NativeVideoPlayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PatternBackground.xaml.cs">
+      <DependentUpon>PatternBackground.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PremiumStarHeader.cs" />
     <Compile Include="Controls\SlideTextBlock.cs" />
     <Compile Include="Controls\TableView.cs" />
@@ -483,6 +486,8 @@
     <Compile Include="Td\Api\ProfileColor.cs" />
     <Compile Include="Td\Api\UpdateChatAffiliatePrograms.cs" />
     <Compile Include="Td\Api\UpdateChatSwitchInlineQuery.cs" />
+    <Compile Include="Td\Api\UpdateGiftIsSold.cs" />
+    <Compile Include="Td\Api\UpdateGiftIsSaved.cs" />
     <Compile Include="Td\Api\UpdateGreetingSticker.cs" />
     <Compile Include="Td\Api\UpdateMessageEffect.cs" />
     <Compile Include="Td\Api\UpdateMessageTranslatedText.cs" />
@@ -2743,6 +2748,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\NativeVideoPlayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PatternBackground.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

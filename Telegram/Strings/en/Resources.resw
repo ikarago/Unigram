@@ -493,6 +493,9 @@
   <data name="ActionGiftPremiumView" xml:space="preserve">
     <value>View</value>
   </data>
+  <data name="ActionGiftSelf" xml:space="preserve">
+    <value>You bought a gift for **un2**</value>
+  </data>
   <data name="ActionGiftStarsSubtitle" xml:space="preserve">
     <value>With Stars, **{0}** is able to unlock content and services on Telegram.</value>
   </data>
@@ -706,6 +709,21 @@ Your prize is **{0} Stars**.</value>
   </data>
   <data name="ActionTTLYouDisabled" xml:space="preserve">
     <value>You disabled the auto-delete timer</value>
+  </data>
+  <data name="ActionUniqueGiftTransferInbound" xml:space="preserve">
+    <value>**un1** transferred a gift to you!</value>
+  </data>
+  <data name="ActionUniqueGiftTransferOutbound" xml:space="preserve">
+    <value>You transferred a gift to **un1**</value>
+  </data>
+  <data name="ActionUniqueGiftUpgradeInbound" xml:space="preserve">
+    <value>**un1** turned the gift from you into a unique collectible</value>
+  </data>
+  <data name="ActionUniqueGiftUpgradeOutbound" xml:space="preserve">
+    <value>You turned the gift from **un1** into a unique collectible</value>
+  </data>
+  <data name="ActionUniqueGiftUpgradeSelf" xml:space="preserve">
+    <value>You turned the gift into a unique collectible</value>
   </data>
   <data name="ActionUserScored" xml:space="preserve">
     <value>un1 scored {0}</value>
@@ -6056,6 +6074,39 @@ Duration: {1}</value>
   <data name="Gift2ActionTitleInAnonymous" xml:space="preserve">
     <value>{0} received a gift!</value>
   </data>
+  <data name="Gift2ActionUpgrade" xml:space="preserve">
+    <value>Tap “Unpack” to turn this gift to a unique collectible.</value>
+  </data>
+  <data name="Gift2ActionUpgradeOut" xml:space="preserve">
+    <value>{0} can turn this gift to a unique collectible.</value>
+  </data>
+  <data name="Gift2AttributeBackdrop" xml:space="preserve">
+    <value>Backdrop</value>
+  </data>
+  <data name="Gift2AttributeModel" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="Gift2AttributeOriginalDetails" xml:space="preserve">
+    <value>Gifted by {0} to {1} on {2}.</value>
+  </data>
+  <data name="Gift2AttributeOriginalDetailsComment" xml:space="preserve">
+    <value>Gifted by {0} to {1} on {2} with the comment: “{3}”</value>
+  </data>
+  <data name="Gift2AttributeOriginalDetailsNoSender" xml:space="preserve">
+    <value>Gifted to {0} on {1}.</value>
+  </data>
+  <data name="Gift2AttributeOriginalDetailsNoSenderComment" xml:space="preserve">
+    <value>Gifted to {0} on {1} with the comment: “{2}”</value>
+  </data>
+  <data name="Gift2AttributeOriginalDetailsSelf" xml:space="preserve">
+    <value>Saved by {0} on {1}.</value>
+  </data>
+  <data name="Gift2AttributeOriginalDetailsSelfComment" xml:space="preserve">
+    <value>Gifted by {0} on {1} with the comment: “{2}”</value>
+  </data>
+  <data name="Gift2AttributeSymbol" xml:space="preserve">
+    <value>Symbol</value>
+  </data>
   <data name="Gift2Availability" xml:space="preserve">
     <value>Availability</value>
   </data>
@@ -6079,6 +6130,12 @@ Duration: {1}</value>
   </data>
   <data name="Gift2ButtonSell_other" xml:space="preserve">
     <value>sell for {0} Stars</value>
+  </data>
+  <data name="Gift2CollectionNumber_one" xml:space="preserve">
+    <value>Collectible #{0}</value>
+  </data>
+  <data name="Gift2CollectionNumber_other" xml:space="preserve">
+    <value>Collectible #{0}</value>
   </data>
   <data name="Gift2ConvertButton" xml:space="preserve">
     <value>Convert</value>
@@ -6123,6 +6180,12 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="Gift2HideInfo" xml:space="preserve">
     <value>You can hide your name and message from visitors to {0}`s profile. {0} will still see your name and message.</value>
   </data>
+  <data name="Gift2HideSelf" xml:space="preserve">
+    <value>Hide My Name</value>
+  </data>
+  <data name="Gift2HideSelfInfo" xml:space="preserve">
+    <value>Hide my name and message from visitors to my profile</value>
+  </data>
   <data name="Gift2Info_one" xml:space="preserve">
     <value>You can keep this gift in your Profile or convert it to **{0}** Star.</value>
   </data>
@@ -6141,6 +6204,12 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="Gift2InfoConverted_other" xml:space="preserve">
     <value>You converted this gift to **{0}** Stars.</value>
   </data>
+  <data name="Gift2InfoFreeUpgrade" xml:space="preserve">
+    <value>{0} can turn this gift to a unique collectible.</value>
+  </data>
+  <data name="Gift2InfoInFreeUpgrade" xml:space="preserve">
+    <value>Upgrade this gift for free to turn it into a unique collectible.</value>
+  </data>
   <data name="Gift2InfoOut_one" xml:space="preserve">
     <value>{1} can keep this gift in profile or convert it to **{0}** Star.</value>
   </data>
@@ -6149,6 +6218,12 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   </data>
   <data name="Gift2InfoPinned" xml:space="preserve">
     <value>You kept this gift in your Profile.</value>
+  </data>
+  <data name="Gift2Invisible" xml:space="preserve">
+    <value>Not visible on your page</value>
+  </data>
+  <data name="Gift2InvisibleShow" xml:space="preserve">
+    <value>show</value>
   </data>
   <data name="Gift2Limited1OfRibbon" xml:space="preserve">
     <value>1 of {0}</value>
@@ -6183,6 +6258,9 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="Gift2Months_other" xml:space="preserve">
     <value>{0}-months</value>
   </data>
+  <data name="Gift2Owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
   <data name="Gift2Premium" xml:space="preserve">
     <value>Gift Premium</value>
   </data>
@@ -6203,6 +6281,24 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   </data>
   <data name="Gift2ProfileVisible" xml:space="preserve">
     <value>This gift is visible to visitors of your page.</value>
+  </data>
+  <data name="Gift2Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="Gift2QuantityIssued1_other" xml:space="preserve">
+    <value>{0}/</value>
+  </data>
+  <data name="Gift2QuantityIssued2_other" xml:space="preserve">
+    <value>{0} issued</value>
+  </data>
+  <data name="Gift2QuantityIssuedNone_one" xml:space="preserve">
+    <value>None of {0} left</value>
+  </data>
+  <data name="Gift2QuantityIssuedNone_other" xml:space="preserve">
+    <value>None of {0} left</value>
+  </data>
+  <data name="Gift2RarityHint" xml:space="preserve">
+    <value>Only {0} of such collectibles have this attribute</value>
   </data>
   <data name="Gift2Send_one" xml:space="preserve">
     <value>Send a Gift for ⭐️ {0}</value>
@@ -6249,6 +6345,15 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="Gift2StarsInfoLink" xml:space="preserve">
     <value>What are Stars &gt;</value>
   </data>
+  <data name="Gift2Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Gift2StatusNonUnique" xml:space="preserve">
+    <value>Non-Unique</value>
+  </data>
+  <data name="Gift2StatusUpgrade" xml:space="preserve">
+    <value>upgrade</value>
+  </data>
   <data name="Gift2TabAll" xml:space="preserve">
     <value>All Gifts</value>
   </data>
@@ -6285,8 +6390,41 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="Gift2TransactionSent" xml:space="preserve">
     <value>Gift</value>
   </data>
+  <data name="Gift2UniqueRibbon" xml:space="preserve">
+    <value>gift</value>
+  </data>
+  <data name="Gift2UniqueTitle" xml:space="preserve">
+    <value>Gift from {0}</value>
+  </data>
+  <data name="Gift2UniqueView" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Gift2Unpack" xml:space="preserve">
+    <value>Unpack</value>
+  </data>
+  <data name="Gift2Upgrade" xml:space="preserve">
+    <value>Make Unique for ⭐️{0}</value>
+  </data>
+  <data name="Gift2UpgradeButton" xml:space="preserve">
+    <value>Upgrade for ⭐️{0}</value>
+  </data>
+  <data name="Gift2UpgradeButtonFree" xml:space="preserve">
+    <value>Upgrade for Free</value>
+  </data>
+  <data name="Gift2UpgradeInfo" xml:space="preserve">
+    <value>Enable this to let {0} turn your gift into a unique collectible. **Learn More &gt;**</value>
+  </data>
   <data name="Gift2Value" xml:space="preserve">
     <value>Value</value>
+  </data>
+  <data name="Gift2Visibility" xml:space="preserve">
+    <value>Visibility</value>
+  </data>
+  <data name="Gift2Visible" xml:space="preserve">
+    <value>Visible on your page</value>
+  </data>
+  <data name="Gift2VisibleHide" xml:space="preserve">
+    <value>hide</value>
   </data>
   <data name="GiftMonths_one" xml:space="preserve">
     <value>{0}-month</value>

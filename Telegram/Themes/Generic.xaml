@@ -13,6 +13,7 @@
                     xmlns:windows10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 14)">
 
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Controls/PatternBackground.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/Cells/ChatCell.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/Cells/ForumTopicCell.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/Messages/Content/AnimationContent.xaml" />

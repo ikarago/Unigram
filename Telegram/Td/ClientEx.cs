@@ -6,6 +6,7 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Telegram.Controls;
 using Telegram.Services;
@@ -135,6 +136,57 @@ namespace Telegram.Td
             }
 
             return -1;
+        }
+
+        public static FormattedText Format(string format, params FormattedText[] args)
+        {
+            // TODO: doesn't support more than 10 parameters but I'm lazy
+
+            var builder = new StringBuilder(format);
+            var entities = new List<TextEntity>();
+
+            var argument = 0;
+            var index = -1;
+
+            for (int i = 0; i < builder.Length; i++)
+            {
+                var c = builder[i];
+                if (c == '{')
+                {
+                    index = i;
+                }
+                else if (index >= 0)
+                {
+                    if (c >= '0' && c <= '9')
+                    {
+                        argument = c - '0';
+                        continue;
+                    }
+                    
+                    if (c == '}')
+                    {
+                        if (argument < args.Length)
+                        {
+                            var text = args[argument];
+
+                            builder.Remove(index, i - index + 1);
+                            builder.Insert(index, text.Text);
+
+                            foreach (var entity in text.Entities)
+                            {
+                                entities.Add(new TextEntity(entity.Offset + index, entity.Length, entity.Type));
+                            }
+
+                            i = index + text.Text.Length - 1;
+                        }
+                    }
+
+                    argument = 0;
+                    index = -1;
+                }
+            }
+
+            return new FormattedText(builder.ToString(), entities);
         }
 
 

@@ -111,6 +111,38 @@ namespace Telegram.Controls.Messages
                 var animation = FindName("Animation") as AnimatedImage;
                 animation.Source = DelayedFileSource.FromSticker(message.ClientService, giveawayPrizeStars.Sticker);
             }
+            else if (message.Content is MessageUpgradedGift upgradedGift)
+            {
+                var user = message.ClientService.GetUser(message.Chat);
+                var self = message.ClientService.GetUser(message.ClientService.Options.MyId);
+
+                if (user == null || self == null)
+                {
+                    return;
+                }
+
+                var pattern = FindName("Pattern") as PatternBackground;
+
+                var source = DelayedFileSource.FromSticker(message.ClientService, upgradedGift.Gift.Symbol.Sticker);
+                var centerColor = upgradedGift.Gift.Backdrop.CenterColor.ToColor();
+                var edgeColor = upgradedGift.Gift.Backdrop.EdgeColor.ToColor();
+
+                pattern.Update(source, centerColor, edgeColor);
+
+                var animation = FindName("Animation") as AnimatedImage;
+                animation.Source = DelayedFileSource.FromSticker(message.ClientService, upgradedGift.Gift.Model.Sticker);
+
+                var title = FindName("Title") as TextBlock;
+                var subtitle = FindName("Subtitle") as TextBlock;
+                var info = FindName("AttributeInfo") as TextBlock;
+                var text = FindName("AttributeText") as TextBlock;
+
+                title.Text = string.Format(Strings.Gift2UniqueTitle, message.IsOutgoing ? self.FirstName : user.FullName(true));
+                subtitle.Text = string.Format("{0} #{1}", upgradedGift.Gift.Title, upgradedGift.Gift.Number);
+
+                info.Text = Strings.Gift2AttributeModel + "\n" + Strings.Gift2AttributeBackdrop + "\n" + Strings.Gift2AttributeSymbol;
+                text.Text = upgradedGift.Gift.Model.Name + "\n" + upgradedGift.Gift.Backdrop.Name + "\n" + upgradedGift.Gift.Symbol.Name;
+            }
             else if (message.Content is MessageGift gift)
             {
                 var title = FindName("Title") as TextBlock;
@@ -137,12 +169,17 @@ namespace Telegram.Controls.Messages
                     {
                         subtitle.SetText(message.ClientService, gift.Text);
                     }
+                    else if (gift.PrepaidUpgradeStarCount > 0)
+                    {
+                        subtitle.SetText(message.ClientService, ClientEx.ParseMarkdown(string.Format(Strings.Gift2ActionUpgradeOut, user.FullName(true))));
+                    }
                     else
                     {
                         subtitle.SetText(message.ClientService, ClientEx.ParseMarkdown(Locale.Declension(Strings.R.Gift2ActionOutInfo, gift.SellStarCount, user.FullName(true))));
                     }
 
-                    view.Visibility = Visibility.Collapsed;
+                    view.Visibility = Visibility.Visible;
+                    button.Text = Strings.ActionGiftPremiumView;
                 }
                 else
                 {
@@ -153,6 +190,10 @@ namespace Telegram.Controls.Messages
                     if (gift.Text.Text.Length > 0)
                     {
                         subtitle.SetText(message.ClientService, gift.Text);
+                    }
+                    else if (gift.PrepaidUpgradeStarCount > 0)
+                    {
+                        subtitle.SetText(message.ClientService, ClientEx.ParseMarkdown(Strings.Gift2ActionUpgrade));
                     }
                     else if (gift.IsSaved)
                     {
@@ -166,7 +207,9 @@ namespace Telegram.Controls.Messages
                     }
 
                     view.Visibility = Visibility.Visible;
-                    button.Text = Strings.ActionGiftPremiumView;
+                    button.Text = gift.PrepaidUpgradeStarCount > 0
+                        ? Strings.Gift2Unpack
+                        : Strings.ActionGiftPremiumView;
                 }
 
                 var animation = FindName("Animation") as AnimatedImage;
@@ -449,6 +492,7 @@ namespace Telegram.Controls.Messages
                 MessageScreenshotTaken screenshotTaken => UpdateScreenshotTaken(message, screenshotTaken, active),
                 MessageSuggestProfilePhoto suggestProfilePhoto => UpdateSuggestProfilePhoto(message, suggestProfilePhoto, active),
                 MessageSupergroupChatCreate supergroupChatCreate => UpdateSupergroupChatCreate(message, supergroupChatCreate, active),
+                MessageUpgradedGift upgradedGift => UpdateUpgradedGift(message, upgradedGift, active),
                 MessageUsersShared usersShared => UpdateUsersShared(message, usersShared, active),
                 MessageVideoChatEnded videoChatEnded => UpdateVideoChatEnded(message, videoChatEnded, active),
                 MessageVideoChatScheduled videoChatScheduled => UpdateVideoChatScheduled(message, videoChatScheduled, active),
@@ -2010,6 +2054,10 @@ namespace Telegram.Controls.Messages
             var content = string.Empty;
             var entities = active ? new List<TextEntity>() : null;
 
+            if (message.ChatId == message.ClientService.Options.MyId)
+            {
+                content = ReplaceWithLink(Strings.ActionGiftSelf, "un2", gift, entities);
+            }
             if (message.IsOutgoing)
             {
                 content = ReplaceWithLink(Strings.ActionGiftOutbound, "un2", gift, entities);
@@ -2565,6 +2613,38 @@ namespace Telegram.Controls.Messages
             return (content, null);
         }
 
+        private static (string, IList<TextEntity>) UpdateUpgradedGift(MessageViewModel message, MessageUpgradedGift upgradedGift, bool active)
+        {
+            var content = string.Empty;
+            var entities = active ? new List<TextEntity>() : null;
+
+            if (upgradedGift.IsUpgrade)
+            {
+                if (message.ChatId == message.ClientService.Options.MyId)
+                {
+                    content = Strings.ActionUniqueGiftUpgradeSelf;
+                }
+                else if (message.IsOutgoing && message.ClientService.TryGetUser(message.Chat, out User outboundUser))
+                {
+                    content = ReplaceWithLink(Strings.ActionUniqueGiftUpgradeOutbound, "un1", outboundUser, entities);
+                }
+                else if (message.ClientService.TryGetUser(message.SenderId, out User inboundUser))
+                {
+                    content = ReplaceWithLink(Strings.ActionUniqueGiftUpgradeInbound, "un1", inboundUser, entities);
+                }
+            }
+            else if (message.IsOutgoing && message.ClientService.TryGetUser(message.Chat, out User outboundUser))
+            {
+                content = ReplaceWithLink(Strings.ActionUniqueGiftTransferOutbound, "un1", outboundUser, entities);
+            }
+            else if (message.ClientService.TryGetUser(message.SenderId, out User inboundUser))
+            {
+                content = ReplaceWithLink(Strings.ActionUniqueGiftTransferInbound, "un1", inboundUser, entities);
+            }
+
+            return (content, null);
+        }
+
         private static (string, IList<TextEntity>) UpdateChatShared(MessageViewModel message, MessageChatShared chatShared, bool active)
         {
             var content = string.Empty;
@@ -2720,6 +2800,8 @@ namespace Telegram.Controls.Messages
 
         public static string ReplaceWithLink(string source, string param, object obj, IList<TextEntity> entities)
         {
+            source = source.Replace("**", string.Empty);
+
             var start = source.IndexOf(param);
             if (start >= 0)
             {
@@ -2742,7 +2824,7 @@ namespace Telegram.Controls.Messages
                 }
                 else if (obj is MessageGift gift)
                 {
-                    name = Locale.Declension(Strings.R.StarsCount, gift.Gift.StarCount);
+                    name = Locale.Declension(Strings.R.StarsCount, gift.Gift.StarCount + gift.PrepaidUpgradeStarCount);
                     id = null;
                 }
                 else if (obj is MessageGiftedPremium giftedPremium)

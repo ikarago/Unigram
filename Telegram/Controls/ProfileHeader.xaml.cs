@@ -179,14 +179,28 @@ namespace Telegram.Controls
 
                 for (int i = 0; i < avatarPatternCount - 1; i++)
                 {
-                    //float baseItemDistance = 72.0f + row * 28.0f;
-                    float baseItemDistance = 100.0f + row * 40.0f;
+                    float baseItemDistance;
+                    float itemDistanceFraction;
+                    float itemScaleFraction;
+                    float itemDistance;
 
-                    //float itemDistanceFraction = MathF.Max(0.0f, MathF.Min(1.0f, baseItemDistance / 140.0f));
-                    float itemDistanceFraction = MathF.Max(0.0f, MathF.Min(1.0f, baseItemDistance / 196.0f));
-                    float itemScaleFraction = patternScaleValueAt(fraction: avatarTransitionFraction, t: itemDistanceFraction, reverse: false);
-                    //float itemDistance = baseItemDistance * (1.0f - itemScaleFraction) + 20.0f * itemScaleFraction;
-                    float itemDistance = baseItemDistance * (1.0f - itemScaleFraction) + 28.0f * itemScaleFraction;
+                    if (IsSmall)
+                    {
+                        baseItemDistance = 72.0f + row * 28.0f;
+
+                        itemDistanceFraction = MathF.Max(0.0f, MathF.Min(1.0f, baseItemDistance / 140.0f));
+                        itemScaleFraction = patternScaleValueAt(fraction: avatarTransitionFraction, t: itemDistanceFraction, reverse: false);
+                        itemDistance = baseItemDistance * (1.0f - itemScaleFraction) + 20.0f * itemScaleFraction;
+                    }
+                    else
+                    {
+                        baseItemDistance = 100.0f + row * 40.0f;
+
+                        itemDistanceFraction = MathF.Max(0.0f, MathF.Min(1.0f, baseItemDistance / 196.0f));
+                        itemScaleFraction = patternScaleValueAt(fraction: avatarTransitionFraction, t: itemDistanceFraction, reverse: false);
+                        itemDistance = baseItemDistance * (1.0f - itemScaleFraction) + 28.0f * itemScaleFraction;
+                    }
+
 
                     float itemAngle = -MathF.PI * 0.5f + i * avatarPatternAngleSpan;
 
@@ -198,7 +212,7 @@ namespace Telegram.Controls
                     Vector2 itemPosition = new Vector2(avatarPatternFrame.X * 0.5f + MathF.Cos(itemAngle) * itemDistance, avatarPatternFrame.Y * 0.5f + MathF.Sin(itemAngle) * itemDistance);
 
                     float itemScale = 0.7f + lokiRng.Next() * (1.0f - 0.7f);
-                    float itemSize = MathF.Floor(36.0f * itemScale);
+                    float itemSize = MathF.Floor((IsSmall ? 32 : 36) * itemScale);
 
                     results.Add(new Vector4(itemPosition.X, itemPosition.Y, itemSize, 1.0f - itemScaleFraction));
                 }
@@ -206,6 +220,8 @@ namespace Telegram.Controls
 
             return results;
         }
+
+        public bool IsSmall { get; set; } = false;
 
         #region Source
 

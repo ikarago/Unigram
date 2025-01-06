@@ -18,13 +18,21 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"
+                           MinHeight="4" />
         </Grid.RowDefinitions>
         <Border Background="{ThemeResource SettingsItemBackground}"
                 BorderBrush="{ThemeResource SettingsItemBorderBrush}"
                 BorderThickness="1"
                 CornerRadius="4"
                 Grid.RowSpan="2" />
+        <controls:PatternBackground x:Name="Pattern"
+                                    ScaleXY="0.6"
+                                    BorderBrush="{ThemeResource SettingsItemBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Padding="0"
+                                    Grid.RowSpan="2" />
 
         <controls:ProfilePicture x:Name="Photo"
                                  Width="24"

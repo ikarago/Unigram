@@ -1778,6 +1778,20 @@ namespace Telegram.Td.Api
             return years;
         }
 
+        public static Sticker GetSticker(this UserGift gift)
+        {
+            if (gift.Gift is SentGiftRegular regular)
+            {
+                return regular.Gift.Sticker;
+            }
+            else if (gift.Gift is SentGiftUpgraded upgraded)
+            {
+                return upgraded.Gift.Model.Sticker;
+            }
+
+            return null;
+        }
+
         public static bool AreTheSame(this ChatFolder x, ChatFolder y)
         {
             if (x == null || y == null)

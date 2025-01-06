@@ -820,6 +820,10 @@ namespace Telegram.Views
                 {
                     return ChatHistoryViewItemType.ServiceGift;
                 }
+                else if (message.Content is MessageUpgradedGift)
+                {
+                    return ChatHistoryViewItemType.ServiceUpgradedGift;
+                }
                 else if (message.Content is MessageChatChangePhoto or MessageSuggestProfilePhoto or MessageAsyncStory)
                 {
                     return ChatHistoryViewItemType.ServicePhoto;

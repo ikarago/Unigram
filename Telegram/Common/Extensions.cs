@@ -148,6 +148,11 @@ namespace Telegram.Common
             });
         }
 
+        public static FormattedText AsFormattedText(this string str)
+        {
+            return new FormattedText(str, Array.Empty<TextEntity>());
+        }
+
         public static IEnumerable<IList<T>> ToChunks<T>(this List<T> enumerable, int chunkSize)
         {
             int itemsReturned = 0;
