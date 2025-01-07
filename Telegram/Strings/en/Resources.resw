@@ -2411,6 +2411,9 @@ from **{0}**.</value>
   <data name="BotChangeSettings" xml:space="preserve">
     <value>Change Bot Settings</value>
   </data>
+  <data name="BotChooseChatToVerify" xml:space="preserve">
+    <value>Choose Chat To Verify</value>
+  </data>
   <data name="BotDAU_one" xml:space="preserve">
     <value>{0} monthly user</value>
   </data>
@@ -2494,8 +2497,25 @@ It will be able to access your **IP address** and basic device info.</value>
   <data name="BotRemoveFromMenuTitle" xml:space="preserve">
     <value>Remove bot</value>
   </data>
+  <data name="BotRemoveVerificationChatText" xml:space="preserve">
+    <value>This chat is already verified by you.
+Do you want to revoke verification?</value>
+  </data>
+  <data name="BotRemoveVerificationText" xml:space="preserve">
+    <value>This account is already verified by you.
+Do you want to revoke verification?</value>
+  </data>
+  <data name="BotRemoveVerificationTitle" xml:space="preserve">
+    <value>Remove verification</value>
+  </data>
   <data name="BotRestart" xml:space="preserve">
     <value>Restart Bot</value>
+  </data>
+  <data name="BotSentRevokeVerifyRequest" xml:space="preserve">
+    <value>**{0}**&apos;s verification has been revoked.</value>
+  </data>
+  <data name="BotSentVerifyRequest" xml:space="preserve">
+    <value>**{0}** has been notified and will receive your verification mark and description upon accepting.</value>
   </data>
   <data name="BotSettings" xml:space="preserve">
     <value>Settings</value>
@@ -2592,6 +2612,36 @@ It will be able to access your **IP address** and basic device info.</value>
   </data>
   <data name="BotUsernamesHelp" xml:space="preserve">
     <value>Drag and drop links to change the order in which they will be displayed on the bot info page.</value>
+  </data>
+  <data name="BotVerifierRepresentatives" xml:space="preserve">
+    <value>This community is verified as official by the representatives of {0}.</value>
+  </data>
+  <data name="BotVerifyAccounts" xml:space="preserve">
+    <value>Verify Accounts</value>
+  </data>
+  <data name="BotVerifyBotTitle" xml:space="preserve">
+    <value>Verify Bot</value>
+  </data>
+  <data name="BotVerifyChannelTitle" xml:space="preserve">
+    <value>Verify Channel</value>
+  </data>
+  <data name="BotVerifyDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="BotVerifyDescriptionInfo" xml:space="preserve">
+    <value>You can customize your description for each account.</value>
+  </data>
+  <data name="BotVerifyDescriptionInfoChat" xml:space="preserve">
+    <value>You can customize your description for each chat.</value>
+  </data>
+  <data name="BotVerifyGroupTitle" xml:space="preserve">
+    <value>Verify Group</value>
+  </data>
+  <data name="BotVerifyText" xml:space="preserve">
+    <value>Do you want to verify **{0}** with your verification mark and description?</value>
+  </data>
+  <data name="BotVerifyUserTitle" xml:space="preserve">
+    <value>Verify User</value>
   </data>
   <data name="BotWebAppDisclaimerCheck" xml:space="preserve">
     <value>I agree to the **Terms of Use**</value>

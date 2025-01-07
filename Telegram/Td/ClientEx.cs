@@ -162,7 +162,7 @@ namespace Telegram.Td
                         argument = c - '0';
                         continue;
                     }
-                    
+
                     if (c == '}')
                     {
                         if (argument < args.Length)

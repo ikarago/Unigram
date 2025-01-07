@@ -12,6 +12,7 @@ using Telegram.Services;
 using Telegram.Td.Api;
 using Telegram.ViewModels.Delegates;
 using Telegram.Views.Chats;
+using Telegram.Views.Popups;
 using Telegram.Views.Settings.Popups;
 using Telegram.Views.Users;
 using Windows.UI.Xaml.Controls;
@@ -315,6 +316,11 @@ namespace Telegram.ViewModels.Users
             {
                 MessageHelper.OpenTelegramUrl(ClientService, NavigationService, fullInfo.BotInfo.EditSettingsLink);
             }
+        }
+
+        public void VerifyAccounts()
+        {
+            ShowPopup(new ChooseChatsPopup(), new ChooseChatsConfigurationVerifyChat(_userId));
         }
     }
 }

@@ -153,29 +153,6 @@ namespace Telegram.Common
             {
                 sender.Inlines.Add(text.Substring(previous));
             }
-
-            //var previous = 0;
-            //var index = markdown.IndexOf("**");
-            //var next = index > -1 ? markdown.IndexOf("**", index + 2) : -1;
-
-            //while (index > -1 && next > -1)
-            //{
-            //    if (index - previous > 0)
-            //    {
-            //        sender.Inlines.Add(new Run { Text = markdown.Substring(previous, index - previous) });
-            //    }
-
-            //    sender.Inlines.Add(new Run { Text = markdown.Substring(index + 2, next - index - 2), FontWeight = FontWeights.SemiBold });
-
-            //    previous = next + 2;
-            //    index = markdown.IndexOf("**", next + 2);
-            //    next = index > -1 ? markdown.IndexOf("**", index + 2) : -1;
-            //}
-
-            //if (markdown.Length - previous > 0)
-            //{
-            //    sender.Inlines.Add(new Run { Text = markdown.Substring(previous, markdown.Length - previous) });
-            //}
         }
 
         #endregion
@@ -197,16 +174,19 @@ namespace Telegram.Common
 
         private static void OnFormattedTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var sender = d as TextBlock;
             var markdown = e.NewValue as FormattedText;
-
-            var span = new Span();
-            sender.Inlines.Clear();
-            sender.Inlines.Add(span);
-
             if (markdown == null)
             {
                 return;
+            }
+
+            var span = d as Span;
+
+            if (d is TextBlock textBlock)
+            {
+                span = new Span();
+                textBlock.Inlines.Clear();
+                textBlock.Inlines.Add(span);
             }
 
             markdown = markdown.ReplaceSpoilers(false);
@@ -247,6 +227,24 @@ namespace Telegram.Common
                         span.Inlines.Add(hyperlink);
                         local = hyperlink;
                     }
+                    else if (entity.Type is TextEntityTypeUrl url)
+                    {
+                        var data = text.Substring(entity.Offset, entity.Length);
+                        var hyperlink = new Hyperlink();
+                        hyperlink.Click += (s, args) => Hyperlink_Click(s, entity.Type, data);
+                        hyperlink.UnderlineStyle = UnderlineStyle.None;
+                        span.Inlines.Add(hyperlink);
+                        local = hyperlink;
+                    }
+                    else if (entity.Type is TextEntityTypeMention mention)
+                    {
+                        var data = text.Substring(entity.Offset + 1, entity.Length - 1);
+                        var hyperlink = new Hyperlink();
+                        hyperlink.Click += (s, args) => Hyperlink_Click(s, entity.Type, data);
+                        hyperlink.UnderlineStyle = UnderlineStyle.None;
+                        span.Inlines.Add(hyperlink);
+                        local = hyperlink;
+                    }
 
                     var run = new Run { Text = text.Substring(entity.Offset, entity.Length) };
 
@@ -277,29 +275,6 @@ namespace Telegram.Common
             {
                 span.Inlines.Add(new Run { Text = text.Substring(previous) });
             }
-
-            //var previous = 0;
-            //var index = markdown.IndexOf("**");
-            //var next = index > -1 ? markdown.IndexOf("**", index + 2) : -1;
-
-            //while (index > -1 && next > -1)
-            //{
-            //    if (index - previous > 0)
-            //    {
-            //        sender.Inlines.Add(new Run { Text = markdown.Substring(previous, index - previous) });
-            //    }
-
-            //    sender.Inlines.Add(new Run { Text = markdown.Substring(index + 2, next - index - 2), FontWeight = FontWeights.SemiBold });
-
-            //    previous = next + 2;
-            //    index = markdown.IndexOf("**", next + 2);
-            //    next = index > -1 ? markdown.IndexOf("**", index + 2) : -1;
-            //}
-
-            //if (markdown.Length - previous > 0)
-            //{
-            //    sender.Inlines.Add(new Run { Text = markdown.Substring(previous, markdown.Length - previous) });
-            //}
         }
 
         #endregion

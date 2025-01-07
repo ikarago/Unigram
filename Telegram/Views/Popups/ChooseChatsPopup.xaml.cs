@@ -592,6 +592,16 @@ namespace Telegram.Views.Popups
         public InputMessageContent Content { get; }
     }
 
+    public partial class ChooseChatsConfigurationVerifyChat : ChooseChatsConfiguration
+    {
+        public ChooseChatsConfigurationVerifyChat(long botUserId)
+        {
+            BotUserId = botUserId;
+        }
+
+        public long BotUserId { get; }
+    }
+
     public partial class ChooseChatsConfigurationStartBot : ChooseChatsConfiguration
     {
         public ChooseChatsConfigurationStartBot(User bot, string token = null)
@@ -1473,16 +1483,32 @@ namespace Telegram.Views.Popups
 
         private bool ItemClick(Chat chat, bool origin)
         {
-            if (ViewModel.Options.CanPostMessages && (ViewModel.ClientService.IsSavedMessages(chat) || ViewModel.SelectionMode == ListViewSelectionMode.None))
+            if (ViewModel.Options.CanPostMessages && ViewModel.ClientService.IsSavedMessages(chat))
             {
                 if (ViewModel.SelectedItems.Empty())
                 {
                     ViewModel.SelectedItems = new MvxObservableCollection<Chat>(new[] { chat });
                     ViewModel.SendCommand.Execute();
 
-                    Hide();
+                    if (ViewModel.ShouldCloseOnCommit)
+                    {
+                        Hide();
+                    }
+
                     return true;
                 }
+            }
+            else if (ViewModel.SelectionMode == ListViewSelectionMode.None)
+            {
+                ViewModel.SelectedItems = new MvxObservableCollection<Chat>(new[] { chat });
+                ViewModel.SendCommand.Execute();
+
+                if (ViewModel.ShouldCloseOnCommit)
+                {
+                    Hide();
+                }
+
+                return true;
             }
             else if (ViewModel.Options.CanPostMessages && origin && ViewModel.ClientService.IsForum(chat))
             {

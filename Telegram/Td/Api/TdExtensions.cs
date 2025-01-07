@@ -1792,6 +1792,16 @@ namespace Telegram.Td.Api
             return null;
         }
 
+        public static MessageSender ToMessageSender(this Chat chat)
+        {
+            return chat.Type switch
+            {
+                ChatTypePrivate privata => new MessageSenderUser(privata.UserId),
+                ChatTypeSecret secret => new MessageSenderUser(secret.UserId),
+                _ => new MessageSenderChat(chat.Id)
+            };
+        }
+
         public static bool AreTheSame(this ChatFolder x, ChatFolder y)
         {
             if (x == null || y == null)

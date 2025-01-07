@@ -111,6 +111,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <controls:CustomEmojiIcon x:Name="BotVerified"
+                                          Visibility="Collapsed"
                                           VerticalAlignment="Bottom"
                                           Margin="0,0,4,4" />
 
@@ -431,6 +432,26 @@
                             Height="36" />
                 </Border>
             </controls:HeaderedControl>
+
+            <Grid x:Name="BotVerifiedRoot"
+                  Visibility="Collapsed"
+                  MaxWidth="1000"
+                  Margin="24,8,24,8">
+                <RichTextBlock Style="{StaticResource InfoCaptionRichTextBlockStyle}"
+                               IsTextSelectionEnabled="False">
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <controls:CustomEmojiIcon x:Name="BotVerifiedInfo"
+                                                      ReplacementColor="{ThemeResource SystemControlDisabledChromeDisabledLowBrush}"
+                                                      Width="16"
+                                                      Height="16"
+                                                      FrameSize="16,16"
+                                                      Margin="0,0,0,-4" />
+                        </InlineUIContainer>
+                        <Span x:Name="BotVerifiedText" />
+                    </Paragraph>
+                </RichTextBlock>
+            </Grid>
 
             <controls:HeaderedControl x:Name="AffiliateProgramRoot">
                 <controls:BadgeButton x:Name="AffiliateProgram"

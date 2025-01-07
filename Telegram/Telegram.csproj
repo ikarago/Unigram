@@ -1217,6 +1217,9 @@
     <Compile Include="Views\Popups\FactCheckPopup.xaml.cs">
       <DependentUpon>FactCheckPopup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Popups\VerifyChatPopup.xaml.cs">
+      <DependentUpon>VerifyChatPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Popups\LogOutPopup.xaml.cs">
       <DependentUpon>LogOutPopup.xaml</DependentUpon>
     </Compile>
@@ -3108,6 +3111,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Popups\FactCheckPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Popups\VerifyChatPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

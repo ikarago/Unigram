@@ -246,6 +246,16 @@ namespace Telegram.ViewModels
                     ? Strings.ChooseChannel
                     : Strings.ChooseGroup;
             }
+            else if (parameter is ChooseChatsConfigurationVerifyChat)
+            {
+                SelectionMode = ListViewSelectionMode.None;
+                Options = ChooseChatsOptions.All;
+                ShouldCloseOnCommit = false;
+                IsCommentEnabled = false;
+                IsChatSelection = false;
+
+                Title = Strings.BotChooseChatToVerify;
+            }
 
             #endregion
 
@@ -269,7 +279,12 @@ namespace Telegram.ViewModels
                 var folders = ClientService.ChatFolders.ToList();
                 var index = Math.Min(ClientService.MainChatListPosition, folders.Count);
 
-                folders.Insert(index, new ChatFolderInfo { Id = Constants.ChatListMain, Title = Strings.FilterAllChats, Icon = new ChatFolderIcon("All") });
+                folders.Insert(index, new ChatFolderInfo
+                {
+                    Id = Constants.ChatListMain,
+                    Name = new ChatFolderName(new FormattedText(Strings.FilterAllChats, Array.Empty<TextEntity>()), false),
+                    Icon = new ChatFolderIcon("All")
+                });
 
                 Folders = new ObservableCollection<ChatFolderViewModel>(folders.Select(x => new ChatFolderViewModel(ClientService, x)));
 
@@ -685,10 +700,52 @@ namespace Telegram.ViewModels
                     .ToList();
                 ClientService.Send(new ShareUsersWithBot(requestUsers.ChatId, requestUsers.MessageId, requestUsers.Id, userIds, false));
             }
+            else if (_configuration is ChooseChatsConfigurationVerifyChat verifyChat && ClientService.TryGetUserFull(verifyChat.BotUserId, out UserFullInfo verifyChatFullInfo))
+            {
+                var chat = chats[0];
+                var verifiedId = chats[0].ToMessageSender();
 
-            //App.InMemoryState.ForwardMessages = new List<TLMessage>(messages);
-            //NavigationService.GoBackAt(0);
+                var verification = await ClientService.GetBotVerificationAsync(chat);
+                if (verification?.BotUserId == verifyChat.BotUserId)
+                {
+                    var confirm = await VerifyChatPopup.ShowAsync(XamlRoot, ClientService, chat, true, false);
+                    if (confirm.Result == ContentDialogResult.Primary)
+                    {
+                        NavigationService.Hide(typeof(ChooseChatsPopup));
+
+                        var response = await ClientService.SendAsync(new RemoveMessageSenderBotVerification(verifyChat.BotUserId, verifiedId));
+                        if (response is Ok)
+                        {
+                            ShowToast(string.Format(Strings.BotSentRevokeVerifyRequest, chat.Title));
+                        }
+                        else if (response is Error error)
+                        {
+                            ToastPopup.ShowError(XamlRoot, error);
+                        }
+                    }
+                }
+                else
+                {
+                    var confirm = await VerifyChatPopup.ShowAsync(XamlRoot, ClientService, chat, false, verifyChatFullInfo.BotInfo.VerificationParameters.CanSetCustomDescription);
+                    if (confirm.Result == ContentDialogResult.Primary)
+                    {
+                        NavigationService.Hide(typeof(ChooseChatsPopup));
+
+                        var response = await ClientService.SendAsync(new SetMessageSenderBotVerification(verifyChat.BotUserId, verifiedId, confirm.Text));
+                        if (response is Ok)
+                        {
+                            ShowToast(string.Format(Strings.BotSentVerifyRequest, chat.Title));
+                        }
+                        else if (response is Error error)
+                        {
+                            ToastPopup.ShowError(XamlRoot, error);
+                        }
+                    }
+                }
+            }
         }
+
+        public bool ShouldCloseOnCommit { get; private set; } = true;
 
         private ListViewSelectionMode _selectionMode = ListViewSelectionMode.Multiple;
         public ListViewSelectionMode SelectionMode

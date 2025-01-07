@@ -38,6 +38,7 @@ namespace Telegram.Views.Users
 
                 FindName(nameof(UsernamePanel));
                 FindName(nameof(BotPanel));
+                FindName(nameof(BotPanel2));
 
                 LayoutRoot.Footer = string.Empty;
 

@@ -219,6 +219,8 @@ namespace Telegram.Services
         int GetMembersCount(long chatId);
         int GetMembersCount(Chat chat);
 
+        Task<BotVerification> GetBotVerificationAsync(Chat chat);
+
         bool IsAnimationSaved(int id);
         bool IsStickerRecent(int id);
         bool IsStickerFavorite(int id);
@@ -2168,6 +2170,32 @@ namespace Telegram.Services
             }
 
             return 0;
+        }
+
+        public async Task<BotVerification> GetBotVerificationAsync(Chat chat)
+        {
+            if (chat.Type is ChatTypePrivate privata)
+            {
+                if (TryGetUserFull(chat, out UserFullInfo fullInfo))
+                {
+                    return fullInfo.BotVerification;
+                }
+
+                var response = await SendAsync(new GetUserFullInfo(privata.UserId)) as UserFullInfo;
+                return response?.BotVerification;
+            }
+            else if (chat.Type is ChatTypeSupergroup supergroup)
+            {
+                if (TryGetSupergroupFull(supergroup.SupergroupId, out SupergroupFullInfo fullInfo))
+                {
+                    return fullInfo.BotVerification;
+                }
+
+                var response = await SendAsync(new GetSupergroupFullInfo(supergroup.SupergroupId)) as SupergroupFullInfo;
+                return response?.BotVerification;
+            }
+
+            return null;
         }
 
 

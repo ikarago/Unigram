@@ -889,6 +889,22 @@ namespace Telegram.Controls
             {
                 BusinessHours.Visibility = Visibility.Collapsed;
             }
+
+            if (fullInfo.BotVerification != null && ViewModel.ClientService.TryGetUser(fullInfo.BotVerification.BotUserId, out User verifierBotUser))
+            {
+                var emoji = new CustomEmojiFileSource(ViewModel.ClientService, fullInfo.BotVerification.IconCustomEmojiId);
+                var text = fullInfo.BotVerification.CustomDescription.Text.Length > 0
+                    ? fullInfo.BotVerification.CustomDescription
+                    : Strings.BotVerifierRepresentatives.AsFormattedText();
+
+                TextBlockHelper.SetFormattedText(BotVerifiedText, text);
+                BotVerifiedInfo.Source = emoji;
+                BotVerifiedRoot.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                BotVerifiedRoot.Visibility = Visibility.Collapsed;
+            }
         }
 
         public void UpdateUserStatus(Chat chat, User user)
@@ -1150,6 +1166,22 @@ namespace Telegram.Controls
             else
             {
                 PersonalChannelRoot.Visibility = Visibility.Collapsed;
+            }
+
+            if (fullInfo.BotVerification != null && ViewModel.ClientService.TryGetUser(fullInfo.BotVerification.BotUserId, out User verifierBotUser))
+            {
+                var emoji = new CustomEmojiFileSource(ViewModel.ClientService, fullInfo.BotVerification.IconCustomEmojiId);
+                var text = fullInfo.BotVerification.CustomDescription.Text.Length > 0
+                    ? fullInfo.BotVerification.CustomDescription
+                    : Strings.BotVerifierRepresentatives.AsFormattedText();
+
+                TextBlockHelper.SetFormattedText(BotVerifiedText, text);
+                BotVerifiedInfo.Source = emoji;
+                BotVerifiedRoot.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                BotVerifiedRoot.Visibility = Visibility.Collapsed;
             }
         }
 

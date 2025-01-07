@@ -124,6 +124,14 @@
                     </controls:BadgeButton>
                 </controls:HeaderedControl>
 
+                <controls:HeaderedControl x:Name="BotPanel2"
+                                          x:Load="False">
+                    <controls:BadgeButton Click="{x:Bind ViewModel.VerifyAccounts}"
+                                          Content="{CustomResource BotVerifyAccounts}"
+                                          Style="{StaticResource GlyphBadgeButtonStyle}"
+                                          Glyph="&#xEA8B;" />
+                </controls:HeaderedControl>
+
                 <controls:HeaderedControl x:Name="BotPanel"
                                           x:Load="False"
                                           Footer="{CustomResource BotManageInfo}">
