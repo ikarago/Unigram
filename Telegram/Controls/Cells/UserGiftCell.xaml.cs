@@ -1,11 +1,13 @@
 ﻿using Telegram.Common;
 using Telegram.Controls.Media;
+using Telegram.Navigation;
 using Telegram.Services;
 using Telegram.Streams;
 using Telegram.Td.Api;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace Telegram.Controls.Cells
 {
@@ -44,6 +46,23 @@ namespace Telegram.Controls.Cells
                 {
                     RibbonRoot.Visibility = Visibility.Visible;
                     Ribbon.Text = string.Format(Strings.Gift2Limited1OfRibbon, regular.Gift.TotalText());
+
+                    if (RibbonPath.Fill is not LinearGradientBrush)
+                    {
+                        RibbonPath.Fill = new LinearGradientBrush(new GradientStopCollection
+                        {
+                            new GradientStop
+                            {
+                                Color = Color.FromArgb(0xFF, 0x6E, 0xD2, 0xFF),
+                                Offset = 0
+                            },
+                            new GradientStop
+                            {
+                                Color = Color.FromArgb(0xFF, 0x35, 0xA5, 0xFC),
+                                Offset = 1
+                            }
+                        }, 0);
+                    }
                 }
                 else
                 {
@@ -62,6 +81,14 @@ namespace Telegram.Controls.Cells
                 Pattern.Visibility = Visibility.Visible;
 
                 Animated.Source = new DelayedFileSource(clientService, upgraded.Gift.Model.Sticker);
+
+                RibbonRoot.Visibility = Visibility.Visible;
+                Ribbon.Text = string.Format(Strings.Gift2Limited1OfRibbon, upgraded.Gift.MaxUpgradedCount.ToString("N0"));
+
+                if (RibbonPath.Fill is LinearGradientBrush)
+                {
+                    RibbonPath.Fill = BootStrapper.Current.Resources["MessageServiceBackgroundBrush"] as Brush;
+                }
             }
 
             if (gift.IsSaved)
