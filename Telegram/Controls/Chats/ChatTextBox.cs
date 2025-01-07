@@ -903,8 +903,10 @@ namespace Telegram.Controls.Chats
             Sending?.Invoke(this, EventArgs.Empty);
             Effect = null;
 
+            var linkPreview = ViewModel.GetLinkPreviewOptions();
             var text = GetFormattedText(true);
-            await ViewModel.SendMessageAsync(text, options);
+
+            await ViewModel.SendMessageAsync(text, linkPreview, options);
         }
 
         public async void Schedule(bool whenOnline)
@@ -924,8 +926,10 @@ namespace Telegram.Controls.Chats
 
             if (options != null)
             {
+                var linkPreview = ViewModel.GetLinkPreviewOptions();
                 var text = GetFormattedText(true);
-                await ViewModel.SendMessageAsync(text, options);
+
+                await ViewModel.SendMessageAsync(text, linkPreview, options);
             }
         }
 
