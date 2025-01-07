@@ -198,7 +198,7 @@ namespace Telegram
                 {
                     var view = ApplicationView.GetForCurrentView();
                     await ApplicationViewSwitcher.TryShowAsStandaloneAsync(view.Id);
-                    view.TryResizeView(WindowContext.Current.Bounds.ToSize());
+                    //view.TryResizeView(WindowContext.Current.Bounds.ToSize());
                 }
             }
             else
