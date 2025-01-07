@@ -309,6 +309,11 @@ namespace Telegram.Controls.Chats
 
         private void OnTextChanged(object sender, RoutedEventArgs e)
         {
+            if (IsEmpty)
+            {
+                return;
+            }
+
             var diff = DateTime.Now - _lastKeystroke;
             if (diff.TotalSeconds > 4 || (_wasEmpty && !IsEmpty))
             {
