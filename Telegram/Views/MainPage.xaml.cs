@@ -3024,7 +3024,8 @@ namespace Telegram.Views
                         var icon = Icons.ParseFolder(folder.Icon);
                         var glyph = Icons.FolderToGlyph(icon);
 
-                        item.CreateFlyoutItem(viewModel.AddToFolder, (folder.Id, chat), folder.Title, glyph.Item1);
+                        // TODO: Custom emojis
+                        item.CreateFlyoutItem(viewModel.AddToFolder, (folder.Id, chat), folder.Name.Text.Text, glyph.Item1);
                     }
                 }
 

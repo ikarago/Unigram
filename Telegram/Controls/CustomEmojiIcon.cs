@@ -37,6 +37,7 @@ namespace Telegram.Controls
                 var clean = message.ReplaceSpoilers();
                 var previous = 0;
 
+                // TODO: support more entities
                 if (message.Entities != null)
                 {
                     foreach (var entity in clean.Entities)
@@ -95,6 +96,7 @@ namespace Telegram.Controls
                 var clean = name.Text.ReplaceSpoilers();
                 var previous = 0;
 
+                // TODO: support more entities
                 if (name.Text.Entities != null)
                 {
                     foreach (var entity in clean.Entities)

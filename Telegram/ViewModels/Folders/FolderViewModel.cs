@@ -207,6 +207,7 @@ namespace Telegram.ViewModels.Folders
 
                 Invalidate(ref _title, value);
                 RaisePropertyChanged(nameof(Name));
+                RaisePropertyChanged(nameof(HasCustomEmoji));
             }
         }
 
@@ -219,9 +220,12 @@ namespace Telegram.ViewModels.Folders
                 if (Invalidate(ref _animateCustomEmoji, value))
                 {
                     RaisePropertyChanged(nameof(Name));
+                    RaisePropertyChanged(nameof(HasCustomEmoji));
                 }
             }
         }
+
+        public bool HasCustomEmoji => Title?.Entities?.Count > 0;
 
         public ChatFolderName Name => new ChatFolderName(Title, AnimateCustomEmoji);
 
