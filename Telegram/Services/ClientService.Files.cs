@@ -779,6 +779,16 @@ namespace Telegram.Services
                         ProcessFiles(item);
                     }
                     break;
+                case GiftUpgradePreview giftUpgradePreview:
+                    foreach (var item in giftUpgradePreview.Models)
+                    {
+                        ProcessFiles(item);
+                    }
+                    foreach (var item in giftUpgradePreview.Symbols)
+                    {
+                        ProcessFiles(item);
+                    }
+                    break;
                 case IdentityDocument identityDocument:
                     if (identityDocument.FrontSide != null)
                     {
@@ -1217,6 +1227,12 @@ namespace Telegram.Services
                         ProcessFiles(messagePremiumGiftCode.Sticker);
                     }
                     break;
+                case MessageRefundedUpgradedGift messageRefundedUpgradedGift:
+                    if (messageRefundedUpgradedGift.Gift != null)
+                    {
+                        ProcessFiles(messageRefundedUpgradedGift.Gift);
+                    }
+                    break;
                 case MessageReplyToMessage messageReplyToMessage:
                     if (messageReplyToMessage.Content != null)
                     {
@@ -1257,6 +1273,12 @@ namespace Telegram.Services
                     foreach (var item in messageThreadInfo.Messages)
                     {
                         ProcessFiles(item);
+                    }
+                    break;
+                case MessageUpgradedGift messageUpgradedGift:
+                    if (messageUpgradedGift.Gift != null)
+                    {
+                        ProcessFiles(messageUpgradedGift.Gift);
                     }
                     break;
                 case MessageUsersShared messageUsersShared:
@@ -1915,6 +1937,18 @@ namespace Telegram.Services
                         ProcessFiles(savedMessagesTopic.LastMessage);
                     }
                     break;
+                case SentGiftRegular sentGiftRegular:
+                    if (sentGiftRegular.Gift != null)
+                    {
+                        ProcessFiles(sentGiftRegular.Gift);
+                    }
+                    break;
+                case SentGiftUpgraded sentGiftUpgraded:
+                    if (sentGiftUpgraded.Gift != null)
+                    {
+                        ProcessFiles(sentGiftUpgraded.Gift);
+                    }
+                    break;
                 case SharedChat sharedChat:
                     if (sharedChat.Photo != null)
                     {
@@ -2031,6 +2065,18 @@ namespace Telegram.Services
                     if (starTransactionTypeGiftSale.Gift != null)
                     {
                         ProcessFiles(starTransactionTypeGiftSale.Gift);
+                    }
+                    break;
+                case StarTransactionTypeGiftTransfer starTransactionTypeGiftTransfer:
+                    if (starTransactionTypeGiftTransfer.Gift != null)
+                    {
+                        ProcessFiles(starTransactionTypeGiftTransfer.Gift);
+                    }
+                    break;
+                case StarTransactionTypeGiftUpgrade starTransactionTypeGiftUpgrade:
+                    if (starTransactionTypeGiftUpgrade.Gift != null)
+                    {
+                        ProcessFiles(starTransactionTypeGiftUpgrade.Gift);
                     }
                     break;
                 case StarTransactionTypeUserDeposit starTransactionTypeUserDeposit:
@@ -2397,6 +2443,34 @@ namespace Telegram.Services
                     if (updateUserFullInfo.UserFullInfo != null)
                     {
                         ProcessFiles(updateUserFullInfo.UserFullInfo);
+                    }
+                    break;
+                case UpgradedGift upgradedGift:
+                    if (upgradedGift.Model != null)
+                    {
+                        ProcessFiles(upgradedGift.Model);
+                    }
+                    if (upgradedGift.Symbol != null)
+                    {
+                        ProcessFiles(upgradedGift.Symbol);
+                    }
+                    break;
+                case UpgradedGiftModel upgradedGiftModel:
+                    if (upgradedGiftModel.Sticker != null)
+                    {
+                        ProcessFiles(upgradedGiftModel.Sticker);
+                    }
+                    break;
+                case UpgradedGiftSymbol upgradedGiftSymbol:
+                    if (upgradedGiftSymbol.Sticker != null)
+                    {
+                        ProcessFiles(upgradedGiftSymbol.Sticker);
+                    }
+                    break;
+                case UpgradeGiftResult upgradeGiftResult:
+                    if (upgradeGiftResult.Gift != null)
+                    {
+                        ProcessFiles(upgradeGiftResult.Gift);
                     }
                     break;
                 case User user:
