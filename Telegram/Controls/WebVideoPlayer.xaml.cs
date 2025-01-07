@@ -3,6 +3,7 @@ using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
@@ -161,7 +162,7 @@ namespace Telegram.Controls
             set
             {
                 OnVolumeChanged(_volume = value);
-                ExecuteScript($"playerSetVolume({value})");
+                ExecuteScript($"playerSetVolume({value.ToString(CultureInfo.InvariantCulture)})");
             }
         }
 
@@ -172,7 +173,7 @@ namespace Telegram.Controls
             set
             {
                 _rate = value;
-                ExecuteScript($"playerSetBaseRate({value})");
+                ExecuteScript($"playerSetBaseRate({value.ToString(CultureInfo.InvariantCulture)})");
             }
         }
 
