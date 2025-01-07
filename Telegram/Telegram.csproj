@@ -1370,6 +1370,9 @@
     <Compile Include="Views\Stars\Popups\FoundAffiliateProgramPopup.xaml.cs">
       <DependentUpon>FoundAffiliateProgramPopup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Stars\Popups\UpgradeGiftPopup.xaml.cs">
+      <DependentUpon>UpgradeGiftPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Stars\Popups\UserGiftPopup.xaml.cs">
       <DependentUpon>UserGiftPopup.xaml</DependentUpon>
     </Compile>
@@ -3315,6 +3318,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Stars\Popups\FoundAffiliateProgramPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Stars\Popups\UpgradeGiftPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

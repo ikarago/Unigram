@@ -76,7 +76,7 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <TextBlock common:TextBlockHelper.Text="{x:Bind Title}"
+                                <TextBlock common:TextBlockHelper.Markdown="{x:Bind Title}"
                                            VerticalAlignment="Bottom"
                                            Style="{StaticResource BaseTextBlockStyle}" />
                                 <TextBlock Text="{x:Bind common:Locale.Declension('Stickers', Size)}"
