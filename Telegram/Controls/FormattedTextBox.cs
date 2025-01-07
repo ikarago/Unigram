@@ -421,7 +421,7 @@ namespace Telegram.Controls
             flyout.CreateFlyoutItem(length, ContextDelete_Click, Strings.Delete);
             flyout.CreateFlyoutSeparator();
 
-            var entities = AllowedEntities;
+            var entities = AllowedEntities & ~FormattedTextEntity.CustomEmoji;
             if (entities != FormattedTextEntity.None)
             {
                 var formatting = new MenuFlyoutSubItem
