@@ -92,7 +92,7 @@ namespace Telegram.Controls
             {
                 var status = supergroup.VerificationStatus;
 
-                if (clientService.IsPremiumAvailable && chat.EmojiStatus != null && status?.IsFake is false && status?.IsScam is false)
+                if (clientService.IsPremiumAvailable && chat.EmojiStatus != null && status.IsFalse())
                 {
                     CurrentType = IdentityIconType.None;
                     UnloadObject(ref Icon);
@@ -125,7 +125,7 @@ namespace Telegram.Controls
 
             var status = user.VerificationStatus;
 
-            if (clientService.IsPremiumAvailable && user.EmojiStatus != null && status?.IsFake is false && status?.IsScam is false && (!chatList || user.Id != clientService.Options.MyId))
+            if (clientService.IsPremiumAvailable && user.EmojiStatus != null && status.IsFalse() && (!chatList || user.Id != clientService.Options.MyId))
             {
                 CurrentType = IdentityIconType.Premium;
                 UnloadObject(ref Icon);
@@ -278,9 +278,9 @@ namespace Telegram.Controls
 
         #region Helpers
 
-        public void SetStatus(IClientService clientService, User user, CustomEmojiIcon botVerified)
+        public void SetStatus(IClientService clientService, User user, CustomEmojiIcon botVerified, bool chatList = false)
         {
-            SetStatus(clientService, user, true);
+            SetStatus(clientService, user, chatList);
 
             if (user.VerificationStatus?.BotVerificationIconCustomEmojiId is not null and not 0)
             {
