@@ -91,7 +91,7 @@ namespace Telegram.Controls
         {
             inlines.Clear();
 
-            if (name != null)
+            if (name?.Text != null)
             {
                 var clean = name.Text.ReplaceSpoilers();
                 var previous = 0;

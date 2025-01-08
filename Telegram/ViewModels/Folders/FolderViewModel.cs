@@ -107,8 +107,8 @@ namespace Telegram.ViewModels.Folders
             _originalColorId = folder.ColorId;
 
             //Title = new FormattedText(folder.Title, Array.Empty<TextEntity>());
-            Title = folder.Name.Text;
-            AnimateCustomEmoji = folder.Name.AnimateCustomEmoji;
+            Title = folder.Name?.Text ?? string.Empty.AsFormattedText();
+            AnimateCustomEmoji = folder.Name?.AnimateCustomEmoji ?? true;
             Icon = Icons.ParseFolder(folder);
             SelectedColor = IsPremium && folder.ColorId != -1
                 ? ClientService.GetAccentColor(folder.ColorId)
