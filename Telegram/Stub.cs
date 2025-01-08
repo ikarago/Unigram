@@ -4786,21 +4786,6 @@ public static class GeographicRegion_stub
         }
     }
 }
-public static class Language_stub
-{
-    public static bool IsWellFormed_stub(string languageTag)
-    {
-        try
-        {
-            return Windows.Globalization.Language.IsWellFormed(languageTag);
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(Environment.StackTrace);
-            throw new RuntimeException(ex);
-        }
-    }
-}
 public static class ElementCompositionPreview_stub
 {
     public static Windows.UI.Composition.Visual GetElementChildVisual_stub(Windows.UI.Xaml.UIElement element)
@@ -6524,18 +6509,6 @@ public static class ToastNotificationHistory_stub
         try
         {
             sender.Remove(tag, group);
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(Environment.StackTrace);
-            throw new RuntimeException(ex);
-        }
-    }
-    public static void RemoveGroup_stub(this Windows.UI.Notifications.ToastNotificationHistory sender, string group)
-    {
-        try
-        {
-            sender.RemoveGroup(group);
         }
         catch (Exception ex)
         {
