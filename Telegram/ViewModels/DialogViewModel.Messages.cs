@@ -1765,7 +1765,7 @@ namespace Telegram.ViewModels
                 var senderUserId = message.SenderId is MessageSenderUser senderUser ? senderUser.UserId : 0;
                 var receiverUserId = senderUserId == user.Id ? ClientService.Options.MyId : user.Id;
 
-                var userGift = new UserGift(senderUserId, gift.Text, gift.IsPrivate, gift.IsSaved, gift.CanBeUpgraded, false, gift.WasRefunded, message.Date, new SentGiftRegular(gift.Gift), message.Id, gift.SellStarCount, gift.PrepaidUpgradeStarCount, 0, 0);
+                var userGift = new UserGift(senderUserId, gift.Text, gift.IsPrivate, gift.IsSaved, gift.CanBeUpgraded && !gift.WasUpgraded, false, gift.WasRefunded, message.Date, new SentGiftRegular(gift.Gift), message.Id, gift.SellStarCount, gift.PrepaidUpgradeStarCount, 0, 0);
 
                 ShowPopup(new UserGiftPopup(ClientService, NavigationService, userGift, receiverUserId));
             }

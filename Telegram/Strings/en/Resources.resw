@@ -6130,6 +6130,15 @@ Duration: {1}</value>
   <data name="Gift2ActionUpgradeOut" xml:space="preserve">
     <value>{0} can turn this gift to a unique collectible.</value>
   </data>
+  <data name="Gift2AddMyNameName" xml:space="preserve">
+    <value>Add my name to the gift</value>
+  </data>
+  <data name="Gift2AddSenderName" xml:space="preserve">
+    <value>Add sender&apos;s name to the gift</value>
+  </data>
+  <data name="Gift2AddSenderNameComment" xml:space="preserve">
+    <value>Add sender&apos;s name and comment</value>
+  </data>
   <data name="Gift2AttributeBackdrop" xml:space="preserve">
     <value>Backdrop</value>
   </data>
@@ -6311,6 +6320,9 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="Gift2Owner" xml:space="preserve">
     <value>Owner</value>
   </data>
+  <data name="Gift2OwnerChange" xml:space="preserve">
+    <value>transfer</value>
+  </data>
   <data name="Gift2Premium" xml:space="preserve">
     <value>Gift Premium</value>
   </data>
@@ -6440,6 +6452,27 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="Gift2TransactionSent" xml:space="preserve">
     <value>Gift</value>
   </data>
+  <data name="Gift2Transfer" xml:space="preserve">
+    <value>Transfer {0}</value>
+  </data>
+  <data name="Gift2TransferDo" xml:space="preserve">
+    <value>Transfer</value>
+  </data>
+  <data name="Gift2TransferDoPrice" xml:space="preserve">
+    <value>Transfer for ⭐️{0}</value>
+  </data>
+  <data name="Gift2TransferPriceText_one" xml:space="preserve">
+    <value>Do you want to transfer ownership of **{1}** to **{2}** for **{0} Star**?</value>
+  </data>
+  <data name="Gift2TransferPriceText_other" xml:space="preserve">
+    <value>Do you want to transfer ownership of **{1}** to **{2}** for **{0} Stars**?</value>
+  </data>
+  <data name="Gift2TransferredText" xml:space="preserve">
+    <value>You have successfully transferred **{0}** to **{1}**.</value>
+  </data>
+  <data name="Gift2TransferText" xml:space="preserve">
+    <value>Do you want to transfer ownership of **{0}** to **{1}**?</value>
+  </data>
   <data name="Gift2UniqueRibbon" xml:space="preserve">
     <value>gift</value>
   </data>
@@ -6461,8 +6494,44 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="Gift2UpgradeButtonFree" xml:space="preserve">
     <value>Upgrade for Free</value>
   </data>
+  <data name="Gift2UpgradeFeature1Text" xml:space="preserve">
+    <value>Get a unique number, model, backdrop and a symbol for your gift.</value>
+  </data>
+  <data name="Gift2UpgradeFeature1TextLearn" xml:space="preserve">
+    <value>The recipient will get a unique number, model, backdrop, and symbol for the gift.</value>
+  </data>
+  <data name="Gift2UpgradeFeature1Title" xml:space="preserve">
+    <value>Unique</value>
+  </data>
+  <data name="Gift2UpgradeFeature2Text" xml:space="preserve">
+    <value>Send your upgraded gift to any of your friends on Telegram.</value>
+  </data>
+  <data name="Gift2UpgradeFeature2TextLearn" xml:space="preserve">
+    <value>The recipient will be able to send the gift to anyone on Telegram.</value>
+  </data>
+  <data name="Gift2UpgradeFeature2Title" xml:space="preserve">
+    <value>Transferable</value>
+  </data>
+  <data name="Gift2UpgradeFeature3Text" xml:space="preserve">
+    <value>Sell or auction your gift on third-party NFT marketplaces.</value>
+  </data>
+  <data name="Gift2UpgradeFeature3TextLearn" xml:space="preserve">
+    <value>The recipient will be able to auction the gift on third-party NFT marketplaces.</value>
+  </data>
+  <data name="Gift2UpgradeFeature3Title" xml:space="preserve">
+    <value>Tradable</value>
+  </data>
+  <data name="Gift2UpgradeFeatureSoon" xml:space="preserve">
+    <value>SOON</value>
+  </data>
   <data name="Gift2UpgradeInfo" xml:space="preserve">
     <value>Enable this to let {0} turn your gift into a unique collectible. **Learn More &gt;**</value>
+  </data>
+  <data name="Gift2UpgradeText" xml:space="preserve">
+    <value>Turn your gift into a unique collectible that you can transfer or auction.</value>
+  </data>
+  <data name="Gift2UpgradeTitle" xml:space="preserve">
+    <value>Upgrade Gift</value>
   </data>
   <data name="Gift2Value" xml:space="preserve">
     <value>Value</value>

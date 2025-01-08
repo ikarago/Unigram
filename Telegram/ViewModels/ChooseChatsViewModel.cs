@@ -256,6 +256,19 @@ namespace Telegram.ViewModels
 
                 Title = Strings.BotChooseChatToVerify;
             }
+            else if (parameter is ChooseChatsConfigurationTransferGift transferGift)
+            {
+                SelectionMode = ListViewSelectionMode.None;
+                Options = ChooseChatsOptions.Users;
+                ShouldCloseOnCommit = false;
+                IsCommentEnabled = false;
+                IsChatSelection = false;
+
+                if (transferGift.Gift.Gift is SentGiftUpgraded upgraded)
+                {
+                    Title = string.Format(Strings.Gift2Transfer, upgraded.Gift.ToName());
+                }
+            }
 
             #endregion
 
@@ -740,6 +753,26 @@ namespace Telegram.ViewModels
                         {
                             ToastPopup.ShowError(XamlRoot, error);
                         }
+                    }
+                }
+            }
+            else if (_configuration is ChooseChatsConfigurationTransferGift transferGift && chats[0].Type is ChatTypePrivate transferGiftPrivate)
+            {
+                var confirm = await TransferGiftPopup.ShowAsync(XamlRoot, ClientService, transferGift.Gift, chats[0]);
+                if (confirm == ContentDialogResult.Primary)
+                {
+                    NavigationService.Hide(typeof(ChooseChatsPopup));
+
+                    var response = await ClientService.SendAsync(new TransferGift(transferGift.Gift.SenderUserId, transferGift.Gift.MessageId, transferGiftPrivate.UserId, transferGift.Gift.TransferStarCount));
+                    if (response is Ok && transferGift.Gift.Gift is SentGiftUpgraded upgraded)
+                    {
+                        Aggregator.Publish(new UpdateGiftIsSold(transferGift.Gift.SenderUserId, transferGift.Gift.MessageId));
+
+                        ShowToast(string.Format(Strings.Gift2TransferredText, upgraded.Gift.ToName(), chats[0].Title));
+                    }
+                    else if (response is Error error)
+                    {
+                        ToastPopup.ShowError(XamlRoot, error);
                     }
                 }
             }

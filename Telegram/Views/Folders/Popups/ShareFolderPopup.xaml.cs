@@ -13,10 +13,8 @@ using Telegram.Controls.Cells;
 using Telegram.Td;
 using Telegram.Td.Api;
 using Telegram.ViewModels.Folders;
-using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Documents;
 
 namespace Telegram.Views.Folders.Popups
 {

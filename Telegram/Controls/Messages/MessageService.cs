@@ -191,7 +191,7 @@ namespace Telegram.Controls.Messages
                     {
                         subtitle.SetText(message.ClientService, gift.Text);
                     }
-                    else if (gift.PrepaidUpgradeStarCount > 0)
+                    else if (gift.PrepaidUpgradeStarCount > 0 && !gift.WasUpgraded)
                     {
                         subtitle.SetText(message.ClientService, ClientEx.ParseMarkdown(Strings.Gift2ActionUpgrade));
                     }
@@ -207,7 +207,7 @@ namespace Telegram.Controls.Messages
                     }
 
                     view.Visibility = Visibility.Visible;
-                    button.Text = gift.PrepaidUpgradeStarCount > 0
+                    button.Text = gift.PrepaidUpgradeStarCount > 0 && !gift.WasUpgraded
                         ? Strings.Gift2Unpack
                         : Strings.ActionGiftPremiumView;
                 }

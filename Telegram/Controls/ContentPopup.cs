@@ -296,7 +296,12 @@ namespace Telegram.Controls
 
         private void DismissButton_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            OnDismissButtonClick();
+        }
+
+        protected virtual void OnDismissButtonClick()
+        {
+            Hide();
         }
 
         private void PrimaryButton_Loaded(object sender, RoutedEventArgs e)

@@ -450,6 +450,16 @@ namespace Telegram.Views.Popups
 
     #region Configurations
 
+    public partial class ChooseChatsConfigurationTransferGift : ChooseChatsConfiguration
+    {
+        public ChooseChatsConfigurationTransferGift(UserGift gift)
+        {
+            Gift = gift;
+        }
+
+        public UserGift Gift { get; }
+    }
+
     public partial class ChooseChatsConfigurationGroupCall : ChooseChatsConfiguration
     {
         public ChooseChatsConfigurationGroupCall(int groupCallId)

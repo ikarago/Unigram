@@ -1802,6 +1802,21 @@ namespace Telegram.Td.Api
             };
         }
 
+        public static string ToName(this UpgradedGift gift)
+        {
+            return string.Format("{0} #{1}", gift.Title, gift.Number);
+        }
+
+        public static bool IsFalse(this VerificationStatus status)
+        {
+            if (status == null)
+            {
+                return true;
+            }
+
+            return !status.IsFake && !status.IsScam;
+        }
+
         public static bool AreTheSame(this ChatFolder x, ChatFolder y)
         {
             if (x == null || y == null)
