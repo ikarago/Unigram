@@ -6257,6 +6257,9 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="Gift2Info2Expired_other" xml:space="preserve">
     <value>You can keep this {0} Stars gift in your Profile.</value>
   </data>
+  <data name="Gift2Info2OutExpired" xml:space="preserve">
+    <value>{0} can keep this gift in their Profile.</value>
+  </data>
   <data name="Gift2InfoConverted_one" xml:space="preserve">
     <value>You converted this gift to **{0}** Star.</value>
   </data>

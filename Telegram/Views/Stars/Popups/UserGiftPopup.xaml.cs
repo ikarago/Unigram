@@ -94,6 +94,18 @@ namespace Telegram.Views.Stars.Popups
                 Subtitle.Visibility = Visibility.Collapsed;
                 Convert.Visibility = Visibility.Collapsed;
                 Status.Visibility = Visibility.Collapsed;
+                Info.Visibility = Visibility.Collapsed;
+
+                PurchaseText.Text = Strings.OK;
+
+                if (userGift.CanBeUpgraded)
+                {
+                    TextBlockHelper.SetMarkdown(Subtitle, string.Format(Strings.Gift2ActionUpgradeOut, user.FullName(true)));
+                }
+                else
+                {
+                    TextBlockHelper.SetMarkdown(Subtitle, string.Format(Strings.Gift2Info2OutExpired, user.FullName(true)));
+                }
             }
             else
             {
