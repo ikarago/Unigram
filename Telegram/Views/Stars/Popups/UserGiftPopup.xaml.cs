@@ -312,6 +312,9 @@ namespace Telegram.Views.Stars.Popups
             _clientService = clientService;
             _navigationService = navigationService;
 
+            UpgradedHeader.Visibility = Visibility.Collapsed;
+            UpgradedRoot.Visibility = Visibility.Collapsed;
+
             From.Visibility = Visibility.Collapsed;
 
             Title.Text = Strings.Gift2SoldOutSheetTitle;

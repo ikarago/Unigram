@@ -410,6 +410,7 @@
             <controls:BadgeButton x:Name="PurchaseCommand"
                                   Click="Purchase_Click"
                                   Style="{StaticResource AccentButtonStyle}"
+                                  FontFamily="{StaticResource EmojiThemeFontFamilyWithSymbols}"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Center"
                                   FontWeight="SemiBold"

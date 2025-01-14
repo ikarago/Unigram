@@ -134,7 +134,7 @@ namespace Telegram.Views.Popups
             var popup = new TranslateToPopup();
 
             var confirm = await popup.ShowQueuedAsync(XamlRoot);
-            if (confirm == ContentDialogResult.Primary)
+            if (confirm == ContentDialogResult.Primary && popup.SelectedItem != null)
             {
                 var translate = new TranslatePopup(_translateService, _chatId, _messageId, _text, _fromLanguage, popup.SelectedItem, _contentProtected);
                 _ = translate.ShowQueuedAsync(XamlRoot);

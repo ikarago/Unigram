@@ -739,7 +739,7 @@ namespace Telegram.ViewModels
                 }
                 else
                 {
-                    var confirm = await VerifyChatPopup.ShowAsync(XamlRoot, ClientService, chat, false, verifyChatFullInfo.BotInfo.VerificationParameters.CanSetCustomDescription);
+                    var confirm = await VerifyChatPopup.ShowAsync(XamlRoot, ClientService, chat, false, verifyChatFullInfo.BotInfo.VerificationParameters?.CanSetCustomDescription ?? false);
                     if (confirm.Result == ContentDialogResult.Primary)
                     {
                         NavigationService.Hide(typeof(ChooseChatsPopup));
