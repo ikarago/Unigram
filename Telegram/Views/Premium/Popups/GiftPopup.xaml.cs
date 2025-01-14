@@ -96,6 +96,7 @@ namespace Telegram.Views.Premium.Popups
         {
             All,
             Limited,
+            InStock,
             StarCount
         }
 
@@ -148,6 +149,11 @@ namespace Telegram.Views.Premium.Popups
                 if (all.Any(x => x.TotalCount > 0))
                 {
                     navigation.Add(new GiftGroup(GiftGroupType.Limited, all.Where(x => x.TotalCount > 0)));
+                }
+
+                if (all.Any(x => x.RemainingCount > 0 || x.TotalCount == 0))
+                {
+                    navigation.Add(new GiftGroup(GiftGroupType.InStock, all.Where(x => x.RemainingCount > 0 || x.TotalCount == 0)));
                 }
 
                 var groups = all
@@ -240,6 +246,7 @@ namespace Telegram.Views.Premium.Popups
             {
                 GiftGroupType.All => Strings.Gift2TabAll,
                 GiftGroupType.Limited => Strings.Gift2TabLimited,
+                GiftGroupType.InStock => Strings.Gift2TabInStock,
                 _ => starCount.ToString("N0")
             };
         }

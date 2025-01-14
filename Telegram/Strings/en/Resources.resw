@@ -6422,6 +6422,9 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="Gift2TabAll" xml:space="preserve">
     <value>All Gifts</value>
   </data>
+  <data name="Gift2TabInStock" xml:space="preserve">
+    <value>In Stock</value>
+  </data>
   <data name="Gift2TabLimited" xml:space="preserve">
     <value>Limited</value>
   </data>
