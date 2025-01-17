@@ -238,7 +238,6 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <controls:ProfilePicture x:Name="UpgradedFromPhoto"
@@ -253,18 +252,6 @@
                                         <Run x:Name="UpgradedFromTitle" />
                                     </Hyperlink>
                                 </TextBlock>
-
-                                <controls:BadgeButton x:Name="UpgradedTransfer"
-                                                      Click="UpgradedTransfer_Click"
-                                                      Glyph="{CustomResource Gift2OwnerChange}"
-                                                      Style="{StaticResource SmallButtonStyle}"
-                                                      VerticalAlignment="Center"
-                                                      FontSize="11"
-                                                      Padding="4,0"
-                                                      CornerRadius="8"
-                                                      BorderThickness="0"
-                                                      Height="16"
-                                                      Grid.Column="2" />
                             </Grid>
                         </controls:TableViewItem>
                         <controls:TableViewItem Header="{CustomResource Gift2AttributeModel}"
@@ -430,5 +417,14 @@
                 </Grid>
             </controls:BadgeButton>
         </Grid>
+
+        <controls:MoreButton x:Name="MoreButton"
+                             Click="More_ContextRequested"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Top"
+                             Margin="0,0,16,0"
+                             CornerRadius="20"
+                             RequestedTheme="Dark"
+                             Visibility="Collapsed" />
     </Grid>
 </controls:ContentPopup>

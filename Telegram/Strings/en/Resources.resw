@@ -6467,6 +6467,9 @@ This action cannot be undone. This will permanently destroy the gift.</value>
   <data name="Gift2TransferDoPrice" xml:space="preserve">
     <value>Transfer for ⭐️{0}</value>
   </data>
+  <data name="Gift2TransferOption" xml:space="preserve">
+    <value>Transfer</value>
+  </data>
   <data name="Gift2TransferPriceText_one" xml:space="preserve">
     <value>Do you want to transfer ownership of **{1}** to **{2}** for **{0} Star**?</value>
   </data>

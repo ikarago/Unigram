@@ -20,6 +20,7 @@ using Telegram.Td.Api;
 using Telegram.Views.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Media;
@@ -70,8 +71,10 @@ namespace Telegram.Views.Stars.Popups
 
         private void InitializeRegular(IClientService clientService, UserGift userGift, Gift gift, long receiverUserId)
         {
+            DismissButtonRequestedTheme = ElementTheme.Default;
             UpgradedHeader.Visibility = Visibility.Collapsed;
             UpgradedRoot.Visibility = Visibility.Collapsed;
+            MoreButton.Visibility = Visibility.Collapsed;
 
             if (clientService.TryGetUser(userGift.SenderUserId, out User user))
             {
@@ -191,8 +194,10 @@ namespace Telegram.Views.Stars.Popups
 
         private void InitializeUpgraded(IClientService clientService, UserGift userGift, UpgradedGift gift, long receiverUserId)
         {
+            DismissButtonRequestedTheme = ElementTheme.Dark;
             Header.Visibility = Visibility.Collapsed;
             RegularRoot.Visibility = Visibility.Collapsed;
+            MoreButton.Visibility = Visibility.Visible;
 
             var source = DelayedFileSource.FromSticker(clientService, gift.Symbol.Sticker);
             var centerColor = gift.Backdrop.CenterColor.ToColor();
@@ -215,10 +220,6 @@ namespace Telegram.Views.Stars.Popups
                 FromPhoto.Visibility = Visibility.Visible;
                 FromTitle.Text = Strings.StarsTransactionHidden;
             }
-
-            UpgradedTransfer.Visibility = userGift.CanBeTransferred
-                ? Visibility.Visible
-                : Visibility.Collapsed;
 
             From.Header = Strings.Gift2From;
             Title.Text = Strings.Gift2TitleReceived;
@@ -312,6 +313,7 @@ namespace Telegram.Views.Stars.Popups
             _clientService = clientService;
             _navigationService = navigationService;
 
+            DismissButtonRequestedTheme = ElementTheme.Default;
             UpgradedHeader.Visibility = Visibility.Collapsed;
             UpgradedRoot.Visibility = Visibility.Collapsed;
 
@@ -398,6 +400,8 @@ namespace Telegram.Views.Stars.Popups
                 _gift.Gift = new SentGiftUpgraded(result.Gift);
 
                 UpgradedAnimatedPhoto.LoopCompleted -= OnLoopCompleted;
+
+                DismissButtonRequestedTheme = ElementTheme.Dark;
                 UpgradedHeader.Visibility = Visibility.Visible;
                 UpgradedRoot.Visibility = Visibility.Visible;
 
@@ -506,12 +510,6 @@ namespace Telegram.Views.Stars.Popups
             }
         }
 
-        private void UpgradedTransfer_Click(object sender, RoutedEventArgs e)
-        {
-            Hide();
-            _navigationService.ShowPopup(new ChooseChatsPopup(), new ChooseChatsConfigurationTransferGift(_gift));
-        }
-
         private bool _upgradeCollapsed = true;
 
         private void ShowHideUpgrade(bool show)
@@ -523,6 +521,8 @@ namespace Telegram.Views.Stars.Popups
 
             _upgradeCollapsed = !show;
 
+
+            DismissButtonRequestedTheme = show ? ElementTheme.Dark : ElementTheme.Default;
             Header.Visibility = show ? Visibility.Collapsed : Visibility.Visible;
             UpgradedHeader.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
 
@@ -619,6 +619,44 @@ namespace Telegram.Views.Stars.Popups
                     InitializeRegular(_clientService, _gift, regular.Gift, _userId);
                 }
             }
+        }
+
+        private void More_ContextRequested(object sender, RoutedEventArgs e)
+        {
+            var flyout = new MenuFlyout();
+
+            flyout.CreateFlyoutItem(CopyLink, Strings.CopyLink, Icons.Link);
+            flyout.CreateFlyoutItem(Share, Strings.ShareFile, Icons.Share);
+
+            if (_gift.CanBeTransferred)
+            {
+                flyout.CreateFlyoutItem(Transfer, Strings.Gift2TransferOption, Icons.Link);
+            }
+
+            flyout.ShowAt(sender as UIElement, FlyoutPlacementMode.BottomEdgeAlignedRight);
+        }
+
+        private void CopyLink()
+        {
+            if (_gift.Gift is SentGiftUpgraded upgraded)
+            {
+                MessageHelper.CopyLink(_clientService, XamlRoot, new InternalLinkTypeUpgradedGift(upgraded.Gift.Name));
+            }
+        }
+
+        private void Share()
+        {
+            if (_gift.Gift is SentGiftUpgraded upgraded)
+            {
+                Hide();
+                _navigationService.ShowPopup(new ChooseChatsPopup(), new ChooseChatsConfigurationPostLink(new InternalLinkTypeUpgradedGift(upgraded.Gift.Name)));
+            }
+        }
+
+        private void Transfer()
+        {
+            Hide();
+            _navigationService.ShowPopup(new ChooseChatsPopup(), new ChooseChatsConfigurationTransferGift(_gift));
         }
     }
 }

@@ -4,6 +4,7 @@
 // Distributed under the GNU General Public License v3.0. (See accompanying
 // file LICENSE or copy at https://www.gnu.org/licenses/gpl-3.0.txt)
 //
+using System;
 using System.Numerics;
 using System.Threading.Tasks;
 using Telegram.Common;
@@ -272,6 +273,7 @@ namespace Telegram.Controls
             if (IsDismissButtonVisible)
             {
                 DismissButton = GetTemplateChild(nameof(DismissButton)) as Button;
+                DismissButton.RequestedTheme = DismissButtonRequestedTheme;
                 DismissButton.Click += DismissButton_Click;
             }
 
@@ -405,7 +407,29 @@ namespace Telegram.Controls
         private static void OnDismissButtonVisibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var sender = d as ContentPopup;
-            if (sender?.DismissButton != null || (bool)e.NewValue)
+            if (sender?.DismissButton != null)
+            {
+                sender.DismissButton.RequestedTheme = (ElementTheme)e.NewValue;
+            }
+        }
+
+        #endregion
+
+        #region DismissButtonRequestedTheme
+
+        public ElementTheme DismissButtonRequestedTheme
+        {
+            get { return (ElementTheme)GetValue(DismissButtonRequestedThemeProperty); }
+            set { SetValue(DismissButtonRequestedThemeProperty, value); }
+        }
+
+        public static readonly DependencyProperty DismissButtonRequestedThemeProperty =
+            DependencyProperty.Register("DismissButtonRequestedTheme", typeof(ElementTheme), typeof(ContentPopup), new PropertyMetadata(ElementTheme.Default, OnDismissButtonRequestedThemeChanged));
+
+        private static void OnDismissButtonRequestedThemeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sender = d as ContentPopup;
+            if (sender?.DismissButton != null)
             {
                 if (sender.DismissButton == null)
                 {
@@ -413,6 +437,7 @@ namespace Telegram.Controls
 
                     if (sender.DismissButton != null)
                     {
+                        sender.DismissButton.RequestedTheme = sender.DismissButtonRequestedTheme;
                         sender.DismissButton.Click += sender.DismissButton_Click;
                     }
                 }
