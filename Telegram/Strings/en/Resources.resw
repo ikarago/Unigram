@@ -11426,6 +11426,9 @@ and enter your phone number.</value>
   <data name="StoryUnsupported" xml:space="preserve">
     <value>This story is not supported by your version of Telegram.</value>
   </data>
+  <data name="StoryViewGift" xml:space="preserve">
+    <value>Show Gift &gt;</value>
+  </data>
   <data name="StoryViewLocation" xml:space="preserve">
     <value>View Location &gt;</value>
   </data>
