@@ -349,6 +349,11 @@ namespace Telegram.Views
                         _clientService,
                         _settingsService,
                         _eventAggregator);
+                case "Telegram.ViewModels.Profile.ProfileBotsTabViewModel":
+                    return (T)(object)new Telegram.ViewModels.Profile.ProfileBotsTabViewModel(
+                        _clientService,
+                        _settingsService,
+                        _eventAggregator);
                 case "Telegram.ViewModels.Profile.ProfileGiftsTabViewModel":
                     return (T)(object)new Telegram.ViewModels.Profile.ProfileGiftsTabViewModel(
                         _clientService,

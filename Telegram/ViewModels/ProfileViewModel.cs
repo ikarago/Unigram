@@ -59,6 +59,7 @@ namespace Telegram.ViewModels
         public ProfileStoriesTabViewModel ArchivedStoriesTab => _archivedStoriesTabViewModel;
         public ProfileGroupsTabViewModel GroupsTab => _groupsTabViewModel;
         public ProfileChannelsTabViewModel ChannelsTab => _channelsTabViewModel;
+        public ProfileBotsTabViewModel BotsTab => _botsTabViewModel;
         public ProfileGiftsTabViewModel GiftsTab => _giftsTabViewModel;
         public SupergroupMembersViewModel MembersTab => _membersTabVieModel;
 
@@ -1242,6 +1243,15 @@ namespace Telegram.ViewModels
         {
             ClientService.Send(new OpenChatSimilarChat(_chat.Id, chat.Id));
             NavigationService.NavigateToChat(chat);
+        }
+
+        public void OpenSimilarBot(User user)
+        {
+            if (_chat.Type is ChatTypePrivate privata)
+            {
+                ClientService.Send(new OpenBotSimilarBot(privata.UserId, user.Id));
+                NavigationService.NavigateToUser(user.Id);
+            }
         }
 
         public void OpenSavedMessagesTopic(SavedMessagesTopic topic)

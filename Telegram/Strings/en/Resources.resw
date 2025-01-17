@@ -10786,6 +10786,9 @@ The channel &quot;**{1}**&quot; will become private.</value>
   <data name="SignUp" xml:space="preserve">
     <value>Sign Up</value>
   </data>
+  <data name="SimilarBotsTab" xml:space="preserve">
+    <value>Similar Bots</value>
+  </data>
   <data name="SimilarChannelsTab" xml:space="preserve">
     <value>Similar Channels</value>
   </data>

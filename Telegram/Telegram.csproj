@@ -569,6 +569,7 @@
     <Compile Include="Td\Api\MessageTranslateResult.cs" />
     <Compile Include="ViewModels\Drawers\EffectDrawerViewModel.cs" />
     <Compile Include="Collections\BatchedObservableCollection.cs" />
+    <Compile Include="ViewModels\Profile\ProfileBotsTabViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfileGiftsTabViewModel.cs" />
     <Compile Include="ViewModels\RevenueViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfileChannelsTabViewModel.cs" />
@@ -1249,6 +1250,9 @@
     </Compile>
     <Compile Include="Views\Premium\Popups\ChangePrivacyPopup.xaml.cs">
       <DependentUpon>ChangePrivacyPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Profile\ProfileBotsTabPage.xaml.cs">
+      <DependentUpon>ProfileBotsTabPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Profile\ProfileGiftsTabPage.xaml.cs">
       <DependentUpon>ProfileGiftsTabPage.xaml</DependentUpon>
@@ -3158,6 +3162,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Premium\Popups\ChangePrivacyPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Profile\ProfileBotsTabPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
