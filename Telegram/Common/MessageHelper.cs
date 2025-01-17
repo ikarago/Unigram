@@ -28,6 +28,7 @@ using Telegram.Views.Host;
 using Telegram.Views.Popups;
 using Telegram.Views.Premium.Popups;
 using Telegram.Views.Settings;
+using Telegram.Views.Stars.Popups;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources.Core;
@@ -617,6 +618,29 @@ namespace Telegram.Common
             else if (internalLink is InternalLinkTypeChatAffiliateProgram chatAffiliateProgram)
             {
                 NavigateToUsername(clientService, navigation, chatAffiliateProgram.Username, referrer: chatAffiliateProgram.Referrer);
+            }
+            else if (internalLink is InternalLinkTypeUpgradedGift upgradedGift)
+            {
+                NavigateToUpgradedGift(clientService, navigation, upgradedGift.Name);
+            }
+        }
+
+        private static async void NavigateToUpgradedGift(IClientService clientService, INavigationService navigation, string name)
+        {
+            var response = await clientService.SendAsync(new GetUpgradedGift(name));
+            if (response is UpgradedGift gift)
+            {
+                var senderUserId = 0;
+                var receiverUserId = 0;
+
+                var text = gift.OriginalDetails?.Text ?? string.Empty.AsFormattedText();
+                var userGift = new UserGift(senderUserId, text, true, false, false, false, false, 0, new SentGiftUpgraded(gift), 0, 0, 0, 0, 0);
+
+                navigation.ShowPopup(new UserGiftPopup(clientService, navigation, userGift, receiverUserId));
+            }
+            else
+            {
+                navigation.ShowToast(Strings.UniqueGiftNotFound, ToastPopupIcon.Error);
             }
         }
 

@@ -12144,6 +12144,9 @@ If you are not comfortable with Telegram&apos;s modest needs, it won&apos;t be p
   <data name="UnhideFromTop" xml:space="preserve">
     <value>Pin</value>
   </data>
+  <data name="UniqueGiftNotFound" xml:space="preserve">
+    <value>Gift was not found</value>
+  </data>
   <data name="UnknownErrorCode" xml:space="preserve">
     <value>Unknown error: {0}</value>
   </data>

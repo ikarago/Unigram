@@ -291,7 +291,7 @@ namespace Telegram.Views.Stars.Popups
                 UpgradedCaption.SetText(clientService, text);
             }
 
-            if (gift.OwnerUserId == clientService.Options.MyId)
+            if (gift.OwnerUserId == clientService.Options.MyId && userGift.MessageId != 0)
             {
                 if (userGift.IsSaved)
                 {
@@ -303,6 +303,11 @@ namespace Telegram.Views.Stars.Popups
                     Info.Text = Strings.Gift2ProfileInvisible;
                     PurchaseText.Text = Strings.Gift2ProfileMakeVisible;
                 }
+            }
+            else
+            {
+                Info.Visibility = Visibility.Collapsed;
+                PurchaseText.Text = Strings.OK;
             }
         }
 
