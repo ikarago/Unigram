@@ -244,7 +244,8 @@
                                                          Margin="8,4,0,4"
                                                          Width="24"
                                                          Height="24" />
-                                <TextBlock Margin="8,5,4,6"
+                                <TextBlock x:Name="UpgradedFromText"
+                                           Margin="8,5,4,6"
                                            Style="{StaticResource BodyTextBlockStyle}"
                                            VerticalAlignment="Top"
                                            Grid.Column="1">

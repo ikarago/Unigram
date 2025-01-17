@@ -216,9 +216,8 @@ namespace Telegram.Views.Stars.Popups
             }
             else
             {
-                FromPhoto.Source = PlaceholderImage.GetGlyph(Icons.AuthorHiddenFilled, 5);
-                FromPhoto.Visibility = Visibility.Visible;
-                FromTitle.Text = Strings.StarsTransactionHidden;
+                UpgradedFromPhoto.Visibility = Visibility.Collapsed;
+                UpgradedFromText.Text = gift.OwnerName;
             }
 
             From.Header = Strings.Gift2From;
